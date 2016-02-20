@@ -1,4 +1,4 @@
-package DateParser.test;
+package DateParser;
 
 import java.io.IOException;
 import java.io.OutputStream;
