@@ -1,4 +1,4 @@
-package DateParser.test;
+package Test.DateParser;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
