@@ -2,7 +2,8 @@ package MainLogic;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import Entity.Task;
+
+import entity.Task;
 
 class TaskManager {
     private static ArrayList<Task> tasks;

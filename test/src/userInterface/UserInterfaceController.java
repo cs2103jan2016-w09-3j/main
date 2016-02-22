@@ -15,6 +15,7 @@ public class UserInterfaceController {
     private Stage _parentStage;
     private TaskViewUserInterface _taskViewInterface;
     private DescriptionComponent _descriptionComponent;
+    private DetailComponent _detailComponent;
     private FloatingBarViewUserInterface _floatingBarComponent;
 
     public UserInterfaceController(Stage primaryStage) {
@@ -25,6 +26,7 @@ public class UserInterfaceController {
         _taskViewInterface = new TaskViewUserInterface(_parentStage, _screenBounds, _fixedSize);
         _descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
         _floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
+        _detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
         _taskViewInterface.buildComponent(generateFakeData());
         update(0);
     }
@@ -33,6 +35,7 @@ public class UserInterfaceController {
         _taskViewInterface.show();
         _descriptionComponent.show();
         _floatingBarComponent.show();
+        _detailComponent.show();
     }
 
     int selectedStartIndex;

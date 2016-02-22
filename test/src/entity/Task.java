@@ -1,5 +1,6 @@
 package entity;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class Task {
@@ -9,11 +10,9 @@ public class Task {
     private String name;
     private String description;
     private int id;
-    
+
     private static int currentID = 0;
 
-    
-    
     public int getId() {
         return id;
     }
@@ -61,11 +60,10 @@ public class Task {
         isFloating = false;
     }
 
-    public Task(int id, Calendar calendar, String desc)
-    {
-        
+    public Task(int id, Calendar calendar, String desc) {
+
     }
-    
+
     public Task(String _name, Calendar _dueDate, String _description) {
         initIdAndDate();
 
@@ -82,20 +80,20 @@ public class Task {
         description = _description;
         isFloating = true;
     }
-    
-    public String getName (){
+
+    public String getName() {
         return name;
     }
-    
-    public Calendar getDueDate (){
-        if(!isFloating){
+
+    public Calendar getDueDate() {
+        if (!isFloating) {
             return dueDate;
-        }else{
+        } else {
             return null;
         }
     }
-    
-    public void setDueDate (Calendar _dueDate){
+
+    public void setDueDate(Calendar _dueDate) {
         isFloating = false;
         dueDate = _dueDate;
     }
@@ -111,8 +109,10 @@ public class Task {
     public void setDescription(String _description) {
         description = _description;
     }
-    
-    public boolean isFloating (){
+
+    public boolean isFloating() {
         return isFloating;
     }
+
+   
 }

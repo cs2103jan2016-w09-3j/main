@@ -55,7 +55,8 @@ public class TaskViewUserInterface implements ViewInterface {
     public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
         if (fixedSize) {
             _stageWidth = (int) screenBounds.getWidth() - DescriptionComponent.CONPONENT_WIDTH
-                    - DescriptionComponent.CONPONENT_RIGHT_MARGIN;
+                    - DescriptionComponent.CONPONENT_RIGHT_MARGIN - DetailComponent.CONPONENT_WIDTH
+                    - DetailComponent.CONPONENT_LEFT_MARGIN;
             _stageHeight = (int) (screenBounds.getHeight() - PrimaryUserInterface.COMMAND_BAR_HEIGTH
                     - PrimaryUserInterface.COMMAND_BAR_TOP_MARGIN
                     - PrimaryUserInterface.COMMAND_BAR_BOTTOM_MARGIN
@@ -67,7 +68,8 @@ public class TaskViewUserInterface implements ViewInterface {
                     - PrimaryUserInterface.COMMAND_BAR_BOTTOM_MARGIN;
         } else {
             _stageWidth = (int) (screenBounds.getWidth() * PrimaryUserInterface.PREFERED_WINDOW_SCALE)
-                    - DescriptionComponent.CONPONENT_WIDTH - DescriptionComponent.CONPONENT_RIGHT_MARGIN;
+                    - DescriptionComponent.CONPONENT_WIDTH - DescriptionComponent.CONPONENT_RIGHT_MARGIN
+                    - DetailComponent.CONPONENT_WIDTH - DetailComponent.CONPONENT_LEFT_MARGIN;
             _stageHeight = (int) (screenBounds.getHeight() - PrimaryUserInterface.COMMAND_BAR_HEIGTH
                     - PrimaryUserInterface.COMMAND_BAR_TOP_MARGIN
                     - PrimaryUserInterface.COMMAND_BAR_BOTTOM_MARGIN
@@ -120,7 +122,7 @@ public class TaskViewUserInterface implements ViewInterface {
     public void buildComponent(ArrayList<Task> workingList) {
         this.workingList = workingList;
         _individualItemWidth = _stageWidth;
-        int workingIndex = 30; // getWorkingIndex(); when qy implements 
+        int workingIndex = 30; // getWorkingIndex(); when qy implements
         int startIndex = 0;
         int endIndex = workingList.size() - 1;
         if (workingIndex - THRESHOLD > startIndex) {
@@ -311,7 +313,7 @@ public class TaskViewUserInterface implements ViewInterface {
         _mainVbox.setTranslateY(itemPosY);
     }
 
-    //get from logic side
+    // get from logic side
     public static Label checkSameDay(Task task1, Task task2) {
         if (task1 == null) { // new day
             return new Label(task2.getDueDate().toString());
