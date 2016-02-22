@@ -1,0 +1,38 @@
+#mainUserInput {
+    -fx-background-color: -fx-control-inner-background;
+    -fx-font: 12.0px "Serif";
+}
+
+#commandText {
+	-fx-font: 12.0px "Serif";
+}
+
+#rootPane{
+	-fx-border-color: #d3d3d3;
+    -fx-border-width: 2.0px;
+}
+
+
+#cssLabel{
+}
+
+.controlFocus {
+	-fx-border-color: #FF00FF;
+	-fx-border-width: 2.0px;
+}
+
+#cssTaskViewVerticleBox {
+    -fx-background-color: black, white;
+    -fx-background-insets: 0, 1 1 1 1;
+}
+
+#cssTaskViewDay{
+	-fx-background-color: black, white;
+    -fx-background-insets: 0, 1 1 1 1;
+}
+
+#cssTaskViewVerticleBoxSelected
+{
+	-fx-background-color: blue, white;
+    -fx-background-insets: 0, 1 1 1 1;
+}
