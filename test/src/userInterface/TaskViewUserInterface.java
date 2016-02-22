@@ -165,7 +165,7 @@ public class TaskViewUserInterface implements ViewInterface {
         vbox.setAlignment(Pos.CENTER);
         vbox.setId("cssTaskViewDay");
         vbox.setMinHeight(LABEL_HEIGHT);
-        Label dateLabel = new Label(task.getDueDate().toString());
+        Label dateLabel = new Label("task.getDueDate() and pass to ten to prase out Today/Tmr/watever");
         dateLabel.setMinHeight(TaskViewUserInterface.LABEL_HEIGHT);
         dateLabel.setFont(new Font(PrimaryUserInterface.DEFAULT_FONT, TaskViewUserInterface.LABEL_FONT_SIZE));
         vbox.getChildren().add(dateLabel);
