@@ -86,4 +86,8 @@ public class DetailComponent implements ViewInterface {
     public void hide() {
     }
 
+    public void destoryStage() {
+        _stage.close();
+    }
+
 }

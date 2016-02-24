@@ -493,4 +493,8 @@ public class TaskViewUserInterface implements ViewInterface {
         GridPane gridPane = _gridPanes.get(_selectedIndex - _startIndex);
         return gridPane;
     }
+
+    public void destoryStage() {
+        _stage.close();
+    }
 }
