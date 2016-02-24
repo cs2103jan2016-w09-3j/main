@@ -12,32 +12,29 @@
     -fx-border-width: 2.0px;
 }
 
-
-#cssLabel{
-}
-
 .controlFocus {
 	-fx-border-color: #FF00FF;
 	-fx-border-width: 2.0px;
 }
 
 #cssTaskViewVerticleBox {
-    -fx-background-color: black, white;
-    -fx-background-insets: 0, 1 1 1 1;
-}
-
-#cssTaskViewDay{
-	-fx-background-color: black, white;
-    -fx-background-insets: 0, 1 1 1 1;
+    -fx-background-color: black, rgba(237, 237, 237, 1);
+    -fx-background-insets: 0.0, 1.0 1.0 1.0 1.0;
 }
 
 #cssTaskViewWeek{
-	-fx-background-color: blue, white;
-    -fx-background-insets: 0, 1 1 1 1;
+	-fx-background-color: black, white;
+    -fx-background-insets: 0.0, 1.0 1.0 1.0 1.0;
 }
 
 #cssTaskViewVerticleBoxSelected
 {
-	-fx-background-color: blue, white;
-    -fx-background-insets: 0, 1 1 1 1;
+	-fx-background-color: black, rgba(0, 120, 255, 1), white;
+    -fx-background-insets: 0, 1 0 1 1, 1 5 1 1;
+}
+
+#cssTaskViewSelectedTask
+{
+	-fx-background-color: black, rgba(0, 120, 255, 1), rgba(255, 255, 255, 0.95);
+    -fx-background-insets: 0, 0 0 0 1, 0 10 0 1;
 }

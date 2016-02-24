@@ -56,13 +56,13 @@ public class UserInterfaceController {
 
     public void move(int value) {
         if (value > 0) {
-            double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() + 200;
+            double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() + 50;
             _taskViewInterface.updateTranslateY(t);
             _descriptionComponent.updateTranslateY(t);
         } else {
-            double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() - 200;
+            double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() - 50;
             _taskViewInterface.updateTranslateY(t);
-            _descriptionComponent.updateTranslateY(t);
+             _descriptionComponent.updateTranslateY(t);
         }
     }
 
@@ -87,22 +87,18 @@ public class UserInterfaceController {
         ArrayList<Task> fakeData = new ArrayList<Task>();
         int k = 0;
         int day = Calendar.getInstance().get(Calendar.DATE);
-        for (int i = 0; i < 5; i++) {
-            Calendar c = Calendar.getInstance();
-            Task t = new Task(Integer.toString(k++), c, (k - 1) + " title");
-            fakeData.add(t);
-        }
-
-        while (k < 90) {
+        while (k < 200) {
             Random r = new Random();
-            int loop = r.nextInt(20);
+            int loop = r.nextInt(2);
             for (int kk = 0; kk < loop; kk++) {
                 Random rr = new Random();
-                int ind = rr.nextInt(30);
+                int ind = rr.nextInt(5);
                 Calendar c = Calendar.getInstance();
                 c.set(Calendar.DATE, ++day);
                 for (int i = 0; i < ind; i++) {
-                    Task t = new Task(Integer.toString(k++), c, (k - 1) + " title");
+                    String d = (k) + " - - - " + Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "/"
+                            + Integer.toString(c.get(Calendar.MONTH));
+                    Task t = new Task(Integer.toString(k++), c, d);
                     fakeData.add(t);
                 }
             }

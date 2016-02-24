@@ -6,9 +6,7 @@ import java.util.Calendar;
 
 import entity.DescriptionLabel;
 import entity.Task;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -19,12 +17,11 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import javafx.stage.WindowEvent;
 
 public class TaskViewUserInterface implements ViewInterface {
 
-    static final int LABEL_HEIGHT = 30;
-    static final int ITEM_HEIGHT = 24;
+    static final int LABEL_HEIGHT = 35;
+    static final int ITEM_HEIGHT = 30;
     static final int LABEL_FONT_SIZE = 12;
     static final int TASK_FONT_SIZE = 12;
 
@@ -188,16 +185,40 @@ public class TaskViewUserInterface implements ViewInterface {
 
     public VBox createDayParent(Task task) {
         VBox vbox = new VBox();
-        vbox.setAlignment(Pos.CENTER);
-        // vbox.setId("cssTaskViewDay");
         vbox.setMinHeight(LABEL_HEIGHT);
-        // Label dateLabel = new Label("task.getDueDate() and pass to ten to
-        // prase out Today/Tmr/watever");
-        Label dateLabel = new Label(Integer.toString(task.getDueDate().get(Calendar.WEEK_OF_MONTH)));
+        // vbox.setId(calculateVboxCssStyle(task.getDueDate()));
+        Label dateLabel = new Label(getStringOfDate(task.getDueDate()));
         dateLabel.setMinHeight(TaskViewUserInterface.LABEL_HEIGHT);
         dateLabel.setFont(new Font(PrimaryUserInterface.DEFAULT_FONT, TaskViewUserInterface.LABEL_FONT_SIZE));
         vbox.getChildren().add(dateLabel);
+        VBox.setMargin(dateLabel, new Insets(0, 0, 0, 20));
         return vbox;
+    }
+
+    public String calculateVboxCssStyle(Calendar calendar) {
+        switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+            case Calendar.SUNDAY :
+                return "cssTaskViewSunday";
+            case Calendar.SATURDAY :
+                return "cssTaskViewSaturday";
+            case Calendar.MONDAY :
+                return "cssTaskViewMonday";
+            case Calendar.TUESDAY :
+                return "cssTaskViewTuesday";
+            case Calendar.WEDNESDAY :
+                return "cssTaskViewWednesday";
+            case Calendar.THURSDAY :
+                return "cssTaskViewThursday";
+            case Calendar.FRIDAY :
+                return "cssTaskViewFriday";
+        }
+        return null;
+    }
+
+    // this method will call ten method.
+    public String getStringOfDate(Calendar c) {
+        Integer.toString(c.get(Calendar.WEEK_OF_MONTH));
+        return c.getTime().toString();
     }
 
     public HBox buildIndividualTask(Task task) {
@@ -213,7 +234,7 @@ public class TaskViewUserInterface implements ViewInterface {
         Font font = new Font(PrimaryUserInterface.DEFAULT_FONT, TaskViewUserInterface.TASK_FONT_SIZE);
         GridPane grid = new GridPane();
         grid.setStyle(null);
-        grid.setId("grid" + task.getId());
+        grid.setId("");
         grid.setHgap(GAP_SIZE);
         grid.setMinWidth(_individualItemWidth);
         grid.setMinHeight(ITEM_HEIGHT);
@@ -256,8 +277,7 @@ public class TaskViewUserInterface implements ViewInterface {
     }
 
     public void removeFirstTask() {
-        String item = "#grid" + String.valueOf(_startIndex);
-        GridPane gp = (GridPane) _mainVbox.lookup(item);
+        GridPane gp = _gridPanes.get(0);
         VBox gpDayParent = (VBox) gp.getParent().getParent();
         VBox gpWeekParent = (VBox) gpDayParent.getParent();
         if (gpDayParent.getChildren().size() == 2) {
@@ -278,13 +298,12 @@ public class TaskViewUserInterface implements ViewInterface {
     }
 
     public void removeLastTask() {
-        String item = "#grid" + String.valueOf(_endIndex);
-        GridPane gp = (GridPane) _mainVbox.lookup(item);
+        GridPane gp = _gridPanes.get(_gridPanes.size() - 1);
         VBox gpDayParent = (VBox) gp.getParent().getParent();
         VBox gpWeekParent = (VBox) gpDayParent.getParent();
         if (gpDayParent.getChildren().size() == 2) {
             gpWeekParent.getChildren().remove(gpDayParent);
-            gpWeekParent.setMinHeight(gpWeekParent.getMinWidth() - gpDayParent.getMinHeight());
+            gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - gpDayParent.getMinHeight());
             if (gpWeekParent.getChildren().size() == 0) {
                 _mainVbox.getChildren().remove(gpWeekParent);
             }
@@ -353,8 +372,8 @@ public class TaskViewUserInterface implements ViewInterface {
     public boolean setItemSelected(int value) {
         int index = value + _selectedIndex;
         if (isBetweenStartEnd(index)) {
-            _gridPanes.get(_selectedIndex - _startIndex).setStyle(null);
-            _gridPanes.get(index - _startIndex).setStyle("-fx-border-color:blue");
+            _gridPanes.get(_selectedIndex - _startIndex).setId("");
+            _gridPanes.get(index - _startIndex).setId("cssTaskViewSelectedTask");
             updateTranslationY(value, index, _selectedIndex);
             _selectedIndex = index;
             return true;
@@ -408,10 +427,20 @@ public class TaskViewUserInterface implements ViewInterface {
             return false;
         }
         if (task1.getDueDate().get(Calendar.YEAR) == task2.getDueDate().get(Calendar.YEAR)) {
-            if (task1.getDueDate().get(Calendar.MONTH) == task2.getDueDate().get(Calendar.MONTH)) {
-                if (task1.getDueDate().get(Calendar.WEEK_OF_MONTH) == task2.getDueDate()
-                        .get(Calendar.WEEK_OF_MONTH)) {
+
+            // display by year week //remove after decided
+            boolean byYearWeek = true;
+            if (byYearWeek) {
+                if (task1.getDueDate().get(Calendar.WEEK_OF_YEAR) == task2.getDueDate()
+                        .get(Calendar.WEEK_OF_YEAR)) {
                     return true;
+                }
+            } else {
+                if (task1.getDueDate().get(Calendar.MONTH) == task2.getDueDate().get(Calendar.MONTH)) {
+                    if (task1.getDueDate().get(Calendar.WEEK_OF_MONTH) == task2.getDueDate()
+                            .get(Calendar.WEEK_OF_MONTH)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -421,17 +450,35 @@ public class TaskViewUserInterface implements ViewInterface {
     public ArrayList<DescriptionLabel> rebuildDescriptionLabels() {
         ArrayList<DescriptionLabel> descriptionLables = new ArrayList<DescriptionLabel>();
         HBox hbox = (HBox) getSelectedGridPane().getParent();
+        int countOfItems = 0;
         for (int i = 0; i < _mainVbox.getChildren().size(); i++) {
-            VBox vbox = (VBox) _mainVbox.getChildren().get(i);
-            int index = getSelectedGridPaneIndex(vbox);
-            DescriptionLabel dLabel = new DescriptionLabel(workingList.get(index));
-            dLabel.setHeight(vbox.getMinHeight());
-            if (vbox == hbox.getParent()) {
+            VBox weekBox = (VBox) _mainVbox.getChildren().get(i);
+            Task firstTaskInWeek = workingList.get(_startIndex + countOfItems);
+            int numberOfTaskInWeek = countNumberOfTaskInWeek(weekBox);
+            int indexForLastTaskInWeek = countOfItems + numberOfTaskInWeek - 1;
+            Task lastTaskInWeek = null;
+            if (indexForLastTaskInWeek < workingList.size()) {
+                lastTaskInWeek = workingList.get(_startIndex + indexForLastTaskInWeek);
+                countOfItems += numberOfTaskInWeek;
+            }
+            DescriptionLabel dLabel = new DescriptionLabel(firstTaskInWeek, lastTaskInWeek);
+            dLabel.setHeight(weekBox.getMinHeight());
+            if (weekBox.getChildren().contains(hbox.getParent())) {
                 dLabel.setSelected();
             }
             descriptionLables.add(dLabel);
         }
         return descriptionLables;
+    }
+
+    public int countNumberOfTaskInWeek(VBox weekBox) {
+        int noOfTask = 0;
+        for (int i = 0; i < weekBox.getChildren().size(); i++) {
+            VBox dayBox = (VBox) weekBox.getChildren().get(i);
+            noOfTask += dayBox.getChildren().size() - 1;// -1 cause of label for
+                                                        // day
+        }
+        return noOfTask;
     }
 
     public int getSelectedGridPaneIndex(VBox vbox) {
@@ -443,8 +490,7 @@ public class TaskViewUserInterface implements ViewInterface {
     }
 
     public GridPane getSelectedGridPane() {
-        String item = "#grid" + String.valueOf(_selectedIndex);
-        GridPane gridPane = (GridPane) _mainVbox.lookup(item);
+        GridPane gridPane = _gridPanes.get(_selectedIndex - _startIndex);
         return gridPane;
     }
 }

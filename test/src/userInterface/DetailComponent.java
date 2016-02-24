@@ -10,8 +10,8 @@ import javafx.stage.Window;
 
 public class DetailComponent implements ViewInterface {
     
-    static final int CONPONENT_WIDTH = 100;
-    static final int CONPONENT_LEFT_MARGIN = 5;
+    static final int CONPONENT_WIDTH = 300;
+    static final int CONPONENT_LEFT_MARGIN = 4;
 
     private Stage _stage;
     private int _stageWidth;

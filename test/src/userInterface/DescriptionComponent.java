@@ -151,13 +151,13 @@ public class DescriptionComponent {
             label.setTranslateX(translationX);
             label.setTranslateY(translationY);
             if (height > LABEL_SIZE_LARGE) {
-                label.setText(dLabel.getFullLabel());
+                label.setText(dLabel.getFullWeekLabel());
             } else {
-                label.setText(dLabel.getMediumLabel());
+                label.setText(dLabel.getMediumWeekLabel());
             }
 
         } else if (height <= LABEL_SIZE_MEDIUM) {
-            label.setText(dLabel.getSmallLabel());
+            label.setText(dLabel.getSmallWeekLabel());
             label.setMinWidth(CONPONENT_WIDTH);
         }
 
