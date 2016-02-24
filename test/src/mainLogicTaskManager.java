@@ -1,4 +1,4 @@
-package MainLogic;
+package mainLogic;
 
 import java.util.ArrayList;
 import java.util.Calendar;
