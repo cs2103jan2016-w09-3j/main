@@ -1,4 +1,4 @@
-package MainLogic;
+package mainLogic;
 
 class Converter {
 
