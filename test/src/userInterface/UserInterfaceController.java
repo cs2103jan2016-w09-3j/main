@@ -2,7 +2,6 @@ package userInterface;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
 
 import entity.Task;
@@ -12,17 +11,31 @@ import javafx.stage.Stage;
 
 public class UserInterfaceController {
 
+    private final static int CALENDAR_VIEW = 0;
+    private final static int TASK_VIEW = 1;
+    private final static int DETAILED_VIEW = 2;
+
     private Stage _parentStage;
     private TaskViewUserInterface _taskViewInterface;
     private DescriptionComponent _descriptionComponent;
     private DetailComponent _detailComponent;
     private FloatingBarViewUserInterface _floatingBarComponent;
+    private Rectangle2D _screenBounds;
+    private boolean _fixedSize;
+    private int _currentView = TASK_VIEW;
 
     public UserInterfaceController(Stage primaryStage) {
         _parentStage = primaryStage;
     }
 
-    public void initializeInterface(Rectangle2D _screenBounds, boolean _fixedSize) {
+    public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize) {
+        this._screenBounds = screenBounds;
+        this._fixedSize = fixedSize;
+        initializeTaskView();
+        show();
+    }
+
+    public void initializeTaskView() {
         _taskViewInterface = new TaskViewUserInterface(_parentStage, _screenBounds, _fixedSize);
         _descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
         _floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
@@ -32,14 +45,25 @@ public class UserInterfaceController {
     }
 
     public void show() {
-        _taskViewInterface.show();
-        _descriptionComponent.show();
-        _floatingBarComponent.show();
-        _detailComponent.show();
+        if (_currentView == TASK_VIEW) {
+            _taskViewInterface.show();
+            _descriptionComponent.show();
+            _floatingBarComponent.show();
+            _detailComponent.show();
+        }else if (_currentView == DETAILED_VIEW) {
+            _taskViewInterface.show();
+            _descriptionComponent.show();
+            _floatingBarComponent.show();
+            _detailComponent.show();
+        }
     }
 
-    int selectedStartIndex;
-    int selectedEndIndex;
+    public void destory() {
+        _taskViewInterface.destoryStage();
+        _descriptionComponent.destoryStage();
+        _floatingBarComponent.destoryStage();
+        _detailComponent.destoryStage();
+    }
 
     public void update(int value) {
         _taskViewInterface.update(value);
@@ -54,6 +78,32 @@ public class UserInterfaceController {
         _descriptionComponent.updateTranslateY(value);
     }
 
+    public void changeView(int value) {
+        int view = _currentView + value;
+        switch (view) {
+            case CALENDAR_VIEW : {
+                _currentView = view;
+                break;
+            }
+            case TASK_VIEW : {
+                _currentView = view;
+                destory();
+                initializeTaskView();
+                show();
+                break;
+            }
+            case DETAILED_VIEW : {
+                _currentView = view;
+                destory();
+                initializeTaskView();
+                show();
+                break;
+            }
+            default :
+                break;
+        }
+    }
+
     public void move(int value) {
         if (value > 0) {
             double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() + 50;
@@ -62,7 +112,7 @@ public class UserInterfaceController {
         } else {
             double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() - 50;
             _taskViewInterface.updateTranslateY(t);
-             _descriptionComponent.updateTranslateY(t);
+            _descriptionComponent.updateTranslateY(t);
         }
     }
 

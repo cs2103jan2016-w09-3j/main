@@ -72,4 +72,8 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 
     }
 
+    public void destoryStage() {
+        _stage.close();
+    }
+
 }

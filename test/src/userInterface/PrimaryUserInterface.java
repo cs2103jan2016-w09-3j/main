@@ -54,7 +54,6 @@ public class PrimaryUserInterface extends Application{
         initializeControls();
         initializePrimaryStage(primaryStage);
         initializeUiController(primaryStage);
-        showUserInterface();
         _primaryStage.requestFocus();
     }
 
@@ -66,6 +65,7 @@ public class PrimaryUserInterface extends Application{
         Scene primaryScene = new Scene(initializeRootLayout(), COMMAND_BAR_WIDTH, COMMAND_BAR_HEIGTH);
         primaryScene.getStylesheets().add(STYLE_SHEET);
         primaryStage.setScene(primaryScene);
+        _primaryStage.show();
     }
 
     private BorderPane initializeRootLayout() {
@@ -80,11 +80,6 @@ public class PrimaryUserInterface extends Application{
     private void initializeUiController(Stage primaryStage) {
         uiController = new UserInterfaceController(primaryStage);
         uiController.initializeInterface(_screenBounds, _fixedSize);
-    }
-
-    private void showUserInterface() {
-        _primaryStage.show();
-        uiController.show();
     }
 
     public void initializeControls() {
@@ -115,6 +110,14 @@ public class PrimaryUserInterface extends Application{
         if (event.getCode().compareTo(KeyCode.UP) == 0 && event.isControlDown() && !event.isShiftDown()) {
             uiController.update(-1);
         }
+        
+        if (event.getCode().compareTo(KeyCode.RIGHT) == 0 && event.isControlDown() && !event.isShiftDown()) {
+            uiController.changeView(1);
+        }
+        if (event.getCode().compareTo(KeyCode.LEFT) == 0 && event.isControlDown() && !event.isShiftDown()) {
+            uiController.changeView(-1);
+        }
+        _primaryStage.requestFocus();
     }
     
 }

@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
-public class DescriptionComponent {
+public class DescriptionComponent implements ViewInterface {
 
     static final int CONPONENT_WIDTH = 50;
     static final int CONPONENT_RIGHT_MARGIN = 0;
@@ -180,6 +180,13 @@ public class DescriptionComponent {
 
     public GridPane getMainVBox() {
         return _mainVbox;
+    }
+
+    public void update(int value) {
+    }
+
+    public void destoryStage() {
+        _stage.close();
     }
 
 }
