@@ -1,4 +1,4 @@
-package DateParser;
+package dateParser;
 import java.util.Date;
 import java.util.List;
 
