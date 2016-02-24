@@ -122,7 +122,7 @@ public class TaskViewUserInterface implements ViewInterface {
     public void buildComponent(ArrayList<Task> workingList) {
         this.workingList = workingList;
         _individualItemWidth = _stageWidth;
-        int workingIndex = 30; // getWorkingIndex(); when qy implements
+        int workingIndex = 1; // getWorkingIndex(); when qy implements
         int startIndex = 0;
         int endIndex = workingList.size() - 1;
         if (workingIndex - THRESHOLD > startIndex) {
@@ -131,6 +131,8 @@ public class TaskViewUserInterface implements ViewInterface {
         if (workingIndex + THRESHOLD < endIndex) {
             endIndex = workingIndex + THRESHOLD;
         }
+
+        VBox weekBox = createWeekParent();
         VBox topBox = createDayParent(workingList.get(startIndex));
         HBox item = buildIndividualTask(workingList.get(startIndex));
         topBox.getChildren().add(item);
@@ -139,35 +141,59 @@ public class TaskViewUserInterface implements ViewInterface {
         if (startIndex < workingIndex) {
             transLationY += ITEM_HEIGHT;
         }
-
         for (int i = startIndex + 1; i <= endIndex; i++) {
-            Label dateLabel = checkSameDay(workingList.get(i - 1), workingList.get(i));
-            if (dateLabel != null) {
-                _mainVbox.getChildren().add(topBox);
+            if (!isSameWeek(workingList.get(i - 1), workingList.get(i))) {
+                weekBox.getChildren().add(topBox);
+                weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
+                _mainVbox.getChildren().add(weekBox);
+                weekBox = createWeekParent();
                 topBox = createDayParent(workingList.get(i));
                 if (i < workingIndex) {
                     transLationY += LABEL_HEIGHT;
                 }
-
+            } else {
+                if (!isSameDay(workingList.get(i - 1), workingList.get(i))) {
+                    weekBox.getChildren().add(topBox);
+                    weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
+                    topBox = createDayParent(workingList.get(i));
+                    if (i < workingIndex) {
+                        transLationY += LABEL_HEIGHT;
+                    }
+                }
             }
             topBox.getChildren().add(buildIndividualTask(workingList.get(i)));
             topBox.setMinHeight(topBox.getMinHeight() + ITEM_HEIGHT);
             if (i < workingIndex) {
                 transLationY += ITEM_HEIGHT;
             }
+
         }
-        _mainVbox.getChildren().add(topBox);
+        weekBox.getChildren().add(topBox);
+        weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
+        _mainVbox.getChildren().add(weekBox);
+
         _startIndex = startIndex;
         _endIndex = endIndex;
         _selectedIndex = workingIndex;
+
     }
 
-    public static VBox createDayParent(Task task) {
+    public VBox createWeekParent() {
+        VBox vbox = new VBox();
+        vbox.setId("cssTaskViewWeek");
+        vbox.setMinWidth(_stageWidth);
+        vbox.setMinHeight(0);
+        return vbox;
+    }
+
+    public VBox createDayParent(Task task) {
         VBox vbox = new VBox();
         vbox.setAlignment(Pos.CENTER);
-        vbox.setId("cssTaskViewDay");
+        // vbox.setId("cssTaskViewDay");
         vbox.setMinHeight(LABEL_HEIGHT);
-        Label dateLabel = new Label("task.getDueDate() and pass to ten to prase out Today/Tmr/watever");
+        // Label dateLabel = new Label("task.getDueDate() and pass to ten to
+        // prase out Today/Tmr/watever");
+        Label dateLabel = new Label(Integer.toString(task.getDueDate().get(Calendar.WEEK_OF_MONTH)));
         dateLabel.setMinHeight(TaskViewUserInterface.LABEL_HEIGHT);
         dateLabel.setFont(new Font(PrimaryUserInterface.DEFAULT_FONT, TaskViewUserInterface.LABEL_FONT_SIZE));
         vbox.getChildren().add(dateLabel);
@@ -215,68 +241,113 @@ public class TaskViewUserInterface implements ViewInterface {
         {
             if (_endIndex + 1 < workingList.size()) {
                 if (_selectedIndex - _startIndex >= THRESHOLD) {
-                    String item = "#grid" + String.valueOf(_startIndex);
-                    GridPane gp = (GridPane) _mainVbox.lookup(item);
-                    VBox gpParent = (VBox) gp.getParent().getParent();
-                    if (gpParent.getChildren().size() == 2) {
-                        _mainVbox.getChildren().remove(gpParent);
-                        transLationY = transLationY - LABEL_HEIGHT - ITEM_HEIGHT;
-                    } else {
-                        gpParent.getChildren().remove(1);
-                        gpParent.setMinHeight(gpParent.getMinHeight() - ITEM_HEIGHT);
-                        transLationY = transLationY - ITEM_HEIGHT;
-                    }
-                    _gridPanes.remove(0);
-                    _startIndex += 1;
+                    removeFirstTask();
                 }
-                Label labelForTask = checkSameDay(workingList.get(_endIndex), workingList.get(_endIndex + 1));
-                if (labelForTask == null) {
-                    GridPane gp = _gridPanes.get(_gridPanes.size() - 1);
-                    VBox gpParent = (VBox) gp.getParent().getParent();
-                    gpParent.getChildren().add(buildIndividualTask(workingList.get(_endIndex + 1)));
-                    gpParent.setMinHeight(gpParent.getMinHeight() + ITEM_HEIGHT);
-                } else {
-                    VBox vbox = createDayParent(workingList.get(_endIndex + 1));
-                    vbox.getChildren().add(buildIndividualTask(workingList.get(_endIndex + 1)));
-                    vbox.setMinHeight(vbox.getMinHeight() + ITEM_HEIGHT);
-                    _mainVbox.getChildren().add(vbox);
-                }
-                _endIndex = _endIndex + 1;
+                addLastItem();
             }
         } else if (value < 0) {
             if (_startIndex > 0) {
                 if (_endIndex - _selectedIndex >= THRESHOLD) {
-                    String item = "#grid" + String.valueOf(_endIndex);
-                    GridPane gp = (GridPane) _mainVbox.lookup(item);
-                    VBox gpParent = (VBox) gp.getParent().getParent();
-                    if (gpParent.getChildren().size() == 2) {
-                        _mainVbox.getChildren().remove(gpParent);
-                    } else {
-                        gpParent.getChildren().remove(gpParent.getChildren().size() - 1);
-                        gpParent.setMinHeight(gpParent.getMinHeight() - ITEM_HEIGHT);
-                    }
-                    _gridPanes.remove(_gridPanes.size() - 1);
-                    _endIndex -= 1;
+                    removeLastTask();
                 }
-                Label labelForTask = checkSameDay(workingList.get(_startIndex),
-                        workingList.get(_startIndex - 1));
-                if (labelForTask == null) {
-                    GridPane gp = _gridPanes.get(0);
-                    VBox gpParent = (VBox) gp.getParent().getParent();
-                    gpParent.getChildren().add(1, buildIndividualTask(workingList.get(_startIndex - 1)));
-                    gpParent.setMinHeight(gpParent.getMinHeight() + ITEM_HEIGHT);
-                } else {
-                    VBox vbox = createDayParent(workingList.get(_startIndex - 1));
-                    vbox.getChildren().add(buildIndividualTask(workingList.get(_startIndex - 1)));
-                    vbox.setMinHeight(vbox.getMinHeight() + ITEM_HEIGHT);
-                    _mainVbox.getChildren().add(0, vbox);
-                    transLationY += LABEL_HEIGHT;
-                }
-                transLationY += ITEM_HEIGHT;
-                _gridPanes.add(0, _gridPanes.remove(_gridPanes.size() - 1));
-                _startIndex = _startIndex - 1;
+                addFirstItem();
             }
         }
+    }
+
+    public void removeFirstTask() {
+        String item = "#grid" + String.valueOf(_startIndex);
+        GridPane gp = (GridPane) _mainVbox.lookup(item);
+        VBox gpDayParent = (VBox) gp.getParent().getParent();
+        VBox gpWeekParent = (VBox) gpDayParent.getParent();
+        if (gpDayParent.getChildren().size() == 2) {
+            gpWeekParent.getChildren().remove(gpDayParent);
+            gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - gpDayParent.getMinHeight());
+            if (gpWeekParent.getChildren().size() == 0) {
+                _mainVbox.getChildren().remove(gpWeekParent);
+            }
+            transLationY = transLationY - LABEL_HEIGHT - ITEM_HEIGHT;
+        } else {
+            gpDayParent.getChildren().remove(1);
+            gpDayParent.setMinHeight(gpDayParent.getMinHeight() - ITEM_HEIGHT);
+            gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - ITEM_HEIGHT);
+            transLationY = transLationY - ITEM_HEIGHT;
+        }
+        _gridPanes.remove(0);
+        _startIndex += 1;
+    }
+
+    public void removeLastTask() {
+        String item = "#grid" + String.valueOf(_endIndex);
+        GridPane gp = (GridPane) _mainVbox.lookup(item);
+        VBox gpDayParent = (VBox) gp.getParent().getParent();
+        VBox gpWeekParent = (VBox) gpDayParent.getParent();
+        if (gpDayParent.getChildren().size() == 2) {
+            gpWeekParent.getChildren().remove(gpDayParent);
+            gpWeekParent.setMinHeight(gpWeekParent.getMinWidth() - gpDayParent.getMinHeight());
+            if (gpWeekParent.getChildren().size() == 0) {
+                _mainVbox.getChildren().remove(gpWeekParent);
+            }
+        } else {
+            gpDayParent.getChildren().remove(gpDayParent.getChildren().size() - 1);
+            gpDayParent.setMinHeight(gpDayParent.getMinHeight() - ITEM_HEIGHT);
+            gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - ITEM_HEIGHT);
+        }
+        _gridPanes.remove(_gridPanes.size() - 1);
+        _endIndex -= 1;
+    }
+
+    public void addLastItem() {
+        GridPane gp = _gridPanes.get(_gridPanes.size() - 1);
+        VBox gpDayParent = (VBox) gp.getParent().getParent();
+        VBox gpWeekParent = (VBox) gpDayParent.getParent();
+        if (isSameDay(workingList.get(_endIndex), workingList.get(_endIndex + 1))) {
+            gpDayParent.getChildren().add(buildIndividualTask(workingList.get(_endIndex + 1)));
+            gpDayParent.setMinHeight(gpDayParent.getMinHeight() + ITEM_HEIGHT);
+            gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() + ITEM_HEIGHT);
+        } else {
+            VBox weekParent = null;
+            if (isSameWeek(workingList.get(_endIndex), workingList.get(_endIndex + 1))) {
+                weekParent = (VBox) gp.getParent().getParent().getParent();
+            } else {
+                weekParent = createWeekParent();
+                _mainVbox.getChildren().add(weekParent);
+            }
+            VBox vbox = createDayParent(workingList.get(_endIndex + 1));
+            vbox.getChildren().add(buildIndividualTask(workingList.get(_endIndex + 1)));
+            vbox.setMinHeight(vbox.getMinHeight() + ITEM_HEIGHT);
+            weekParent.setMinHeight(weekParent.getMinHeight() + vbox.getMinHeight());
+            weekParent.getChildren().add(vbox);
+        }
+        _endIndex = _endIndex + 1;
+    }
+
+    public void addFirstItem() {
+        GridPane gp = _gridPanes.get(0);
+        VBox gpDayParent = (VBox) gp.getParent().getParent();
+        VBox gpWeekParent = (VBox) gpDayParent.getParent();
+        if (isSameDay(workingList.get(_startIndex), workingList.get(_startIndex - 1))) {
+            gpDayParent.getChildren().add(1, buildIndividualTask(workingList.get(_startIndex - 1)));
+            gpDayParent.setMinHeight(gpDayParent.getMinHeight() + ITEM_HEIGHT);
+            gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() + ITEM_HEIGHT);
+        } else {
+            VBox weekBox = null;
+            if (isSameWeek(workingList.get(_startIndex), workingList.get(_startIndex - 1))) {
+                weekBox = (VBox) gpDayParent.getParent();
+            } else {
+                weekBox = createWeekParent();
+                _mainVbox.getChildren().add(0, weekBox);
+            }
+            VBox vbox = createDayParent(workingList.get(_startIndex - 1));
+            vbox.getChildren().add(buildIndividualTask(workingList.get(_startIndex - 1)));
+            vbox.setMinHeight(vbox.getMinHeight() + ITEM_HEIGHT);
+            weekBox.getChildren().add(0, vbox);
+            weekBox.setMinHeight(weekBox.getMinHeight() + vbox.getMinHeight());
+            transLationY += LABEL_HEIGHT;
+        }
+        transLationY += ITEM_HEIGHT;
+        _gridPanes.add(0, _gridPanes.remove(_gridPanes.size() - 1));
+        _startIndex = _startIndex - 1;
     }
 
     public boolean setItemSelected(int value) {
@@ -293,12 +364,12 @@ public class TaskViewUserInterface implements ViewInterface {
 
     public void updateTranslationY(int direction, int selectedIndex, int previousSelected) {
         if (direction > 0) {
-            if (checkSameDay(workingList.get(selectedIndex), workingList.get(previousSelected)) != null) {
+            if (!isSameDay(workingList.get(selectedIndex), workingList.get(previousSelected))) {
                 transLationY = transLationY + LABEL_HEIGHT;
             }
             transLationY += ITEM_HEIGHT;
         } else {
-            if (checkSameDay(workingList.get(selectedIndex), workingList.get(previousSelected)) != null) {
+            if (!isSameDay(workingList.get(selectedIndex), workingList.get(previousSelected))) {
                 transLationY = transLationY - LABEL_HEIGHT;
             }
             transLationY -= ITEM_HEIGHT;
@@ -313,20 +384,38 @@ public class TaskViewUserInterface implements ViewInterface {
         _mainVbox.setTranslateY(itemPosY);
     }
 
+    public static Label createLabelForDay(Task task) {
+        return new Label(task.getDueDate().toString());
+    }
+
     // get from logic side
-    public static Label checkSameDay(Task task1, Task task2) {
+    public static boolean isSameDay(Task task1, Task task2) {
         if (task1 == null) { // new day
-            return new Label(task2.getDueDate().toString());
-        } else {
-            if (task1.getDueDate().get(Calendar.YEAR) == task2.getDueDate().get(Calendar.YEAR)) {
-                if (task1.getDueDate().get(Calendar.MONTH) == task2.getDueDate().get(Calendar.MONTH)) {
-                    if (task1.getDueDate().get(Calendar.DATE) == task2.getDueDate().get(Calendar.DATE)) {
-                        return null;
-                    }
+            return false;
+        }
+        if (task1.getDueDate().get(Calendar.YEAR) == task2.getDueDate().get(Calendar.YEAR)) {
+            if (task1.getDueDate().get(Calendar.MONTH) == task2.getDueDate().get(Calendar.MONTH)) {
+                if (task1.getDueDate().get(Calendar.DATE) == task2.getDueDate().get(Calendar.DATE)) {
+                    return true;
                 }
             }
         }
-        return new Label(task2.getDueDate().toString());
+        return false;
+    }
+
+    public static boolean isSameWeek(Task task1, Task task2) {
+        if (task1 == null) {
+            return false;
+        }
+        if (task1.getDueDate().get(Calendar.YEAR) == task2.getDueDate().get(Calendar.YEAR)) {
+            if (task1.getDueDate().get(Calendar.MONTH) == task2.getDueDate().get(Calendar.MONTH)) {
+                if (task1.getDueDate().get(Calendar.WEEK_OF_MONTH) == task2.getDueDate()
+                        .get(Calendar.WEEK_OF_MONTH)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public ArrayList<DescriptionLabel> rebuildDescriptionLabels() {
@@ -335,7 +424,6 @@ public class TaskViewUserInterface implements ViewInterface {
         for (int i = 0; i < _mainVbox.getChildren().size(); i++) {
             VBox vbox = (VBox) _mainVbox.getChildren().get(i);
             int index = getSelectedGridPaneIndex(vbox);
-
             DescriptionLabel dLabel = new DescriptionLabel(workingList.get(index));
             dLabel.setHeight(vbox.getMinHeight());
             if (vbox == hbox.getParent()) {
@@ -347,7 +435,8 @@ public class TaskViewUserInterface implements ViewInterface {
     }
 
     public int getSelectedGridPaneIndex(VBox vbox) {
-        HBox parentHbox = (HBox) vbox.getChildren().get(1);
+        VBox parentDay = (VBox) vbox.getChildren().get(0);
+        HBox parentHbox = (HBox) parentDay.getChildren().get(1);
         GridPane gp = (GridPane) parentHbox.getChildren().get(0);
         String id = gp.getId();
         return Integer.parseInt(id.substring(4));

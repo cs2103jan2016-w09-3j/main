@@ -31,6 +31,11 @@
     -fx-background-insets: 0, 1 1 1 1;
 }
 
+#cssTaskViewWeek{
+	-fx-background-color: blue, white;
+    -fx-background-insets: 0, 1 1 1 1;
+}
+
 #cssTaskViewVerticleBoxSelected
 {
 	-fx-background-color: blue, white;
