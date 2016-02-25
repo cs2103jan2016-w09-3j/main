@@ -30,6 +30,7 @@ public class DescriptionComponent implements ViewInterface {
 
     private GridPane _mainVbox;
     private double _translationY = 0;
+    private int _currentView;
 
     public DescriptionComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize) {
         initializeVaribles(screenBounds, fixedSize);
@@ -78,10 +79,10 @@ public class DescriptionComponent implements ViewInterface {
     }
 
     public void initializeContent(ArrayList<DescriptionLabel> descriptionLabels) {
-        buildComponent(descriptionLabels, 0);
     }
 
-    public void buildComponent(ArrayList<DescriptionLabel> descriptionLabels, int selectedIndex) {
+    public void buildComponent(ArrayList<DescriptionLabel> descriptionLabels, int view) {
+        _currentView = view;
         _mainVbox.getChildren().clear();
         double totalBuildedHeight = 0;
         for (int i = 0; i < descriptionLabels.size(); i++) {
@@ -102,11 +103,12 @@ public class DescriptionComponent implements ViewInterface {
         double posYStart = _translationY + totalBuildedHeight;
         double posYEnd = posYStart + dLabel.getHeight();
 
-        calculateLabelHeight(posYStart, posYEnd, vbox, dLabel);
+        createLabelBaseOnHeight(posYStart, posYEnd, vbox, dLabel);
         return vbox;
     }
 
-    public void calculateLabelHeight(double posYStart, double posYEnd, VBox vbox, DescriptionLabel dLabel) {
+    public void createLabelBaseOnHeight(double posYStart, double posYEnd, VBox vbox,
+            DescriptionLabel dLabel) {
         Label main = new Label();
         Label extra = new Label();
         if ((posYStart >= 0 && posYStart < _stageHeight) || (posYEnd <= _stageHeight && posYEnd > 0)) {
@@ -141,6 +143,38 @@ public class DescriptionComponent implements ViewInterface {
     }
 
     public Label buildLabelBaseOnHeight(Label label, DescriptionLabel dLabel, double height) {
+        if (_currentView == UserInterfaceController.TASK_VIEW) {
+            return setLabelForTaskView(label, dLabel, height);
+        } else {
+            return setLabelForDetailedView(label, dLabel, height);
+        }
+    }
+
+    private Label setLabelForDetailedView(Label label, DescriptionLabel dLabel, double height) {
+        if (height > LABEL_SIZE_MEDIUM) {
+
+            label.setMinHeight(CONPONENT_WIDTH);
+            label.setMinWidth(height);
+            label.setRotate(270);
+            double translationX = -(height / 2) + CONPONENT_WIDTH / 2;
+            double translationY = (height / 2) - CONPONENT_WIDTH / 2;
+            label.setTranslateX(translationX);
+            label.setTranslateY(translationY);
+            if (height > LABEL_SIZE_LARGE) {
+                label.setText(dLabel.getFullDayLabel());
+            } else {
+                label.setText(dLabel.getMediumDayLabel());
+            }
+
+        } else if (height <= LABEL_SIZE_MEDIUM) {
+            label.setText(dLabel.getSmallDayLabel());
+            label.setMinWidth(CONPONENT_WIDTH);
+        }
+        label.setAlignment(Pos.CENTER);
+        return label;
+    }
+    
+    private Label setLabelForTaskView(Label label, DescriptionLabel dLabel, double height) {
         if (height > LABEL_SIZE_MEDIUM) {
 
             label.setMinHeight(CONPONENT_WIDTH);
@@ -160,7 +194,6 @@ public class DescriptionComponent implements ViewInterface {
             label.setText(dLabel.getSmallWeekLabel());
             label.setMinWidth(CONPONENT_WIDTH);
         }
-
         label.setAlignment(Pos.CENTER);
         return label;
     }

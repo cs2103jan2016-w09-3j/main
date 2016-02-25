@@ -503,12 +503,43 @@ public class TaskViewUserInterface implements ViewInterface {
         return descriptionLables;
     }
 
+    public ArrayList<DescriptionLabel> rebuildDescriptionLabelsForDay() {
+        ArrayList<DescriptionLabel> descriptionLables = new ArrayList<DescriptionLabel>();
+        HBox hbox = (HBox) getSelectedGridPane().getParent();
+        int countOfItems = 0;
+        for (int i = 0; i < _mainVbox.getChildren().size(); i++) {
+            VBox weekBox = (VBox) _mainVbox.getChildren().get(i);
+            for (int k = 0; k < weekBox.getChildren().size(); k++) {
+                VBox dayParent = (VBox) weekBox.getChildren().get(k);
+                TaskEntity firstTaskInWeek = workingList.get(_startIndex + countOfItems);
+                int numberOfTaskInDay = countNumberOfTaskInDay(dayParent);
+                countOfItems+=numberOfTaskInDay;
+                DescriptionLabel dLabel = new DescriptionLabel(firstTaskInWeek);
+                dLabel.setHeight(dayParent.getMinHeight());
+                if (dayParent.getChildren().contains(hbox)) {
+                    dLabel.setSelected();
+                }
+                descriptionLables.add(dLabel);
+            }
+        }
+        return descriptionLables;
+    }
+
     public int countNumberOfTaskInWeek(VBox weekBox) {
         int noOfTask = 0;
         for (int i = 0; i < weekBox.getChildren().size(); i++) {
             VBox dayBox = (VBox) weekBox.getChildren().get(i);
-            noOfTask += dayBox.getChildren().size() - 1;// -1 cause of label for
-                                                        // day
+            noOfTask += countNumberOfTaskInDay(dayBox);
+        }
+        return noOfTask;
+    }
+
+    public int countNumberOfTaskInDay(VBox dayBox) {
+        int noOfTask = 0;
+        for (int i = 0; i < dayBox.getChildren().size(); i++) {
+            if (dayBox.getChildren().get(i) instanceof HBox) {
+                noOfTask++;
+            }
         }
         return noOfTask;
     }

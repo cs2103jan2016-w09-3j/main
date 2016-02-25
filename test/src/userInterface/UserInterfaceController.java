@@ -26,9 +26,11 @@ public class UserInterfaceController {
     private FloatingBarViewUserInterface _floatingBarComponent;
     private Rectangle2D _screenBounds;
     private boolean _fixedSize;
-    private int _currentView = TASK_VIEW;
 
+    // var for animation and changing views;
+    private int _currentView = TASK_VIEW;
     private boolean _isDoneTranslatingToOtherView;
+    private Thread _threadToAnimate;
 
     public UserInterfaceController(Stage primaryStage) {
         _parentStage = primaryStage;
@@ -75,8 +77,15 @@ public class UserInterfaceController {
         _taskViewInterface.update(value);
         _taskViewInterface.setItemSelected(value);
         translateComponentsY(_taskViewInterface.getTranslationY());
-        _descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), 0);
+        updateDescriptionComponent();
+    }
 
+    public void updateDescriptionComponent() {
+        if (_currentView == TASK_VIEW) {
+            _descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
+        } else if (_currentView == DETAILED_VIEW) {
+            _descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(), DETAILED_VIEW);
+        }
     }
 
     public void translateComponentsY(double value) {
@@ -99,28 +108,26 @@ public class UserInterfaceController {
                             if (_currentView == TASK_VIEW || _currentView == DETAILED_VIEW) {
                                 if (_currentView == DETAILED_VIEW) {
                                     _isDoneTranslatingToOtherView = _taskViewInterface.isAtDetailedView(1);
+                                    _descriptionComponent.buildComponent(
+                                            _taskViewInterface.rebuildDescriptionLabelsForDay(),DETAILED_VIEW);
                                 } else {
                                     _isDoneTranslatingToOtherView = _taskViewInterface.isAtTaskView(-1);
+                                    _descriptionComponent.buildComponent(
+                                            _taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
                                 }
-                                _descriptionComponent.buildComponent(
-                                        _taskViewInterface.rebuildDescriptionLabelsForWeek(), 0);
                                 translateComponentsY(_taskViewInterface.getTranslationY());
                             }
                         }
                     });
                 } while (!_isDoneTranslatingToOtherView);
-
                 return null;
             }
         };
         return animateChangeView;
     }
 
-    Thread t;
-
     public void changeView(int value) {
         int view = _currentView + value;
-        System.out.println(view);
         switch (view) {
             case CALENDAR_VIEW : {
                 _currentView = view;
@@ -129,20 +136,23 @@ public class UserInterfaceController {
             case TASK_VIEW : {
                 _currentView = view;
                 _taskViewInterface.setView(_currentView);
-                t = new Thread(createNewTaskToAnimate());
-                t.start();
+                startThreadToAnimate();
                 break;
             }
             case DETAILED_VIEW : {
                 _currentView = view;
                 _taskViewInterface.setView(_currentView);
-                t = new Thread(createNewTaskToAnimate());
-                t.start();
+                startThreadToAnimate();
                 break;
             }
             default :
                 break;
         }
+    }
+
+    public void startThreadToAnimate() {
+        _threadToAnimate = new Thread(createNewTaskToAnimate());
+        _threadToAnimate.start();
     }
 
     public void move(int value) {

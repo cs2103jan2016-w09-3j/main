@@ -10,6 +10,12 @@ public class DescriptionLabel {
     private TaskEntity _endTask;
     private boolean selected = false;
 
+    public DescriptionLabel(TaskEntity startTask) {
+        this._startTask = startTask;
+        this._endTask = null;
+        _height = 0;
+    }
+    
     public DescriptionLabel(TaskEntity startTask, TaskEntity endTask) {
         this._startTask = startTask;
         this._endTask = endTask;
@@ -45,13 +51,13 @@ public class DescriptionLabel {
     }
 
     public String getFullDayLabel() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd EEEE");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM EEEEE");
         Calendar c = _startTask.getDueDate();
         return sdf.format(c.getTime());
     }
 
     public String getMediumDayLabel() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd EEE");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM EEE");
         Calendar c = _startTask.getDueDate();
         return sdf.format(c.getTime());
     }
