@@ -3,17 +3,17 @@ package mainLogic;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import entity.Task;
+import entity.TaskEntity;
 
 class TaskManager {
-    private static ArrayList<Task> tasks;
+    private static ArrayList<TaskEntity> taskEntities;
 
     public static boolean delete(int index) {
-        if (index + 1 > tasks.size()) {
+        if (index + 1 > taskEntities.size()) {
             return false;
         }
 
-        tasks.remove(index);
+        taskEntities.remove(index);
         return true;
     }
 
@@ -39,14 +39,14 @@ class TaskManager {
      *         - False if delete operation failed
      */
     public static boolean delete(int startIndex, int endIndex) {
-        if (endIndex + 1 > tasks.size()) {
+        if (endIndex + 1 > taskEntities.size()) {
             return false;
         } else if (startIndex > endIndex) {
             return false;
         }
 
         for (int i = 0; i <= endIndex - startIndex; i++) {
-            tasks.remove(startIndex);
+            taskEntities.remove(startIndex);
         }
         return true;
     }
@@ -64,9 +64,9 @@ class TaskManager {
         return delete(Converter.convertBase36ToDec(startIndex), Converter.convertBase36ToDec(endIndex));
     }
 
-    public static ArrayList<Task> undo() {
+    public static ArrayList<TaskEntity> undo() {
         // TODO
-        return new ArrayList<Task>();
+        return new ArrayList<TaskEntity>();
     }
 
     /**
@@ -79,7 +79,7 @@ class TaskManager {
      *         False - If either the dates are different, or if either task is
      *         floating
      */
-    public static boolean checkSameDate(Task firstTask, Task secondTask) {
+    public static boolean checkSameDate(TaskEntity firstTask, TaskEntity secondTask) {
         Calendar firstDate;
         if (firstTask.isFloating()) {
             return false;

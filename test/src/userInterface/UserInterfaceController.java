@@ -3,8 +3,12 @@ package userInterface;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import entity.Task;
+import entity.TaskEntity;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -12,8 +16,8 @@ import javafx.stage.Stage;
 public class UserInterfaceController {
 
     private final static int CALENDAR_VIEW = 0;
-    private final static int TASK_VIEW = 1;
-    private final static int DETAILED_VIEW = 2;
+    final static int TASK_VIEW = 1;
+    final static int DETAILED_VIEW = 2;
 
     private Stage _parentStage;
     private TaskViewUserInterface _taskViewInterface;
@@ -23,6 +27,8 @@ public class UserInterfaceController {
     private Rectangle2D _screenBounds;
     private boolean _fixedSize;
     private int _currentView = TASK_VIEW;
+
+    private boolean _isDoneTranslatingToOtherView;
 
     public UserInterfaceController(Stage primaryStage) {
         _parentStage = primaryStage;
@@ -50,7 +56,7 @@ public class UserInterfaceController {
             _descriptionComponent.show();
             _floatingBarComponent.show();
             _detailComponent.show();
-        }else if (_currentView == DETAILED_VIEW) {
+        } else if (_currentView == DETAILED_VIEW) {
             _taskViewInterface.show();
             _descriptionComponent.show();
             _floatingBarComponent.show();
@@ -69,7 +75,7 @@ public class UserInterfaceController {
         _taskViewInterface.update(value);
         _taskViewInterface.setItemSelected(value);
         translateComponentsY(_taskViewInterface.getTranslationY());
-        _descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabels(), 0);
+        _descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), 0);
 
     }
 
@@ -78,8 +84,43 @@ public class UserInterfaceController {
         _descriptionComponent.updateTranslateY(value);
     }
 
+    public Task<Void> createNewTaskToAnimate() {
+        _isDoneTranslatingToOtherView = false;
+        Task<Void> animateChangeView = new Task<Void>() {
+            @Override
+            public Void call() {
+                do {
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                    }
+                    Platform.runLater(new Runnable() {
+                        public void run() {
+                            if (_currentView == TASK_VIEW || _currentView == DETAILED_VIEW) {
+                                if (_currentView == DETAILED_VIEW) {
+                                    _isDoneTranslatingToOtherView = _taskViewInterface.isAtDetailedView(1);
+                                } else {
+                                    _isDoneTranslatingToOtherView = _taskViewInterface.isAtTaskView(-1);
+                                }
+                                _descriptionComponent.buildComponent(
+                                        _taskViewInterface.rebuildDescriptionLabelsForWeek(), 0);
+                                translateComponentsY(_taskViewInterface.getTranslationY());
+                            }
+                        }
+                    });
+                } while (!_isDoneTranslatingToOtherView);
+
+                return null;
+            }
+        };
+        return animateChangeView;
+    }
+
+    Thread t;
+
     public void changeView(int value) {
         int view = _currentView + value;
+        System.out.println(view);
         switch (view) {
             case CALENDAR_VIEW : {
                 _currentView = view;
@@ -87,16 +128,16 @@ public class UserInterfaceController {
             }
             case TASK_VIEW : {
                 _currentView = view;
-                destory();
-                initializeTaskView();
-                show();
+                _taskViewInterface.setView(_currentView);
+                t = new Thread(createNewTaskToAnimate());
+                t.start();
                 break;
             }
             case DETAILED_VIEW : {
                 _currentView = view;
-                destory();
-                initializeTaskView();
-                show();
+                _taskViewInterface.setView(_currentView);
+                t = new Thread(createNewTaskToAnimate());
+                t.start();
                 break;
             }
             default :
@@ -117,7 +158,7 @@ public class UserInterfaceController {
     }
 
     // deetle this method after qy implement.
-    public static Label checkSameDay(Task task1, Task task2) {
+    public static Label checkSameDay(TaskEntity task1, TaskEntity task2) {
         if (task1 == null) { // new day
             return new Label(task2.getDueDate().toString());
         } else {
@@ -133,8 +174,8 @@ public class UserInterfaceController {
     }
 
     // generate fake data.
-    public static ArrayList<Task> generateFakeData() {
-        ArrayList<Task> fakeData = new ArrayList<Task>();
+    public static ArrayList<TaskEntity> generateFakeData() {
+        ArrayList<TaskEntity> fakeData = new ArrayList<TaskEntity>();
         int k = 0;
         int day = Calendar.getInstance().get(Calendar.DATE);
         while (k < 200) {
@@ -148,7 +189,7 @@ public class UserInterfaceController {
                 for (int i = 0; i < ind; i++) {
                     String d = (k) + " - - - " + Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "/"
                             + Integer.toString(c.get(Calendar.MONTH));
-                    Task t = new Task(Integer.toString(k++), c, d);
+                    TaskEntity t = new TaskEntity(Integer.toString(k++), c, d);
                     fakeData.add(t);
                 }
             }

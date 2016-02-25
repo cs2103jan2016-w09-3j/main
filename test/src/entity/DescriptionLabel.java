@@ -6,11 +6,11 @@ import java.util.Calendar;
 public class DescriptionLabel {
 
     private double _height;
-    private Task _startTask;
-    private Task _endTask;
+    private TaskEntity _startTask;
+    private TaskEntity _endTask;
     private boolean selected = false;
 
-    public DescriptionLabel(Task startTask, Task endTask) {
+    public DescriptionLabel(TaskEntity startTask, TaskEntity endTask) {
         this._startTask = startTask;
         this._endTask = endTask;
         _height = 0;
@@ -28,12 +28,12 @@ public class DescriptionLabel {
         this._height = height;
     }
 
-    public Task getTask() {
+    public TaskEntity getTask() {
         return _startTask;
     }
 
-    public void setTask(Task task) {
-        this._startTask = task;
+    public void setTask(TaskEntity taskEntity) {
+        this._startTask = taskEntity;
     }
 
     public void setSelected() {

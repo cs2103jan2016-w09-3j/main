@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import entity.DescriptionLabel;
-import entity.Task;
+import entity.TaskEntity;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -20,10 +20,12 @@ import javafx.stage.Window;
 
 public class TaskViewUserInterface implements ViewInterface {
 
-    static final int LABEL_HEIGHT = 35;
-    static final int ITEM_HEIGHT = 30;
+    static final int TASK_VIEW_LABEL_HEIGHT = 35;
+    static final int TASK_VIEW_ITEM_HEIGHT = 30;
+    static final int DETAILED_VIEW_ITEM_HEIGHT = 90;
     static final int LABEL_FONT_SIZE = 12;
     static final int TASK_FONT_SIZE = 12;
+    static final int SELECTOR_POSITION_Y = TASK_VIEW_LABEL_HEIGHT + TASK_VIEW_ITEM_HEIGHT * 2;
 
     private static final int GAP_SIZE = 10;
     private static final int THRESHOLD = 50;
@@ -40,9 +42,11 @@ public class TaskViewUserInterface implements ViewInterface {
     private int _individualItemWidth = -1;
     private double transLationY = 0;
 
+    private int _view = UserInterfaceController.TASK_VIEW;
+
     private VBox _mainVbox; // main parent for items
     private ArrayList<GridPane> _gridPanes = new ArrayList<GridPane>();
-    private ArrayList<Task> workingList;
+    private ArrayList<TaskEntity> workingList;
 
     public TaskViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
         initializeVaribles(screenBounds, fixedSize);
@@ -116,10 +120,10 @@ public class TaskViewUserInterface implements ViewInterface {
         return _stageHeight;
     }
 
-    public void buildComponent(ArrayList<Task> workingList) {
+    public void buildComponent(ArrayList<TaskEntity> workingList) {
         this.workingList = workingList;
         _individualItemWidth = _stageWidth;
-        int workingIndex = 1; // getWorkingIndex(); when qy implements
+        int workingIndex = 50; // getWorkingIndex(); when qy implements
         int startIndex = 0;
         int endIndex = workingList.size() - 1;
         if (workingIndex - THRESHOLD > startIndex) {
@@ -134,10 +138,6 @@ public class TaskViewUserInterface implements ViewInterface {
         HBox item = buildIndividualTask(workingList.get(startIndex));
         topBox.getChildren().add(item);
         topBox.setMinHeight(topBox.getMinHeight() + item.getMinHeight());
-        transLationY += LABEL_HEIGHT;
-        if (startIndex < workingIndex) {
-            transLationY += ITEM_HEIGHT;
-        }
         for (int i = startIndex + 1; i <= endIndex; i++) {
             if (!isSameWeek(workingList.get(i - 1), workingList.get(i))) {
                 weekBox.getChildren().add(topBox);
@@ -145,26 +145,16 @@ public class TaskViewUserInterface implements ViewInterface {
                 _mainVbox.getChildren().add(weekBox);
                 weekBox = createWeekParent();
                 topBox = createDayParent(workingList.get(i));
-                if (i < workingIndex) {
-                    transLationY += LABEL_HEIGHT;
-                }
             } else {
                 if (!isSameDay(workingList.get(i - 1), workingList.get(i))) {
                     weekBox.getChildren().add(topBox);
                     weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
                     topBox = createDayParent(workingList.get(i));
-                    if (i < workingIndex) {
-                        transLationY += LABEL_HEIGHT;
-                    }
                 }
             }
             HBox itemToAdd = buildIndividualTask(workingList.get(i));
             topBox.getChildren().add(itemToAdd);
             topBox.setMinHeight(topBox.getMinHeight() + itemToAdd.getMinHeight());
-            if (i < workingIndex) {
-                transLationY += ITEM_HEIGHT;
-            }
-
         }
         weekBox.getChildren().add(topBox);
         weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
@@ -184,12 +174,12 @@ public class TaskViewUserInterface implements ViewInterface {
         return vbox;
     }
 
-    public VBox createDayParent(Task task) {
+    public VBox createDayParent(TaskEntity taskEntity) {
         VBox vbox = new VBox();
-        vbox.setMinHeight(LABEL_HEIGHT);
+        vbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT);
         // vbox.setId(calculateVboxCssStyle(task.getDueDate()));
-        Label dateLabel = new Label(getStringOfDate(task.getDueDate()));
-        dateLabel.setMinHeight(TaskViewUserInterface.LABEL_HEIGHT);
+        Label dateLabel = new Label(getStringOfDate(taskEntity.getDueDate()));
+        dateLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
         dateLabel.setFont(new Font(PrimaryUserInterface.DEFAULT_FONT, TaskViewUserInterface.LABEL_FONT_SIZE));
         vbox.getChildren().add(dateLabel);
         VBox.setMargin(dateLabel, new Insets(0, 0, 0, 20));
@@ -222,31 +212,44 @@ public class TaskViewUserInterface implements ViewInterface {
         return c.getTime().toString();
     }
 
-    public HBox buildIndividualTask(Task task) {
+    public HBox buildIndividualTask(TaskEntity taskEntity) {
         HBox hbox = new HBox();
-        GridPane gridPane = createGridPaneForTask(task);
+        GridPane gridPane = createGridPaneForTask(taskEntity);
         hbox.setMinHeight(gridPane.getMinHeight());
         _gridPanes.add(gridPane);
         hbox.getChildren().add(gridPane);
         return hbox;
     }
 
-    public GridPane createGridPaneForTask(Task task) {
+    public GridPane createGridPaneForTask(TaskEntity taskEntity) {
         Font font = new Font(PrimaryUserInterface.DEFAULT_FONT, TaskViewUserInterface.TASK_FONT_SIZE);
         GridPane grid = new GridPane();
         grid.setStyle(null);
         grid.setId("");
         grid.setHgap(GAP_SIZE);
         grid.setMinWidth(_individualItemWidth);
-        grid.setMinHeight(ITEM_HEIGHT);
+
+        if (_view == UserInterfaceController.TASK_VIEW) {
+            grid.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
+        } else {
+            grid.setMinHeight(DETAILED_VIEW_ITEM_HEIGHT);
+        }
+        grid.setMaxHeight(DETAILED_VIEW_ITEM_HEIGHT);
+
         Label timeLabel = new Label("hi");
-        timeLabel.setMinHeight(ITEM_HEIGHT);
+        timeLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
         timeLabel.setFont(font);
         grid.add(timeLabel, 1, 0);
-        Label descriptionLabel = new Label(task.getDescription());
-        descriptionLabel.setMinHeight(ITEM_HEIGHT);
+        Label descriptionLabel = new Label(taskEntity.getDescription());
+        descriptionLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
         descriptionLabel.setFont(font);
         grid.add(descriptionLabel, 2, 0);
+
+        Label descriptionLabel2 = new Label(taskEntity.getDescription());
+        descriptionLabel2.setMinHeight(0);
+        descriptionLabel2.setFont(font);
+        descriptionLabel2.setStyle("-fx-background-color:red");
+        grid.add(descriptionLabel2, 1, 1);
         return grid;
     }
 
@@ -287,12 +290,13 @@ public class TaskViewUserInterface implements ViewInterface {
             if (gpWeekParent.getChildren().size() == 0) {
                 _mainVbox.getChildren().remove(gpWeekParent);
             }
-            transLationY = transLationY - LABEL_HEIGHT - ITEM_HEIGHT;
+            transLationY = transLationY - gpDayParent.getMinHeight();
+
         } else {
             HBox itemToRemove = (HBox) gpDayParent.getChildren().remove(1);
             gpDayParent.setMinHeight(gpDayParent.getMinHeight() - itemToRemove.getMinHeight());
             gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - itemToRemove.getMinHeight());
-            transLationY = transLationY - ITEM_HEIGHT;
+            transLationY = transLationY - itemToRemove.getMinHeight();
         }
         _gridPanes.remove(0);
         _startIndex += 1;
@@ -353,6 +357,7 @@ public class TaskViewUserInterface implements ViewInterface {
             gpDayParent.getChildren().add(1, itemToAdd);
             gpDayParent.setMinHeight(gpDayParent.getMinHeight() + itemToAdd.getMinHeight());
             gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() + itemToAdd.getMinHeight());
+            transLationY += itemToAdd.getMinHeight();
         } else {
             VBox weekBox = null;
             if (isSameWeek(workingList.get(_startIndex), workingList.get(_startIndex - 1))) {
@@ -367,9 +372,8 @@ public class TaskViewUserInterface implements ViewInterface {
             vbox.setMinHeight(vbox.getMinHeight() + itemToAdd.getMinHeight());
             weekBox.getChildren().add(0, vbox);
             weekBox.setMinHeight(weekBox.getMinHeight() + vbox.getMinHeight());
-            transLationY += LABEL_HEIGHT;
+            transLationY += vbox.getMinHeight();
         }
-        transLationY += ITEM_HEIGHT;
         _gridPanes.add(0, _gridPanes.remove(_gridPanes.size() - 1));
         _startIndex = _startIndex - 1;
     }
@@ -377,27 +381,37 @@ public class TaskViewUserInterface implements ViewInterface {
     public boolean setItemSelected(int value) {
         int index = value + _selectedIndex;
         if (isBetweenStartEnd(index)) {
-            _gridPanes.get(_selectedIndex - _startIndex).setId("");
+            _gridPanes.get(_selectedIndex - _startIndex).setId(null);
             _gridPanes.get(index - _startIndex).setId("cssTaskViewSelectedTask");
-            updateTranslationY(value, index, _selectedIndex);
             _selectedIndex = index;
+            updateTranslationY();
             return true;
         }
         return false;
     }
 
-    public void updateTranslationY(int direction, int selectedIndex, int previousSelected) {
-        if (direction > 0) {
-            if (!isSameDay(workingList.get(selectedIndex), workingList.get(previousSelected))) {
-                transLationY = transLationY + LABEL_HEIGHT;
-            }
-            transLationY += ITEM_HEIGHT;
-        } else {
-            if (!isSameDay(workingList.get(selectedIndex), workingList.get(previousSelected))) {
-                transLationY = transLationY - LABEL_HEIGHT;
-            }
-            transLationY -= ITEM_HEIGHT;
+    public void updateTranslationY() {
+        GridPane gp = _gridPanes.get(_selectedIndex - _startIndex);
+        HBox gpParent = (HBox) gp.getParent();
+        VBox dayParent = (VBox) gpParent.getParent();
+        VBox weekParent = (VBox) dayParent.getParent();
+        double heightAboveItem = 0;
+        for (int i = 0; i < _mainVbox.getChildren().indexOf(weekParent); i++) {
+            VBox weekBox = (VBox) _mainVbox.getChildren().get(i);
+            heightAboveItem += weekBox.getMinHeight();
         }
+        for (int i = 0; i < weekParent.getChildren().indexOf(dayParent); i++) {
+            VBox dayBox = (VBox) weekParent.getChildren().get(i);
+            heightAboveItem += dayBox.getMinHeight();
+        }
+        for (int i = 0; i < dayParent.getChildren().indexOf(gpParent); i++) {
+            if (dayParent.getChildren().get(i) instanceof Label) {
+                heightAboveItem += TASK_VIEW_LABEL_HEIGHT;
+            } else {
+                heightAboveItem += ((HBox) dayParent.getChildren().get(i)).getMinHeight();
+            }
+        }
+        transLationY = heightAboveItem;
     }
 
     public double getTranslationY() {
@@ -407,8 +421,7 @@ public class TaskViewUserInterface implements ViewInterface {
             totalHeight += weekBox.getMinHeight();
         }
         totalHeight -= _stageHeight;
-        double itemPosY = -transLationY + TaskViewUserInterface.LABEL_HEIGHT
-                + TaskViewUserInterface.ITEM_HEIGHT * 2;
+        double itemPosY = -transLationY + SELECTOR_POSITION_Y;
         if (itemPosY > 0) {
             return 0;
         }
@@ -422,12 +435,12 @@ public class TaskViewUserInterface implements ViewInterface {
         _mainVbox.setTranslateY(itemPosY);
     }
 
-    public static Label createLabelForDay(Task task) {
-        return new Label(task.getDueDate().toString());
+    public static Label createLabelForDay(TaskEntity taskEntity) {
+        return new Label(taskEntity.getDueDate().toString());
     }
 
     // get from logic side
-    public static boolean isSameDay(Task task1, Task task2) {
+    public static boolean isSameDay(TaskEntity task1, TaskEntity task2) {
         if (task1 == null) { // new day
             return false;
         }
@@ -441,7 +454,7 @@ public class TaskViewUserInterface implements ViewInterface {
         return false;
     }
 
-    public static boolean isSameWeek(Task task1, Task task2) {
+    public static boolean isSameWeek(TaskEntity task1, TaskEntity task2) {
         if (task1 == null) {
             return false;
         }
@@ -466,16 +479,16 @@ public class TaskViewUserInterface implements ViewInterface {
         return false;
     }
 
-    public ArrayList<DescriptionLabel> rebuildDescriptionLabels() {
+    public ArrayList<DescriptionLabel> rebuildDescriptionLabelsForWeek() {
         ArrayList<DescriptionLabel> descriptionLables = new ArrayList<DescriptionLabel>();
         HBox hbox = (HBox) getSelectedGridPane().getParent();
         int countOfItems = 0;
         for (int i = 0; i < _mainVbox.getChildren().size(); i++) {
             VBox weekBox = (VBox) _mainVbox.getChildren().get(i);
-            Task firstTaskInWeek = workingList.get(_startIndex + countOfItems);
+            TaskEntity firstTaskInWeek = workingList.get(_startIndex + countOfItems);
             int numberOfTaskInWeek = countNumberOfTaskInWeek(weekBox);
             int indexForLastTaskInWeek = countOfItems + numberOfTaskInWeek - 1;
-            Task lastTaskInWeek = null;
+            TaskEntity lastTaskInWeek = null;
             if (indexForLastTaskInWeek < workingList.size()) {
                 lastTaskInWeek = workingList.get(_startIndex + indexForLastTaskInWeek);
                 countOfItems += numberOfTaskInWeek;
@@ -515,5 +528,73 @@ public class TaskViewUserInterface implements ViewInterface {
 
     public void destoryStage() {
         _stage.close();
+    }
+
+    public void setView(int view) {
+        _view = view;
+    }
+
+    public boolean isAtDetailedView(double value) {
+        double totalHeight = 0;
+        int index = _selectedIndex - _startIndex;
+        int counterForDoneItems = 0;
+        for (int i = 0; i < _gridPanes.size(); i++) {
+            GridPane gp = _gridPanes.get(i);
+            HBox gpParent = (HBox) gp.getParent();
+            VBox dayParent = (VBox) gpParent.getParent();
+            VBox weekParent = (VBox) dayParent.getParent();
+            if (gp.getMinHeight() < gp.getMaxHeight()) {
+                if (gp.getMaxHeight() - gp.getMinHeight() < value) {
+                    value = gp.getMaxHeight() - gp.getMinHeight();
+                }
+                if (i < index) {
+                    totalHeight += value;
+                }
+                gp.setMinHeight(gp.getMinHeight() + value);
+                gpParent.setMinHeight(gpParent.getMinHeight() + value);
+                dayParent.setMinHeight(dayParent.getMinHeight() + value);
+                weekParent.setMinHeight(weekParent.getMinHeight() + value);
+            } else {
+                counterForDoneItems++;
+            }
+        }
+        transLationY += totalHeight;
+        if (counterForDoneItems >= _gridPanes.size()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isAtTaskView(double value) {
+        double totalHeight = 0;
+        int counterForDoneItems = 0;
+        int index = _selectedIndex - _startIndex;
+        for (int i = 0; i < _gridPanes.size(); i++) {
+            GridPane gp = _gridPanes.get(i);
+            HBox gpParent = (HBox) gp.getParent();
+            VBox dayParent = (VBox) gpParent.getParent();
+            VBox weekParent = (VBox) dayParent.getParent();
+            if (gp.getMinHeight() > TASK_VIEW_ITEM_HEIGHT) {
+                if (gp.getMinHeight() - TASK_VIEW_ITEM_HEIGHT < value) {
+                    value = gp.getMinHeight() - TASK_VIEW_ITEM_HEIGHT;
+                }
+                if (i < index) {
+                    totalHeight += value;
+                }
+                gp.setMinHeight(gp.getMinHeight() + value);
+                gpParent.setMinHeight(gpParent.getMinHeight() + value);
+                dayParent.setMinHeight(dayParent.getMinHeight() + value);
+                weekParent.setMinHeight(weekParent.getMinHeight() + value);
+            } else {
+                counterForDoneItems++;
+            }
+        }
+        transLationY += totalHeight;
+        if (counterForDoneItems >= _gridPanes.size()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
