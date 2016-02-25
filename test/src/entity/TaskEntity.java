@@ -3,7 +3,7 @@ package entity;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class Task {
+public class TaskEntity {
     private boolean isFloating;
     private Calendar dueDate;
     private Calendar dateCreated;
@@ -35,7 +35,7 @@ public class Task {
         dateCreated = Calendar.getInstance();
     }
 
-    public Task() {
+    public TaskEntity() {
         initIdAndDate();
 
         name = "";
@@ -43,7 +43,7 @@ public class Task {
         isFloating = true;
     }
 
-    public Task(String _name) {
+    public TaskEntity(String _name) {
         initIdAndDate();
 
         name = _name;
@@ -51,7 +51,7 @@ public class Task {
         isFloating = true;
     }
 
-    public Task(String _name, Calendar _dueDate) {
+    public TaskEntity(String _name, Calendar _dueDate) {
         initIdAndDate();
 
         name = _name;
@@ -60,11 +60,11 @@ public class Task {
         isFloating = false;
     }
 
-    public Task(int id, Calendar calendar, String desc) {
+    public TaskEntity(int id, Calendar calendar, String desc) {
 
     }
 
-    public Task(String _name, Calendar _dueDate, String _description) {
+    public TaskEntity(String _name, Calendar _dueDate, String _description) {
         initIdAndDate();
 
         name = _name;
@@ -73,7 +73,7 @@ public class Task {
         isFloating = false;
     }
 
-    public Task(String _name, String _description) {
+    public TaskEntity(String _name, String _description) {
         initIdAndDate();
 
         name = _name;
