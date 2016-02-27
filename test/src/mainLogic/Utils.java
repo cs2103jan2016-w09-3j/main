@@ -1,6 +1,10 @@
 package mainLogic;
 
-class Converter {
+import java.util.Calendar;
+
+import entity.TaskEntity;
+
+class Utils {
 
     /**
      * Converts an integer into its base 36, 0~Z equivalent. Supports any length
@@ -76,5 +80,42 @@ class Converter {
             base36 = base36.substring(0, base36.length() - 1);
         }
         return decNumber;
+    }
+    
+    /**
+     * 
+     * Checks if the 2 tasks passed in are of the same date
+     * 
+     * @param firstTask
+     * @param secondTask
+     * @return True - If the dates are the same
+     *         False - If either the dates are different, or if either task is
+     *         floating
+     */
+    public static boolean checkSameDate(TaskEntity firstTask, TaskEntity secondTask) {
+        Calendar firstDate;
+        if (firstTask.isFloating()) {
+            return false;
+        } else {
+            firstDate = firstTask.getDueDate();
+        }
+
+        Calendar secondDate;
+        if (secondTask.isFloating()) {
+            return false;
+        } else {
+            secondDate = secondTask.getDueDate();
+        }
+
+        return checkSameDate(firstDate, secondDate);
+    }
+    
+    public static boolean checkSameDate(Calendar firstDate, Calendar secondDate) {
+        if (firstDate.get(Calendar.YEAR) == secondDate.get(Calendar.YEAR)
+                && firstDate.get(Calendar.YEAR) == secondDate.get(Calendar.YEAR)
+                && firstDate.get(Calendar.YEAR) == secondDate.get(Calendar.YEAR)) {
+            return true;
+        }
+        return false;
     }
 }

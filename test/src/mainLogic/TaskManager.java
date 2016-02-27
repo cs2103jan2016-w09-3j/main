@@ -60,7 +60,7 @@ class TaskManager {
         int j = 0;
         for(int i = 0; i < displayedTasks.size(); i++)
         {
-            System.out.print(Converter.convertDecToBase36(i) + ". " + displayedTasks.get(i).getName() + "     ");
+            System.out.print(Utils.convertDecToBase36(i) + ". " + displayedTasks.get(i).getName() + "     ");
             j++;
             if(j >= 4){
                 System.out.println();
@@ -73,7 +73,7 @@ class TaskManager {
         j = 0;
         for(int i = 0; i < floatingTaskEntities.size(); i++)
         {
-            System.out.print(Converter.convertDecToBase36(i) + ". " + floatingTaskEntities.get(i).getName() + "     ");
+            System.out.print(Utils.convertDecToBase36(i) + ". " + floatingTaskEntities.get(i).getName() + "     ");
             j++;
             if(j >= 4){
                 System.out.println();
@@ -135,7 +135,7 @@ class TaskManager {
      *         - False if delete operation failed
      */
     public static boolean delete(String index) {
-        return delete(Converter.convertBase36ToDec(index));
+        return delete(Utils.convertBase36ToDec(index));
     }   
 
     /**
@@ -176,49 +176,12 @@ class TaskManager {
      *         - False if delete operation failed
      */
     public static boolean delete(String startIndex, String endIndex) {
-        return delete(Converter.convertBase36ToDec(startIndex), Converter.convertBase36ToDec(endIndex));
+        return delete(Utils.convertBase36ToDec(startIndex), Utils.convertBase36ToDec(endIndex));
     }
 
     public static ArrayList<TaskEntity> undo() {
         // TODO
         return new ArrayList<TaskEntity>();
-    }
-
-    /**
-     * 
-     * Checks if the 2 tasks passed in are of the same date
-     * 
-     * @param firstTask
-     * @param secondTask
-     * @return True - If the dates are the same
-     *         False - If either the dates are different, or if either task is
-     *         floating
-     */
-    public static boolean checkSameDate(TaskEntity firstTask, TaskEntity secondTask) {
-        Calendar firstDate;
-        if (firstTask.isFloating()) {
-            return false;
-        } else {
-            firstDate = firstTask.getDueDate();
-        }
-
-        Calendar secondDate;
-        if (secondTask.isFloating()) {
-            return false;
-        } else {
-            secondDate = secondTask.getDueDate();
-        }
-
-        return checkSameDate(firstDate, secondDate);
-    }
-    
-    public static boolean checkSameDate(Calendar firstDate, Calendar secondDate) {
-        if (firstDate.get(Calendar.YEAR) == secondDate.get(Calendar.YEAR)
-                && firstDate.get(Calendar.YEAR) == secondDate.get(Calendar.YEAR)
-                && firstDate.get(Calendar.YEAR) == secondDate.get(Calendar.YEAR)) {
-            return true;
-        }
-        return false;
     }
 
     public static int getTodayFirstTaskIndex() {
