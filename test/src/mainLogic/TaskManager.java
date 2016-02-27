@@ -6,15 +6,53 @@ import java.util.Calendar;
 import entity.TaskEntity;
 
 class TaskManager {
-    private static ArrayList<TaskEntity> taskEntities;
-
+    private static ArrayList<TaskEntity> displayedTasks;
+    private static ArrayList<TaskEntity> floatingTaskEntities = new ArrayList<TaskEntity>();
+    private static ArrayList<TaskEntity> mainTaskEntities = new ArrayList<TaskEntity>();
+    
+    public static ArrayList<TaskEntity> getWorkingList() {
+        return displayedTasks;
+    }
+    
+    /**
+     * UI Interface function
+     * Deletion from the displayed list, will delete the object from the main
+     * list in the backend as well, whether it is from the floating or main list
+     * 
+     * @param index - index of the item in the displayed tasks to be deleted
+     * @return false - if fail to delete
+     *         true - if delete operation succeeded
+     */
     public static boolean delete(int index) {
-        if (index + 1 > taskEntities.size()) {
+        if (index + 1 > displayedTasks.size()) {
             return false;
         }
-
-        taskEntities.remove(index);
+        
+        TaskEntity itemToBeDeleted = displayedTasks.get(index);
+        boolean deletionSuccess = deleteFromMainList(itemToBeDeleted);
+        if(!deletionSuccess){
+            return false;
+        }
+        
+        displayedTasks.remove(index);
         return true;
+    }
+
+    /**
+     * Removes an object from the list containing all tasks, from its respective
+     * list (floatingTaskEntities if it is a floating task, mainTaskEntities if
+     * its not)
+     * 
+     * @param itemToBeDeleted - The task to be deleted from the main list
+     * @return true - if removal operation succeeded
+     *         false - if removal operation failed
+     */
+    private static boolean deleteFromMainList(TaskEntity itemToBeDeleted) {
+        if (itemToBeDeleted.isFloating()) {
+            return floatingTaskEntities.remove(itemToBeDeleted);
+        } else {
+            return mainTaskEntities.remove(itemToBeDeleted);
+        }
     }
 
     /**
@@ -29,7 +67,10 @@ class TaskManager {
     }   
 
     /**
-     * Deletes a consecutive list of tasks form the arrayList
+     * Deletes a consecutive list of tasks from both the working and main
+     * arrayList. Upon failing to delete any item, the function terminates at
+     * the object that it fails to delete and does not attempt to delete anymore
+     * items
      * 
      * @param startIndex - An integer specifying the first index to be deleted.
      *            startIndex must be <= endIndex
@@ -39,14 +80,16 @@ class TaskManager {
      *         - False if delete operation failed
      */
     public static boolean delete(int startIndex, int endIndex) {
-        if (endIndex + 1 > taskEntities.size()) {
+        if (endIndex + 1 > displayedTasks.size()) {
             return false;
         } else if (startIndex > endIndex) {
             return false;
         }
 
         for (int i = 0; i <= endIndex - startIndex; i++) {
-            taskEntities.remove(startIndex);
+            if(!delete(startIndex)){
+                return false;
+            }
         }
         return true;
     }
