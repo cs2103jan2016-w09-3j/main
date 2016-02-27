@@ -9,6 +9,78 @@ class TaskManager {
     private static ArrayList<TaskEntity> displayedTasks;
     private static ArrayList<TaskEntity> floatingTaskEntities = new ArrayList<TaskEntity>();
     private static ArrayList<TaskEntity> mainTaskEntities = new ArrayList<TaskEntity>();
+
+    /**
+     * TEST FUNCTION
+     * Function for manually testing functions(First test/debugging) in
+     * TaskManager class before regression testing with JUnit
+     * 
+     * @param args
+     */
+    public static void main (String[] args)
+    {
+        populateArray();
+        testDisplay();
+        delete("3","5");
+        delete("0", "4");
+        printList(); //0 5 10 6 //deleted 8,15,3
+    }
+    
+    /**
+     * TEST FUNCTION
+     * Prints out the 2 arraylists
+     */
+    private static void testDisplay(){
+        displayedTasks = new ArrayList<TaskEntity>();
+        displayedTasks.add(floatingTaskEntities.get(0));
+        displayedTasks.add(floatingTaskEntities.get(5));
+        displayedTasks.add(floatingTaskEntities.get(10));
+        displayedTasks.add(floatingTaskEntities.get(8));
+        displayedTasks.add(floatingTaskEntities.get(15));
+        displayedTasks.add(floatingTaskEntities.get(3));
+        displayedTasks.add(floatingTaskEntities.get(6));
+    }
+    
+    /**
+     * TESTING FUNCTION
+     * Populates the displayedTasks and taskEntities array with fake data for testing
+     */
+    private static void populateArray() {
+        for(int i = 0; i < 30; i++)
+        {
+            TaskEntity new_task = new TaskEntity("Task " + Integer.toString(i));
+            floatingTaskEntities.add(new_task);
+        }
+        displayedTasks = (ArrayList<TaskEntity>) floatingTaskEntities.clone();
+    }
+    
+    private static void printList()
+    {
+        System.out.println("Display");
+        int j = 0;
+        for(int i = 0; i < displayedTasks.size(); i++)
+        {
+            System.out.print(Converter.convertDecToBase36(i) + ". " + displayedTasks.get(i).getName() + "     ");
+            j++;
+            if(j >= 4){
+                System.out.println();
+                j = 0;
+            }
+        }
+        
+        System.out.println();
+        System.out.println("Main");
+        j = 0;
+        for(int i = 0; i < floatingTaskEntities.size(); i++)
+        {
+            System.out.print(Converter.convertDecToBase36(i) + ". " + floatingTaskEntities.get(i).getName() + "     ");
+            j++;
+            if(j >= 4){
+                System.out.println();
+                j = 0;
+            }
+        }
+    }
     
     public static ArrayList<TaskEntity> getWorkingList() {
         return displayedTasks;
