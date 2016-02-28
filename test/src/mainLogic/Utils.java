@@ -1,6 +1,7 @@
 package mainLogic;
 
 import java.util.Calendar;
+import java.util.Comparator;
 
 import entity.TaskEntity;
 
@@ -112,8 +113,8 @@ class Utils {
     
     public static boolean checkSameDate(Calendar firstDate, Calendar secondDate) {
         if (firstDate.get(Calendar.YEAR) == secondDate.get(Calendar.YEAR)
-                && firstDate.get(Calendar.YEAR) == secondDate.get(Calendar.YEAR)
-                && firstDate.get(Calendar.YEAR) == secondDate.get(Calendar.YEAR)) {
+                && firstDate.get(Calendar.MONTH) == secondDate.get(Calendar.MONTH)
+                && firstDate.get(Calendar.DATE) == secondDate.get(Calendar.DATE)) {
             return true;
         }
         return false;
