@@ -5,7 +5,7 @@ import java.util.Comparator;
 
 import entity.TaskEntity;
 
-class Utils {
+public class Utils {
 
     /**
      * Converts an integer into its base 36, 0~Z equivalent. Supports any length
