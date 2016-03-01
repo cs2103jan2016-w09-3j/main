@@ -4,6 +4,14 @@ public class InformationParser {
 	private String Title;
 	private String Description;
 
+	public InformationParser(){
+		
+	}
+	
+	private void getInformation(){
+		
+	}
+	
 	public String getTitle() {
 		return Title;
 	}
