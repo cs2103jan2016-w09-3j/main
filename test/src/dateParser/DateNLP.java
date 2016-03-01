@@ -54,14 +54,15 @@ public class DateNLP {
 	}
 
 	public String XMLDate(String input) {
+		hideErr();
 		String returnVal = input;
 		input = convertFormalDates(input);
 		List<DateGroup> dateGroups = nattyParser.parse(input);
-		List<Date> dates = parseToList(input);
 		for (int i = 0; i < dateGroups.size(); i++) {
-			returnVal = input.replace(dateGroups.get(i).getText(), "<dates>" + dates + "</dates>");
-
+			List<Date> dates = dateGroups.get(i).getDates();
+			returnVal = returnVal.replace(dateGroups.get(i).getText(), "<dates>" + dates + "</dates>");
 		}
+		showErr();
 		return returnVal;
 	}
 
