@@ -30,13 +30,14 @@ public class DateNLP {
 	private final int END_MONTH_INDEX = 5;
 	private final int START_YEAR_INDEX = 6;
 
-
 	PrintStream printStreamOriginal = System.err;
 	private Parser nattyParser = new Parser();
 
 	public DateNLP() {
 		// init the parser so that there's no lag later
+		hideErr();
 		nattyParser.parse("today");
+		showErr();
 	}
 
 	public List<Date> parseToList(String inputDate) {
@@ -46,8 +47,6 @@ public class DateNLP {
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
 			for (int j = 0; j < dates.size(); j++) {
-				// System.out.println(inputDate.replace("dateGroups.get(i).getText()",
-				// ""));
 				returnDateList.add(dates.get(j));
 			}
 		}
@@ -60,7 +59,7 @@ public class DateNLP {
 		List<DateGroup> dateGroups = nattyParser.parse(input);
 		List<Date> dates = parseToList(input);
 		for (int i = 0; i < dateGroups.size(); i++) {
-			returnVal = input.replace(dateGroups.get(i).getText(), "<dates>"+dates+"</dates>");
+			returnVal = input.replace(dateGroups.get(i).getText(), "<dates>" + dates + "</dates>");
 
 		}
 		return returnVal;
@@ -143,24 +142,22 @@ public class DateNLP {
 		return Integer.toString(currYear);
 	}
 
-	private void hideErr(){
-    	System.setErr(new PrintStream(new OutputStream() {
-            @Override
-            public void write(int b) throws IOException {
-            }
-        }));
-    }
+	private void hideErr() {
+		System.setErr(new PrintStream(new OutputStream() {
+			@Override
+			public void write(int b) throws IOException {
+			}
+		}));
+	}
 
-	private void showErr(){
+	private void showErr() {
 		System.setErr(printStreamOriginal);
-    }
+	}
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		
-		DateNLP tempNLP = new DateNLP();
 
-		
+		DateNLP tempNLP = new DateNLP();
 
 		boolean running = true;
 		while (running) {
@@ -171,7 +168,7 @@ public class DateNLP {
 				tempNLP.hideErr();
 				List<Date> dates = tempNLP.parseToList(tempDate);
 				tempNLP.showErr();
-				
+
 				System.out.println(dates);
 
 				tempNLP.hideErr();
