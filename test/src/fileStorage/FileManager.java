@@ -9,8 +9,15 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import com.google.gson.Gson;
+import com.sun.javafx.scene.paint.GradientUtils.Parser;
 
 import entity.TaskEntity;
+
+// External JARs: json-simple-1.1.1.jar, java-json.jar and gson-2.2.2.jar
 
 public class FileManager {
     
@@ -45,12 +52,21 @@ public class FileManager {
     private JSONObject extractDetails(ArrayList<TaskEntity> taskList, int i) throws JSONException {
         JSONObject taskDetails = new JSONObject();
         
-        taskDetails.put("id", taskList.get(i).getId());
+        Gson gson = new Gson();
+        JSONParser parser = new JSONParser();
+        
+        try {
+            taskDetails = (JSONObject)parser.parse(gson.toJson(taskList.get(i)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
+        /*taskDetails.put("id", taskList.get(i).getId());
         taskDetails.put("name", taskList.get(i).getName());
         taskDetails.put("dueDate", taskList.get(i).getDueDate());
         taskDetails.put("dateCreated", taskList.get(i).getDateCreated());
         taskDetails.put("description", taskList.get(i).getDescription());
-        taskDetails.put("floatingTask", taskList.get(i).isFloating());
+        taskDetails.put("floatingTask", taskList.get(i).isFloating());*/
         
         return taskDetails;
     }
@@ -73,7 +89,7 @@ public class FileManager {
         }
     }
     
-    private void writeToFile(JSONObject task) {
+    public void writeToFile(JSONObject task) {
         // TODO
     }
 }
