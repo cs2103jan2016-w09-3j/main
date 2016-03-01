@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -26,6 +26,43 @@ public class FileManager {
     private ArrayList<TaskEntity> floatingTaskEntities;
     private JSONArray allTaskEntities;
     
+    // Test function
+    public static void main(String args[]) {
+        FileManager myFM = new FileManager(createDummyMain(), createDummyFloating());
+        try {
+            myFM.init();
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    
+    // Test function
+    private static ArrayList<TaskEntity> createDummyMain() {
+        ArrayList<TaskEntity> dummyMainList = new ArrayList<TaskEntity>();
+        dummyMainList.add(new TaskEntity("firstTask"));
+        dummyMainList.add(new TaskEntity("secondTask"));
+        return dummyMainList;
+    }
+    
+    // Test function
+    private static ArrayList<TaskEntity> createDummyFloating() {
+        ArrayList<TaskEntity> dummyFloatingList = new ArrayList<TaskEntity>();
+        dummyFloatingList.add(new TaskEntity("floatingTaskOne"));
+        dummyFloatingList.add(new TaskEntity("floatingTaskTwo"));
+        return dummyFloatingList;
+    }
+    
+    public FileManager() {
+        fileName = "taskList.txt";
+        mainTaskEntities = new ArrayList<TaskEntity>();
+        floatingTaskEntities = new ArrayList<TaskEntity>();
+        allTaskEntities = new JSONArray();
+    }
+    
     public FileManager(ArrayList<TaskEntity> _main, ArrayList<TaskEntity> _floating) {
         fileName = "taskList.txt";
         mainTaskEntities = new ArrayList<TaskEntity>(_main);
@@ -34,6 +71,7 @@ public class FileManager {
     }
     
     public void init() throws JSONException, IOException {
+        System.out.println("Initialising....");
         processFile();
         allTaskEntities.put(convertToJson(mainTaskEntities));
         allTaskEntities.put(convertToJson(floatingTaskEntities));
@@ -46,7 +84,7 @@ public class FileManager {
         for(int i = 0; i< taskEntities.size(); i++) {
             taskEntitiesJson.put(extractDetails(taskEntities, i));
         }
-        
+        System.out.println("Converting arraylist to JSON.");
         return taskEntitiesJson;
     }
     
@@ -61,20 +99,14 @@ public class FileManager {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        
-        /*taskDetails.put("id", taskList.get(i).getId());
-        taskDetails.put("name", taskList.get(i).getName());
-        taskDetails.put("dueDate", taskList.get(i).getDueDate());
-        taskDetails.put("dateCreated", taskList.get(i).getDateCreated());
-        taskDetails.put("description", taskList.get(i).getDescription());
-        taskDetails.put("floatingTask", taskList.get(i).isFloating());*/
-        
         return taskDetails;
     }
     
     private void createNewFile() throws IOException {
         file = new File(fileName);
         file.createNewFile();
+        
+        System.out.println("Creating new file...");
     }
     
     // TODO stub
@@ -101,10 +133,12 @@ public class FileManager {
         return false;
     }
 
-    public void writeToFile(JSONArray taskListJson) throws IOException {
+    private void writeToFile(JSONArray taskListJson) throws IOException {
         FileWriter fileWriter = new FileWriter(file);
+        System.out.println("Writing to file...");
         fileWriter.write(taskListJson.toString());
         fileWriter.flush();
         fileWriter.close();
+        System.out.println("Wrote to file. Terminate.");
     }
 }
