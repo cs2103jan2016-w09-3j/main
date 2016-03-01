@@ -6,26 +6,33 @@ public class InputParser {
 	private String input;
 	DateNLP dateParser;
 	CommandParser cmdParser;
+	InformationParser infoParser;
 
 	public InputParser(String input) {
 		this.input = input;
 		dateParser = new DateNLP();
 		cmdParser = new CommandParser();
+		infoParser = new InformationParser();
 	}
-	
-	public void addXML(){
+
+	public void addXML() {
 		addXMLCmd();
 		addXMLDate();
+		addXMLTitleDesc();
 	}
-	
-	public void addXMLDate(){
-		input = dateParser.XMLDate(input);
+
+	public void addXMLTitleDesc() {
+		input = infoParser.xmlTitleAndDesc(input);
 	}
-	
-	public void addXMLCmd(){
+
+	public void addXMLDate() {
+		input = dateParser.xmlDate(input);
+	}
+
+	public void addXMLCmd() {
 		input = cmdParser.xmlFirstWord(input);
 	}
-	
+
 	public String getInput() {
 		return input;
 	}
@@ -35,7 +42,7 @@ public class InputParser {
 	}
 
 	public static void main(String args[]) {
-		while(true){
+		while (true) {
 			Scanner sc = new Scanner(System.in);
 			String input = sc.nextLine();
 			InputParser parser = new InputParser(input);

@@ -53,7 +53,7 @@ public class DateNLP {
 		return returnDateList;
 	}
 
-	public String XMLDate(String input) {
+	public String xmlDate(String input) {
 		hideErr();
 		String returnVal = input;
 		input = convertFormalDates(input);
@@ -173,7 +173,7 @@ public class DateNLP {
 				System.out.println(dates);
 
 				tempNLP.hideErr();
-				System.out.println(tempNLP.XMLDate(tempDate));
+				System.out.println(tempNLP.xmlDate(tempDate));
 				tempNLP.showErr();
 			}
 		}
