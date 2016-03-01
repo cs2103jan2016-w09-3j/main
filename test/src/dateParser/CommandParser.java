@@ -2,7 +2,11 @@ package dateParser;
 
 public class CommandParser {
 	private static final int FIRST_WORD = 0;
-
+	
+	public enum COMMAND {
+		ADD
+	};
+	
 	public CommandParser() {
 
 	}
