@@ -18,6 +18,7 @@ import com.sun.javafx.scene.paint.GradientUtils.Parser;
 import entity.TaskEntity;
 
 // External JARs: json-simple-1.1.1.jar, java-json.jar and gson-2.2.2.jar
+// Go update the pom.xml file
 
 public class FileManager {
     
