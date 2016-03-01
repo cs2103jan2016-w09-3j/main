@@ -1,9 +1,11 @@
 package fileStorage;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.RandomAccessFile;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -13,41 +15,39 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.google.gson.Gson;
-import com.sun.javafx.scene.paint.GradientUtils.Parser;
 
 import entity.TaskEntity;
 
-// External JARs: json-simple-1.1.1.jar, java-json.jar and gson-2.2.2.jar
-// Go update the pom.xml file
-
 public class FileManager {
     
-    private RandomAccessFile file;
+    private File file;
     private String fileName;
-    private BufferedReader buffer;
     private ArrayList<TaskEntity> mainTaskEntities;
     private ArrayList<TaskEntity> floatingTaskEntities;
+    private JSONArray allTaskEntities;
     
     public FileManager(ArrayList<TaskEntity> _main, ArrayList<TaskEntity> _floating) {
         fileName = "taskList.txt";
-        mainTaskEntities = _main;
-        floatingTaskEntities = _floating;
+        mainTaskEntities = new ArrayList<TaskEntity>(_main);
+        floatingTaskEntities = new ArrayList<TaskEntity>(_floating);
+        allTaskEntities = new JSONArray();
     }
     
-    private void convertMainToJson(ArrayList<TaskEntity> mainTaskEntities) throws JSONException {
-        JSONArray mainTaskEntitiesJson = new JSONArray();
-        
-        for(int i = 0; i< mainTaskEntities.size(); i++) {
-            mainTaskEntitiesJson.put(extractDetails(mainTaskEntities, i));
-        }
+    public void init() throws JSONException, IOException {
+        processFile();
+        allTaskEntities.put(convertToJson(mainTaskEntities));
+        allTaskEntities.put(convertToJson(floatingTaskEntities));
+        writeToFile(allTaskEntities);
     }
     
-    private void convertFloatingToJson(ArrayList<TaskEntity> floatingTaskEntities) throws JSONException {
-        JSONArray floatingTaskEntitiesJson = new JSONArray();
+    private JSONArray convertToJson(ArrayList<TaskEntity> taskEntities) throws JSONException {
+        JSONArray taskEntitiesJson = new JSONArray();
         
-        for(int i = 0; i< floatingTaskEntities.size(); i++) {
-            floatingTaskEntitiesJson.put(extractDetails(floatingTaskEntities, i));
+        for(int i = 0; i< taskEntities.size(); i++) {
+            taskEntitiesJson.put(extractDetails(taskEntities, i));
         }
+        
+        return taskEntitiesJson;
     }
     
     private JSONObject extractDetails(ArrayList<TaskEntity> taskList, int i) throws JSONException {
@@ -72,25 +72,39 @@ public class FileManager {
         return taskDetails;
     }
     
-    private void createNewFile() {
+    private void createNewFile() throws IOException {
+        file = new File(fileName);
+        file.createNewFile();
+    }
+    
+    // TODO stub
+    private void readFromExistingFile() throws IOException {
         try {
-            file = new RandomAccessFile(fileName, "rw");
+            BufferedReader buffer = new BufferedReader(new FileReader(fileName));
+            buffer.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
             e.printStackTrace();
         }
     }
     
-    private void readFromExistingFile() {
-        try {
-            buffer = new BufferedReader(new FileReader(fileName));
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found.");
-            e.printStackTrace();
+    private void processFile() throws IOException {
+        if (hasExistingFile() == false) {
+            createNewFile();
+        } else {   
+            readFromExistingFile();
         }
     }
     
-    public void writeToFile(JSONObject task) {
-        // TODO
+    private boolean hasExistingFile() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public void writeToFile(JSONArray taskListJson) throws IOException {
+        FileWriter fileWriter = new FileWriter(file);
+        fileWriter.write(taskListJson.toString());
+        fileWriter.flush();
+        fileWriter.close();
     }
 }
