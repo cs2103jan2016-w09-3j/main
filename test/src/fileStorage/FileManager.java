@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,23 +26,33 @@ public class FileManager {
         floatingTaskEntities = _floating;
     }
     
-    public void extractDetails() throws JSONException {
+    private void convertMainToJson(ArrayList<TaskEntity> mainTaskEntities) throws JSONException {
+        JSONArray mainTaskEntitiesJson = new JSONArray();
+        
         for(int i = 0; i< mainTaskEntities.size(); i++) {
-            convertToJson(i);
+            mainTaskEntitiesJson.put(extractDetails(mainTaskEntities, i));
         }
     }
     
-    public void convertToJson(int i) throws JSONException {
+    private void convertFloatingToJson(ArrayList<TaskEntity> floatingTaskEntities) throws JSONException {
+        JSONArray floatingTaskEntitiesJson = new JSONArray();
+        
+        for(int i = 0; i< floatingTaskEntities.size(); i++) {
+            floatingTaskEntitiesJson.put(extractDetails(floatingTaskEntities, i));
+        }
+    }
+    
+    private JSONObject extractDetails(ArrayList<TaskEntity> taskList, int i) throws JSONException {
         JSONObject taskDetails = new JSONObject();
         
-        taskDetails.put("id", mainTaskEntities.get(i).getId());
-        taskDetails.put("name", mainTaskEntities.get(i).getName());
-        taskDetails.put("dueDate", mainTaskEntities.get(i).getDueDate());
-        taskDetails.put("dateCreated", mainTaskEntities.get(i).getDateCreated());
-        taskDetails.put("description", mainTaskEntities.get(i).getDescription());
-        taskDetails.put("floatingTask", mainTaskEntities.get(i).isFloating());
+        taskDetails.put("id", taskList.get(i).getId());
+        taskDetails.put("name", taskList.get(i).getName());
+        taskDetails.put("dueDate", taskList.get(i).getDueDate());
+        taskDetails.put("dateCreated", taskList.get(i).getDateCreated());
+        taskDetails.put("description", taskList.get(i).getDescription());
+        taskDetails.put("floatingTask", taskList.get(i).isFloating());
         
-        writeToFile(taskDetails);
+        return taskDetails;
     }
     
     private void createNewFile() {
