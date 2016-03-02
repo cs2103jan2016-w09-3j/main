@@ -15,9 +15,10 @@ public class InputParser {
 		infoParser = new InformationParser();
 	}
 
+	//DO NOT CHANGE ORDER!!
 	public void addXML() {
-		addXMLCmd();
 		addXMLDate();
+		addXMLCmd();
 		addXMLTitleDesc();
 	}
 

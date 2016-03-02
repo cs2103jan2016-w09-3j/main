@@ -55,12 +55,15 @@ public class DateNLP {
 
 	public String xmlDate(String input) {
 		hideErr();
-		String returnVal = input;
 		input = convertFormalDates(input);
+		String returnVal = input;
 		List<DateGroup> dateGroups = nattyParser.parse(input);
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
-			returnVal = returnVal.replace(dateGroups.get(i).getText(), "<dates>" + dates + "</dates>");
+			System.out.println(dates);
+			String dateUS = dateGroups.get(i).getText();
+			//String dateSG = convertFormalDates(dateUS);
+			returnVal = returnVal.replace(dateUS, "<dates>" + dates + "</dates>");
 		}
 		showErr();
 		return returnVal;
@@ -79,7 +82,7 @@ public class DateNLP {
 
 	private String convertSGFormalDateToUS(String sgDate) {
 		String usDate = sgDate.replace(FWD_SLASH, DASH);
-		usDate = sgDate.replace(DOT, DASH);
+		//usDate = sgDate.replace(DOT, DASH);
 
 		usDate = addZero(usDate);
 
