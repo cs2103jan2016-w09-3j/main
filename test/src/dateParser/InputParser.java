@@ -45,6 +45,7 @@ public class InputParser {
 		while (true) {
 			Scanner sc = new Scanner(System.in);
 			String input = sc.nextLine();
+			
 			InputParser parser = new InputParser(input);
 			parser.addXML();
 			System.out.println(parser.getInput());

@@ -13,16 +13,24 @@ public class InformationParser {
 
 	public String xmlTitleAndDesc(String input) {
 		getInformation(input);
-		input = input.replace(title, "<title>" + title + "</title>");
-		input = input.replace(description, "<desc>"+ description + "</desc>");
+		if (title != null) {
+			input = input.replace(title, "<title>" + title + "</title>");
+		}
+		if (description != null) {
+			input = input.replace(description, "<desc>" + description + "</desc>");
+		}
 		return input;
 	}
 
 	private void getInformation(String input) {
 		input = removeOtherAttributes(input);
 		String[] inputs = input.split(":");
-		setTitle(inputs[0].trim());
-		setDescription(inputs[1].trim());
+		if (inputs.length == 2) {
+			setTitle(inputs[0].trim());
+			setDescription(inputs[1].trim());
+		} else {
+			setTitle(inputs[0].trim());
+		}
 	}
 
 	private String removeOtherAttributes(String input) {
