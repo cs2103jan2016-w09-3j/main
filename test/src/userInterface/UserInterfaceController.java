@@ -7,6 +7,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import entity.TaskEntity;
+import mainLogic.Utils;
+
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.geometry.Rectangle2D;
@@ -82,9 +84,11 @@ public class UserInterfaceController {
 
     public void updateDescriptionComponent() {
         if (_currentView == TASK_VIEW) {
-            _descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
+            _descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(),
+                    TASK_VIEW);
         } else if (_currentView == DETAILED_VIEW) {
-            _descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(), DETAILED_VIEW);
+            _descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(),
+                    DETAILED_VIEW);
         }
     }
 
@@ -109,7 +113,8 @@ public class UserInterfaceController {
                                 if (_currentView == DETAILED_VIEW) {
                                     _isDoneTranslatingToOtherView = _taskViewInterface.isAtDetailedView(1);
                                     _descriptionComponent.buildComponent(
-                                            _taskViewInterface.rebuildDescriptionLabelsForDay(),DETAILED_VIEW);
+                                            _taskViewInterface.rebuildDescriptionLabelsForDay(),
+                                            DETAILED_VIEW);
                                 } else {
                                     _isDoneTranslatingToOtherView = _taskViewInterface.isAtTaskView(-1);
                                     _descriptionComponent.buildComponent(
@@ -167,17 +172,19 @@ public class UserInterfaceController {
         }
     }
 
-    // deetle this method after qy implement.
+    /**
+     * This method will call utils and check if the both task have the same date
+     * 
+     * @param task1
+     * @param task2
+     * @return label for task2 if the dates are not the same, null if they are the same
+     */
     public static Label checkSameDay(TaskEntity task1, TaskEntity task2) {
         if (task1 == null) { // new day
             return new Label(task2.getDueDate().toString());
         } else {
-            if (task1.getDueDate().get(Calendar.YEAR) == task2.getDueDate().get(Calendar.YEAR)) {
-                if (task1.getDueDate().get(Calendar.MONTH) == task2.getDueDate().get(Calendar.MONTH)) {
-                    if (task1.getDueDate().get(Calendar.DATE) == task2.getDueDate().get(Calendar.DATE)) {
-                        return null;
-                    }
-                }
+            if (Utils.checkSameDate(task1, task2)) {
+                return null;
             }
         }
         return new Label(task2.getDueDate().toString());
