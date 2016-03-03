@@ -13,7 +13,7 @@ public class InformationParser {
 
 	public String xmlTitleAndDesc(String input) {
 		getInformation(input);
-		if (title != null) {
+		if (title != null){
 			input = input.replace(title, "<title>" + title + "</title>");
 		}
 		if (description != null) {
@@ -29,9 +29,13 @@ public class InformationParser {
 			setTitle(inputs[0].trim());
 			setDescription(inputs[1].trim());
 		} else {
-			setTitle(inputs[0].trim());
+			if (!inputs[0].trim().isEmpty()){
+				setTitle(inputs[0].trim());
+			}
 		}
 	}
+	
+	
 
 	private String removeOtherAttributes(String input) {
 		try {
@@ -86,7 +90,8 @@ public class InformationParser {
 	}
 
 	public static void main(String args[]) {
-		String input = "<cmd>add</cmd> <dates>[Wed Mar 02 22:32:30 SGT 2016]</dates> basketball with niggas:at suntec <dates>[Sun Mar 06 22:32:30 SGT 2016]</dates>";
+		//String input = "<cmd>add</cmd> <dates>[Wed Mar 02 22:32:30 SGT 2016]</dates> basketball with niggas:at suntec <dates>[Sun Mar 06 22:32:30 SGT 2016]</dates>";
+		String input = "<cmd>add</cmd>";
 		InformationParser tempInfoParser = new InformationParser();
 		System.out.println(tempInfoParser.xmlTitleAndDesc(input));
 	}
