@@ -15,8 +15,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class PrimaryUserInterface extends Application{
-    
+public class PrimaryUserInterface extends Application {
+
     static final int PREFERED_WINDOW_WIDTH = 600; // change to 1080
     static final double PREFERED_WINDOW_SCALE = 0.8;
 
@@ -35,7 +35,7 @@ public class PrimaryUserInterface extends Application{
     private boolean _fixedSize = false;
     private UserInterfaceController uiController;
     private Stage _primaryStage;
-    
+
     /**
      * Constructor will determine if the application will run in fixed size or
      * not
@@ -96,7 +96,11 @@ public class PrimaryUserInterface extends Application{
             if (textField.getText().toLowerCase().equals("exit")) {
                 System.exit(0);
             }
+            //Ten add here
+        } else if (event.getCode().compareTo(KeyCode.SPACE) == 0) {
+           //Ten add here too.
         }
+        
         if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
             uiController.move(-1);
         }
@@ -110,7 +114,7 @@ public class PrimaryUserInterface extends Application{
         if (event.getCode().compareTo(KeyCode.UP) == 0 && event.isControlDown() && !event.isShiftDown()) {
             uiController.update(-1);
         }
-        
+
         if (event.getCode().compareTo(KeyCode.RIGHT) == 0 && event.isControlDown() && !event.isShiftDown()) {
             uiController.changeView(1);
         }
@@ -119,5 +123,5 @@ public class PrimaryUserInterface extends Application{
         }
         _primaryStage.requestFocus();
     }
-    
+
 }
