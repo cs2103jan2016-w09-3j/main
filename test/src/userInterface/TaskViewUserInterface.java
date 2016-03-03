@@ -124,13 +124,6 @@ public class TaskViewUserInterface implements ViewInterface {
         this.workingList = workingList;
         _individualItemWidth = _stageWidth;
         int workingIndex = 50; // getWorkingIndex(); when qy implements
-        jumpToIndex(workingIndex);
-    }
-
-    public void jumpToIndex(int workingIndex) {
-        _mainVbox.getChildren().clear();
-        _gridPanes = new ArrayList<GridPane>();
-        
         int startIndex = 0;
         int endIndex = workingList.size() - 1;
         if (workingIndex - THRESHOLD > startIndex) {
@@ -170,6 +163,7 @@ public class TaskViewUserInterface implements ViewInterface {
         _startIndex = startIndex;
         _endIndex = endIndex;
         _selectedIndex = workingIndex;
+
     }
 
     public VBox createWeekParent() {
@@ -519,7 +513,7 @@ public class TaskViewUserInterface implements ViewInterface {
                 VBox dayParent = (VBox) weekBox.getChildren().get(k);
                 TaskEntity firstTaskInWeek = workingList.get(_startIndex + countOfItems);
                 int numberOfTaskInDay = countNumberOfTaskInDay(dayParent);
-                countOfItems += numberOfTaskInDay;
+                countOfItems+=numberOfTaskInDay;
                 DescriptionLabel dLabel = new DescriptionLabel(firstTaskInWeek);
                 dLabel.setHeight(dayParent.getMinHeight());
                 if (dayParent.getChildren().contains(hbox)) {
