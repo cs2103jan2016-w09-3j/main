@@ -26,6 +26,8 @@ public class XMLParser {
 	}
 	
 	public static Map<String, ArrayList<String>> loadMapFromXML (String xml) throws Exception{
+		xml = "<xml>"+xml +"</xml>";
+		System.out.println(xml);
 		Map<String,ArrayList<String>> returnVal = new HashMap<String,ArrayList<String>>();
 		Document xmlDoc = loadXMLFromString(xml);
 		NodeList children = xmlDoc.getChildNodes().item(0).getChildNodes();
@@ -49,9 +51,9 @@ public class XMLParser {
 	}
 	
 	public static void main(String args[]){
-		String temp = "<xml><cmd>add</cmd> <dates>nigra</dates> <title>basketball with friends</title> <dates>[Fri Mar 04 22:25:13 SGT 2016]</dates></xml> ";
+		String temp = "<cmd>add</cmd> <dates>nigra</dates> <title>basketball with friends</title> <dates>[Fri Mar 04 22:25:13 SGT 2016]</dates> ";
 		try {
-			Document tempDoc = loadXMLFromString(temp);
+			//Document tempDoc = loadXMLFromString(temp);
 			//System.out.println(tempDoc.getElementsByTagName("a").item(0).getTextContent());
 			Map<String,ArrayList<String>> m = loadMapFromXML(temp);
 			System.out.println(m.get("dates"));
