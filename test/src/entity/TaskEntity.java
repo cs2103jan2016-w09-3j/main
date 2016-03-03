@@ -1,28 +1,28 @@
 package entity;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class TaskEntity {
-    private boolean isFloating;
-    private Calendar dueDate;
-    private Calendar dateCreated;
-    private String name;
-    private String description;
-    private int id;
+    private boolean _isFloating;
+    private boolean _isFullDay;
+    private Calendar _dueDate;
+    private Calendar _dateCreated;
+    private String _name;
+    private String _description;
+    private int _id;
 
     private static int currentID = 0;
 
     public int getId() {
-        return id;
+        return _id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this._id = id;
     }
 
     public void setFloating(boolean isFloating) {
-        this.isFloating = isFloating;
+        this._isFloating = isFloating;
     }
 
     /**
@@ -30,89 +30,94 @@ public class TaskEntity {
      * used by task's constructor
      */
     private void initIdAndDate() {
-        id = currentID;
+        _id = currentID;
         currentID++;
-        dateCreated = Calendar.getInstance();
+        _dateCreated = Calendar.getInstance();
     }
 
     public TaskEntity() {
         initIdAndDate();
 
-        name = "";
-        description = "";
-        isFloating = true;
+        _name = "";
+        _description = "";
+        _isFloating = true;
     }
 
-    public TaskEntity(String _name) {
+    public TaskEntity(String name) {
         initIdAndDate();
 
-        name = _name;
-        description = "";
-        isFloating = true;
+        _name = name;
+        _description = "";
+        _isFloating = true;
     }
 
-    public TaskEntity(String _name, Calendar _dueDate) {
+    public TaskEntity(String name, Calendar dueDate, boolean isFullDay) {
         initIdAndDate();
 
-        name = _name;
-        description = "";
-        dueDate = _dueDate;
-        isFloating = false;
+        _name = name;
+        _description = "";
+        _dueDate = dueDate;
+        _isFloating = false;
+        _isFullDay = isFullDay;
     }
 
-    public TaskEntity(int id, Calendar calendar, String desc) {
-
-    }
-
-    public TaskEntity(String _name, Calendar _dueDate, String _description) {
+    public TaskEntity(String name, Calendar dueDate, boolean isFullDay, String description) {
         initIdAndDate();
 
-        name = _name;
-        description = _description;
-        dueDate = _dueDate;
-        isFloating = false;
+        _name = name;
+        _description = description;
+        _dueDate = dueDate;
+        _isFullDay = isFullDay;
+        _isFloating = false;
     }
 
-    public TaskEntity(String _name, String _description) {
+    public TaskEntity(String name, String description) {
         initIdAndDate();
 
-        name = _name;
-        description = _description;
-        isFloating = true;
+        _name = name;
+        _description = description;
+        _isFloating = true;
     }
 
     public String getName() {
-        return name;
+        return _name;
     }
 
     public Calendar getDueDate() {
-        if (!isFloating) {
-            return dueDate;
+        if (!_isFloating) {
+            return _dueDate;
         } else {
             return null;
         }
     }
 
-    public void setDueDate(Calendar _dueDate) {
-        isFloating = false;
-        dueDate = _dueDate;
+    public void setDueDate(Calendar dueDate, boolean isFullDay) {
+        _isFloating = false;
+        _dueDate = dueDate;
+        _isFullDay = isFullDay;
     }
 
     public Calendar getDateCreated() {
-        return dateCreated;
+        return _dateCreated;
     }
 
     public String getDescription() {
-        return description;
+        return _description;
     }
 
-    public void setDescription(String _description) {
-        description = _description;
+    public void setDescription(String description) {
+        _description = description;
     }
 
     public boolean isFloating() {
-        return isFloating;
+        return _isFloating;
     }
 
-   
+    public void setIfFullDay(boolean isFullDay) {
+        _isFullDay = isFullDay;
+    }
+
+    public boolean isFullDay() {
+        return _isFullDay;
+    }
 }

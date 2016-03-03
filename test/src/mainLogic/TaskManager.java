@@ -3,9 +3,10 @@ package mainLogic;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import entity.TaskEntity;
 
-class TaskManager {
+public class TaskManager {
     private static ArrayList<TaskEntity> displayedTasks;
     private static ArrayList<TaskEntity> floatingTaskEntities = new ArrayList<TaskEntity>();
     private static ArrayList<TaskEntity> mainTaskEntities = new ArrayList<TaskEntity>();
@@ -19,11 +20,7 @@ class TaskManager {
      */
     public static void main (String[] args)
     {
-        populateArray();
-        testDisplay();
-        delete("3","5");
-        delete("0", "4");
-        printList(); //0 5 10 6 //deleted 8,15,3
+       
     }
     
     /**
@@ -54,8 +51,16 @@ class TaskManager {
         displayedTasks = (ArrayList<TaskEntity>) floatingTaskEntities.clone();
     }
     
+    /**
+     * Testing function to print out the array contents
+     */
     private static void printList()
     {
+        String output = "";
+        if(displayedTasks == null){
+            displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
+        }
+        
         System.out.println("Display");
         int j = 0;
         for(int i = 0; i < displayedTasks.size(); i++)
@@ -69,7 +74,7 @@ class TaskManager {
         }
         
         System.out.println();
-        System.out.println("Main");
+        System.out.println("Floating");
         j = 0;
         for(int i = 0; i < floatingTaskEntities.size(); i++)
         {
@@ -80,10 +85,89 @@ class TaskManager {
                 j = 0;
             }
         }
+        
+        System.out.println();
+        System.out.println("Time based");
+        j = 0;
+        for(int i = 0; i < mainTaskEntities.size(); i++)
+        {
+            System.out.print(Utils.convertDecToBase36(i) + ". " + mainTaskEntities.get(i).getName() + "     ");
+            j++;
+            if(j >= 4){
+                System.out.println();
+                j = 0;
+            }
+        }
     }
-    
+
+    /**
+     * Testing function for JUnit test to check the output
+     */
+    public static String printListToString()
+    {
+        String output = "";
+        if(displayedTasks == null){
+            displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
+        }
+        
+        output += "Display\n";
+        int j = 0;
+        for(int i = 0; i < displayedTasks.size(); i++)
+        {
+            output += Utils.convertDecToBase36(i) + ". " + displayedTasks.get(i).getName() + "     ";
+            j++;
+            if(j >= 4){
+                output += "\n";
+                j = 0;
+            }
+        }
+        
+        output+= "\nFloating\n";
+        j = 0;
+        for(int i = 0; i < floatingTaskEntities.size(); i++)
+        {
+            output += Utils.convertDecToBase36(i) + ". " + floatingTaskEntities.get(i).getName() + "     ";
+            j++;
+            if(j >= 4){
+                output += "\n";
+                j = 0;
+            }
+        }
+        
+        output += "\nTime based\n";
+        
+        j = 0;
+        for(int i = 0; i < mainTaskEntities.size(); i++)
+        {
+            output += Utils.convertDecToBase36(i) + ". " + mainTaskEntities.get(i).getName() + "     ";
+            j++;
+            if(j >= 4){
+                output += "\n";
+                j = 0;
+            }
+        }
+        return output;
+    }
+
     public static ArrayList<TaskEntity> getWorkingList() {
         return displayedTasks;
+    }
+
+    public static void add(TaskEntity newTask) {
+        if(newTask.isFloating()){
+            floatingTaskEntities.add(newTask);
+        }else{
+            int idToInsert = Collections.binarySearch(mainTaskEntities, newTask, new TaskDateComparator());
+
+            // Due to Collections.binarySearch's implementation, all objects
+            // that can't be found will return a negative value, which indicates
+            // the position where the object that is being searched is supposed
+            // to be minus 1. This if case figures out the position to slot it in
+            if (idToInsert < 0) {
+                idToInsert = -(idToInsert+1);
+            }
+            mainTaskEntities.add(idToInsert, newTask);
+        }
     }
     
     /**
@@ -182,14 +266,5 @@ class TaskManager {
     public static ArrayList<TaskEntity> undo() {
         // TODO
         return new ArrayList<TaskEntity>();
-    }
-
-    public static int getTodayFirstTaskIndex() {
-        return 0;
-    }
-
-    public static int isFirstItemForDay(int index) {
-        // TODO
-        return 0;
     }
 }
