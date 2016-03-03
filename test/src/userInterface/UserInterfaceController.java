@@ -97,7 +97,57 @@ public class UserInterfaceController {
         _descriptionComponent.updateTranslateY(value);
     }
 
-    public Task<Void> createNewTaskToAnimate() {
+    public void jumpToIndex(String indexZZ) {
+        int index = Integer.parseInt(indexZZ);
+        _taskViewInterface.jumpToIndex(index);
+        _taskViewInterface.setItemSelected(0);
+       
+        Thread t = new Thread(jumpToIndexAnimation());
+        t.start();
+    }
+
+    public Task<Void> jumpToIndexAnimation() {
+        _isDoneTranslatingToOtherView = false;
+        Task<Void> jumpToIndexAnimation = new Task<Void>() {
+            @Override
+            public Void call() {
+                do {
+                    int secondsToAnimate = 3;
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                    }
+                    Platform.runLater(new Runnable() {
+                        public void run() {
+                            if (_currentView == TASK_VIEW || _currentView == DETAILED_VIEW) {
+                                if (_currentView == DETAILED_VIEW) {
+
+                                } else {
+                                    _descriptionComponent.buildComponent(
+                                            _taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
+                                    double currentMainY = _taskViewInterface.getMainLayoutComponent()
+                                            .getTranslateY();
+                                    double selectedItemY = _taskViewInterface.getTranslationY();
+
+                                    if (currentMainY < selectedItemY) {
+                                        translateComponentsY(currentMainY + 10);
+                                        _descriptionComponent.buildComponent(
+                                                _taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
+                                    } else {
+                                        _isDoneTranslatingToOtherView = true;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                } while (!_isDoneTranslatingToOtherView);
+                return null;
+            }
+        };
+        return jumpToIndexAnimation;
+    }
+
+    public Task<Void> animateTransitionForView() {
         _isDoneTranslatingToOtherView = false;
         Task<Void> animateChangeView = new Task<Void>() {
             @Override
@@ -156,7 +206,7 @@ public class UserInterfaceController {
     }
 
     public void startThreadToAnimate() {
-        _threadToAnimate = new Thread(createNewTaskToAnimate());
+        _threadToAnimate = new Thread(animateTransitionForView());
         _threadToAnimate.start();
     }
 
@@ -177,7 +227,8 @@ public class UserInterfaceController {
      * 
      * @param task1
      * @param task2
-     * @return label for task2 if the dates are not the same, null if they are the same
+     * @return label for task2 if the dates are not the same, null if they are
+     *         the same
      */
     public static Label checkSameDay(TaskEntity task1, TaskEntity task2) {
         if (task1 == null) { // new day
@@ -206,7 +257,7 @@ public class UserInterfaceController {
                 for (int i = 0; i < ind; i++) {
                     String d = (k) + " - - - " + Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "/"
                             + Integer.toString(c.get(Calendar.MONTH));
-                    TaskEntity t = new TaskEntity(Integer.toString(k++), c, d);
+                    TaskEntity t = new TaskEntity(Integer.toString(k++), c, false, d);
                     fakeData.add(t);
                 }
             }
