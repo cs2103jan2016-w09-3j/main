@@ -38,11 +38,15 @@ public class CommandBar {
     }
 
     public TaskEntity executeLine(String userInput) {
-        
+
         Calendar c = Calendar.getInstance();
         TaskEntity t = new TaskEntity("id123", c, false, userInput);
-        
-        return t; //return null if not valid command.
+
+        return t; // return null if not valid command.
+    }
+
+    public void onSpace(String input) {
+
     }
 
     public void setTextFieldHandler(EventHandler<KeyEvent> mainEventHandler) {
