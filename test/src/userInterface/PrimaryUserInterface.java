@@ -101,6 +101,7 @@ public class PrimaryUserInterface extends Application {
                 textField.setText("");
                 TaskEntity task = _commandBar.executeLine(t);
                 uiController.addTask(task);
+                _commandBar.focus();
                 // uiController.jumpToIndex("10");
             }
             // Ten add here
@@ -108,6 +109,7 @@ public class PrimaryUserInterface extends Application {
             // Ten add here too.
             String input = textField.getText();
             _commandBar.onSpace(input);
+            _commandBar.focus();
         }
 
         if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
