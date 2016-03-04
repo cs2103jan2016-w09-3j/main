@@ -2,6 +2,7 @@ package mainLogic;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import entity.TaskEntity;
@@ -266,5 +267,35 @@ public class TaskManager {
     public static ArrayList<TaskEntity> undo() {
         // TODO
         return new ArrayList<TaskEntity>();
+    }
+    
+    //ys method, do not remove, ys will remove it ^_^
+    // generate fake data.
+    public static ArrayList<TaskEntity> generateFakeData() {
+        int k = 0;
+        int day = Calendar.getInstance().get(Calendar.DATE);
+        while (k < 200) {
+            Random r = new Random();
+            int loop = r.nextInt(2);
+            for (int kk = 0; kk < loop; kk++) {
+                Random rr = new Random();
+                int ind = rr.nextInt(5);
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.DATE, ++day);
+                for (int i = 0; i < ind; i++) {
+                    String d = (k) + " - - - " + Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "/"
+                            + Integer.toString(c.get(Calendar.MONTH));
+                    TaskEntity t = new TaskEntity(Integer.toString(k++), c, false, d);
+                    add(t);
+                }
+            }
+        }
+
+        System.out.println(k + " Fake data created");
+        return mainTaskEntities;
+    }
+    //its here because u haven set the thing -.-
+    public ArrayList<TaskEntity> getMainDisplay(){
+        return mainTaskEntities;
     }
 }

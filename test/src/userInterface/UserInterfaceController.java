@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import entity.TaskEntity;
+import mainLogic.TaskManager;
 import mainLogic.Utils;
 
 import javafx.application.Platform;
@@ -34,8 +35,13 @@ public class UserInterfaceController {
     private boolean _isDoneTranslatingToOtherView;
     private Thread _threadToAnimate;
 
+    // var for animation scrolling
+    private int _jumpToIndex;
+    private TaskManager _taskManager; 
+
     public UserInterfaceController(Stage primaryStage) {
         _parentStage = primaryStage;
+        _taskManager = new TaskManager();
     }
 
     public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize) {
@@ -50,7 +56,7 @@ public class UserInterfaceController {
         _descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
         _floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
         _detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
-        _taskViewInterface.buildComponent(generateFakeData());
+        _taskViewInterface.buildComponent(_taskManager.generateFakeData());
         update(0);
     }
 
@@ -99,48 +105,55 @@ public class UserInterfaceController {
 
     public void jumpToIndex(String indexZZ) {
         int index = Integer.parseInt(indexZZ);
-        _taskViewInterface.jumpToIndex(index);
-        _taskViewInterface.setItemSelected(0);
-       
+        // check index valid a not
+        // assume is valid for now. between 0 to workingListSize;
+        _jumpToIndex = index;
         Thread t = new Thread(jumpToIndexAnimation());
         t.start();
     }
 
     public Task<Void> jumpToIndexAnimation() {
-        _isDoneTranslatingToOtherView = false;
         Task<Void> jumpToIndexAnimation = new Task<Void>() {
             @Override
             public Void call() {
-                do {
-                    int secondsToAnimate = 3;
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                    }
-                    Platform.runLater(new Runnable() {
-                        public void run() {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        
+                        boolean isDone = false;
+                        long startTime = System.currentTimeMillis() % 1000;
+                        long secondsToAnimate = 3000;
+                        int selectedIndex = _taskViewInterface.getSelectIndex();
+                        int itemsTomove = selectedIndex - _jumpToIndex;
+                        int indexMoved = 0;
+                        do {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                            Long timePassed = System.currentTimeMillis() % 1000 - startTime;
+                            double indexA = timePassed / secondsToAnimate;
+                            int numberToMoveNow = (int) (itemsTomove * indexA);
+                            int itemToMove = Math.abs(numberToMoveNow) - indexMoved;
+                            System.out.println(itemToMove);
                             if (_currentView == TASK_VIEW || _currentView == DETAILED_VIEW) {
                                 if (_currentView == DETAILED_VIEW) {
 
                                 } else {
-                                    _descriptionComponent.buildComponent(
-                                            _taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
-                                    double currentMainY = _taskViewInterface.getMainLayoutComponent()
-                                            .getTranslateY();
-                                    double selectedItemY = _taskViewInterface.getTranslationY();
-
-                                    if (currentMainY < selectedItemY) {
-                                        translateComponentsY(currentMainY + 10);
-                                        _descriptionComponent.buildComponent(
-                                                _taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
-                                    } else {
-                                        _isDoneTranslatingToOtherView = true;
+                                    for (int i = 0; i < Math.abs(itemToMove); i++) {
+                                        _taskViewInterface.update(numberToMoveNow);
                                     }
+                                    _taskViewInterface.setItemSelected(numberToMoveNow);
+                                    indexMoved+=itemToMove;
+                                    translateComponentsY(_taskViewInterface.getTranslationY());
+                                    updateDescriptionComponent();
                                 }
                             }
-                        }
-                    });
-                } while (!_isDoneTranslatingToOtherView);
+                        } while (!isDone);
+                    }
+
+                });
                 return null;
             }
         };
@@ -241,30 +254,10 @@ public class UserInterfaceController {
         return new Label(task2.getDueDate().toString());
     }
 
-    // generate fake data.
-    public static ArrayList<TaskEntity> generateFakeData() {
-        ArrayList<TaskEntity> fakeData = new ArrayList<TaskEntity>();
-        int k = 0;
-        int day = Calendar.getInstance().get(Calendar.DATE);
-        while (k < 200) {
-            Random r = new Random();
-            int loop = r.nextInt(2);
-            for (int kk = 0; kk < loop; kk++) {
-                Random rr = new Random();
-                int ind = rr.nextInt(5);
-                Calendar c = Calendar.getInstance();
-                c.set(Calendar.DATE, ++day);
-                for (int i = 0; i < ind; i++) {
-                    String d = (k) + " - - - " + Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "/"
-                            + Integer.toString(c.get(Calendar.MONTH));
-                    TaskEntity t = new TaskEntity(Integer.toString(k++), c, false, d);
-                    fakeData.add(t);
-                }
-            }
-        }
-
-        System.out.println(k + " Fake data created");
-        return fakeData;
+    public void addTask(TaskEntity task) {
+        _taskManager.add(task);
+        _taskViewInterface.buildComponent(_taskManager.getMainDisplay());
+        update(0);
     }
 
 }

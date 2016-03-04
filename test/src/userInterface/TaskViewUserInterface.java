@@ -4,6 +4,7 @@ package userInterface;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import dateParser.ReverseParser;
 import entity.DescriptionLabel;
 import entity.TaskEntity;
 import javafx.geometry.Insets;
@@ -121,16 +122,12 @@ public class TaskViewUserInterface implements ViewInterface {
     }
 
     public void buildComponent(ArrayList<TaskEntity> workingList) {
-        this.workingList = workingList;
-        _individualItemWidth = _stageWidth;
-        int workingIndex = 50; // getWorkingIndex(); when qy implements
-        jumpToIndex(workingIndex);
-    }
-
-    public void jumpToIndex(int workingIndex) {
         _mainVbox.getChildren().clear();
         _gridPanes = new ArrayList<GridPane>();
         
+        this.workingList = workingList;
+        _individualItemWidth = _stageWidth;
+        int workingIndex = 0; // getWorkingIndex(); when qy implements
         int startIndex = 0;
         int endIndex = workingList.size() - 1;
         if (workingIndex - THRESHOLD > startIndex) {
@@ -172,6 +169,10 @@ public class TaskViewUserInterface implements ViewInterface {
         _selectedIndex = workingIndex;
     }
 
+    public void jumpToIndex(int workingIndex) {
+
+    }
+
     public VBox createWeekParent() {
         VBox vbox = new VBox();
         vbox.setId("cssTaskViewWeek");
@@ -183,7 +184,6 @@ public class TaskViewUserInterface implements ViewInterface {
     public VBox createDayParent(TaskEntity taskEntity) {
         VBox vbox = new VBox();
         vbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT);
-        // vbox.setId(calculateVboxCssStyle(task.getDueDate()));
         Label dateLabel = new Label(getStringOfDate(taskEntity.getDueDate()));
         dateLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
         dateLabel.setFont(new Font(PrimaryUserInterface.DEFAULT_FONT, TaskViewUserInterface.LABEL_FONT_SIZE));
@@ -212,10 +212,8 @@ public class TaskViewUserInterface implements ViewInterface {
         return null;
     }
 
-    // this method will call ten method.
     public String getStringOfDate(Calendar c) {
-        Integer.toString(c.get(Calendar.WEEK_OF_MONTH));
-        return c.getTime().toString();
+        return ReverseParser.reParse(c);
     }
 
     public HBox buildIndividualTask(TaskEntity taskEntity) {
@@ -396,6 +394,8 @@ public class TaskViewUserInterface implements ViewInterface {
         return false;
     }
 
+    // set transLationY to be desired tranlationY, which is current selected
+    // item position + threshold
     public void updateTranslationY() {
         GridPane gp = _gridPanes.get(_selectedIndex - _startIndex);
         HBox gpParent = (HBox) gp.getParent();
@@ -633,5 +633,9 @@ public class TaskViewUserInterface implements ViewInterface {
         } else {
             return false;
         }
+    }
+
+    public int getSelectIndex() {
+        return _selectedIndex;
     }
 }

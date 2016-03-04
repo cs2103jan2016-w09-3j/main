@@ -1,5 +1,8 @@
 package userInterface;
 
+import java.util.Calendar;
+
+import entity.TaskEntity;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,6 +35,14 @@ public class CommandBar {
         _textField.setId("mainUserInput");
         _textField.setPrefWidth(800.0);
         _textField.setBorder(null);
+    }
+
+    public TaskEntity executeLine(String userInput) {
+        
+        Calendar c = Calendar.getInstance();
+        TaskEntity t = new TaskEntity("id123", c, false, userInput);
+        
+        return t; //return null if not valid command.
     }
 
     public void setTextFieldHandler(EventHandler<KeyEvent> mainEventHandler) {

@@ -2,6 +2,7 @@ package userInterface;
 
 import userInterface.CommandBar;
 import userInterface.UserInterfaceController;
+import entity.TaskEntity;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
@@ -95,12 +96,18 @@ public class PrimaryUserInterface extends Application {
         if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
             if (textField.getText().toLowerCase().equals("exit")) {
                 System.exit(0);
+            } else {
+                String t = textField.getText();
+                textField.setText("");
+                TaskEntity task = _commandBar.executeLine(t);
+                uiController.addTask(task);
+               // uiController.jumpToIndex("10");
             }
-            //Ten add here
+            // Ten add here
         } else if (event.getCode().compareTo(KeyCode.SPACE) == 0) {
-           //Ten add here too.
+            // Ten add here too.
         }
-        
+
         if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
             uiController.move(-1);
         }
