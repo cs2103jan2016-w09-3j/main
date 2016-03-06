@@ -56,7 +56,8 @@ public class UserInterfaceController {
         _descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
         _floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
         _detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
-        _taskViewInterface.buildComponent(_taskManager.generateFakeData());
+        //_taskViewInterface.buildComponent(_taskManager.generateFakeData());
+        _taskViewInterface.buildComponent(_taskManager.getMainDisplay(),0);
         update(0);
     }
 
@@ -255,8 +256,8 @@ public class UserInterfaceController {
     }
 
     public void addTask(TaskEntity task) {
-        _taskManager.add(task);
-        _taskViewInterface.buildComponent(_taskManager.getMainDisplay());
+        int insertedTo = _taskManager.add(task);
+        _taskViewInterface.buildComponent(_taskManager.getMainDisplay(), insertedTo);
         update(0);
     }
 

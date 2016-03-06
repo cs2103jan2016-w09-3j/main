@@ -121,13 +121,12 @@ public class TaskViewUserInterface implements ViewInterface {
         return _stageHeight;
     }
 
-    public void buildComponent(ArrayList<TaskEntity> workingList) {
+    public void buildComponent(ArrayList<TaskEntity> workingList, int workingIndex) {
         _mainVbox.getChildren().clear();
         _gridPanes = new ArrayList<GridPane>();
-        
+
         this.workingList = workingList;
         _individualItemWidth = _stageWidth;
-        int workingIndex = 0; // getWorkingIndex(); when qy implements
         int startIndex = 0;
         int endIndex = workingList.size() - 1;
         if (workingIndex - THRESHOLD > startIndex) {
@@ -137,33 +136,34 @@ public class TaskViewUserInterface implements ViewInterface {
             endIndex = workingIndex + THRESHOLD;
         }
 
-        VBox weekBox = createWeekParent();
-        VBox topBox = createDayParent(workingList.get(startIndex));
-        HBox item = buildIndividualTask(workingList.get(startIndex));
-        topBox.getChildren().add(item);
-        topBox.setMinHeight(topBox.getMinHeight() + item.getMinHeight());
-        for (int i = startIndex + 1; i <= endIndex; i++) {
-            if (!isSameWeek(workingList.get(i - 1), workingList.get(i))) {
-                weekBox.getChildren().add(topBox);
-                weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
-                _mainVbox.getChildren().add(weekBox);
-                weekBox = createWeekParent();
-                topBox = createDayParent(workingList.get(i));
-            } else {
-                if (!isSameDay(workingList.get(i - 1), workingList.get(i))) {
+        if (startIndex <= endIndex) {
+            VBox weekBox = createWeekParent();
+            VBox topBox = createDayParent(workingList.get(startIndex));
+            HBox item = buildIndividualTask(workingList.get(startIndex));
+            topBox.getChildren().add(item);
+            topBox.setMinHeight(topBox.getMinHeight() + item.getMinHeight());
+            for (int i = startIndex + 1; i <= endIndex; i++) {
+                if (!isSameWeek(workingList.get(i - 1), workingList.get(i))) {
                     weekBox.getChildren().add(topBox);
                     weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
+                    _mainVbox.getChildren().add(weekBox);
+                    weekBox = createWeekParent();
                     topBox = createDayParent(workingList.get(i));
+                } else {
+                    if (!isSameDay(workingList.get(i - 1), workingList.get(i))) {
+                        weekBox.getChildren().add(topBox);
+                        weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
+                        topBox = createDayParent(workingList.get(i));
+                    }
                 }
+                HBox itemToAdd = buildIndividualTask(workingList.get(i));
+                topBox.getChildren().add(itemToAdd);
+                topBox.setMinHeight(topBox.getMinHeight() + itemToAdd.getMinHeight());
             }
-            HBox itemToAdd = buildIndividualTask(workingList.get(i));
-            topBox.getChildren().add(itemToAdd);
-            topBox.setMinHeight(topBox.getMinHeight() + itemToAdd.getMinHeight());
+            weekBox.getChildren().add(topBox);
+            weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
+            _mainVbox.getChildren().add(weekBox);
         }
-        weekBox.getChildren().add(topBox);
-        weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
-        _mainVbox.getChildren().add(weekBox);
-
         _startIndex = startIndex;
         _endIndex = endIndex;
         _selectedIndex = workingIndex;
@@ -220,6 +220,7 @@ public class TaskViewUserInterface implements ViewInterface {
         HBox hbox = new HBox();
         GridPane gridPane = createGridPaneForTask(taskEntity);
         hbox.setMinHeight(gridPane.getMinHeight());
+        hbox.setMaxHeight(gridPane.getMinHeight());
         _gridPanes.add(gridPane);
         hbox.getChildren().add(gridPane);
         return hbox;
@@ -240,10 +241,21 @@ public class TaskViewUserInterface implements ViewInterface {
         }
         grid.setMaxHeight(DETAILED_VIEW_ITEM_HEIGHT);
 
-        Label timeLabel = new Label("hi");
+        Label indexLabel = new Label(Integer.toString(taskEntity.getId()));
+        indexLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
+        indexLabel.setFont(font);
+        grid.add(indexLabel, 0, 0);
+
+        Label timeLabel = new Label();
+        if (taskEntity.isFullDay()) {
+            timeLabel.setText("Full Day Event");
+        } else {
+            timeLabel.setText(taskEntity.getTime());
+        }
         timeLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
         timeLabel.setFont(font);
         grid.add(timeLabel, 1, 0);
+
         Label descriptionLabel = new Label(taskEntity.getDescription());
         descriptionLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
         descriptionLabel.setFont(font);
@@ -253,13 +265,13 @@ public class TaskViewUserInterface implements ViewInterface {
         descriptionLabel2.setMinHeight(0);
         descriptionLabel2.setFont(font);
         descriptionLabel2.setStyle("-fx-background-color:red");
-        grid.add(descriptionLabel2, 1, 1);
+        grid.add(descriptionLabel2, 2, 1);
         return grid;
     }
 
     // inclusive
     public boolean isBetweenStartEnd(int index) {
-        if (index >= _startIndex && index <= _endIndex) {
+        if (index >= _startIndex && index <= _endIndex && _startIndex != _endIndex) {
             return true;
         }
         return false;
@@ -426,15 +438,19 @@ public class TaskViewUserInterface implements ViewInterface {
             VBox weekBox = (VBox) _mainVbox.getChildren().get(i);
             totalHeight += weekBox.getMinHeight();
         }
-        totalHeight -= _stageHeight;
-        double itemPosY = -transLationY + SELECTOR_POSITION_Y;
-        if (itemPosY > 0) {
-            return 0;
+        if (totalHeight > _stageHeight) {
+            totalHeight -= _stageHeight;
+            double itemPosY = -transLationY + SELECTOR_POSITION_Y;
+            if (itemPosY > 0) {
+                return 0;
+            }
+            if (itemPosY < -totalHeight) {
+                return -totalHeight;
+            }
+            return itemPosY;
         }
-        if (itemPosY < -totalHeight) {
-            return -totalHeight;
-        }
-        return itemPosY;
+
+        return 0;
     }
 
     public void updateTranslateY(double itemPosY) {
@@ -487,7 +503,11 @@ public class TaskViewUserInterface implements ViewInterface {
 
     public ArrayList<DescriptionLabel> rebuildDescriptionLabelsForWeek() {
         ArrayList<DescriptionLabel> descriptionLables = new ArrayList<DescriptionLabel>();
-        HBox hbox = (HBox) getSelectedGridPane().getParent();
+        GridPane gp = getSelectedGridPane();
+        if (gp == null) { // no selected gridPane
+            return null;
+        }
+        HBox hbox = (HBox) gp.getParent();
         int countOfItems = 0;
         for (int i = 0; i < _mainVbox.getChildren().size(); i++) {
             VBox weekBox = (VBox) _mainVbox.getChildren().get(i);
@@ -511,7 +531,11 @@ public class TaskViewUserInterface implements ViewInterface {
 
     public ArrayList<DescriptionLabel> rebuildDescriptionLabelsForDay() {
         ArrayList<DescriptionLabel> descriptionLables = new ArrayList<DescriptionLabel>();
-        HBox hbox = (HBox) getSelectedGridPane().getParent();
+        GridPane gp = getSelectedGridPane();
+        if (gp == null) {
+            return null;
+        }
+        HBox hbox = (HBox) gp.getParent();
         int countOfItems = 0;
         for (int i = 0; i < _mainVbox.getChildren().size(); i++) {
             VBox weekBox = (VBox) _mainVbox.getChildren().get(i);
@@ -559,6 +583,9 @@ public class TaskViewUserInterface implements ViewInterface {
     }
 
     public GridPane getSelectedGridPane() {
+        if (_gridPanes.size() <= (_selectedIndex - _startIndex)) {
+            return null;
+        }
         GridPane gridPane = _gridPanes.get(_selectedIndex - _startIndex);
         return gridPane;
     }

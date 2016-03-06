@@ -85,9 +85,11 @@ public class DescriptionComponent implements ViewInterface {
         _currentView = view;
         _mainVbox.getChildren().clear();
         double totalBuildedHeight = 0;
-        for (int i = 0; i < descriptionLabels.size(); i++) {
-            _mainVbox.add(buildIndividualLabel(descriptionLabels.get(i), totalBuildedHeight), 0, i);
-            totalBuildedHeight += descriptionLabels.get(i).getHeight();
+        if (descriptionLabels != null) {
+            for (int i = 0; i < descriptionLabels.size(); i++) {
+                _mainVbox.add(buildIndividualLabel(descriptionLabels.get(i), totalBuildedHeight), 0, i);
+                totalBuildedHeight += descriptionLabels.get(i).getHeight();
+            }
         }
     }
 
@@ -173,7 +175,7 @@ public class DescriptionComponent implements ViewInterface {
         label.setAlignment(Pos.CENTER);
         return label;
     }
-    
+
     private Label setLabelForTaskView(Label label, DescriptionLabel dLabel, double height) {
         if (height > LABEL_SIZE_MEDIUM) {
 

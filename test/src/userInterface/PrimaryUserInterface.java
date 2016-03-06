@@ -98,18 +98,19 @@ public class PrimaryUserInterface extends Application {
                 System.exit(0);
             } else {
                 String t = textField.getText();
+                if (t.substring(0, t.indexOf(" ")).equals("add")) {
+
+                }
                 textField.setText("");
                 TaskEntity task = _commandBar.executeLine(t);
-                uiController.addTask(task);
+                if (task != null) {
+                    uiController.addTask(task);
+                }
                 _commandBar.focus();
-                // uiController.jumpToIndex("10");
             }
-            // Ten add here
         } else if (event.getCode().compareTo(KeyCode.SPACE) == 0) {
-            // Ten add here too.
             String input = textField.getText();
             _commandBar.onSpace(input);
-            _commandBar.focus();
         }
 
         if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
