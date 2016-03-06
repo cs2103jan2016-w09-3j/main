@@ -109,7 +109,7 @@ public class PrimaryUserInterface extends Application {
             // Ten add here too.
             String input = textField.getText();
             _commandBar.onSpace(input);
-            _commandBar.focus();
+            //_commandBar.focus();
         }
 
         if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
