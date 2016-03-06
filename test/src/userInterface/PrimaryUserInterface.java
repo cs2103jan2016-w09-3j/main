@@ -98,8 +98,10 @@ public class PrimaryUserInterface extends Application {
                 System.exit(0);
             } else {
                 String t = textField.getText();
-                if (t.substring(0, t.indexOf(" ")).equals("add")) {
+                if (t.indexOf(" ") != -1) {
+                    if (t.substring(0, t.indexOf(" ")).equals("add")) {
 
+                    }
                 }
                 textField.setText("");
                 TaskEntity task = _commandBar.executeLine(t);
