@@ -41,12 +41,21 @@ public class InputParser {
 	public void setInput(String input) {
 		this.input = input;
 	}
+	
+	public static String getLastWord(String input){
+		String returnVal = null;
+		String [] seperated = input.split(" ");
+		if (seperated.length>0){
+			returnVal = seperated[seperated.length-1];
+		}
+		return returnVal;
+	}
 
 	public static void main(String args[]) {
 		while (true) {
 			Scanner sc = new Scanner(System.in);
 			String input = sc.nextLine();
-			
+			System.out.println(InputParser.getLastWord(input));
 			InputParser parser = new InputParser(input);
 			parser.addXML();
 			System.out.println(parser.getInput());

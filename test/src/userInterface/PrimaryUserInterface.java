@@ -99,16 +99,22 @@ public class PrimaryUserInterface extends Application {
             } else {
                 String t = textField.getText();
                 if (t.indexOf(" ") != -1) {
-                    if (t.substring(0, t.indexOf(" ")).equals("add")) {
-
+                    if (t.substring(0, t.indexOf(" ")).equals("delete")) {
+                        String indexToDelete = t.substring(t.indexOf(" "));
+                        try {
+                            uiController.deleteTask(Integer.parseInt(indexToDelete));
+                        } catch (NumberFormatException e) {
+                            System.out.println("fail");
+                        }
+                    } else {
+                        textField.setText("");
+                        TaskEntity task = _commandBar.executeLine(t.substring(t.indexOf(" ")));
+                        if (task != null) {
+                            uiController.addTask(task);
+                            _commandBar.focus();
+                        }
                     }
                 }
-                textField.setText("");
-                TaskEntity task = _commandBar.executeLine(t);
-                if (task != null) {
-                    uiController.addTask(task);
-                }
-                _commandBar.focus();
             }
         } else if (event.getCode().compareTo(KeyCode.SPACE) == 0) {
             String input = textField.getText();

@@ -18,7 +18,8 @@ public class CommandParser {
 
 	public String xmlFirstWord(String input) {
 		String inputFirstWord = getFirstWord(input);
-		String returnStrVal = input.replace(inputFirstWord, "<cmd>" + inputFirstWord + "</cmd>");
+		String returnStrVal = input;
+		returnStrVal = input.replace(inputFirstWord, "<cmd>" + inputFirstWord + "</cmd>");
 		return returnStrVal;
 	}
 }

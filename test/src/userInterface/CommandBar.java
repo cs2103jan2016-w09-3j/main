@@ -2,6 +2,7 @@ package userInterface;
 
 import java.util.Calendar;
 
+import dateParser.InputParser;
 import entity.TaskEntity;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -15,6 +16,7 @@ public class CommandBar {
     private GridPane _mainPane;
     private TextField _textField;
     private int _numberOfItems = 0;
+    private String _textInField = new String();
 
     public CommandBar() {
         initializeMainPane();
@@ -45,7 +47,14 @@ public class CommandBar {
     }
 
     public void onSpace(String input) {
-
+    	
+    	_textInField += " "+InputParser.getLastWord(input);
+    	System.out.println(_textInField);
+    	InputParser parser = new InputParser(_textInField);
+    	parser.addXML();
+    	String textToShow = parser.getInput();
+    	_textField.setText(textToShow);
+    	_textField.positionCaret(textToShow.length()-1);
     }
 
     public void setTextFieldHandler(EventHandler<KeyEvent> mainEventHandler) {

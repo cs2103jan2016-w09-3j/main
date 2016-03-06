@@ -260,5 +260,10 @@ public class UserInterfaceController {
         _taskViewInterface.buildComponent(_taskManager.getMainDisplay(), insertedTo);
         update(0);
     }
+    
+    public void deleteTask(int idToDelete)
+    {
+        
+    }
 
 }
