@@ -120,4 +120,15 @@ public class TaskEntity {
     public boolean isFullDay() {
         return _isFullDay;
     }
+
+    public String getTime() {
+        if (_isFloating) {
+            return null;
+        }
+        if (_isFullDay) {
+            return "Full Day event";
+        }
+       return  _dueDate.get(Calendar.HOUR) +":"+_dueDate.get(Calendar.MINUTE);
+        
+    }
 }
