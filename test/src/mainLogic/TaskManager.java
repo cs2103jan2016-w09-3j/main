@@ -154,7 +154,7 @@ public class TaskManager {
         return displayedTasks;
     }
 
-    public static void add(TaskEntity newTask) {
+    public static int add(TaskEntity newTask) {
         if(newTask.isFloating()){
             floatingTaskEntities.add(newTask);
         }else{
@@ -168,7 +168,9 @@ public class TaskManager {
                 idToInsert = -(idToInsert+1);
             }
             mainTaskEntities.add(idToInsert, newTask);
+            return idToInsert;
         }
+        return -1;
     }
     
     /**
@@ -271,10 +273,10 @@ public class TaskManager {
     
     //ys method, do not remove, ys will remove it ^_^
     // generate fake data.
-    public static ArrayList<TaskEntity> generateFakeData() {
+    public ArrayList<TaskEntity> generateFakeData() {
         int k = 0;
         int day = Calendar.getInstance().get(Calendar.DATE);
-        while (k < 200) {
+        while (k <200) {
             Random r = new Random();
             int loop = r.nextInt(2);
             for (int kk = 0; kk < loop; kk++) {
