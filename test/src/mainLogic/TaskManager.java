@@ -21,7 +21,27 @@ public class TaskManager {
      */
     public static void main (String[] args)
     {
-       
+        add(new TaskEntity("Task floating"));
+        
+        ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
+        for(int i = 0; i < 5; i++)
+        {
+            Calendar newDate = Calendar.getInstance();
+            newDate.clear();
+            newDate.set(2016, 2, (i+1)*2);
+            newList.add(new TaskEntity("2016/2/" + Integer.toString((i+1)*2), newDate, true));
+        }
+        add(newList);
+        
+        Calendar newDate = Calendar.getInstance();
+        newDate.clear();
+        newDate.set(2016, 2, 5);
+        
+        //delete(0);
+        
+        //modify(0, new TaskEntity("2016/2/5", newDate, true));
+        
+        printList();
     }
     
     /**
@@ -151,12 +171,41 @@ public class TaskManager {
     }
 
     public static ArrayList<TaskEntity> getWorkingList() {
+        displayedTasks = mainTaskEntities;
         return displayedTasks;
     }
 
+    /**
+     * 
+     * @param index
+     * @param modifiedTask
+     * @return id of new position of the modified task in the display list
+     */
+    public static int modify(int index, TaskEntity modifiedTask) {
+        if (delete(index) == false) {
+            return -1;
+        }
+        return add(modifiedTask);
+    }
+    
+    public static int add(ArrayList<TaskEntity> tasks)
+    {
+        int firstIndex = -1;
+        if(tasks.size() >= 1) {
+            firstIndex = add(tasks.get(0));
+        }
+        
+        for(int i = 1; i < tasks.size(); i++) {
+            add(tasks.get(i));
+        }
+        
+        return firstIndex;
+    }
+    
     public static int add(TaskEntity newTask) {
         if(newTask.isFloating()){
             floatingTaskEntities.add(newTask);
+            return floatingTaskEntities.size();
         }else{
             int idToInsert = Collections.binarySearch(mainTaskEntities, newTask, new TaskDateComparator());
 
@@ -170,7 +219,6 @@ public class TaskManager {
             mainTaskEntities.add(idToInsert, newTask);
             return idToInsert;
         }
-        return -1;
     }
     
     /**
@@ -183,6 +231,10 @@ public class TaskManager {
      *         true - if delete operation succeeded
      */
     public static boolean delete(int index) {
+        if(displayedTasks == null) {
+            displayedTasks = mainTaskEntities;
+        }
+        
         if (index + 1 > displayedTasks.size()) {
             return false;
         }
@@ -193,7 +245,6 @@ public class TaskManager {
             return false;
         }
         
-        displayedTasks.remove(index);
         return true;
     }
 
