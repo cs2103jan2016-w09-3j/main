@@ -170,6 +170,9 @@ public class TaskManager {
         return output;
     }
 
+    /**
+     * @return ArrayList containing the list of time sorted tasks
+     */
     public static ArrayList<TaskEntity> getWorkingList() {
         displayedTasks = mainTaskEntities;
         return displayedTasks;
@@ -177,9 +180,10 @@ public class TaskManager {
 
     /**
      * 
-     * @param index
-     * @param modifiedTask
-     * @return id of new position of the modified task in the display list
+     * @param index - Index of task to be modified
+     * @param modifiedTask - New data of the task
+     * @return id of new position of the modified task in the display list if
+     *         succeeded in deleting the task, returns -1 otherwise
      */
     public static int modify(int index, TaskEntity modifiedTask) {
         if (delete(index) == false) {
@@ -345,10 +349,6 @@ public class TaskManager {
         }
 
         System.out.println(k + " Fake data created");
-        return mainTaskEntities;
-    }
-    //its here because u haven set the thing -.-
-    public ArrayList<TaskEntity> getMainDisplay(){
         return mainTaskEntities;
     }
 }
