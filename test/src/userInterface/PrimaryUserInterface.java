@@ -118,7 +118,7 @@ public class PrimaryUserInterface extends Application {
             }
         } else if (event.getCode().compareTo(KeyCode.SPACE) == 0) {
             String input = textField.getText();
-            _commandBar.onSpace(input);
+            //_commandBar.onSpace(input);
         }
 
         if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
