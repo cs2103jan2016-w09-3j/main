@@ -127,16 +127,17 @@ public class TaskViewUserInterface implements ViewInterface {
 
         this.workingList = workingList;
         _individualItemWidth = _stageWidth;
-        int startIndex = 0;
-        int endIndex = workingList.size() - 1;
-        if (workingIndex - THRESHOLD > startIndex) {
-            startIndex = workingIndex - THRESHOLD;
-        }
-        if (workingIndex + THRESHOLD < endIndex) {
-            endIndex = workingIndex + THRESHOLD;
-        }
 
-        if (startIndex <= endIndex) {
+        if (workingList.size() > 0) {
+            int startIndex = 0;
+            int endIndex = workingList.size() - 1;
+            if (workingIndex - THRESHOLD > startIndex) {
+                startIndex = workingIndex - THRESHOLD;
+            }
+            if (workingIndex + THRESHOLD < endIndex) {
+                endIndex = workingIndex + THRESHOLD;
+            }
+
             VBox weekBox = createWeekParent();
             VBox topBox = createDayParent(workingList.get(startIndex));
             HBox item = buildIndividualTask(workingList.get(startIndex));
@@ -163,10 +164,10 @@ public class TaskViewUserInterface implements ViewInterface {
             weekBox.getChildren().add(topBox);
             weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
             _mainVbox.getChildren().add(weekBox);
+            _startIndex = startIndex;
+            _endIndex = endIndex;
+            _selectedIndex = workingIndex;
         }
-        _startIndex = startIndex;
-        _endIndex = endIndex;
-        _selectedIndex = workingIndex;
     }
 
     public void jumpToIndex(int workingIndex) {
@@ -271,7 +272,7 @@ public class TaskViewUserInterface implements ViewInterface {
 
     // inclusive
     public boolean isBetweenStartEnd(int index) {
-        if (index >= _startIndex && index <= _endIndex && _startIndex != _endIndex) {
+        if (index >= _startIndex && index <= _endIndex) {
             return true;
         }
         return false;
@@ -397,10 +398,12 @@ public class TaskViewUserInterface implements ViewInterface {
     public boolean setItemSelected(int value) {
         int index = value + _selectedIndex;
         if (isBetweenStartEnd(index)) {
-            _gridPanes.get(_selectedIndex - _startIndex).setId(null);
-            _gridPanes.get(index - _startIndex).setId("cssTaskViewSelectedTask");
-            _selectedIndex = index;
-            updateTranslationY();
+            if (_gridPanes.size() > 0) {
+                _gridPanes.get(_selectedIndex - _startIndex).setId(null);
+                _gridPanes.get(index - _startIndex).setId("cssTaskViewSelectedTask");
+                _selectedIndex = index;
+                updateTranslationY();
+            }
             return true;
         }
         return false;
