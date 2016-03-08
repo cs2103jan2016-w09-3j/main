@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class FileHandler {
     
@@ -25,13 +26,15 @@ public class FileHandler {
         processFile();
     }
     
-    public boolean writeToFile(String input) {
+    public boolean writeToFile(ArrayList<String> input) {
         FileWriter fileWriter;
         long timeBeforeModification = storedLists.lastModified();
         long timeAfterModification = -1;
         try {
-            fileWriter = new FileWriter(filePath);        
-            fileWriter.write(input);
+            fileWriter = new FileWriter(filePath); 
+            for (int i = 0; i < input.size(); i++) {
+                fileWriter.write(input.get(i) + "\n");
+            }
             fileWriter.flush();
             fileWriter.close();
             timeAfterModification = storedLists.lastModified();
@@ -64,14 +67,14 @@ public class FileHandler {
         }
     }
 
-    public String readFromExistingFile() {        
+    public ArrayList<String> readFromExistingFile() {        
         BufferedReader buffer;
-        String readData = "";
+        ArrayList<String> readData = new ArrayList<String>();
         try {
             buffer = new BufferedReader(new FileReader(filePath));
             String currentLine = "";
             while ((currentLine = buffer.readLine()) != null) {
-                readData = readData + currentLine;
+                readData.add(currentLine);
             }
             buffer.close();
             System.out.println("Read from file");

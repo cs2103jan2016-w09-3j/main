@@ -9,16 +9,24 @@ import entity.TaskEntity;
 
 public class StorageHandler implements StorageInterface {
     
+    private FileHandler fh = new FileHandler();
     // Test function
     public static void main (String args[]) {
         StorageHandler storageHandler = new StorageHandler();
         
         FileHandler fm = new FileHandler();
         
-        AllTaskLists dummyTL = storageHandler.createDummy();
-        fm.writeToFile(storageHandler.convertObjToJson(dummyTL));
+        //AllTaskLists dummyTL = storageHandler.createDummy();
+        //fm.writeToFile(storageHandler.convertObjToJson(dummyTL));
         
-        System.out.println(fm.readFromExistingFile());
+        ArrayList<String> dummyArrayList = new ArrayList<String>();
+        dummyArrayList.add("a");
+        dummyArrayList.add("b");
+        dummyArrayList.add("c");
+        dummyArrayList.add("d");
+        fm.writeToFile(dummyArrayList);
+        
+        System.out.println(fm.readFromExistingFile().toString());
     }
 
     public AllTaskLists getTaskLists() {
@@ -31,12 +39,6 @@ public class StorageHandler implements StorageInterface {
         FileHandler fm = new FileHandler();
         JsonHandler jh = new JsonHandler();
         boolean isStored = false;
-        try {
-            isStored = fm.writeToFile(jh.convertToJson(atl).toString());
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         return isStored;
     }
     
@@ -66,5 +68,13 @@ public class StorageHandler implements StorageInterface {
         }
         
         return jsonString;
+    }
+
+    public ArrayList<String> retrieveFromFile() {
+        return fh.readFromExistingFile();
+    }
+
+    public Boolean saveToFile(ArrayList<String> command) {
+        return fh.writeToFile(command);
     }
 }
