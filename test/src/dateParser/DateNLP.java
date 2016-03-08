@@ -60,10 +60,12 @@ public class DateNLP {
 		List<DateGroup> dateGroups = nattyParser.parse(input);
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
-			System.out.println(dates);
-			String dateUS = dateGroups.get(i).getText();
+			//System.out.println(dateGroups.get(i).getText());
+			//System.out.println(dates);
+			//String dateUS = dateGroups.get(i).getText();
 			//String dateSG = convertFormalDates(dateUS);
-			returnVal = returnVal.replace(dateUS, "<dates>" + dates + "</dates>");
+			System.out.println("test"+ dateGroups.get(i).getText());
+			returnVal = returnVal.replace(dateGroups.get(i).getText(), "<dates>" + dateGroups.get(i).getText() + "</dates>");
 		}
 		showErr();
 		return returnVal;

@@ -2,6 +2,7 @@ package userInterface;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -56,8 +57,8 @@ public class UserInterfaceController {
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
-		_taskViewInterface.buildComponent(_taskManager.generateFakeData(), 5);
-		// _taskViewInterface.buildComponent(_taskManager.getMainDisplay(), 0);
+		// _taskManager.generateFakeData();// replace when integrate with angie
+		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
 		update(0);
 	}
 
@@ -101,63 +102,6 @@ public class UserInterfaceController {
 	public void translateComponentsY(double value) {
 		_taskViewInterface.updateTranslateY(value);
 		_descriptionComponent.updateTranslateY(value);
-	}
-
-	public void jumpToIndex(String indexZZ) {
-		int index = Integer.parseInt(indexZZ);
-		// check index valid a not
-		// assume is valid for now. between 0 to workingListSize;
-		_jumpToIndex = index;
-		Thread t = new Thread(jumpToIndexAnimation());
-		t.start();
-	}
-
-	public Task<Void> jumpToIndexAnimation() {
-		Task<Void> jumpToIndexAnimation = new Task<Void>() {
-			@Override
-			public Void call() {
-				Platform.runLater(new Runnable() {
-					public void run() {
-
-						boolean isDone = false;
-						long startTime = System.currentTimeMillis() % 1000;
-						long secondsToAnimate = 3000;
-						int selectedIndex = _taskViewInterface.getSelectIndex();
-						int itemsTomove = selectedIndex - _jumpToIndex;
-						int indexMoved = 0;
-						do {
-							try {
-								Thread.sleep(500);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							Long timePassed = System.currentTimeMillis() % 1000 - startTime;
-							double indexA = timePassed / secondsToAnimate;
-							int numberToMoveNow = (int) (itemsTomove * indexA);
-							int itemToMove = Math.abs(numberToMoveNow) - indexMoved;
-							System.out.println(itemToMove);
-							if (_currentView == TASK_VIEW || _currentView == DETAILED_VIEW) {
-								if (_currentView == DETAILED_VIEW) {
-
-								} else {
-									for (int i = 0; i < Math.abs(itemToMove); i++) {
-										_taskViewInterface.update(numberToMoveNow);
-									}
-									_taskViewInterface.setItemSelected(numberToMoveNow);
-									indexMoved += itemToMove;
-									translateComponentsY(_taskViewInterface.getTranslationY());
-									updateDescriptionComponent();
-								}
-							}
-						} while (!isDone);
-					}
-
-				});
-				return null;
-			}
-		};
-		return jumpToIndexAnimation;
 	}
 
 	public Task<Void> animateTransitionForView() {
@@ -254,21 +198,22 @@ public class UserInterfaceController {
 	}
 
 	public void addTask(TaskEntity task) {
-		int date = task.getDueDate().get(Calendar.DATE);
-		Random r = new Random();
-		date += r.nextInt(10);
-		date += 5;
-		task.getDueDate().set(Calendar.DATE, date);
-		task.getDueDate().set(Calendar.MONTH, task.getDueDate().get(Calendar.MONTH) + 2);
+		/*
+		 * int date = task.getDueDate().get(Calendar.DATE); Random r = new
+		 * Random(); date += r.nextInt(10); date += 5;
+		 * task.getDueDate().set(Calendar.DATE, date);
+		 * task.getDueDate().set(Calendar.MONTH,
+		 * task.getDueDate().get(Calendar.MONTH) + 2);
+		 */
+		System.out.println(task.getDueDate());
+
 		int insertedTo = _taskManager.add(task);
 		int selected = _taskViewInterface.getSelectIndex();
-
 		if (selected == -1) {
 			selected = 0;
 		} else if (insertedTo <= selected) {
 			selected++;
 		}
-
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
 		update(0);
 
@@ -277,10 +222,10 @@ public class UserInterfaceController {
 		t.start();
 	}
 
-	public boolean deleteTask(String idToDelete) {
+	public boolean deleteTask(int idToDelete) {
 		boolean isDeleted = _taskManager.delete(idToDelete);
 		if (isDeleted) {
-			int index = Utils.convertBase36ToDec(idToDelete);
+			int index = idToDelete;
 			index--;
 			if (index < 0) {
 				index = 0;
@@ -292,14 +237,45 @@ public class UserInterfaceController {
 		return false;
 	}
 
-	public boolean modifyTask(String idToModify, TaskEntity task) {
-		int index = _taskManager.modify(Utils.convertBase36ToDec(idToModify), task);
+	public int getTaskID(TaskEntity taskToCheck) {
+		int index = -1;
+		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
+		for (int i = 0; i < tasks.size(); i++) {
+			TaskEntity taskOnList = tasks.get(i);
+			System.out.println("test0");
+			System.out.println(taskOnList.getDueDate().getTime());
+			Calendar toCheckDate = taskToCheck.getDueDate();
+			toCheckDate.clear(Calendar.MILLISECOND);
+
+			Calendar onListDate= taskOnList.getDueDate();
+			onListDate.clear(Calendar.MILLISECOND);
+
+			if (toCheckDate.compareTo(onListDate) == 0) {
+				System.out.println("test1");
+				if (taskToCheck.getName().equals(taskOnList.getName())) {
+					System.out.println("test2");
+					index = i;
+				}
+			}
+		}
+		return index;
+	}
+
+	public boolean modifyTask(int idToModify, TaskEntity task) {
+		int index = _taskManager.modify(idToModify, task);
 		if (index < 0) {
 			return false;
 		}
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
 		update(0);
 		return true;
+	}
+
+	public void jumpToIndex(String indexToJump) {
+		int selected = _taskViewInterface.getSelectIndex();
+		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, Utils.convertBase36ToDec(indexToJump), this);
+		Thread t = new Thread(sAnimation);
+		t.start();
 	}
 
 }
