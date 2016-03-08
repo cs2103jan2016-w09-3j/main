@@ -39,7 +39,7 @@ public class FileHandler {
         return false;
     }
 
-    // if file exists, use file. Else, creates new file
+    // if file exists, use file. Else, create new file
     private void processFile() {
         File storedLists = new File(filePath);
         
@@ -72,10 +72,8 @@ public class FileHandler {
             buffer.close();
             System.out.println("Read from file");
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         

@@ -10,6 +10,7 @@ import org.json.simple.parser.ParseException;
 
 import com.google.gson.Gson;
 
+import entity.AllTaskLists;
 import entity.TaskEntity;
 
 public class JsonHandler {
@@ -18,17 +19,22 @@ public class JsonHandler {
         
     }
     
-    public JSONArray convertToJson(ArrayList<TaskEntity> taskEntities) throws JSONException {
+    public JSONArray convertToJson(AllTaskLists allTaskLists) throws JSONException {
         JSONArray taskEntitiesJson = new JSONArray();
         
-        for(int i = 0; i< taskEntities.size(); i++) {
-            taskEntitiesJson.put(extractDetails(taskEntities, i));
+        for(int i = 0; i< allTaskLists.getFloatingTaskList().size(); i++) {
+            taskEntitiesJson.put(extractJsonObject(allTaskLists.getFloatingTaskList(), i));
         }
+        
+        for(int i = 0; i< allTaskLists.getMainTaskList().size(); i++) {
+            taskEntitiesJson.put(extractJsonObject(allTaskLists.getMainTaskList(), i));
+        }
+        
         System.out.println("Converting arraylist to JSON.");
         return taskEntitiesJson;
     }
     
-    private JSONObject extractDetails(ArrayList<TaskEntity> taskList, int i) throws JSONException {
+    private JSONObject extractJsonObject(ArrayList<TaskEntity> taskList, int i) throws JSONException {
         JSONObject taskDetails = new JSONObject();
         
         Gson gson = new Gson();
@@ -42,7 +48,15 @@ public class JsonHandler {
         return taskDetails;
     }
     
-    private void convertFromJson() {
+    public void convertFromJson(JSONArray taskEntitiesJson) {
+        Gson gson = new Gson();
+        
+        for (int i = 0; i < taskEntitiesJson.length(); i++) {
+            //JSONObject currentTask = taskEntitiesJson.getJSONObject(i);
+            
+            //int id = gson.fromJson(String.valueOf(currentTask.get("id")), int.class);
+            
+        }
         
     }
 }

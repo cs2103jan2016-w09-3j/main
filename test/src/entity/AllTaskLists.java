@@ -4,27 +4,31 @@ import java.util.ArrayList;
 
 public class AllTaskLists {
     
-    private ArrayList<String> mainTaskList;
-    private ArrayList<String> floatingTaskList;
+    private ArrayList<TaskEntity> mainTaskList;
+    private ArrayList<TaskEntity> floatingTaskList;
     
-    public AllTaskLists(ArrayList<String> main, ArrayList<String> floating) {
-        setMainTaskList(new ArrayList<String>(main));
-        setFloatingTaskList(new ArrayList<String>(floating));
+    public AllTaskLists() {
+        
+    }
+    
+    public AllTaskLists(ArrayList<TaskEntity> main, ArrayList<TaskEntity> floating) {
+        setMainTaskList(main);
+        setFloatingTaskList(floating);
     }
 
-    public ArrayList<String> getMainTaskList() {
+    public ArrayList<TaskEntity> getMainTaskList() {
         return mainTaskList;
     }
 
-    public void setMainTaskList(ArrayList<String> mainTaskList) {
+    public void setMainTaskList(ArrayList<TaskEntity> mainTaskList) {
         this.mainTaskList = mainTaskList;
     }
 
-    public ArrayList<String> getFloatingTaskList() {
+    public ArrayList<TaskEntity> getFloatingTaskList() {
         return floatingTaskList;
     }
 
-    public void setFloatingTaskList(ArrayList<String> floatingTaskList) {
+    public void setFloatingTaskList(ArrayList<TaskEntity> floatingTaskList) {
         this.floatingTaskList = floatingTaskList;
     }
 }
