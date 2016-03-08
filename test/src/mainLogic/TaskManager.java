@@ -52,7 +52,7 @@ public class TaskManager {
      * TEST FUNCTION
      * Prints out the 2 arraylists
      */
-    private static void testDisplay(){
+    private static void testDisplay() {
         displayedTasks = new ArrayList<TaskEntity>();
         displayedTasks.add(floatingTaskEntities.get(0));
         displayedTasks.add(floatingTaskEntities.get(5));
@@ -65,11 +65,11 @@ public class TaskManager {
     
     /**
      * TESTING FUNCTION
-     * Populates the displayedTasks and taskEntities array with fake data for testing
+     * Populates the displayedTasks and taskEntities array with fake data for
+     * testing
      */
     private static void populateArray() {
-        for(int i = 0; i < 30; i++)
-        {
+        for (int i = 0; i < 30; i++) {
             TaskEntity new_task = new TaskEntity("Task " + Integer.toString(i));
             floatingTaskEntities.add(new_task);
         }
