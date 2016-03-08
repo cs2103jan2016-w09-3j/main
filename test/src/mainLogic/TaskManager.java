@@ -370,19 +370,17 @@ public class TaskManager {
         int day = Calendar.getInstance().get(Calendar.DATE);
         while (k <200) {
             Random r = new Random();
-            int loop = r.nextInt(2);
-            for (int kk = 0; kk < loop; kk++) {
-                Random rr = new Random();
-                int ind = rr.nextInt(5);
-                Calendar c = Calendar.getInstance();
-                c.set(Calendar.DATE, ++day);
-                for (int i = 0; i < ind; i++) {
-                    String d = (k) + " - - - " + Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "/"
-                            + Integer.toString(c.get(Calendar.MONTH));
-                    TaskEntity t = new TaskEntity(Integer.toString(k++), c, false, d);
-                    add(t);
-                }
-            }
+            int monthBuffer = r.nextInt(12);
+            int dateBuffer = r.nextInt(31);
+            int hourBuffer = r.nextInt(12);
+            
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.MONTH, monthBuffer);
+            c.set(Calendar.DATE, dateBuffer);
+            c.set(Calendar.HOUR, hourBuffer);
+            
+            TaskEntity t = new TaskEntity(Integer.toString(k++), c, false, "yea");
+            add(t);
         }
 
         System.out.println(k + " Fake data created");
