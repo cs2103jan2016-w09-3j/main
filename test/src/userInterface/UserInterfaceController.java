@@ -257,9 +257,9 @@ public class UserInterfaceController {
 		int date = task.getDueDate().get(Calendar.DATE);
 		Random r = new Random();
 		date += r.nextInt(10);
-		date+=5;
+		date += 5;
 		task.getDueDate().set(Calendar.DATE, date);
-		task.getDueDate().set(Calendar.MONTH, task.getDueDate().get(Calendar.MONTH)+2);
+		task.getDueDate().set(Calendar.MONTH, task.getDueDate().get(Calendar.MONTH) + 2);
 		int insertedTo = _taskManager.add(task);
 		int selected = _taskViewInterface.getSelectIndex();
 
@@ -268,17 +268,33 @@ public class UserInterfaceController {
 		} else if (insertedTo <= selected) {
 			selected++;
 		}
-		
+
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
 		update(0);
-		
+
 		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, insertedTo, this);
 		Thread t = new Thread(sAnimation);
 		t.start();
 	}
 
-	public void deleteTask(int idToDelete) {
-
+	public boolean deleteTask(String idToDelete) {
+		boolean isDeleted = _taskManager.delete(idToDelete);
+		if (isDeleted) {
+			int index = Utils.convertBase36ToDec(idToDelete);
+			index--;
+			if (index < 0) {
+				index = 0;
+			}
+			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
+			update(0);
+			return true;
+		}
+		return false;
+	}
+	
+	public void modifyTask()
+	{
+		
 	}
 
 }
