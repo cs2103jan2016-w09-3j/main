@@ -208,15 +208,12 @@ public class UserInterfaceController {
 
 		int insertedTo = _taskManager.add(task);
 		int selected = _taskViewInterface.getSelectIndex();
-		System.out.println("id "+selected+" "+insertedTo);
 		
 		if (selected == -1) {
 			selected = 0;
 		} else if (insertedTo <= selected) {
 			selected++;
 		}
-		
-		System.out.println(selected+" "+insertedTo);
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
 		update(0);
 		
