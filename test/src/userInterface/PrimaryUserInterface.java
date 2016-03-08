@@ -109,7 +109,7 @@ public class PrimaryUserInterface extends Application {
 
 	public boolean executeDelete(TaskEntity taskToCheck) {
 		int indexToDelete = uiController.getTaskID(taskToCheck);
-		if(indexToDelete>-1){
+		if (indexToDelete > -1) {
 			boolean temp = uiController.deleteTask(indexToDelete);
 			if (temp) {
 				_commandBar.getTextField().setText("");
@@ -121,53 +121,50 @@ public class PrimaryUserInterface extends Application {
 
 	public boolean executeModify(TaskEntity taskToCheck) {
 		int indexToModify = uiController.getTaskID(taskToCheck);
-		if(indexToModify>-1){
+		if (indexToModify > -1) {
 			boolean temp = uiController.modifyTask(indexToModify, taskToCheck);
 			if (temp) {
 				_commandBar.getTextField().setText("");
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
 	public boolean executeJump(String indexToJump) {
 		uiController.jumpToIndex(indexToJump);
+		_commandBar.getTextField().setText("");
 		return true;
 	}
 
 	private void processKeyInputs(TextField textField, KeyEvent event) {
-		
 		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
 			COMMAND cmd = _commandBar.onEnter(textField.getText());
 			String t = _commandBar.get_textInField();
 			if (cmd.equals(COMMAND.EXIT)) {
-					System.exit(0);
+				System.exit(0);
 			} else if (cmd.equals(COMMAND.ADD)) {
 				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
-				for(int i=0; i<tasks.size(); i++)
-				{
+				for (int i = 0; i < tasks.size(); i++) {
 					executeAdd(tasks.get(i));
 				}
-			}else if (cmd.equals(COMMAND.EDIT)){
+			} else if (cmd.equals(COMMAND.EDIT)) {
 				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
-				for(int i=0; i<tasks.size(); i++)
-				{
+				for (int i = 0; i < tasks.size(); i++) {
 					executeModify(tasks.get(i));
 				}
-			}else if (cmd.equals(COMMAND.DELETE)){
+			} else if (cmd.equals(COMMAND.DELETE)) {
 				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
-				for(int i=0; i<tasks.size(); i++)
-				{
+				for (int i = 0; i < tasks.size(); i++) {
 					executeDelete(tasks.get(i));
 				}
-				
-			}else if (t.substring(0, t.indexOf(" ")).equals("jump")) {
+
+			} else if (t.substring(0, t.indexOf(" ")).equals("jump")) {
 				String indexToDelete = t.substring(t.indexOf(" ") + 1);
 				executeJump(indexToDelete);
 			}
-		}else if (event.getCode().compareTo(KeyCode.SPACE) == 0) {
+		} else if (event.getCode().compareTo(KeyCode.SPACE) == 0) {
 			String input = textField.getText();
 			_commandBar.onSpace(input);
 		}
