@@ -56,7 +56,7 @@ public class UserInterfaceController {
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
-		//_taskManager.generateFakeData();// replace when integrate with angie
+		// _taskManager.generateFakeData();// replace when integrate with angie
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
 		update(0);
 	}
@@ -208,18 +208,18 @@ public class UserInterfaceController {
 
 		int insertedTo = _taskManager.add(task);
 		int selected = _taskViewInterface.getSelectIndex();
-		System.out.println("id "+selected+" "+insertedTo);
-		
+		System.out.println("id " + selected + " " + insertedTo);
+
 		if (selected == -1) {
 			selected = 0;
 		} else if (insertedTo <= selected) {
 			selected++;
 		}
-		
-		System.out.println(selected+" "+insertedTo);
+
+		System.out.println(selected + " " + insertedTo);
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
 		update(0);
-		
+
 		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, insertedTo, this);
 		Thread t = new Thread(sAnimation);
 		t.start();
@@ -245,8 +245,14 @@ public class UserInterfaceController {
 		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
 		for (int i = 0; i < tasks.size(); i++) {
 			TaskEntity taskOnList = tasks.get(i);
-			if(taskToCheck.getDueDate().equals(taskOnList.getDueDate())){
-				if(taskToCheck.getName().equals(taskToCheck.getName())){
+			System.out.println("test0");
+			System.out.println(taskOnList.getDueDate().getTime());
+			System.out.println(taskToCheck.getDueDate().getTime());
+			System.out.println(taskToCheck.getDueDate().compareTo(taskOnList.getDueDate()));
+			if (taskToCheck.getDueDate().compareTo(taskOnList.getDueDate()) == 0) {
+				System.out.println("test1");
+				if (taskToCheck.getName().equals(taskOnList.getName())) {
+					System.out.println("test2");
 					index = i;
 				}
 			}
