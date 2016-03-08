@@ -10,12 +10,6 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import com.google.gson.Gson;
-
 import entity.TaskEntity;
 
 public class FileManager {
@@ -58,23 +52,21 @@ public class FileManager {
     
     public FileManager() {
         fileName = "taskList.txt";
-        //mainTaskEntities = new ArrayList<TaskEntity>();
-        //floatingTaskEntities = new ArrayList<TaskEntity>();
-        //allTaskEntities = new JSONArray();
     }
     
-    public FileManager(ArrayList<TaskEntity> _main, ArrayList<TaskEntity> _floating) {
+    public FileManager(ArrayList<TaskEntity> main, ArrayList<TaskEntity> floating) {
         fileName = "taskList.txt";
-        mainTaskEntities = new ArrayList<TaskEntity>(_main);
-        floatingTaskEntities = new ArrayList<TaskEntity>(_floating);
+        mainTaskEntities = new ArrayList<TaskEntity>(main);
+        floatingTaskEntities = new ArrayList<TaskEntity>(floating);
         allTaskEntities = new JSONArray();
     }
     
     public void init() throws JSONException, IOException {
         System.out.println("Initialising....");
         processFile();
-        allTaskEntities.put(convertToJson(mainTaskEntities));
-        allTaskEntities.put(convertToJson(floatingTaskEntities));
+        JsonHandler json = new JsonHandler();
+        allTaskEntities.put(json.convertToJson(mainTaskEntities));
+        allTaskEntities.put(json.convertToJson(floatingTaskEntities));
         writeToFile(allTaskEntities);
     }
     
@@ -85,10 +77,15 @@ public class FileManager {
         System.out.println("Creating new file...");
     }
     
-    // TODO stub
+    // TODO 
     private void readFromExistingFile() throws IOException {
+        ArrayList<String> storedTasks = new ArrayList<String>();
         try {
             BufferedReader buffer = new BufferedReader(new FileReader(fileName));
+            String currentLine = "";
+            while ((currentLine = buffer.readLine()) != null) {
+                storedTasks.add(currentLine);
+            }
             buffer.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");

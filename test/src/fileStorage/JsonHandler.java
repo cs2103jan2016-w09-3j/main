@@ -12,9 +12,13 @@ import com.google.gson.Gson;
 
 import entity.TaskEntity;
 
-public class jsonHandler {
+public class JsonHandler {
     
-    private JSONArray convertToJson(ArrayList<TaskEntity> taskEntities) throws JSONException {
+    public JsonHandler() {
+        
+    }
+    
+    public JSONArray convertToJson(ArrayList<TaskEntity> taskEntities) throws JSONException {
         JSONArray taskEntitiesJson = new JSONArray();
         
         for(int i = 0; i< taskEntities.size(); i++) {
@@ -38,7 +42,7 @@ public class jsonHandler {
         return taskDetails;
     }
     
-    private ArrayList<String> convertFromJson() {
+    private void convertFromJson() {
         
     }
 }
