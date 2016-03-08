@@ -154,7 +154,7 @@ public class PrimaryUserInterface extends Application {
 				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
 				for(int i=0; i<tasks.size(); i++)
 				{
-					executeDelete(tasks.get(i));
+					executeModify(tasks.get(i));
 				}
 			}else if (cmd.equals(COMMAND.DELETE)){
 				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
