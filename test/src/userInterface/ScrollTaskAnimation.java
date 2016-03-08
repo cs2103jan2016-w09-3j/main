@@ -17,6 +17,8 @@ public class ScrollTaskAnimation extends Task<Integer> {
 		ui = userInterfaceController;
 	}
 
+	Runnable r;
+
 	@Override
 	protected Integer call() throws Exception {
 		direction = 0;
@@ -26,15 +28,20 @@ public class ScrollTaskAnimation extends Task<Integer> {
 			direction = -1;
 		}
 		long startTime = System.currentTimeMillis();
+
 		while (currentIndex != indexToGo) {
 			startTime = checkTime(startTime);
 			checkExceed();
-			Platform.runLater(new Runnable() {
-				public void run() {
-					ui.update(direction);
-					currentIndex = currentIndex + direction;
-				}
-			});
+			if (r == null) {
+				r = new Runnable() {
+					public void run() {
+						ui.update(direction);
+						currentIndex = currentIndex + direction;
+						r =null;
+					}
+				};
+				Platform.runLater(r);
+			}
 			Thread.sleep(80);
 		}
 
@@ -61,7 +68,7 @@ public class ScrollTaskAnimation extends Task<Integer> {
 	public void checkExceed() {
 		if (direction < 0) {
 			if (currentIndex + direction < indexToGo) {
-				direction =  currentIndex - indexToGo;
+				direction = currentIndex - indexToGo;
 			}
 		} else if (direction > 0) {
 			if (currentIndex + direction > indexToGo) {

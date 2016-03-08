@@ -197,24 +197,23 @@ public class UserInterfaceController {
 	}
 
 	public void addTask(TaskEntity task) {
-		int date = task.getDueDate().get(Calendar.DATE);
-		Random r = new Random();
-		date += r.nextInt(10);
-		date += 5;
-		task.getDueDate().set(Calendar.DATE, date);
-		task.getDueDate().set(Calendar.MONTH, task.getDueDate().get(Calendar.MONTH) + 2);
+		System.out.println(task.getDueDate().get(Calendar.YEAR));
+		System.out.println(task.getDueDate().get(Calendar.MONTH));
+		System.out.println(task.getDueDate().get(Calendar.DATE));
 		int insertedTo = _taskManager.add(task);
 		int selected = _taskViewInterface.getSelectIndex();
-
+		System.out.println("id "+selected+" "+insertedTo);
+		
 		if (selected == -1) {
 			selected = 0;
 		} else if (insertedTo <= selected) {
 			selected++;
 		}
-
+		
+		System.out.println(selected+" "+insertedTo);
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
 		update(0);
-
+		
 		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, insertedTo, this);
 		Thread t = new Thread(sAnimation);
 		t.start();
