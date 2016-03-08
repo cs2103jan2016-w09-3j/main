@@ -1,6 +1,13 @@
 package dateParser;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
+
+import dateParser.CommandParser.COMMAND;
+import entity.TaskEntity;
 
 public class InputParser {
 	private String input;
@@ -42,6 +49,10 @@ public class InputParser {
 		this.input = input;
 	}
 	
+	public COMMAND getCommand(String input){
+		return cmdParser.getCommand(input);
+	}
+	
 	public static String getLastWord(String input){
 		String returnVal = null;
 		String [] seperated = input.split(" ");
@@ -51,6 +62,25 @@ public class InputParser {
 		return returnVal;
 	}
 
+	public ArrayList<TaskEntity> getTask(String input){
+		input = XMLParser.removeAllTags(input);
+		this.input = input;
+		ArrayList<TaskEntity> tasks  = new ArrayList<TaskEntity>();
+		List<Date> dates = dateParser.parseToList(input);
+		addXMLDate();
+		addXMLCmd();
+		infoParser.setInformation(this.input);
+		String name = infoParser.getTitle();
+		String desc = infoParser.getDescription();
+		for(int i=0; i<dates.size(); i++){
+			Calendar c = Calendar.getInstance();
+			c.setTime(dates.get(i));
+			TaskEntity toAdd = new TaskEntity(name, c, false, desc);
+			tasks.add(toAdd);
+		}
+		return tasks;
+	}
+	
 	public static void main(String args[]) {
 		while (true) {
 			Scanner sc = new Scanner(System.in);

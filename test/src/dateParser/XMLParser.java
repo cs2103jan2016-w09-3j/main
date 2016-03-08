@@ -50,6 +50,43 @@ public class XMLParser {
 		return returnVal;
 	}
 	
+	public static String removeAllAttributes(String input) {
+		try {
+			Document tempXMLDoc = XMLParser.loadXMLFromString("<XML>" + input + "</XML>");
+			input = removeAttribute(input, tempXMLDoc,TITLE_TAG);
+			input = removeAttribute(input, tempXMLDoc,CMD_TAG);
+			input = removeAttribute(input, tempXMLDoc,DESC_TAG);
+			input = removeAttribute(input, tempXMLDoc,DATE_TAG);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return input;
+	}
+
+	private static String removeAttribute(String input, Document tempXMLDoc, String tag) {
+		input = input.replace("<"+tag+">", "");
+		input = input.replace("</"+tag+">", "");
+		NodeList titles = tempXMLDoc.getElementsByTagName(tag);
+		for (int i = 0; i < titles.getLength(); i++) {
+			input = input.replace(titles.item(i).getTextContent(), "");
+		}
+		return input;
+	}
+	
+	public static String removeAllTags(String input) {
+		input = removeTags(input, CMD_TAG);
+		input = removeTags(input, TITLE_TAG);
+		input = removeTags(input, DESC_TAG);
+		input = removeTags(input, DATE_TAG);
+		return input;
+	}
+	
+	private static String removeTags(String input, String tag) {
+		input = input.replace("<"+tag+">", "");
+		input = input.replace("</"+tag+">", "");
+		return input;
+	}
+	
 	public static void main(String args[]){
 		String temp = "<cmd>add</cmd> <dates>nigra</dates> <title>basketball with friends</title> <dates>[Fri Mar 04 22:25:13 SGT 2016]</dates> ";
 		try {

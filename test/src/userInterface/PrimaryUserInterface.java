@@ -3,8 +3,10 @@ package userInterface;
 import userInterface.CommandBar;
 import userInterface.UserInterfaceController;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
+import dateParser.CommandParser.COMMAND;
 import entity.TaskEntity;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -127,32 +129,29 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	private void processKeyInputs(TextField textField, KeyEvent event) {
+		
 		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
-			if (textField.getText().toLowerCase().equals("exit")) {
-				System.exit(0);
-			} else {
-				String t = textField.getText();
-				if (t.indexOf(" ") != -1) {
-					if (t.substring(0, t.indexOf(" ")).equals("del")) {
-						String indexToDelete = t.substring(t.indexOf(" ") + 1);
-						executeDelete(indexToDelete);
-					} else if (t.substring(0, t.indexOf(" ")).equals("add")) {
-						TaskEntity task = _commandBar.executeLine(t.substring(t.indexOf(" ")));
-						executeAdd(task);
-					} else if (t.substring(0, t.indexOf(" ")).equals("mod")) {
-						String indexToModify = t.substring(t.indexOf(" ") + 1);
-						TaskEntity task = new TaskEntity("modify to this task ", Calendar.getInstance(), false,
-								"modified");
-						executeModify(indexToModify, task);
-					} else if (t.substring(0, t.indexOf(" ")).equals("jump")) {
-						String indexToDelete = t.substring(t.indexOf(" ") + 1);
-						executeJump(indexToDelete);
-					}
+			COMMAND cmd = _commandBar.onEnter(textField.getText());
+			String t = _commandBar.get_textInField();
+			if (cmd.equals(COMMAND.EXIT)) {
+					System.exit(0);
+			} else if (cmd.equals(COMMAND.ADD)) {
+				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
+				for(int i=0; i<tasks.size(); i++)
+				{
+					executeAdd(tasks.get(i));
 				}
+			}else if (cmd.equals(COMMAND.EDIT)){
+				
+			}else if (cmd.equals(COMMAND.DELETE)){
+			
+			}else if (t.substring(0, t.indexOf(" ")).equals("jump")) {
+				String indexToDelete = t.substring(t.indexOf(" ") + 1);
+				executeJump(indexToDelete);
 			}
-		} else if (event.getCode().compareTo(KeyCode.SPACE) == 0) {
+		}else if (event.getCode().compareTo(KeyCode.SPACE) == 0) {
 			String input = textField.getText();
-			// _commandBar.onSpace(input);
+			_commandBar.onSpace(input);
 		}
 
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
