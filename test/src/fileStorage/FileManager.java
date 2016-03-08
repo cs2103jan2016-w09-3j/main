@@ -58,9 +58,9 @@ public class FileManager {
     
     public FileManager() {
         fileName = "taskList.txt";
-        mainTaskEntities = new ArrayList<TaskEntity>();
-        floatingTaskEntities = new ArrayList<TaskEntity>();
-        allTaskEntities = new JSONArray();
+        //mainTaskEntities = new ArrayList<TaskEntity>();
+        //floatingTaskEntities = new ArrayList<TaskEntity>();
+        //allTaskEntities = new JSONArray();
     }
     
     public FileManager(ArrayList<TaskEntity> _main, ArrayList<TaskEntity> _floating) {
@@ -76,30 +76,6 @@ public class FileManager {
         allTaskEntities.put(convertToJson(mainTaskEntities));
         allTaskEntities.put(convertToJson(floatingTaskEntities));
         writeToFile(allTaskEntities);
-    }
-    
-    private JSONArray convertToJson(ArrayList<TaskEntity> taskEntities) throws JSONException {
-        JSONArray taskEntitiesJson = new JSONArray();
-        
-        for(int i = 0; i< taskEntities.size(); i++) {
-            taskEntitiesJson.put(extractDetails(taskEntities, i));
-        }
-        System.out.println("Converting arraylist to JSON.");
-        return taskEntitiesJson;
-    }
-    
-    private JSONObject extractDetails(ArrayList<TaskEntity> taskList, int i) throws JSONException {
-        JSONObject taskDetails = new JSONObject();
-        
-        Gson gson = new Gson();
-        JSONParser parser = new JSONParser();
-        
-        try {
-            taskDetails = (JSONObject)parser.parse(gson.toJson(taskList.get(i)));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return taskDetails;
     }
     
     private void createNewFile() throws IOException {
@@ -129,7 +105,9 @@ public class FileManager {
     }
     
     private boolean hasExistingFile() {
-        // TODO Auto-generated method stub
+        if(file.exists() && file.canRead()) {
+            return true;
+        }
         return false;
     }
 
