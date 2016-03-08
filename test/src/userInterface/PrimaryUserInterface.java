@@ -95,6 +95,32 @@ public class PrimaryUserInterface extends Application {
 		_commandBar.setTextFieldHandler(mainEventHandler);
 	}
 
+	public boolean executeAdd(TaskEntity task) {
+		if (task != null) {
+			uiController.addTask(task);
+			_commandBar.getTextField().setText("");
+			_commandBar.focus();
+			return true;
+		}
+		return false;
+	}
+
+	public boolean executeDelete(String indexToDelete) {
+		if (uiController.deleteTask(indexToDelete)) {
+			_commandBar.getTextField().setText("");
+			return true;
+		}
+		return false;
+	}
+
+	public boolean executeModify(String indexToModify, TaskEntity task) {
+		if (uiController.modifyTask(indexToModify, task)) {
+			_commandBar.getTextField().setText("");
+			return true;
+		}
+		return false;
+	}
+
 	private void processKeyInputs(TextField textField, KeyEvent event) {
 		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
 			if (textField.getText().toLowerCase().equals("exit")) {
@@ -104,25 +130,15 @@ public class PrimaryUserInterface extends Application {
 				if (t.indexOf(" ") != -1) {
 					if (t.substring(0, t.indexOf(" ")).equals("del")) {
 						String indexToDelete = t.substring(t.indexOf(" ") + 1);
-						// String of ZZIndex
-						if (uiController.deleteTask(indexToDelete)) {
-							textField.setText(""); // success in delete
-						}
+						executeDelete(indexToDelete);
 					} else if (t.substring(0, t.indexOf(" ")).equals("add")) {
-
 						TaskEntity task = _commandBar.executeLine(t.substring(t.indexOf(" ")));
-						if (task != null) {
-							uiController.addTask(task);
-							textField.setText("");
-							_commandBar.focus();
-						}
+						executeAdd(task);
 					} else if (t.substring(0, t.indexOf(" ")).equals("mod")) {
-						System.out.println("ad");
 						String indexToModify = t.substring(t.indexOf(" ") + 1);
-						System.out.println(indexToModify);
-						TaskEntity task = new TaskEntity("modify to this task ", Calendar.getInstance(), false, "modified");
-						uiController.modifyTask(indexToModify, task);
-						//Ten change this sections. 
+						TaskEntity task = new TaskEntity("modify to this task ", Calendar.getInstance(), false,
+								"modified");
+						executeModify(indexToModify, task);
 					}
 				}
 			}
