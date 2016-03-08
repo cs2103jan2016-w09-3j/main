@@ -20,28 +20,32 @@ public class TaskManager {
      * @param args
      */
     public static void main (String[] args)
-    {
-        add(new TaskEntity("Task floating"));
-        
+    {   
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
         for(int i = 0; i < 5; i++)
         {
             Calendar newDate = Calendar.getInstance();
-            newDate.clear();
-            newDate.set(2016, 2, (i+1)*2);
-            newList.add(new TaskEntity("2016/2/" + Integer.toString((i+1)*2), newDate, true));
+            newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
+            newList.add(new TaskEntity("Task " + Integer.toString(i+1), newDate, false));
         }
         add(newList);
-        
+        add(new TaskEntity("Task floating"));
         Calendar newDate = Calendar.getInstance();
         newDate.clear();
         newDate.set(2016, 2, 5);
-        
-        //delete(0);
-        
         //modify(0, new TaskEntity("2016/2/5", newDate, true));
         
+        newDate = Calendar.getInstance();
+        newDate.clear();
+        newDate.set(2016, 2, 3);
+        //modify(3, new TaskEntity("2016/2/3", newDate, true));
+        
+        getWorkingList();
         printList();
+        
+        while(true){
+            System.out.println(getNextTimeListId());
+        }
     }
     
     /**
@@ -79,7 +83,7 @@ public class TaskManager {
     {
         String output = "";
         if(displayedTasks == null){
-            displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
+            displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities;
         }
         
         System.out.println("Display");
@@ -319,6 +323,24 @@ public class TaskManager {
      */
     public static boolean delete(String startIndex, String endIndex) {
         return delete(Utils.convertBase36ToDec(startIndex), Utils.convertBase36ToDec(endIndex));
+    }
+    
+    /**
+     * Gets the ID number of the next task in time order
+     * @return ID of the task that is next, counting from the current time
+     */
+    public static int getNextTimeListId() {
+        TaskEntity currentTimePlaceholder = new TaskEntity("", Calendar.getInstance(), false);
+        int nextTimeId = Collections.binarySearch(mainTaskEntities, currentTimePlaceholder, new TaskDateComparator());
+
+        // Due to Collections.binarySearch's implementation, all objects
+        // that can't be found will return a negative value, which indicates
+        // the position where the object that is being searched is supposed
+        // to be minus 1. This if case figures out the position to slot it in
+        if (nextTimeId < 0) {
+            nextTimeId = -(nextTimeId+1);
+        }
+        return nextTimeId;
     }
 
     public static ArrayList<TaskEntity> undo() {
