@@ -30,13 +30,14 @@ public class StorageHandler implements StorageInterface {
     public Boolean storeTaskLists(AllTaskLists atl) {
         FileHandler fm = new FileHandler();
         JsonHandler jh = new JsonHandler();
+        boolean isStored = false;
         try {
-            fm.writeToFile(jh.convertToJson(atl).toString());
+            isStored = fm.writeToFile(jh.convertToJson(atl).toString());
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return null;
+        return isStored;
     }
     
     private AllTaskLists createDummy() {

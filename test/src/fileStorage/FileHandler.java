@@ -10,6 +10,7 @@ import java.io.IOException;
 public class FileHandler {
     
     private String filePath;
+    private File storedLists;
     
     public String getFilePath() {
         return filePath;
@@ -26,22 +27,25 @@ public class FileHandler {
     
     public boolean writeToFile(String input) {
         FileWriter fileWriter;
+        long timeBeforeModification = storedLists.lastModified();
+        long timeAfterModification = -1;
         try {
             fileWriter = new FileWriter(filePath);        
             fileWriter.write(input);
             fileWriter.flush();
             fileWriter.close();
-            return true;
+            timeAfterModification = storedLists.lastModified();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return false;
+        boolean isModified = timeAfterModification > timeBeforeModification;
+        return isModified;
     }
 
     // if file exists, use file. Else, create new file
     private void processFile() {
-        File storedLists = new File(filePath);
+        storedLists = new File(filePath);
         
         if (storedLists.exists()) {
             System.out.println("File found, begin reading...");
