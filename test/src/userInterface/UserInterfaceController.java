@@ -2,6 +2,7 @@ package userInterface;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -247,9 +248,13 @@ public class UserInterfaceController {
 			TaskEntity taskOnList = tasks.get(i);
 			System.out.println("test0");
 			System.out.println(taskOnList.getDueDate().getTime());
-			System.out.println(taskToCheck.getDueDate().getTime());
-			System.out.println(taskToCheck.getDueDate().compareTo(taskOnList.getDueDate()));
-			if (taskToCheck.getDueDate().compareTo(taskOnList.getDueDate()) == 0) {
+			Calendar toCheckDate = taskToCheck.getDueDate();
+			toCheckDate.clear(Calendar.MILLISECOND);
+
+			Calendar onListDate= taskOnList.getDueDate();
+			onListDate.clear(Calendar.MILLISECOND);
+
+			if (toCheckDate.compareTo(onListDate) == 0) {
 				System.out.println("test1");
 				if (taskToCheck.getName().equals(taskOnList.getName())) {
 					System.out.println("test2");
