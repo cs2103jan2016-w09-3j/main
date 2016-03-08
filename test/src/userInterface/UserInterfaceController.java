@@ -2,6 +2,7 @@ package userInterface;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -56,7 +57,7 @@ public class UserInterfaceController {
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
-		//_taskManager.generateFakeData();// replace when integrate with angie
+		// _taskManager.generateFakeData();// replace when integrate with angie
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
 		update(0);
 	}
@@ -208,7 +209,6 @@ public class UserInterfaceController {
 
 		int insertedTo = _taskManager.add(task);
 		int selected = _taskViewInterface.getSelectIndex();
-		
 		if (selected == -1) {
 			selected = 0;
 		} else if (insertedTo <= selected) {
@@ -216,7 +216,7 @@ public class UserInterfaceController {
 		}
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
 		update(0);
-		
+
 		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, insertedTo, this);
 		Thread t = new Thread(sAnimation);
 		t.start();
@@ -242,8 +242,18 @@ public class UserInterfaceController {
 		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
 		for (int i = 0; i < tasks.size(); i++) {
 			TaskEntity taskOnList = tasks.get(i);
-			if(taskToCheck.getDueDate().equals(taskOnList.getDueDate())){
-				if(taskToCheck.getName().equals(taskToCheck.getName())){
+			System.out.println("test0");
+			System.out.println(taskOnList.getDueDate().getTime());
+			Calendar toCheckDate = taskToCheck.getDueDate();
+			toCheckDate.clear(Calendar.MILLISECOND);
+
+			Calendar onListDate= taskOnList.getDueDate();
+			onListDate.clear(Calendar.MILLISECOND);
+
+			if (toCheckDate.compareTo(onListDate) == 0) {
+				System.out.println("test1");
+				if (taskToCheck.getName().equals(taskOnList.getName())) {
+					System.out.println("test2");
 					index = i;
 				}
 			}
