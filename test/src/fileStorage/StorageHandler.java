@@ -9,13 +9,14 @@ import entity.TaskEntity;
 
 public class StorageHandler implements StorageInterface {
     
+    // Test function
     public static void main (String args[]) {
-        StorageHandler sh = new StorageHandler();
+        StorageHandler storageHandler = new StorageHandler();
         
         FileHandler fm = new FileHandler();
         
-        AllTaskLists dummyTL = sh.createDummy();
-        fm.writeToFile(sh.convertObjToJson(dummyTL));
+        AllTaskLists dummyTL = storageHandler.createDummy();
+        fm.writeToFile(storageHandler.convertObjToJson(dummyTL));
         
         System.out.println(fm.readFromExistingFile());
     }
@@ -25,8 +26,16 @@ public class StorageHandler implements StorageInterface {
         return null;
     }
 
+    // Returns true if task lists written into file. False otherwise.
     public Boolean storeTaskLists(AllTaskLists atl) {
-        // TODO Auto-generated method stub
+        FileHandler fm = new FileHandler();
+        JsonHandler jh = new JsonHandler();
+        try {
+            fm.writeToFile(jh.convertToJson(atl).toString());
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return null;
     }
     
