@@ -2,6 +2,9 @@ package userInterface;
 
 import userInterface.CommandBar;
 import userInterface.UserInterfaceController;
+
+import java.util.Calendar;
+
 import entity.TaskEntity;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -114,7 +117,12 @@ public class PrimaryUserInterface extends Application {
 							_commandBar.focus();
 						}
 					} else if (t.substring(0, t.indexOf(" ")).equals("mod")) {
-
+						System.out.println("ad");
+						String indexToModify = t.substring(t.indexOf(" ") + 1);
+						System.out.println(indexToModify);
+						TaskEntity task = new TaskEntity("modify to this task ", Calendar.getInstance(), false, "modified");
+						uiController.modifyTask(indexToModify, task);
+						//Ten change this sections. 
 					}
 				}
 			}

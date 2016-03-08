@@ -291,10 +291,11 @@ public class UserInterfaceController {
 		}
 		return false;
 	}
-	
-	public void modifyTask()
-	{
-		
+
+	public void modifyTask(String idToModify, TaskEntity task) {
+		int index = _taskManager.modify(Utils.convertBase36ToDec(idToModify),task);
+		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
+		update(0);
 	}
 
 }
