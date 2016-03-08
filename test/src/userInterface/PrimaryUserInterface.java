@@ -121,6 +121,11 @@ public class PrimaryUserInterface extends Application {
 		return false;
 	}
 
+	public boolean executeJump(String indexToJump) {
+		uiController.jumpToIndex(indexToJump);
+		return true;
+	}
+
 	private void processKeyInputs(TextField textField, KeyEvent event) {
 		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
 			if (textField.getText().toLowerCase().equals("exit")) {
@@ -139,6 +144,9 @@ public class PrimaryUserInterface extends Application {
 						TaskEntity task = new TaskEntity("modify to this task ", Calendar.getInstance(), false,
 								"modified");
 						executeModify(indexToModify, task);
+					} else if (t.substring(0, t.indexOf(" ")).equals("jump")) {
+						String indexToDelete = t.substring(t.indexOf(" ") + 1);
+						executeJump(indexToDelete);
 					}
 				}
 			}

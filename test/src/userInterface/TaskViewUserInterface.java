@@ -374,7 +374,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		VBox gpDayParent = (VBox) gp.getParent().getParent();
 		VBox gpWeekParent = (VBox) gpDayParent.getParent();
 		if (isSameDay(workingList.get(_startIndex), workingList.get(_startIndex - 1))) {
-			HBox itemToAdd = buildIndividualTask(workingList.get(_startIndex - 1),(_endIndex + 1));
+			HBox itemToAdd = buildIndividualTask(workingList.get(_startIndex - 1),(_startIndex - 1));
 			gpDayParent.getChildren().add(1, itemToAdd);
 			gpDayParent.setMinHeight(gpDayParent.getMinHeight() + itemToAdd.getMinHeight());
 			gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() + itemToAdd.getMinHeight());
@@ -388,7 +388,7 @@ public class TaskViewUserInterface implements ViewInterface {
 				_mainVbox.getChildren().add(0, weekBox);
 			}
 			VBox vbox = createDayParent(workingList.get(_startIndex - 1));
-			HBox itemToAdd = buildIndividualTask(workingList.get(_startIndex - 1),(_endIndex + 1));
+			HBox itemToAdd = buildIndividualTask(workingList.get(_startIndex - 1),(_startIndex - 1));
 			vbox.getChildren().add(itemToAdd);
 			vbox.setMinHeight(vbox.getMinHeight() + itemToAdd.getMinHeight());
 			weekBox.getChildren().add(0, vbox);

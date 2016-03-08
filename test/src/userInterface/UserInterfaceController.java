@@ -56,7 +56,7 @@ public class UserInterfaceController {
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
-		_taskManager.generateFakeData();//replace when integrate with angie
+		_taskManager.generateFakeData();// replace when integrate with angie
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
 		update(0);
 	}
@@ -101,63 +101,6 @@ public class UserInterfaceController {
 	public void translateComponentsY(double value) {
 		_taskViewInterface.updateTranslateY(value);
 		_descriptionComponent.updateTranslateY(value);
-	}
-
-	public void jumpToIndex(String indexZZ) {
-		int index = Integer.parseInt(indexZZ);
-		// check index valid a not
-		// assume is valid for now. between 0 to workingListSize;
-		_jumpToIndex = index;
-		Thread t = new Thread(jumpToIndexAnimation());
-		t.start();
-	}
-
-	public Task<Void> jumpToIndexAnimation() {
-		Task<Void> jumpToIndexAnimation = new Task<Void>() {
-			@Override
-			public Void call() {
-				Platform.runLater(new Runnable() {
-					public void run() {
-
-						boolean isDone = false;
-						long startTime = System.currentTimeMillis() % 1000;
-						long secondsToAnimate = 3000;
-						int selectedIndex = _taskViewInterface.getSelectIndex();
-						int itemsTomove = selectedIndex - _jumpToIndex;
-						int indexMoved = 0;
-						do {
-							try {
-								Thread.sleep(500);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							Long timePassed = System.currentTimeMillis() % 1000 - startTime;
-							double indexA = timePassed / secondsToAnimate;
-							int numberToMoveNow = (int) (itemsTomove * indexA);
-							int itemToMove = Math.abs(numberToMoveNow) - indexMoved;
-							System.out.println(itemToMove);
-							if (_currentView == TASK_VIEW || _currentView == DETAILED_VIEW) {
-								if (_currentView == DETAILED_VIEW) {
-
-								} else {
-									for (int i = 0; i < Math.abs(itemToMove); i++) {
-										_taskViewInterface.update(numberToMoveNow);
-									}
-									_taskViewInterface.setItemSelected(numberToMoveNow);
-									indexMoved += itemToMove;
-									translateComponentsY(_taskViewInterface.getTranslationY());
-									updateDescriptionComponent();
-								}
-							}
-						} while (!isDone);
-					}
-
-				});
-				return null;
-			}
-		};
-		return jumpToIndexAnimation;
 	}
 
 	public Task<Void> animateTransitionForView() {
@@ -300,6 +243,13 @@ public class UserInterfaceController {
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
 		update(0);
 		return true;
+	}
+
+	public void jumpToIndex(String indexToJump) {
+		int selected = _taskViewInterface.getSelectIndex();
+		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, Utils.convertBase36ToDec(indexToJump), this);
+		Thread t = new Thread(sAnimation);
+		t.start();
 	}
 
 }
