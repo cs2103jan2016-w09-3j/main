@@ -70,6 +70,8 @@ public class Utils {
             // it to its dec number value of 0~35
             if (lastCharAsciiValue >= 65 && lastCharAsciiValue <= 90) {
                 characterValue = lastCharAsciiValue - 55;
+            } else if (lastCharAsciiValue >= 97 && lastCharAsciiValue <= 122) {
+                characterValue = lastCharAsciiValue - 87;
             } else if (lastCharAsciiValue >= 48 && lastCharAsciiValue <= 57){
                 characterValue = lastCharAsciiValue - 48;
             }

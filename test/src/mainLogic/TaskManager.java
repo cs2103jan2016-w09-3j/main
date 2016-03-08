@@ -183,8 +183,10 @@ public class TaskManager {
     }
 
     /**
+     * Modifies the selected task, effectively deleting it and adding a new
+     * task. Base10 version
      * 
-     * @param index - Index of task to be modified
+     * @param index - int(in base10) index of task to be modified
      * @param modifiedTask - New data of the task
      * @return id of new position of the modified task in the display list if
      *         succeeded in deleting the task, returns -1 otherwise
@@ -194,6 +196,19 @@ public class TaskManager {
             return -1;
         }
         return add(modifiedTask);
+    }
+
+    /**
+     * Modifies the selected task, effectively deleting it and adding a new
+     * task. Base36 version
+     * 
+     * @param index - index(in base36) of task to be modified in string
+     * @param modifiedTask - new data of the task
+     * @return id of new position of the modified task in the display list if
+     *         succeeded in deleting the task, returns -1 otherwise
+     */     
+    public static int modify(String index, TaskEntity modifiedTask) {
+        return modify(Utils.convertBase36ToDec(index), modifiedTask);
     }
     
     public static int add(ArrayList<TaskEntity> tasks)
