@@ -25,15 +25,14 @@ public class ScrollTaskAnimation extends Task<Integer> {
 		} else {
 			direction = -1;
 		}
-
 		long startTime = System.currentTimeMillis();
 		while (currentIndex != indexToGo) {
 			startTime = checkTime(startTime);
+			checkExceed();
 			Platform.runLater(new Runnable() {
 				public void run() {
 					ui.update(direction);
 					currentIndex = currentIndex + direction;
-					checkExceed();
 				}
 			});
 			Thread.sleep(80);
@@ -62,11 +61,11 @@ public class ScrollTaskAnimation extends Task<Integer> {
 	public void checkExceed() {
 		if (direction < 0) {
 			if (currentIndex + direction < indexToGo) {
-				currentIndex = indexToGo;
+				direction =  currentIndex - indexToGo;
 			}
 		} else if (direction > 0) {
 			if (currentIndex + direction > indexToGo) {
-				currentIndex = indexToGo;
+				direction = indexToGo - currentIndex;
 			}
 		}
 	}

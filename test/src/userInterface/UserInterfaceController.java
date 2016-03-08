@@ -56,7 +56,7 @@ public class UserInterfaceController {
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
-		_taskViewInterface.buildComponent(_taskManager.generateFakeData(), 199);
+		_taskViewInterface.buildComponent(_taskManager.generateFakeData(), 5);
 		// _taskViewInterface.buildComponent(_taskManager.getMainDisplay(), 0);
 		update(0);
 	}
@@ -253,31 +253,13 @@ public class UserInterfaceController {
 		return new Label(task2.getDueDate().toString());
 	}
 
-	public Task<Void> scrollToIndex(int index) {
-		Task<Void> scrollToIndex = new Task<Void>() {
-			int index;
-			int currentIndex;
-
-			@Override
-			public Void call() {
-				Platform.runLater(new Runnable() {
-					public void run() {
-					}
-
-				});
-
-				return null;
-			}
-		};
-		return scrollToIndex;
-	}
-
 	public void addTask(TaskEntity task) {
 		int date = task.getDueDate().get(Calendar.DATE);
 		Random r = new Random();
 		date += r.nextInt(10);
-		date -= 5;
+		date+=5;
 		task.getDueDate().set(Calendar.DATE, date);
+		task.getDueDate().set(Calendar.MONTH, task.getDueDate().get(Calendar.MONTH)+2);
 		int insertedTo = _taskManager.add(task);
 		int selected = _taskViewInterface.getSelectIndex();
 
