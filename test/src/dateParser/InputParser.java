@@ -74,6 +74,9 @@ public class InputParser {
 		String desc = infoParser.getDescription();
 		for(int i=0; i<dates.size(); i++){
 			Calendar c = Calendar.getInstance();
+			dates.get(i).setHours(0);
+			dates.get(i).setMinutes(0);
+			dates.get(i).setSeconds(0);
 			c.setTime(dates.get(i));
 			TaskEntity toAdd = new TaskEntity(name, c, false, desc);
 			tasks.add(toAdd);

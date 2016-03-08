@@ -107,19 +107,28 @@ public class PrimaryUserInterface extends Application {
 		return false;
 	}
 
-	public boolean executeDelete(String indexToDelete) {
-		if (uiController.deleteTask(indexToDelete)) {
-			_commandBar.getTextField().setText("");
-			return true;
+	public boolean executeDelete(TaskEntity taskToCheck) {
+		int indexToDelete = uiController.getTaskID(taskToCheck);
+		if(indexToDelete>-1){
+			boolean temp = uiController.deleteTask(indexToDelete);
+			if (temp) {
+				_commandBar.getTextField().setText("");
+				return true;
+			}
 		}
 		return false;
 	}
 
-	public boolean executeModify(String indexToModify, TaskEntity task) {
-		if (uiController.modifyTask(indexToModify, task)) {
-			_commandBar.getTextField().setText("");
-			return true;
+	public boolean executeModify(TaskEntity taskToCheck) {
+		int indexToModify = uiController.getTaskID(taskToCheck);
+		if(indexToModify>-1){
+			boolean temp = uiController.modifyTask(indexToModify, taskToCheck);
+			if (temp) {
+				_commandBar.getTextField().setText("");
+				return true;
+			}
 		}
+		
 		return false;
 	}
 
@@ -142,9 +151,18 @@ public class PrimaryUserInterface extends Application {
 					executeAdd(tasks.get(i));
 				}
 			}else if (cmd.equals(COMMAND.EDIT)){
-				
+				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
+				for(int i=0; i<tasks.size(); i++)
+				{
+					executeDelete(tasks.get(i));
+				}
 			}else if (cmd.equals(COMMAND.DELETE)){
-			
+				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
+				for(int i=0; i<tasks.size(); i++)
+				{
+					executeDelete(tasks.get(i));
+				}
+				
 			}else if (t.substring(0, t.indexOf(" ")).equals("jump")) {
 				String indexToDelete = t.substring(t.indexOf(" ") + 1);
 				executeJump(indexToDelete);

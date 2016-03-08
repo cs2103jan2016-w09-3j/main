@@ -197,12 +197,14 @@ public class UserInterfaceController {
 	}
 
 	public void addTask(TaskEntity task) {
-		int date = task.getDueDate().get(Calendar.DATE);
-		Random r = new Random();
-		date += r.nextInt(10);
-		date += 5;
-		task.getDueDate().set(Calendar.DATE, date);
-		task.getDueDate().set(Calendar.MONTH, task.getDueDate().get(Calendar.MONTH) + 2);
+		/*
+		 * int date = task.getDueDate().get(Calendar.DATE); Random r = new
+		 * Random(); date += r.nextInt(10); date += 5;
+		 * task.getDueDate().set(Calendar.DATE, date);
+		 * task.getDueDate().set(Calendar.MONTH,
+		 * task.getDueDate().get(Calendar.MONTH) + 2);
+		 */
+		System.out.println(task.getDueDate());
 		int insertedTo = _taskManager.add(task);
 		int selected = _taskViewInterface.getSelectIndex();
 
@@ -220,10 +222,10 @@ public class UserInterfaceController {
 		t.start();
 	}
 
-	public boolean deleteTask(String idToDelete) {
+	public boolean deleteTask(int idToDelete) {
 		boolean isDeleted = _taskManager.delete(idToDelete);
 		if (isDeleted) {
-			int index = Utils.convertBase36ToDec(idToDelete);
+			int index = idToDelete;
 			index--;
 			if (index < 0) {
 				index = 0;
@@ -235,8 +237,22 @@ public class UserInterfaceController {
 		return false;
 	}
 
-	public boolean modifyTask(String idToModify, TaskEntity task) {
-		int index = _taskManager.modify(Utils.convertBase36ToDec(idToModify), task);
+	public int getTaskID(TaskEntity taskToCheck) {
+		int index = -1;
+		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
+		for (int i = 0; i < tasks.size(); i++) {
+			TaskEntity taskOnList = tasks.get(i);
+			if(taskToCheck.getDueDate().equals(taskOnList.getDueDate())){
+				if(taskToCheck.getName().equals(taskToCheck.getName())){
+					index = i;
+				}
+			}
+		}
+		return index;
+	}
+
+	public boolean modifyTask(int idToModify, TaskEntity task) {
+		int index = _taskManager.modify(idToModify, task);
 		if (index < 0) {
 			return false;
 		}
