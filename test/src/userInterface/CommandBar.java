@@ -20,7 +20,7 @@ public class CommandBar {
 	private TextField _textField;
 	private int _numberOfItems = 0;
 	private String _textInField = new String();
-
+	private ArrayList<String> _allSessionCmds = new ArrayList<String>();
 	public String get_textInField() {
 		return _textInField;
 	}
@@ -95,6 +95,18 @@ public class CommandBar {
 
 	public GridPane getCommandBar() {
 		return _mainPane;
+	}
+
+	public ArrayList<String> get_allSessionCmds() {
+		return _allSessionCmds;
+	}
+
+	public void set_allSessionCmds(ArrayList<String> _allSessionCmds) {
+		this._allSessionCmds = _allSessionCmds;
+	}
+	
+	public void addSessionCmds(String input) {
+		this._allSessionCmds.add(input);
 	}
 
 }

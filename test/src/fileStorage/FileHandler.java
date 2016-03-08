@@ -75,6 +75,7 @@ public class FileHandler {
             String currentLine = "";
             while ((currentLine = buffer.readLine()) != null) {
                 readData.add(currentLine);
+                System.out.println("test"+currentLine);
             }
             buffer.close();
             System.out.println("Read from file");

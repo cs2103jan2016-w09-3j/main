@@ -60,7 +60,38 @@ public class PrimaryUserInterface extends Application {
 		initializeControls();
 		initializePrimaryStage(primaryStage);
 		initializeUiController(primaryStage);
+		//temp method for v0.1 demo
+		initializeData();
 		_primaryStage.requestFocus();
+	}
+	
+	private void initializeData(){
+		ArrayList<String> cmdArrs = uiController.readFromFile();
+		System.out.println(cmdArrs.size());
+		for(int j=0; j<cmdArrs.size(); j++){
+			COMMAND cmd = _commandBar.onEnter(cmdArrs.get(j));
+			String t = cmdArrs.get(j);
+			if (cmd.equals(COMMAND.EXIT)) {
+				uiController.saveToFile(_commandBar.get_allSessionCmds());
+				System.exit(0);
+			} else if (cmd.equals(COMMAND.ADD)) {
+				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
+				for (int i = 0; i < tasks.size(); i++) {
+					executeAdd(tasks.get(i));
+				}
+			} else if (cmd.equals(COMMAND.EDIT)) {
+				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
+				for (int i = 0; i < tasks.size(); i++) {
+					executeModify(tasks.get(i));
+				}
+			} else if (cmd.equals(COMMAND.DELETE)) {
+				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
+				for (int i = 0; i < tasks.size(); i++) {
+					executeDelete(tasks.get(i));
+				}
+	
+			}
+		}
 	}
 
 	private void initializePrimaryStage(Stage primaryStage) {
@@ -101,6 +132,7 @@ public class PrimaryUserInterface extends Application {
 		if (task != null) {
 			uiController.addTask(task);
 			_commandBar.getTextField().setText("");
+			_commandBar.addSessionCmds(_commandBar.get_textInField());
 			_commandBar.focus();
 			return true;
 		}
@@ -112,6 +144,7 @@ public class PrimaryUserInterface extends Application {
 		if (indexToDelete > -1) {
 			boolean temp = uiController.deleteTask(indexToDelete);
 			if (temp) {
+				_commandBar.addSessionCmds(_commandBar.get_textInField());
 				_commandBar.getTextField().setText("");
 				return true;
 			}
@@ -124,6 +157,7 @@ public class PrimaryUserInterface extends Application {
 		if (indexToModify > -1) {
 			boolean temp = uiController.modifyTask(indexToModify, taskToCheck);
 			if (temp) {
+				_commandBar.addSessionCmds(_commandBar.get_textInField());
 				_commandBar.getTextField().setText("");
 				return true;
 			}
@@ -143,6 +177,7 @@ public class PrimaryUserInterface extends Application {
 			COMMAND cmd = _commandBar.onEnter(textField.getText());
 			String t = _commandBar.get_textInField();
 			if (cmd.equals(COMMAND.EXIT)) {
+				uiController.saveToFile(_commandBar.get_allSessionCmds());
 				System.exit(0);
 			} else if (cmd.equals(COMMAND.ADD)) {
 				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);

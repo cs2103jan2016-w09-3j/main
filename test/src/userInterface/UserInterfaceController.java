@@ -8,6 +8,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import entity.TaskEntity;
+import fileStorage.FileHandler;
+import fileStorage.StorageHandler;
+import fileStorage.StorageInterface;
 import mainLogic.TaskManager;
 import mainLogic.Utils;
 
@@ -136,7 +139,7 @@ public class UserInterfaceController {
 		};
 		return animateChangeView;
 	}
-
+	
 	public void changeView(int value) {
 		int view = _currentView + value;
 		switch (view) {
@@ -197,6 +200,18 @@ public class UserInterfaceController {
 		return new Label(task2.getDueDate().toString());
 	}
 
+	//temp method for v0.1
+	public void saveToFile(ArrayList<String> input){
+		StorageHandler fh = new StorageHandler();
+		fh.saveToFile(input);
+	}
+	
+	//temp method for v0.1
+	public ArrayList<String> readFromFile(){
+		StorageHandler fh = new StorageHandler();
+		return fh.retrieveFromFile();
+	}
+	
 	public void addTask(TaskEntity task) {
 		/*
 		 * int date = task.getDueDate().get(Calendar.DATE); Random r = new
@@ -209,11 +224,13 @@ public class UserInterfaceController {
 
 		int insertedTo = _taskManager.add(task);
 		int selected = _taskViewInterface.getSelectIndex();
+		
 		if (selected == -1) {
 			selected = 0;
 		} else if (insertedTo <= selected) {
 			selected++;
 		}
+
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
 		update(0);
 
