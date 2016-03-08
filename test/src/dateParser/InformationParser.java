@@ -12,65 +12,40 @@ public class InformationParser {
 	}
 
 	public String xmlTitleAndDesc(String input) {
-		getInformation(input);
-		if (title != null){
-			input = input.replace(title, "<title>" + title + "</title>");
-		}
-		if (description != null) {
-			input = input.replace(description, "<desc>" + description + "</desc>");
+		boolean success = setInformation(input);
+		if (success){
+			if (title != null){
+				input = input.replace(title, "<title>" + title + "</title>");
+			}
+			if (description != null) {
+				input = input.replace(description, "<desc>" + description + "</desc>");
+			}
 		}
 		return input;
 	}
 
-	private void getInformation(String input) {
-		input = removeOtherAttributes(input);
-		String[] inputs = input.split(":");
-		if (inputs.length == 2) {
-			setTitle(inputs[0].trim());
-			setDescription(inputs[1].trim());
-		} else {
-			if (!inputs[0].trim().isEmpty()){
+	public boolean setInformation(String input) {
+		input = XMLParser.removeAllAttributes(input);
+		boolean success = false;
+		System.out.println(input);
+		if (!input.trim().equalsIgnoreCase(":"))
+		{
+			String[] inputs = input.split(":");
+			if (inputs.length == 2) {
 				setTitle(inputs[0].trim());
+				System.out.println(inputs[1]);
+				if(!inputs[1].trim().isEmpty())
+				{
+					setDescription(inputs[1].trim());
+				}
+			} else {
+				if (!inputs[0].trim().isEmpty()){
+					setTitle(inputs[0].trim());
+				}
 			}
+			success = true;
 		}
-	}
-	
-	
-
-	private String removeOtherAttributes(String input) {
-		try {
-			Document tempXMLDoc = XMLParser.loadXMLFromString("<XML>" + input + "</XML>");
-			input = input.replace("<title>", "");
-			input = input.replace("</title>", "");
-			NodeList titles = tempXMLDoc.getElementsByTagName(XMLParser.TITLE_TAG);
-			for (int i = 0; i < titles.getLength(); i++) {
-				input = input.replace(titles.item(i).getTextContent(), "");
-			}
-
-			input = input.replace("<desc>", "");
-			input = input.replace("</desc>", "");
-			NodeList descs = tempXMLDoc.getElementsByTagName(XMLParser.DESC_TAG);
-			for (int i = 0; i < descs.getLength(); i++) {
-				input = input.replace(descs.item(i).getTextContent(), "");
-			}
-
-			input = input.replace("<dates>", "");
-			input = input.replace("</dates>", "");
-			NodeList dates = tempXMLDoc.getElementsByTagName(XMLParser.DATE_TAG);
-			for (int i = 0; i < dates.getLength(); i++) {
-				input = input.replace(dates.item(i).getTextContent(), "");
-			}
-
-			input = input.replace("<cmd>", "");
-			input = input.replace("</cmd>", "");
-			NodeList commands = tempXMLDoc.getElementsByTagName(XMLParser.CMD_TAG);
-			for (int i = 0; i < commands.getLength(); i++) {
-				input = input.replace(commands.item(i).getTextContent(), "");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return input;
+		return success;
 	}
 
 	public String getTitle() {
