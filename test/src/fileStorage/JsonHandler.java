@@ -1,6 +1,7 @@
 package fileStorage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,6 +66,7 @@ public class JsonHandler {
             currentTask = taskEntitiesJson.getJSONObject(i);
             String taskName = gson.fromJson(String.valueOf(currentTask.get("_name")), String.class);
             String taskDesc = gson.fromJson(String.valueOf(currentTask.get("_description")), String.class);
+            Calendar dueDate = gson.fromJson(String.valueOf(currentTask.get("_duedate")), Calendar.class);
             //boolean isFloating = gson.fromJson(String.valueOf(currentTask.get("_isFloating")), boolean.class);
             //boolean isFullDay = gson.fromJson(String.valueOf(currentTask.get("_isFullDay")), boolean.class);
             TaskEntity retrievedTask = new TaskEntity(taskName, taskDesc);
