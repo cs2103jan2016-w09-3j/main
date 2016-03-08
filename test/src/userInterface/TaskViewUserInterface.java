@@ -252,16 +252,21 @@ public class TaskViewUserInterface implements ViewInterface {
 		timeLabel.setFont(font);
 		grid.add(timeLabel, 1, 0);
 
+		Label titleLabel = new Label(taskEntity.getName());
+		titleLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
+		titleLabel.setFont(font);
+		grid.add(titleLabel, 2, 0);
+		
 		Label descriptionLabel = new Label(taskEntity.getDescription());
 		descriptionLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		descriptionLabel.setFont(font);
-		grid.add(descriptionLabel, 2, 0);
+		grid.add(descriptionLabel, 3, 0);
 
 		Label descriptionLabel2 = new Label(taskEntity.getDescription());
 		descriptionLabel2.setMinHeight(0);
 		descriptionLabel2.setFont(font);
 		descriptionLabel2.setStyle("-fx-background-color:red");
-		grid.add(descriptionLabel2, 2, 1);
+		grid.add(descriptionLabel2, 3, 1);
 		return grid;
 	}
 
