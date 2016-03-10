@@ -11,10 +11,14 @@ import entity.TaskEntity;
 
 public class InputParser {
 	private String input;
-	DateNLP dateParser;
-	CommandParser cmdParser;
-	InformationParser infoParser;
+	private DateNLP dateParser;
+	private CommandParser cmdParser;
+	private InformationParser infoParser;
 
+	/**
+	 * Intializes parser and creates individual command parsers
+	 * @param input String to be parsed
+	 */
 	public InputParser(String input) {
 		this.input = input;
 		dateParser = new DateNLP();
@@ -22,46 +26,66 @@ public class InputParser {
 		infoParser = new InformationParser();
 	}
 
-	//DO NOT CHANGE ORDER!!
+
+	/**
+	 * changes input to XML form
+	 */
 	public void addXML() {
+		//DO NOT CHANGE ORDER!!
 		addXMLDate();
 		addXMLCmd();
 		addXMLTitleDesc();
 	}
 
-	public void addXMLTitleDesc() {
+	/**
+	 * adds xml to title
+	 */
+	private void addXMLTitleDesc() {
 		input = infoParser.xmlTitleAndDesc(input);
 	}
 
-	public void addXMLDate() {
+	/**
+	 * adds xml to date
+	 */
+	private void addXMLDate() {
 		input = dateParser.xmlDate(input);
 	}
 
-	public void addXMLCmd() {
+	/**
+	 * adds xml to cmd(first word)
+	 */
+	private void addXMLCmd() {
 		input = cmdParser.xmlFirstWord(input);
 	}
 
+	/**
+	 * getter for input
+	 * @return input
+	 */
 	public String getInput() {
 		return input;
 	}
 
+	/**
+	 * setter for input
+	 * @param input
+	 */
 	public void setInput(String input) {
 		this.input = input;
 	}
 	
+	/**
+	 * Parses the input and returns an enum COMMAND
+	 * @return respective COMMAND 
+	 */
 	public COMMAND getCommand(){
 		return cmdParser.getCommand(input);
 	}
 	
-	public static String getLastWord(String input){
-		String returnVal = null;
-		String [] seperated = input.split(" ");
-		if (seperated.length>0){
-			returnVal = seperated[seperated.length-1];
-		}
-		return returnVal;
-	}
-
+	/**
+	 * generates a list of tasks from the input, with no time
+	 * @return ArrayList of tasks
+	 */
 	public ArrayList<TaskEntity> getTask(){
 		input = XMLParser.removeAllTags(input);
 		this.input = input;
@@ -88,7 +112,7 @@ public class InputParser {
 		while (true) {
 			Scanner sc = new Scanner(System.in);
 			String input = sc.nextLine();
-			System.out.println(InputParser.getLastWord(input));
+			System.out.println(ParserCommons.getLastWord(input));
 			InputParser parser = new InputParser(input);
 			parser.addXML();
 			System.out.println(parser.getInput());

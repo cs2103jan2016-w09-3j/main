@@ -8,9 +8,13 @@ public class InformationParser {
 	private String description;
 
 	public InformationParser() {
-
+		
 	}
-
+	/**
+	 * Takes a String input and returns input in XML
+	 * @param input, a String with with Date and Command already parsed 
+	 * @return String in xml form
+	 */
 	public String xmlTitleAndDesc(String input) {
 		boolean success = setInformation(input);
 		if (success){
@@ -24,6 +28,11 @@ public class InformationParser {
 		return input;
 	}
 
+	/**
+	 * Automatically takes input(non-XML) and returns the success status
+	 * @param input (non-XML)
+	 * @return success
+	 */
 	public boolean setInformation(String input) {
 		input = XMLParser.removeAllAttributes(input);
 		boolean success = false;
@@ -48,18 +57,34 @@ public class InformationParser {
 		return success;
 	}
 
+	/**
+	 * getter for title
+	 * @return title
+	 */
 	public String getTitle() {
 		return title;
 	}
 
+	/**
+	 * setter for title
+	 * @param title
+	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
+	/**
+	 * getter for description
+	 * @return description
+	 */
 	public String getDescription() {
 		return description;
 	}
 
+	/**
+	 * setter for description
+	 * @param description
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
