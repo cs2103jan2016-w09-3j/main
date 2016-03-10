@@ -40,10 +40,18 @@ public class DateParser {
 		showErr();
 	}
 
+	/**
+	 * Takes in a string with dates and returns a list of date
+	 * 
+	 * @param input
+	 * @return List of all possible dates
+	 */
 	public List<Date> parseToList(String inputDate) {
 		inputDate = convertFormalDates(inputDate);
 		List<Date> returnDateList = new ArrayList<Date>();
+		hideErr();
 		List<DateGroup> dateGroups = nattyParser.parse(inputDate);
+		showErr();
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
 			for (int j = 0; j < dates.size(); j++) {
@@ -53,6 +61,13 @@ public class DateParser {
 		return returnDateList;
 	}
 
+	/**
+	 * takes in a string with date and adds XML to the date portions
+	 * 
+	 * @param input
+	 *            String with date in it
+	 * @return String of xmlDate
+	 */
 	public String xmlDate(String input) {
 		hideErr();
 		input = convertFormalDates(input);
@@ -60,17 +75,24 @@ public class DateParser {
 		List<DateGroup> dateGroups = nattyParser.parse(input);
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
-			//System.out.println(dateGroups.get(i).getText());
-			//System.out.println(dates);
-			//String dateUS = dateGroups.get(i).getText();
-			//String dateSG = convertFormalDates(dateUS);
-			System.out.println("test"+ dateGroups.get(i).getText());
-			returnVal = returnVal.replace(dateGroups.get(i).getText(), "<dates>" + dateGroups.get(i).getText() + "</dates>");
+			// System.out.println(dateGroups.get(i).getText());
+			// System.out.println(dates);
+			// String dateUS = dateGroups.get(i).getText();
+			// String dateSG = convertFormalDates(dateUS);
+			System.out.println("test" + dateGroups.get(i).getText());
+			returnVal = returnVal.replace(dateGroups.get(i).getText(),
+					"<dates>" + dateGroups.get(i).getText() + "</dates>");
 		}
 		showErr();
 		return returnVal;
 	}
 
+	/**
+	 * Convert all formal dates from SG to US
+	 * 
+	 * @param input
+	 * @return String formal date in a US format
+	 */
 	private String convertFormalDates(String input) {
 		String convertedFormalDates = new String();
 		Scanner sc = new Scanner(input);
@@ -82,10 +104,16 @@ public class DateParser {
 		return convertedFormalDates;
 	}
 
+	/**
+	 * convert a single date from SG to US
+	 * 
+	 * @param sgDate
+	 *            a String in US dates
+	 * @return a String in US dates
+	 */
 	private String convertSGFormalDateToUS(String sgDate) {
 		String usDate = sgDate.replace(FWD_SLASH, DASH);
-		//usDate = sgDate.replace(DOT, DASH);
-
+		// usDate = sgDate.replace(DOT, DASH);
 		usDate = addZero(usDate);
 
 		if (usDate.matches(DATE_REGEX_2DAY_2MONTH)) {
@@ -95,6 +123,13 @@ public class DateParser {
 
 	}
 
+	/**
+	 * takes in a formal date and if it does not follow DD/MM/YYYY, it will add
+	 * the required zeros
+	 * 
+	 * @param date
+	 * @return String date with format DD/MM/YYYY
+	 */
 	private String addZero(String date) {
 		boolean addToDay = false;
 		boolean addToMonth = false;
@@ -117,6 +152,12 @@ public class DateParser {
 		return date;
 	}
 
+	/**
+	 * Swaps day and month of a date in string with format DD/MM/YYYY
+	 * @param input 
+	 * @param seperator Character which is used to seperate day month and year
+	 * @return the input with the day and month swapped
+	 */
 	private String swapDayMonth(String input, char seperator) {
 		String usDate;
 		String day;
@@ -133,6 +174,12 @@ public class DateParser {
 		return usDate;
 	}
 
+	/**
+	 * Checks the date and sets the year to next year if it the date has already passed
+	 * @param dayStr
+	 * @param monthStr
+	 * @return String year
+	 */
 	private String getYear(String dayStr, String monthStr) {
 		int currYear = Calendar.getInstance().get(Calendar.YEAR);
 		int currDay = Calendar.getInstance().get(Calendar.DATE);
@@ -148,6 +195,9 @@ public class DateParser {
 		return Integer.toString(currYear);
 	}
 
+	/**
+	 * Hide error messages
+	 */
 	private void hideErr() {
 		System.setErr(new PrintStream(new OutputStream() {
 			@Override
@@ -156,6 +206,9 @@ public class DateParser {
 		}));
 	}
 
+	/**
+	 * shows error messages
+	 */
 	private void showErr() {
 		System.setErr(printStreamOriginal);
 	}
