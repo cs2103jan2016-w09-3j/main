@@ -49,7 +49,7 @@ public class InputParser {
 		this.input = input;
 	}
 	
-	public COMMAND getCommand(String input){
+	public COMMAND getCommand(){
 		return cmdParser.getCommand(input);
 	}
 	
@@ -62,7 +62,7 @@ public class InputParser {
 		return returnVal;
 	}
 
-	public ArrayList<TaskEntity> getTask(String input){
+	public ArrayList<TaskEntity> getTask(){
 		input = XMLParser.removeAllTags(input);
 		this.input = input;
 		ArrayList<TaskEntity> tasks  = new ArrayList<TaskEntity>();

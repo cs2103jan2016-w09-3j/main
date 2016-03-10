@@ -64,13 +64,13 @@ public class CommandBar {
 	public COMMAND onEnter(String input) {
 		onSpace(input);
 		InputParser parser = new InputParser(_textInField);
-		COMMAND cmd = parser.getCommand(_textInField);
+		COMMAND cmd = parser.getCommand();
 		return cmd;
 	}
 
 	public ArrayList<TaskEntity> getTasks(String input) {
 		InputParser parser = new InputParser(input);
-		return parser.getTask(input);
+		return parser.getTask();
 	}
 
 	public void setTextFieldHandler(EventHandler<KeyEvent> mainEventHandler) {
