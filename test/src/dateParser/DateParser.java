@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 import com.joestelmach.natty.*;
 
-public class DateNLP {
+public class DateParser {
 	private static final int CONVERSION_FROM_GREGORIAN_CAL = 1;
 	private static final char CHAR_ZERO = '0';
 	private static final String SPACE_DELIM = " ";
@@ -33,7 +33,7 @@ public class DateNLP {
 	PrintStream printStreamOriginal = System.err;
 	private Parser nattyParser = new Parser();
 
-	public DateNLP() {
+	public DateParser() {
 		// init the parser so that there's no lag later
 		hideErr();
 		nattyParser.parse("today");
@@ -163,7 +163,7 @@ public class DateNLP {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 
-		DateNLP tempNLP = new DateNLP();
+		DateParser tempNLP = new DateParser();
 
 		boolean running = true;
 		while (running) {

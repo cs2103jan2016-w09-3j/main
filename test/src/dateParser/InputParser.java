@@ -11,7 +11,7 @@ import entity.TaskEntity;
 
 public class InputParser {
 	private String input;
-	private DateNLP dateParser;
+	private DateParser dateParser;
 	private CommandParser cmdParser;
 	private InformationParser infoParser;
 
@@ -21,7 +21,7 @@ public class InputParser {
 	 */
 	public InputParser(String input) {
 		this.input = input;
-		dateParser = new DateNLP();
+		dateParser = new DateParser();
 		cmdParser = new CommandParser();
 		infoParser = new InformationParser();
 	}
