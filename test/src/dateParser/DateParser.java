@@ -30,7 +30,7 @@ public class DateParser {
 	private final int END_MONTH_INDEX = 5;
 	private final int START_YEAR_INDEX = 6;
 
-	PrintStream printStreamOriginal = System.err;
+	private PrintStream printStreamOriginal = System.err;
 	private Parser nattyParser = new Parser();
 
 	public DateParser() {
