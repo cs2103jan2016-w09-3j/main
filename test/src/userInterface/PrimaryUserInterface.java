@@ -2,10 +2,7 @@ package userInterface;
 
 import userInterface.CommandBar;
 import userInterface.UserInterfaceController;
-
 import java.util.ArrayList;
-import java.util.Calendar;
-
 import dateParser.CommandParser.COMMAND;
 import entity.TaskEntity;
 import javafx.application.Application;
@@ -23,28 +20,29 @@ import javafx.stage.StageStyle;
 
 public class PrimaryUserInterface extends Application {
 
-	static final int PREFERED_WINDOW_WIDTH = 600; // change to 1080
+	static final int PREFERED_WINDOW_WIDTH = 600; // change to 1080.
 	static final double PREFERED_WINDOW_SCALE = 0.8;
 
+	//CommandBar dimensions.
 	static final int COMMAND_BAR_WIDTH = 600;
 	static final int COMMAND_BAR_HEIGTH = 50;
 	static final int COMMAND_BAR_TOP_MARGIN = 10;
 	static final int COMMAND_BAR_BOTTOM_MARGIN = 40;
 
+	//Font and style.
 	static final String DEFAULT_FONT = "Arial";
 	static final int DEFAULT_FONT_SIZE = 24;
-
 	static final String STYLE_SHEET = "stylesheet.css";
 
 	private Rectangle2D _screenBounds;
+	private Stage _primaryStage;
 	private CommandBar _commandBar;
 	private boolean _fixedSize = false;
 	private UserInterfaceController uiController;
-	private Stage _primaryStage;
 
 	/**
 	 * Constructor will determine if the application will run in fixed size or
-	 * not
+	 * not.
 	 */
 	public PrimaryUserInterface() {
 		_screenBounds = Screen.getPrimary().getVisualBounds();
@@ -53,6 +51,10 @@ public class PrimaryUserInterface extends Application {
 		}
 	}
 
+	/**
+	 * initialize stage and components, this is the first method javafx will call.
+	 * 
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		_primaryStage = primaryStage;
@@ -64,7 +66,60 @@ public class PrimaryUserInterface extends Application {
 		initializeData();
 		_primaryStage.requestFocus();
 	}
-	
+
+	/**
+	 * set up the primary stage dimensions and display it on screen.
+	 * 
+	 * @param primaryStage.
+	 */
+	private void initializePrimaryStage(Stage primaryStage) {
+		primaryStage.setAlwaysOnTop(true);
+		primaryStage.initStyle(StageStyle.TRANSPARENT);
+		primaryStage.setX((_screenBounds.getWidth() - COMMAND_BAR_WIDTH) / 2);
+		primaryStage.setY((_screenBounds.getHeight() - COMMAND_BAR_HEIGTH - COMMAND_BAR_BOTTOM_MARGIN));
+		Scene primaryScene = new Scene(initializeRootLayout(), COMMAND_BAR_WIDTH, COMMAND_BAR_HEIGTH);
+		primaryScene.getStylesheets().add(STYLE_SHEET);
+		primaryStage.setScene(primaryScene);
+		_primaryStage.show();
+	}
+
+	/**
+	 * initialize the content inside the primary stage.
+	 * 
+	 * @return rootLayout.
+	 */
+	private BorderPane initializeRootLayout() {
+		GridPane commandBarPane = _commandBar.getCommandBar();
+		BorderPane rootLayout = new BorderPane();
+		rootLayout.setId("rootPane");
+		rootLayout.getStylesheets().add(STYLE_SHEET);
+		rootLayout.setCenter(commandBarPane);
+		return rootLayout;
+	}
+
+	/**
+	 * initialize the other compoents which is controlled by the uiController
+	 * 
+	 * @param primaryStage.
+	 */
+	private void initializeUiController(Stage primaryStage) {
+		uiController = new UserInterfaceController(primaryStage);
+		uiController.initializeInterface(_screenBounds, _fixedSize);
+	}
+
+	/** 
+	 * initialize the main controls for the application. 
+	 * 
+	 */
+	public void initializeControls() {
+		EventHandler<KeyEvent> mainEventHandler = new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent event) {
+				processKeyInputs(_commandBar.getTextField(), event);
+			}
+		};
+		_commandBar.setTextFieldHandler(mainEventHandler);
+	}
+
 	private void initializeData(){
 		ArrayList<String> cmdArrs = uiController.readFromFile();
 		System.out.println(cmdArrs.size());
@@ -93,41 +148,13 @@ public class PrimaryUserInterface extends Application {
 			}
 		}
 	}
-
-	private void initializePrimaryStage(Stage primaryStage) {
-		primaryStage.setAlwaysOnTop(true);
-		primaryStage.initStyle(StageStyle.TRANSPARENT);
-		primaryStage.setX((_screenBounds.getWidth() - COMMAND_BAR_WIDTH) / 2);
-		primaryStage.setY((_screenBounds.getHeight() - COMMAND_BAR_HEIGTH - COMMAND_BAR_BOTTOM_MARGIN));
-		Scene primaryScene = new Scene(initializeRootLayout(), COMMAND_BAR_WIDTH, COMMAND_BAR_HEIGTH);
-		primaryScene.getStylesheets().add(STYLE_SHEET);
-		primaryStage.setScene(primaryScene);
-		_primaryStage.show();
-	}
-
-	private BorderPane initializeRootLayout() {
-		GridPane commandBarPane = _commandBar.getCommandBar();
-		BorderPane rootLayout = new BorderPane();
-		rootLayout.setId("rootPane");
-		rootLayout.getStylesheets().add(STYLE_SHEET);
-		rootLayout.setCenter(commandBarPane);
-		return rootLayout;
-	}
-
-	private void initializeUiController(Stage primaryStage) {
-		uiController = new UserInterfaceController(primaryStage);
-		uiController.initializeInterface(_screenBounds, _fixedSize);
-	}
-
-	public void initializeControls() {
-		EventHandler<KeyEvent> mainEventHandler = new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent event) {
-				processKeyInputs(_commandBar.getTextField(), event);
-			}
-		};
-		_commandBar.setTextFieldHandler(mainEventHandler);
-	}
-
+	
+	/**
+	 * add a task into the system and display the changes in the selected view.
+	 * 
+	 * @param task
+	 * @return boolean, true for successful and false for unsuccessful.
+	 */
 	public boolean executeAdd(TaskEntity task) {
 		if (task != null) {
 			uiController.addTask(task);
@@ -139,6 +166,12 @@ public class PrimaryUserInterface extends Application {
 		return false;
 	}
 
+	/**
+	 * delete task from the system. 
+	 * 
+	 * @param taskToCheck.
+	 * @return boolean, true for successful and false for unsuccessful.
+	 */
 	public boolean executeDelete(TaskEntity taskToCheck) {
 		int indexToDelete = uiController.getTaskID(taskToCheck);
 		if (indexToDelete > -1) {
@@ -152,6 +185,12 @@ public class PrimaryUserInterface extends Application {
 		return false;
 	}
 
+	/**
+	 * modify a task.
+	 * 
+	 * @param taskToCheck
+	 * @return boolean, true for successful and false for unsuccessful.
+	 */
 	public boolean executeModify(TaskEntity taskToCheck) {
 		int indexToModify = uiController.getTaskID(taskToCheck);
 		if (indexToModify > -1) {
