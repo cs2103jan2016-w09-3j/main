@@ -74,12 +74,15 @@ public class Utils {
                 characterValue = lastCharAsciiValue - 87;
             } else if (lastCharAsciiValue >= 48 && lastCharAsciiValue <= 57){
                 characterValue = lastCharAsciiValue - 48;
+            } else if (lastCharAsciiValue != 32) {
+                return -1;
             }
             
             //Add the appropriate value of that digit to the final value
-            decNumber += characterValue * digitWeight;
-            digitWeight *= 36;
-            
+            if(lastCharAsciiValue != 32){
+                decNumber += characterValue * digitWeight;
+                digitWeight *= 36;
+            }    
             base36 = base36.substring(0, base36.length() - 1);
         }
         return decNumber;

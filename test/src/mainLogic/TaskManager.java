@@ -20,7 +20,8 @@ public class TaskManager {
      * @param args
      */
     public static void main (String[] args)
-    {   
+    {
+        System.out.println(Utils.convertBase36ToDec(",10"));
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
         for(int i = 0; i < 5; i++)
         {
@@ -43,9 +44,9 @@ public class TaskManager {
         getWorkingList();
         printList();
         
-        while(true){
-            System.out.println(getNextTimeListId());
-        }
+        //while(true){
+        //    System.out.println(getNextTimeListId());
+        //}
     }
     
     /**
