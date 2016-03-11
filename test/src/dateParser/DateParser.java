@@ -228,7 +228,9 @@ public class DateParser {
 				List<Date> dates = tempNLP.parseToList(tempDate);
 				tempNLP.showErr();
 
-				System.out.println(dates);
+				String parseAgain = dates.get(0).toString();
+				dates = tempNLP.parseToList(parseAgain);
+				//System.out.println("test2"+dates);
 
 				tempNLP.hideErr();
 				System.out.println(tempNLP.xmlDate(tempDate));
