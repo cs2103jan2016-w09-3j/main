@@ -27,6 +27,7 @@ public class ScrollTaskAnimation extends Task<Integer> {
 		} else {
 			direction = -1;
 		}
+		
 		long startTime = System.currentTimeMillis();
 
 		while (currentIndex != indexToGo) {

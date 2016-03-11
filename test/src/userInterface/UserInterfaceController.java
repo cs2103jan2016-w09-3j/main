@@ -34,12 +34,12 @@ public class UserInterfaceController {
 	private Rectangle2D _screenBounds;
 	private boolean _fixedSize;
 
-	// var for animation and changing views;
+	// variables for animation and changing views;
 	private int _currentView = TASK_VIEW;
 	private boolean _isDoneTranslatingToOtherView;
 	private Thread _threadToAnimate;
 
-	// var for animation scrolling
+	// variables for animation scrolling
 	private int _jumpToIndex;
 	private TaskManager _taskManager;
 
@@ -60,7 +60,7 @@ public class UserInterfaceController {
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
-		// _taskManager.generateFakeData();// replace when integrate with angie
+		_taskManager.generateFakeData();// replace when integrate with angie
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
 		update(0);
 	}
@@ -107,39 +107,6 @@ public class UserInterfaceController {
 		_descriptionComponent.updateTranslateY(value);
 	}
 
-	public Task<Void> animateTransitionForView() {
-		_isDoneTranslatingToOtherView = false;
-		Task<Void> animateChangeView = new Task<Void>() {
-			@Override
-			public Void call() {
-				do {
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException e) {
-					}
-					Platform.runLater(new Runnable() {
-						public void run() {
-							if (_currentView == TASK_VIEW || _currentView == DETAILED_VIEW) {
-								if (_currentView == DETAILED_VIEW) {
-									_isDoneTranslatingToOtherView = _taskViewInterface.isAtDetailedView(1);
-									_descriptionComponent.buildComponent(
-											_taskViewInterface.rebuildDescriptionLabelsForDay(), DETAILED_VIEW);
-								} else {
-									_isDoneTranslatingToOtherView = _taskViewInterface.isAtTaskView(-1);
-									_descriptionComponent.buildComponent(
-											_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
-								}
-								translateComponentsY(_taskViewInterface.getTranslationY());
-							}
-						}
-					});
-				} while (!_isDoneTranslatingToOtherView);
-				return null;
-			}
-		};
-		return animateChangeView;
-	}
-	
 	public void changeView(int value) {
 		int view = _currentView + value;
 		switch (view) {
@@ -164,8 +131,25 @@ public class UserInterfaceController {
 		}
 	}
 
+	public boolean animateView() {
+		boolean temp = false;
+		if (_currentView == TASK_VIEW || _currentView == DETAILED_VIEW) {
+			if (_currentView == DETAILED_VIEW) {
+				temp = _taskViewInterface.isAtDetailedView(1);
+				_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(),
+						DETAILED_VIEW);
+			} else {
+				temp = _taskViewInterface.isAtTaskView(-1);
+				_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
+			}
+			translateComponentsY(_taskViewInterface.getTranslationY());
+		}
+		return temp;
+	}
+
 	public void startThreadToAnimate() {
-		_threadToAnimate = new Thread(animateTransitionForView());
+		TaskViewDescriptionAnimation animation = new TaskViewDescriptionAnimation(this);
+		_threadToAnimate = new Thread(animation);
 		_threadToAnimate.start();
 	}
 
@@ -200,18 +184,18 @@ public class UserInterfaceController {
 		return new Label(task2.getDueDate().toString());
 	}
 
-	//temp method for v0.1
-	public void saveToFile(ArrayList<String> input){
+	// temp method for v0.1
+	public void saveToFile(ArrayList<String> input) {
 		StorageHandler fh = new StorageHandler();
 		fh.saveToFile(input);
 	}
-	
-	//temp method for v0.1
-	public ArrayList<String> readFromFile(){
+
+	// temp method for v0.1
+	public ArrayList<String> readFromFile() {
 		StorageHandler fh = new StorageHandler();
 		return fh.retrieveFromFile();
 	}
-	
+
 	public void addTask(TaskEntity task) {
 		/*
 		 * int date = task.getDueDate().get(Calendar.DATE); Random r = new
@@ -224,7 +208,7 @@ public class UserInterfaceController {
 
 		int insertedTo = _taskManager.add(task);
 		int selected = _taskViewInterface.getSelectIndex();
-		
+
 		if (selected == -1) {
 			selected = 0;
 		} else if (insertedTo <= selected) {
@@ -264,7 +248,7 @@ public class UserInterfaceController {
 			Calendar toCheckDate = taskToCheck.getDueDate();
 			toCheckDate.clear(Calendar.MILLISECOND);
 
-			Calendar onListDate= taskOnList.getDueDate();
+			Calendar onListDate = taskOnList.getDueDate();
 			onListDate.clear(Calendar.MILLISECOND);
 
 			if (toCheckDate.compareTo(onListDate) == 0) {
@@ -290,7 +274,7 @@ public class UserInterfaceController {
 
 	public void jumpToIndex(String indexToJump) {
 		int selected = _taskViewInterface.getSelectIndex();
-		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, Utils.convertBase36ToDec(indexToJump), this);
+		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, Utils.convertBase36ToDec(indexToJump.trim()), this);
 		Thread t = new Thread(sAnimation);
 		t.start();
 	}
