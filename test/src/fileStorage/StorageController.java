@@ -7,14 +7,14 @@ import org.json.JSONException;
 import entity.AllTaskLists;
 import entity.TaskEntity;
 
-public class StorageHandler implements StorageInterface {
+public class StorageController implements StorageInterface {
     
-    private FileHandler fh = new FileHandler();
+    private MainFileHandler fh = new MainFileHandler();
     // Test function
     public static void main (String args[]) {
-        StorageHandler storageHandler = new StorageHandler();
+        StorageController storageHandler = new StorageController();
         
-        FileHandler fm = new FileHandler();
+        MainFileHandler fm = new MainFileHandler();
         
         //AllTaskLists dummyTL = storageHandler.createDummy();
         //fm.writeToFile(storageHandler.convertObjToJson(dummyTL));
@@ -36,8 +36,8 @@ public class StorageHandler implements StorageInterface {
 
     // Returns true if task lists written into file. False otherwise.
     public Boolean storeTaskLists(AllTaskLists atl) {
-        FileHandler fm = new FileHandler();
-        JsonHandler jh = new JsonHandler();
+        MainFileHandler fm = new MainFileHandler();
+        JsonConverter jh = new JsonConverter();
         boolean isStored = false;
         return isStored;
     }
@@ -58,7 +58,7 @@ public class StorageHandler implements StorageInterface {
     }
     
     private String convertObjToJson (AllTaskLists te) {
-        JsonHandler json = new JsonHandler();
+        JsonConverter json = new JsonConverter();
         String jsonString = "";
         
         try {

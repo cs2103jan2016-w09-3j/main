@@ -15,9 +15,9 @@ import com.google.gson.JsonSyntaxException;
 import entity.AllTaskLists;
 import entity.TaskEntity;
 
-public class JsonHandler {
+public class JsonConverter {
     
-    public JsonHandler() {
+    public JsonConverter() {
         
     }
     

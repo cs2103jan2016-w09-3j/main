@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class FileHandler {
+public class MainFileHandler {
     
     private String filePath;
     private File storedLists;
@@ -21,7 +21,7 @@ public class FileHandler {
         this.filePath = filePath;
     }
     
-    public FileHandler() {
+    public MainFileHandler() {
         filePath = "taskLists.txt";
         processFile();
     }
