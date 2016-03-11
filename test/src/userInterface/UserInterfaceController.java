@@ -274,7 +274,7 @@ public class UserInterfaceController {
 
 	public void jumpToIndex(String indexToJump) {
 		int selected = _taskViewInterface.getSelectIndex();
-		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, Utils.convertBase36ToDec(indexToJump.trim()), this);
+		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, Utils.convertBase36ToDec(indexToJump), this);
 		Thread t = new Thread(sAnimation);
 		t.start();
 	}
