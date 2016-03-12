@@ -31,7 +31,26 @@ public class JsonConverter {
         return mainToJson + floatingToJson;
     }
     
-    public AllTaskLists jsonToJava() {
+    @SuppressWarnings("unchecked")
+    public AllTaskLists jsonToJava(String readData) {
+        Gson gson = new Gson();
         
+        ArrayList<TaskEntity> allTasks = new ArrayList<TaskEntity>();
+        ArrayList<TaskEntity> mainTaskList = new ArrayList<TaskEntity>();
+        ArrayList<TaskEntity> floatingTaskList = new ArrayList<TaskEntity>();
+        
+        allTasks = gson.fromJson(readData, ArrayList.class);
+        
+        for (int i = 0; i < allTasks.size(); i++) {
+            if(allTasks.get(i).isFloating() == true) {
+                floatingTaskList.add(allTasks.get(i));
+            } else {
+                mainTaskList.add(allTasks.get(i));
+            }
+        }
+        
+        AllTaskLists allLists = new AllTaskLists(mainTaskList, floatingTaskList);
+        
+        return allLists;
     }
 }

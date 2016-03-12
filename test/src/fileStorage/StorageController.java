@@ -1,6 +1,7 @@
 package fileStorage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.json.JSONException;
 
@@ -12,21 +13,19 @@ public class StorageController implements StorageInterface {
     private MainFileHandler fh = new MainFileHandler();
     // Test function
     public static void main (String args[]) {
-        StorageController storageHandler = new StorageController();
-        
+        StorageController sh = new StorageController();
         MainFileHandler fm = new MainFileHandler();
+        JsonConverter jc = new JsonConverter();
         
-        AllTaskLists dummyTL = storageHandler.createDummy();
-        fm.writeToFile(storageHandler.convertObjToJson(dummyTL));
+        AllTaskLists dummyTL = sh.createDummy();
+        fm.writeToFile(jc.javaToJson(dummyTL));
         
-        /*ArrayList<String> dummyArrayList = new ArrayList<String>();
-        dummyArrayList.add("a");
-        dummyArrayList.add("b");
-        dummyArrayList.add("c");
-        dummyArrayList.add("d");
-        fm.writeToFile(dummyArrayList);*/
+        String data = fm.readFromExistingFile();
+        System.out.println(data);
+        AllTaskLists convertedDummy = jc.jsonToJava(data);
+        Calendar created = convertedDummy.getFloatingTaskList().get(0).getDateCreated();
         
-        System.out.println(fm.readFromExistingFile());
+        System.out.println("Calendar :" + created);
     }
 
     public AllTaskLists getTaskLists() {
