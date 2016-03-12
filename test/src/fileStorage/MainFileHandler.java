@@ -54,7 +54,7 @@ public class MainFileHandler {
             buffer = new BufferedReader(new FileReader(filePath));
             String currentLine = "";
             while ((currentLine = buffer.readLine()) != null) {
-                readData = readData + currentLine;
+                readData = readData.trim() + currentLine.trim();
             }
             buffer.close();
             System.out.println("Read from file.");
@@ -63,7 +63,7 @@ public class MainFileHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return readData;
+        return readData.trim();
     }
 
     public boolean writeToFile(String data) {
@@ -82,7 +82,7 @@ public class MainFileHandler {
         return isModified(beforeModify, afterModify);
     }
 
-    private boolean isModified(long timeBeforeModification, long timeAfterModification) {
+    public boolean isModified(long timeBeforeModification, long timeAfterModification) {
         return timeAfterModification > timeBeforeModification;
     }
 }

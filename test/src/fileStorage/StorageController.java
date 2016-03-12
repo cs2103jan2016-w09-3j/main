@@ -23,9 +23,9 @@ public class StorageController implements StorageInterface {
         String data = fm.readFromExistingFile();
         System.out.println(data);
         AllTaskLists convertedDummy = jc.jsonToJava(data);
-        Calendar created = convertedDummy.getFloatingTaskList().get(0).getDateCreated();
+        //Calendar created = convertedDummy.getFloatingTaskList().get(0).getDateCreated();
         
-        System.out.println("Calendar :" + created);
+        //System.out.println("Calendar :" + created);
     }
 
     public AllTaskLists getTaskLists() {
@@ -60,7 +60,6 @@ public class StorageController implements StorageInterface {
         JsonConverter json = new JsonConverter();
         String jsonString = "";
         
-        //jsonString = json.javaToJson(te).toString();
         jsonString = json.javaToJson(te);
         
         return jsonString;
