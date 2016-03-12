@@ -1,16 +1,12 @@
 package fileStorage;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-
-import org.json.JSONException;
 
 import entity.AllTaskLists;
 import entity.TaskEntity;
 
 public class StorageController implements StorageInterface {
     
-    private MainFileHandler fh = new MainFileHandler();
     // Test function
     public static void main (String args[]) {
         StorageController sh = new StorageController();
@@ -34,10 +30,14 @@ public class StorageController implements StorageInterface {
     }
 
     // Returns true if task lists written into file. False otherwise.
-    public Boolean storeTaskLists(AllTaskLists atl) {
-        MainFileHandler fm = new MainFileHandler();
-        JsonConverter jh = new JsonConverter();
-        boolean isStored = false;
+    public Boolean storeTaskLists(AllTaskLists allTaskLists) {
+        MainFileHandler mainHandler = new MainFileHandler();
+        JsonConverter jsonConverter = new JsonConverter();
+        
+        String toStore = jsonConverter.javaToJson(allTaskLists);
+        
+        boolean isStored = mainHandler.writeToFile(toStore);
+        
         return isStored;
     }
     
@@ -54,14 +54,5 @@ public class StorageController implements StorageInterface {
         dummyTL.setFloatingTaskList(dummyFloatingList);
         dummyTL.setMainTaskList(dummyMainList);
         return dummyTL;
-    }
-    
-    private String convertObjToJson (AllTaskLists te) {
-        JsonConverter json = new JsonConverter();
-        String jsonString = "";
-        
-        jsonString = json.javaToJson(te);
-        
-        return jsonString;
     }
 }

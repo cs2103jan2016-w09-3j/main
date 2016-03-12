@@ -34,7 +34,7 @@ public class JsonConverter {
     public AllTaskLists jsonToJava(String readData) {
         Gson gson = new Gson();
 
-        // Load json string into custom object
+        // Load JSON string into custom object using TypeToken
         ArrayList<TaskEntity> allTasks = gson.fromJson(readData, new TypeToken<ArrayList<TaskEntity>>(){}.getType());
         
         ArrayList<TaskEntity> mainTaskList = new ArrayList<TaskEntity>();

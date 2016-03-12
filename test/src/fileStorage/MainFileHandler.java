@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class MainFileHandler {
 
@@ -82,7 +81,7 @@ public class MainFileHandler {
         return isModified(beforeModify, afterModify);
     }
 
-    public boolean isModified(long timeBeforeModification, long timeAfterModification) {
+    private boolean isModified(long timeBeforeModification, long timeAfterModification) {
         return timeAfterModification > timeBeforeModification;
     }
 }
