@@ -1,6 +1,7 @@
 package fileStorage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import entity.AllTaskLists;
 import entity.TaskEntity;
@@ -19,14 +20,19 @@ public class StorageController implements StorageInterface {
         String data = fm.readFromExistingFile();
         System.out.println(data);
         AllTaskLists convertedDummy = jc.jsonToJava(data);
-        //Calendar created = convertedDummy.getFloatingTaskList().get(0).getDateCreated();
+        Calendar created = convertedDummy.getFloatingTaskList().get(0).getDateCreated();
         
-        //System.out.println("Calendar :" + created);
+        System.out.println("Calendar :" + created);
     }
 
     public AllTaskLists getTaskLists() {
-        // TODO Auto-generated method stub
-        return null;
+        MainFileHandler mainHandler = new MainFileHandler();
+        JsonConverter jsonConverter = new JsonConverter();
+        
+        String retrievedTasks = mainHandler.getAllStoredTasks();
+        AllTaskLists retrievedList = jsonConverter.jsonToJava(retrievedTasks);
+        
+        return retrievedList;
     }
 
     // Returns true if task lists written into file. False otherwise.

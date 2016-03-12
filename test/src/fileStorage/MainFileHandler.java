@@ -11,10 +11,19 @@ public class MainFileHandler {
 
     private String filePath;
     private File storedLists;
+    private String allStoredTasks;
 
     public MainFileHandler() {
         filePath = "taskLists.txt";
         processFile();
+    }
+
+    public String getAllStoredTasks() {
+        return allStoredTasks;
+    }
+
+    public void setAllStoredTasks(String allStoredTasks) {
+        this.allStoredTasks = allStoredTasks;
     }
 
     public String getFilePath() {
@@ -30,7 +39,7 @@ public class MainFileHandler {
         storedLists = new File(filePath);
 
         if (storedLists.exists()) {
-            readFromExistingFile();
+            setAllStoredTasks(readFromExistingFile());
             System.out.println("File found, begin reading...");
         } else {
             createNewFile(storedLists);
@@ -53,7 +62,7 @@ public class MainFileHandler {
             buffer = new BufferedReader(new FileReader(filePath));
             String currentLine = "";
             while ((currentLine = buffer.readLine()) != null) {
-                readData = readData.trim() + currentLine.trim();
+                readData = readData + currentLine.trim();
             }
             buffer.close();
             System.out.println("Read from file.");
