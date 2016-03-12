@@ -16,17 +16,17 @@ public class StorageController implements StorageInterface {
         
         MainFileHandler fm = new MainFileHandler();
         
-        //AllTaskLists dummyTL = storageHandler.createDummy();
-        //fm.writeToFile(storageHandler.convertObjToJson(dummyTL));
+        AllTaskLists dummyTL = storageHandler.createDummy();
+        fm.writeToFile(storageHandler.convertObjToJson(dummyTL));
         
-        ArrayList<String> dummyArrayList = new ArrayList<String>();
+        /*ArrayList<String> dummyArrayList = new ArrayList<String>();
         dummyArrayList.add("a");
         dummyArrayList.add("b");
         dummyArrayList.add("c");
         dummyArrayList.add("d");
-        fm.writeToFile(dummyArrayList);
+        fm.writeToFile(dummyArrayList);*/
         
-        System.out.println(fm.readFromExistingFile().toString());
+        System.out.println(fm.readFromExistingFile());
     }
 
     public AllTaskLists getTaskLists() {
@@ -61,20 +61,9 @@ public class StorageController implements StorageInterface {
         JsonConverter json = new JsonConverter();
         String jsonString = "";
         
-        try {
-            jsonString = json.convertToJson(te).toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        //jsonString = json.javaToJson(te).toString();
+        jsonString = json.javaToJson(te);
         
         return jsonString;
-    }
-
-    public ArrayList<String> retrieveFromFile() {
-        return fh.readFromExistingFile();
-    }
-
-    public Boolean saveToFile(ArrayList<String> command) {
-        return fh.writeToFile(command);
     }
 }
