@@ -20,7 +20,8 @@ import javafx.stage.Stage;
 
 public class UserInterfaceController {
 
-	private final static int CALENDAR_VIEW = 0;
+	// view indicators
+	final static int CALENDAR_VIEW = 0;
 	final static int TASK_VIEW = 1;
 	final static int DETAILED_VIEW = 2;
 
@@ -34,11 +35,9 @@ public class UserInterfaceController {
 
 	// variables for animation and changing views;
 	private int _currentView = TASK_VIEW;
-	private boolean _isDoneTranslatingToOtherView;
 	private Thread _threadToAnimate;
 
-	// variables for animation scrolling
-	private int _jumpToIndex;
+	// main logic class to interact
 	private TaskManager _taskManager;
 
 	public UserInterfaceController(Stage primaryStage) {
@@ -53,6 +52,10 @@ public class UserInterfaceController {
 		show();
 	}
 
+	/**
+	 * Initialize floatingBar Component, TaskViewUserInterface,
+	 * DescriptionComponent, DetailsComponent
+	 */
 	public void initializeTaskView() {
 		_taskViewInterface = new TaskViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
@@ -60,9 +63,12 @@ public class UserInterfaceController {
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
 		_taskManager.generateFakeData();// replace when integrate with angie
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
-		update(0);
+		updateUI(0);
 	}
 
+	/**
+	 * Show the various components depending on _currentView
+	 */
 	public void show() {
 		if (_currentView == TASK_VIEW) {
 			_taskViewInterface.show();
@@ -77,6 +83,9 @@ public class UserInterfaceController {
 		}
 	}
 
+	/**
+	 * unused method for now
+	 */
 	public void destory() {
 		_taskViewInterface.destoryStage();
 		_descriptionComponent.destoryStage();
@@ -84,7 +93,7 @@ public class UserInterfaceController {
 		_detailComponent.destoryStage();
 	}
 
-	public void update(int value) {
+	public void updateUI(int value) {
 		_taskViewInterface.update(value);
 		_taskViewInterface.setItemSelected(value);
 		translateComponentsY(_taskViewInterface.getTranslationY());
@@ -151,6 +160,10 @@ public class UserInterfaceController {
 		_threadToAnimate.start();
 	}
 
+	/**
+	 * method for debugging purposes only.
+	 * 
+	 */
 	public void move(int value) {
 		if (value > 0) {
 			double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() + 50;
@@ -162,37 +175,6 @@ public class UserInterfaceController {
 			_descriptionComponent.updateTranslateY(t);
 		}
 	}
-
-	/**
-	 * This method will call utils and check if the both task have the same date
-	 * 
-	 * @param task1
-	 * @param task2
-	 * @return label for task2 if the dates are not the same, null if they are
-	 *         the same
-	 */
-	public static Label checkSameDay(TaskEntity task1, TaskEntity task2) {
-		if (task1 == null) { // new day
-			return new Label(task2.getDueDate().toString());
-		} else {
-			if (Utils.checkSameDate(task1, task2)) {
-				return null;
-			}
-		}
-		return new Label(task2.getDueDate().toString());
-	}
-
-	/*// temp method for v0.1
-	public void saveToFile(ArrayList<String> input) {
-		StorageHandler fh = new StorageHandler();
-		fh.saveToFile(input);
-	}
-
-	// temp method for v0.1
-	public ArrayList<String> readFromFile() {
-		StorageHandler fh = new StorageHandler();
-		return fh.retrieveFromFile();
-	}*/
 
 	public void addTask(TaskEntity task) {
 		/*
@@ -214,7 +196,7 @@ public class UserInterfaceController {
 		}
 
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
-		update(0);
+		updateUI(0);
 
 		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, insertedTo, this);
 		Thread t = new Thread(sAnimation);
@@ -230,7 +212,7 @@ public class UserInterfaceController {
 				index = 0;
 			}
 			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
-			update(0);
+			updateUI(0);
 			return true;
 		}
 		return false;
@@ -266,7 +248,7 @@ public class UserInterfaceController {
 			return false;
 		}
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
-		update(0);
+		updateUI(0);
 		return true;
 	}
 
