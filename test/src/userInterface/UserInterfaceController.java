@@ -95,7 +95,8 @@ public class UserInterfaceController {
 
 	public void updateUI(int value) {
 		_taskViewInterface.update(value);
-		_taskViewInterface.setItemSelected(value);
+		TaskEntity selectedTask= _taskViewInterface.setItemSelected(value);
+		_detailComponent.buildComponent(selectedTask);
 		translateComponentsY(_taskViewInterface.getTranslationY());
 		updateDescriptionComponent();
 	}
