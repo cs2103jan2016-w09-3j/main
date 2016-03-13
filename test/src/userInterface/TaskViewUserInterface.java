@@ -70,8 +70,8 @@ public class TaskViewUserInterface implements ViewInterface {
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
 		if (fixedSize) {
 			_stageWidth = (int) screenBounds.getWidth() - DescriptionComponent.CONPONENT_WIDTH
-					- DescriptionComponent.CONPONENT_RIGHT_MARGIN - DetailComponent.CONPONENT_WIDTH
-					- DetailComponent.CONPONENT_LEFT_MARGIN;
+					- DescriptionComponent.CONPONENT_RIGHT_MARGIN - DetailComponent.COMPONENT_WIDTH
+					- DetailComponent.COMPONENT_LEFT_MARGIN;
 			_stageHeight = (int) (screenBounds.getHeight() - PrimaryUserInterface.COMMAND_BAR_HEIGTH
 					- PrimaryUserInterface.COMMAND_BAR_TOP_MARGIN - PrimaryUserInterface.COMMAND_BAR_BOTTOM_MARGIN
 					- FloatingBarViewUserInterface.COMPONENT_HEIGHT
@@ -82,7 +82,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		} else {
 			_stageWidth = (int) (screenBounds.getWidth() * PrimaryUserInterface.PREFERED_WINDOW_SCALE)
 					- DescriptionComponent.CONPONENT_WIDTH - DescriptionComponent.CONPONENT_RIGHT_MARGIN
-					- DetailComponent.CONPONENT_WIDTH - DetailComponent.CONPONENT_LEFT_MARGIN;
+					- DetailComponent.COMPONENT_WIDTH - DetailComponent.COMPONENT_LEFT_MARGIN;
 			_stageHeight = (int) (screenBounds.getHeight() - PrimaryUserInterface.COMMAND_BAR_HEIGTH
 					- PrimaryUserInterface.COMMAND_BAR_TOP_MARGIN - PrimaryUserInterface.COMMAND_BAR_BOTTOM_MARGIN
 					- FloatingBarViewUserInterface.COMPONENT_HEIGHT - FloatingBarViewUserInterface.COMPONENT_TOP_MARGIN

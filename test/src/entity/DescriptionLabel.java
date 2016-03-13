@@ -101,10 +101,4 @@ public class DescriptionLabel {
         return weekString;
     }
 
-    private boolean isSameMonth(Calendar c1, Calendar c2) {
-        if (c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH)) {
-            return true;
-        }
-        return false;
-    }
 }
