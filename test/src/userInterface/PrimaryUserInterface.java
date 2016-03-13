@@ -23,13 +23,14 @@ public class PrimaryUserInterface extends Application {
 	static final int PREFERED_WINDOW_WIDTH = 600; // change to 1080.
 	static final double PREFERED_WINDOW_SCALE = 0.8;
 
-	//CommandBar dimensions.
+	// CommandBar dimensions.
 	static final int COMMAND_BAR_WIDTH = 600;
 	static final int COMMAND_BAR_HEIGTH = 50;
 	static final int COMMAND_BAR_TOP_MARGIN = 10;
 	static final int COMMAND_BAR_BOTTOM_MARGIN = 40;
+	static final int TWO = 2;
 
-	//Font and style.
+	// Font and style.
 	static final String DEFAULT_FONT = "Arial";
 	static final int DEFAULT_FONT_SIZE = 24;
 	static final String STYLE_SHEET = "stylesheet.css";
@@ -41,8 +42,8 @@ public class PrimaryUserInterface extends Application {
 	private UserInterfaceController uiController;
 
 	/**
-	 * Constructor will determine if the application will run in fixed size or
-	 * not.
+	 * This Constructor is called during JavaFX launch(). Determines user screen
+	 * size to set fixed value or scale value.
 	 */
 	public PrimaryUserInterface() {
 		_screenBounds = Screen.getPrimary().getVisualBounds();
@@ -52,7 +53,8 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	/**
-	 * initialize stage and components, this is the first method javafx will call.
+	 * initialize stage and components, this is the first method JavaFx calls.
+	 * Initialize commandBar and components in commandBar as primary UI
 	 * 
 	 */
 	@Override
@@ -62,8 +64,8 @@ public class PrimaryUserInterface extends Application {
 		initializeControls();
 		initializePrimaryStage(primaryStage);
 		initializeUiController(primaryStage);
-		//temp method for v0.1 demo
-		//initializeData();
+		// temp method for v0.1 demo
+		// initializeData();
 		_primaryStage.requestFocus();
 	}
 
@@ -75,7 +77,7 @@ public class PrimaryUserInterface extends Application {
 	private void initializePrimaryStage(Stage primaryStage) {
 		primaryStage.setAlwaysOnTop(true);
 		primaryStage.initStyle(StageStyle.TRANSPARENT);
-		primaryStage.setX((_screenBounds.getWidth() - COMMAND_BAR_WIDTH) / 2);
+		primaryStage.setX((_screenBounds.getWidth() - COMMAND_BAR_WIDTH) / TWO);
 		primaryStage.setY((_screenBounds.getHeight() - COMMAND_BAR_HEIGTH - COMMAND_BAR_BOTTOM_MARGIN));
 		Scene primaryScene = new Scene(initializeRootLayout(), COMMAND_BAR_WIDTH, COMMAND_BAR_HEIGTH);
 		primaryScene.getStylesheets().add(STYLE_SHEET);
@@ -84,7 +86,7 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	/**
-	 * initialize the content inside the primary stage.
+	 * initialize the content inside the primary stage, BorderPane used as rootLayout 
 	 * 
 	 * @return rootLayout.
 	 */
@@ -98,8 +100,7 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	/**
-	 * initialize the other compoents which is controlled by the uiController
-	 * 
+	 * initialize UserInterfaceController
 	 * @param primaryStage.
 	 */
 	private void initializeUiController(Stage primaryStage) {
@@ -107,8 +108,8 @@ public class PrimaryUserInterface extends Application {
 		uiController.initializeInterface(_screenBounds, _fixedSize);
 	}
 
-	/** 
-	 * initialize the main controls for the application. 
+	/**
+	 * initialize the main controls for the application.
 	 * 
 	 */
 	public void initializeControls() {
@@ -120,35 +121,25 @@ public class PrimaryUserInterface extends Application {
 		_commandBar.setTextFieldHandler(mainEventHandler);
 	}
 
-	/*private void initializeData(){
-		ArrayList<String> cmdArrs = uiController.readFromFile();
-		System.out.println(cmdArrs.size());
-		for(int j=0; j<cmdArrs.size(); j++){
-			COMMAND cmd = _commandBar.onEnter(cmdArrs.get(j));
-			String t = cmdArrs.get(j);
-			if (cmd.equals(COMMAND.EXIT)) {
-				uiController.saveToFile(_commandBar.get_allSessionCmds());
-				System.exit(0);
-			} else if (cmd.equals(COMMAND.ADD)) {
-				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
-				for (int i = 0; i < tasks.size(); i++) {
-					executeAdd(tasks.get(i));
-				}
-			} else if (cmd.equals(COMMAND.EDIT)) {
-				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
-				for (int i = 0; i < tasks.size(); i++) {
-					executeModify(tasks.get(i));
-				}
-			} else if (cmd.equals(COMMAND.DELETE)) {
-				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
-				for (int i = 0; i < tasks.size(); i++) {
-					executeDelete(tasks.get(i));
-				}
-	
-			}
-		}
-	}*/
-	
+	/*
+	 * private void initializeData(){ ArrayList<String> cmdArrs =
+	 * uiController.readFromFile(); System.out.println(cmdArrs.size()); for(int
+	 * j=0; j<cmdArrs.size(); j++){ COMMAND cmd =
+	 * _commandBar.onEnter(cmdArrs.get(j)); String t = cmdArrs.get(j); if
+	 * (cmd.equals(COMMAND.EXIT)) {
+	 * uiController.saveToFile(_commandBar.get_allSessionCmds());
+	 * System.exit(0); } else if (cmd.equals(COMMAND.ADD)) {
+	 * ArrayList<TaskEntity> tasks = _commandBar.getTasks(t); for (int i = 0; i
+	 * < tasks.size(); i++) { executeAdd(tasks.get(i)); } } else if
+	 * (cmd.equals(COMMAND.EDIT)) { ArrayList<TaskEntity> tasks =
+	 * _commandBar.getTasks(t); for (int i = 0; i < tasks.size(); i++) {
+	 * executeModify(tasks.get(i)); } } else if (cmd.equals(COMMAND.DELETE)) {
+	 * ArrayList<TaskEntity> tasks = _commandBar.getTasks(t); for (int i = 0; i
+	 * < tasks.size(); i++) { executeDelete(tasks.get(i)); }
+	 * 
+	 * } } }
+	 */
+
 	/**
 	 * add a task into the system and display the changes in the selected view.
 	 * 
@@ -167,7 +158,7 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	/**
-	 * delete task from the system. 
+	 * delete task from the system.
 	 * 
 	 * @param taskToCheck.
 	 * @return boolean, true for successful and false for unsuccessful.
@@ -204,7 +195,12 @@ public class PrimaryUserInterface extends Application {
 
 		return false;
 	}
-
+	/**
+	 * Jump to index.
+	 * 
+	 * @param indexToJump : base36 format
+	 * @return boolean, true if value found, false it value not found
+	 */
 	public boolean executeJump(String indexToJump) {
 		uiController.jumpToIndex(indexToJump);
 		_commandBar.getTextField().setText("");
@@ -216,7 +212,7 @@ public class PrimaryUserInterface extends Application {
 			COMMAND cmd = _commandBar.onEnter(textField.getText());
 			String t = _commandBar.get_textInField();
 			if (cmd.equals(COMMAND.EXIT)) {
-				//uiController.saveToFile(_commandBar.get_allSessionCmds());
+				// uiController.saveToFile(_commandBar.get_allSessionCmds());
 				System.exit(0);
 			} else if (cmd.equals(COMMAND.ADD)) {
 				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
