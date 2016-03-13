@@ -63,7 +63,7 @@ public class PrimaryUserInterface extends Application {
 		initializePrimaryStage(primaryStage);
 		initializeUiController(primaryStage);
 		//temp method for v0.1 demo
-		initializeData();
+		//initializeData();
 		_primaryStage.requestFocus();
 	}
 
@@ -120,7 +120,7 @@ public class PrimaryUserInterface extends Application {
 		_commandBar.setTextFieldHandler(mainEventHandler);
 	}
 
-	private void initializeData(){
+	/*private void initializeData(){
 		ArrayList<String> cmdArrs = uiController.readFromFile();
 		System.out.println(cmdArrs.size());
 		for(int j=0; j<cmdArrs.size(); j++){
@@ -147,7 +147,7 @@ public class PrimaryUserInterface extends Application {
 	
 			}
 		}
-	}
+	}*/
 	
 	/**
 	 * add a task into the system and display the changes in the selected view.
@@ -216,7 +216,7 @@ public class PrimaryUserInterface extends Application {
 			COMMAND cmd = _commandBar.onEnter(textField.getText());
 			String t = _commandBar.get_textInField();
 			if (cmd.equals(COMMAND.EXIT)) {
-				uiController.saveToFile(_commandBar.get_allSessionCmds());
+				//uiController.saveToFile(_commandBar.get_allSessionCmds());
 				System.exit(0);
 			} else if (cmd.equals(COMMAND.ADD)) {
 				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);

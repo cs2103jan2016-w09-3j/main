@@ -8,8 +8,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import entity.TaskEntity;
-import fileStorage.FileHandler;
-import fileStorage.StorageHandler;
 import fileStorage.StorageInterface;
 import mainLogic.TaskManager;
 import mainLogic.Utils;
@@ -184,7 +182,7 @@ public class UserInterfaceController {
 		return new Label(task2.getDueDate().toString());
 	}
 
-	// temp method for v0.1
+	/*// temp method for v0.1
 	public void saveToFile(ArrayList<String> input) {
 		StorageHandler fh = new StorageHandler();
 		fh.saveToFile(input);
@@ -194,7 +192,7 @@ public class UserInterfaceController {
 	public ArrayList<String> readFromFile() {
 		StorageHandler fh = new StorageHandler();
 		return fh.retrieveFromFile();
-	}
+	}*/
 
 	public void addTask(TaskEntity task) {
 		/*
