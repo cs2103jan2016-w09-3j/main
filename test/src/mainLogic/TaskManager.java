@@ -176,6 +176,9 @@ public class TaskManager {
     }
 
     /**
+     * UI Interface function
+     * Gets the currently displayed list of tasks
+     * 
      * @return ArrayList containing the list of time sorted tasks
      */
     public static ArrayList<TaskEntity> getWorkingList() {
@@ -184,13 +187,14 @@ public class TaskManager {
     }
 
     /**
+     * UI Interface function
      * Modifies the selected task, effectively deleting it and adding a new
      * task. Base10 version
      * 
      * @param index - int(in base10) index of task to be modified
      * @param modifiedTask - New data of the task
      * @return id of new position of the modified task in the display list if
-     *         succeeded in deleting the task, returns -1 otherwise
+     *         succeeded in deleting the task, returns -1 if deletion failed
      */
     public static int modify(int index, TaskEntity modifiedTask) {
         if (delete(index) == false) {
@@ -200,6 +204,7 @@ public class TaskManager {
     }
 
     /**
+     * UI Interface function
      * Modifies the selected task, effectively deleting it and adding a new
      * task. Base36 version
      * 
@@ -212,6 +217,13 @@ public class TaskManager {
         return modify(Utils.convertBase36ToDec(index), modifiedTask);
     }
     
+    /**
+     * UI Interface function
+     * Insert an arrayList of tasks using the same rules as adding a single task
+     * 
+     * @param tasks - An arrayList of the tasks to be added
+     * @return  ID of the first task that was inserted
+     */
     public static int add(ArrayList<TaskEntity> tasks)
     {
         int firstIndex = -1;
@@ -226,23 +238,45 @@ public class TaskManager {
         return firstIndex;
     }
     
+    /**
+     * UI Interface function
+     * Adds a task into its respective arraylist, appending to the bottom of
+     * floatingTaskEntities if it is a floating task, and inserting into its
+     * sorted position if it is a timed task
+     * 
+     * @param newTask - Task to be inserted
+     * @return ID of the task that has been inserted
+     */
     public static int add(TaskEntity newTask) {
         if(newTask.isFloating()){
             floatingTaskEntities.add(newTask);
-            return floatingTaskEntities.size();
+            return floatingTaskEntities.size() - 1;
         }else{
-            int idToInsert = Collections.binarySearch(mainTaskEntities, newTask, new TaskDateComparator());
-
-            // Due to Collections.binarySearch's implementation, all objects
-            // that can't be found will return a negative value, which indicates
-            // the position where the object that is being searched is supposed
-            // to be minus 1. This if case figures out the position to slot it in
-            if (idToInsert < 0) {
-                idToInsert = -(idToInsert+1);
-            }
+            int idToInsert = findPositionToInsert(newTask);
             mainTaskEntities.add(idToInsert, newTask);
             return idToInsert;
         }
+    }
+
+    /**
+     * UI Interface function
+     * Searches for the position to insert a newTask into a sorted list of timed
+     * tasks using rules dictated in TaskDateComparator
+     * 
+     * @param newTask - The task object to be sorted
+     * @return ID of the position where the task should be placed in the sorted list
+     */
+    private static int findPositionToInsert(TaskEntity newTask) {
+        int idToInsert = Collections.binarySearch(mainTaskEntities, newTask, new TaskDateComparator());
+
+        // Due to Collections.binarySearch's implementation, all objects
+        // that can't be found will return a negative value, which indicates
+        // the position where the object that is being searched is supposed
+        // to be minus 1. This if case figures out the position to slot it in
+        if (idToInsert < 0) {
+            idToInsert = -(idToInsert+1);
+        }
+        return idToInsert;
     }
     
     /**
@@ -290,6 +324,7 @@ public class TaskManager {
     }
 
     /**
+     * UI Interface function
      * Deletes a list of tasks from the arrayList
      * 
      * @param index - A string containing a base36 number
@@ -301,6 +336,7 @@ public class TaskManager {
     }   
 
     /**
+     * UI Interface function
      * Deletes a consecutive list of tasks from both the working and main
      * arrayList. Upon failing to delete any item, the function terminates at
      * the object that it fails to delete and does not attempt to delete anymore
@@ -314,9 +350,7 @@ public class TaskManager {
      *         - False if delete operation failed
      */
     public static boolean delete(int startIndex, int endIndex) {
-        if (endIndex + 1 > displayedTasks.size()) {
-            return false;
-        } else if (startIndex > endIndex) {
+        if (checkValidIndex(startIndex, endIndex) == false) {
             return false;
         }
 
@@ -327,8 +361,30 @@ public class TaskManager {
         }
         return true;
     }
-    
+
     /**
+     * Checks if the Index passed in for deletion is a valid index
+     * 
+     * @param startIndex - Index of the first item in the range to be deleted
+     * @param endIndex - Index of the last item in the range to be deleted
+     * @return
+     */
+    private static boolean checkValidIndex(int startIndex, int endIndex) {
+        if (endIndex + 1 > displayedTasks.size()) {
+            return false;
+        } else if (startIndex > endIndex) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * UI Interface function
+     * Deletes a consecutive list of tasks from both the working and main
+     * arrayList. Upon failing to delete any item, the function terminates at
+     * the object that it fails to delete and does not attempt to delete anymore
+     * items
      * 
      * @param startIndex - A string containing a base36 number that represents
      *            the index of the first entry of all the entries to be deleted
@@ -342,26 +398,26 @@ public class TaskManager {
     }
     
     /**
+     * UI Interface function
      * Gets the ID number of the next task in time order
+     * 
      * @return ID of the task that is next, counting from the current time
      */
     public static int getNextTimeListId() {
         TaskEntity currentTimePlaceholder = new TaskEntity("", Calendar.getInstance(), false);
-        int nextTimeId = Collections.binarySearch(mainTaskEntities, currentTimePlaceholder, new TaskDateComparator());
-
-        // Due to Collections.binarySearch's implementation, all objects
-        // that can't be found will return a negative value, which indicates
-        // the position where the object that is being searched is supposed
-        // to be minus 1. This if case figures out the position to slot it in
-        if (nextTimeId < 0) {
-            nextTimeId = -(nextTimeId+1);
-        }
+        int nextTimeId = findPositionToInsert(currentTimePlaceholder);
         return nextTimeId;
     }
 
+    /**
+     * UI Interface function
+     * Undoes the last command performed by the user
+     * 
+     * @return The currently displayed list after the undo operation
+     */
     public static ArrayList<TaskEntity> undo() {
         // TODO
-        return new ArrayList<TaskEntity>();
+        return getWorkingList();
     }
     
     //ys method, do not remove, ys will remove it ^_^
