@@ -68,18 +68,18 @@ public class Utils {
 
             // Identify if the lastChar is an alphabet or number and then cast
             // it to its dec number value of 0~35
-            if (lastCharAsciiValue >= 65 && lastCharAsciiValue <= 90) {
+            if (checkIfAsciiUppercase(lastCharAsciiValue)) {
                 characterValue = lastCharAsciiValue - 55;
-            } else if (lastCharAsciiValue >= 97 && lastCharAsciiValue <= 122) {
+            } else if (checkIfAsciiLowercase(lastCharAsciiValue)) {
                 characterValue = lastCharAsciiValue - 87;
-            } else if (lastCharAsciiValue >= 48 && lastCharAsciiValue <= 57){
+            } else if (checkIfAsciiNumber(lastCharAsciiValue)){
                 characterValue = lastCharAsciiValue - 48;
-            } else if (lastCharAsciiValue != 32) {
+            } else if (checkIfAsciiSpaceChar(lastCharAsciiValue)) {
                 return -1;
             }
             
             //Add the appropriate value of that digit to the final value
-            if(lastCharAsciiValue != 32){
+            if(checkIfAsciiSpaceChar(lastCharAsciiValue)){
                 decNumber += characterValue * digitWeight;
                 digitWeight *= 36;
             }    
@@ -87,18 +87,35 @@ public class Utils {
         }
         return decNumber;
     }
+
+    private static boolean checkIfAsciiSpaceChar(int lastCharAsciiValue) {
+        return lastCharAsciiValue != 32;
+    }
+
+    private static boolean checkIfAsciiNumber(int lastCharAsciiValue) {
+        return lastCharAsciiValue >= 48 && lastCharAsciiValue <= 57;
+    }
+
+    private static boolean checkIfAsciiLowercase(int lastCharAsciiValue) {
+        return lastCharAsciiValue >= 97 && lastCharAsciiValue <= 122;
+    }
+
+    private static boolean checkIfAsciiUppercase(int lastCharAsciiValue) {
+        return lastCharAsciiValue >= 65 && lastCharAsciiValue <= 90;
+    }
     
     /**
      * 
      * Checks if the 2 tasks passed in are of the same date
      * 
-     * @param firstTask
-     * @param secondTask
+     * @param firstTask - first task to be compared
+     * @param secondTask - second task to be compared
      * @return True - If the dates are the same
      *         False - If either the dates are different, or if either task is
      *         floating
      */
     public static boolean checkSameDate(TaskEntity firstTask, TaskEntity secondTask) {
+        // Floating tasks cannot be compared, check if either tasks is floating
         Calendar firstDate;
         if (firstTask.isFloating()) {
             return false;
