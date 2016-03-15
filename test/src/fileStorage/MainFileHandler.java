@@ -67,7 +67,6 @@ public class MainFileHandler {
     public String readFromExistingFile() {        
         BufferedReader buffer;
         String readData = "";
-        logger.log(Level.INFO, "Start processing...");
         try {
             buffer = new BufferedReader(new FileReader(filePath));
             String currentLine = "";
@@ -78,12 +77,9 @@ public class MainFileHandler {
             System.out.println("Read from file.");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            logger.log(Level.WARNING, "FileNotFoundException");
         } catch (IOException e) {
             e.printStackTrace();
-            logger.log(Level.WARNING, "IOException");
         }
-        logger.log(Level.INFO, "End processing...");
         return readData.trim();
     }
     
@@ -94,6 +90,7 @@ public class MainFileHandler {
      * @return boolean
      */
     public boolean writeToFile(String data) {
+        logger.log(Level.INFO, "Start processing...");
         FileWriter fileWriter;
         long beforeModify = storedLists.lastModified();
         long afterModify = -1;
@@ -105,7 +102,9 @@ public class MainFileHandler {
             afterModify = storedLists.lastModified();
         } catch (IOException e) {
             e.printStackTrace();
+            logger.log(Level.WARNING, "IOException");
         }
+        logger.log(Level.INFO, "End processing...");
         return isModified(beforeModify, afterModify);
     }
 
