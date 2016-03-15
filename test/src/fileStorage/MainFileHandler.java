@@ -14,7 +14,7 @@ public class MainFileHandler {
     private String filePath;
     private File storedLists;
     private String allStoredTasks;
-    private Logger logger;
+    private static Logger logger = Logger.getLogger("MainFileHandler");
 
     public MainFileHandler() {
         filePath = "taskLists.txt";
