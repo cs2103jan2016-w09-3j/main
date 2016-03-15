@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -69,13 +70,16 @@ public class DescriptionComponent implements ViewInterface {
             int windowHeight) {
         _stage = new Stage();
         _stage.initOwner(owner);
-        _stage.initStyle(StageStyle.UNDECORATED);
+        _stage.initStyle(StageStyle.TRANSPARENT);
         _stage.setX(applicationX);
         _stage.setY(applicationY);
 
         _mainVbox = new GridPane();
         _mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
-        _stage.setScene(new Scene(_mainVbox, windowWidth, windowHeight));
+        _mainVbox.setId("cssRoot");
+        
+        Scene scene = new Scene(_mainVbox, windowWidth, windowHeight, Color.TRANSPARENT);
+        _stage.setScene(scene);
     }
 
     public void initializeContent(ArrayList<DescriptionLabel> descriptionLabels) {

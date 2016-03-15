@@ -36,7 +36,7 @@ public class ScrollTaskAnimation extends Task<Integer> {
 			if (r == null) {
 				r = new Runnable() {
 					public void run() {
-						ui.update(direction);
+						ui.updateUI(direction);
 						currentIndex = currentIndex + direction;
 						r =null;
 					}
