@@ -1,26 +1,42 @@
 package dateParser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dateParser.CommandParser.COMMAND;
 import entity.TaskEntity;
+import junit.framework.Assert;
 
 public class InputParser {
 	private String input;
 	private DateParser dateParser;
 	private CommandParser cmdParser;
 	private InformationParser infoParser;
+	
+	private static Logger logger = Logger.getLogger("InputParser");
 
 	/**
 	 * Intializes parser and creates individual command parsers
 	 * @param input String to be parsed
 	 */
 	public InputParser(String input) {
-		this.input = input;
+		try{
+			Handler fh = new FileHandler("inputParser.log");
+			logger.addHandler(fh);
+			logger.setLevel(Level.FINEST);
+		}catch(IOException e){
+			
+		}
+		logger.log(Level.INFO,"InputParser init");
+		setInput(input);
 		dateParser = new DateParser();
 		cmdParser = new CommandParser();
 		infoParser = new InformationParser();
@@ -32,6 +48,8 @@ public class InputParser {
 	 */
 	public void addXML() {
 		//DO NOT CHANGE ORDER!!
+		logger.log(Level.INFO,"Add xml to input");
+		assert (input!=null) : "Input is null";
 		addXMLDate();
 		addXMLCmd();
 		addXMLTitleDesc();
@@ -71,7 +89,7 @@ public class InputParser {
 	 * @param input
 	 */
 	public void setInput(String input) {
-		this.input = input;
+		this.input = input;		
 	}
 	
 	/**
@@ -79,7 +97,8 @@ public class InputParser {
 	 * @return respective COMMAND 
 	 */
 	public COMMAND getCommand(){
-		return cmdParser.getCommand(input);
+		COMMAND returnEnum = cmdParser.getCommand(input);
+		return returnEnum;
 	}
 	
 	/**
@@ -88,7 +107,9 @@ public class InputParser {
 	 */
 	public ArrayList<TaskEntity> getTask(){
 		input = XMLParser.removeAllTags(input);
-		this.input = input;
+		if(input.trim().equals("")){
+			logger.log(Level.WARNING, "Input is empty", new IllegalArgumentException("input is empty"));
+		}
 		ArrayList<TaskEntity> tasks  = new ArrayList<TaskEntity>();
 		List<Date> dates = dateParser.parseToList(input);
 		addXMLDate();
@@ -112,9 +133,10 @@ public class InputParser {
 		while (true) {
 			Scanner sc = new Scanner(System.in);
 			String input = sc.nextLine();
-			System.out.println(ParserCommons.getLastWord(input));
+			//System.out.println(ParserCommons.getLastWord(input));
 			InputParser parser = new InputParser(input);
 			parser.addXML();
+			parser.getTask();
 			System.out.println(parser.getInput());
 		}
 	}
