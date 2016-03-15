@@ -1,3 +1,9 @@
+/**
+ * @author Qin Ying
+ * 
+ *         Class to manage the handling of tasks during runtime. Run init()
+ *         before using the functions in the API
+ */
 package mainLogic;
 
 import java.util.ArrayList;
@@ -8,10 +14,15 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import entity.TaskEntity;
 
 public class TaskManager {
+    private static int currentDisplayedList;
     private static ArrayList<TaskEntity> displayedTasks;
     private static ArrayList<TaskEntity> floatingTaskEntities = new ArrayList<TaskEntity>();
     private static ArrayList<TaskEntity> mainTaskEntities = new ArrayList<TaskEntity>();
 
+    public final static int DISPLAY_MAIN = 0;
+    public final static int DISPLAY_FLOATING = 1;
+    public final static int DISPLAY_SEARCH = 2;
+    
     /**
      * TEST FUNCTION
      * Function for manually testing functions(First test/debugging) in
@@ -21,7 +32,7 @@ public class TaskManager {
      */
     public static void main (String[] args)
     {
-        System.out.println(Utils.convertBase36ToDec(",10"));
+        init();
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
         for(int i = 0; i < 5; i++)
         {
@@ -34,14 +45,25 @@ public class TaskManager {
         Calendar newDate = Calendar.getInstance();
         newDate.clear();
         newDate.set(2016, 2, 5);
-        //modify(0, new TaskEntity("2016/2/5", newDate, true));
+        modify(0, new TaskEntity("2016/2/5", newDate, true));
         
         newDate = Calendar.getInstance();
         newDate.clear();
         newDate.set(2016, 2, 3);
-        //modify(3, new TaskEntity("2016/2/3", newDate, true));
+        modify(3, new TaskEntity("2016/2/3", newDate, true));
         
-        getWorkingList();
+        delete(1,3);
+        
+        newDate = Calendar.getInstance();
+        newDate.clear();
+        newDate.set(2016, 3, 16);
+        add(new TaskEntity("2016/3/16", newDate, true));
+        
+        newDate = Calendar.getInstance();
+        newDate.clear();
+        newDate.set(2016, 3, 15);
+        add(new TaskEntity("2016/3/15", newDate, true));
+        
         printList();
         
         //while(true){
@@ -83,9 +105,6 @@ public class TaskManager {
     private static void printList()
     {
         String output = "";
-        if(displayedTasks == null){
-            displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities;
-        }
         
         System.out.println("Display");
         int j = 0;
@@ -176,13 +195,38 @@ public class TaskManager {
     }
 
     /**
+     * Initialization function to be called before usage of TaskManager class
+     */
+    public static void init (){
+        displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
+        currentDisplayedList = DISPLAY_MAIN;
+    }
+
+    /**
+     * Sets focus on a different list 
+     * 
+     * @param view TaskManager.DISPLAY_MAIN, taskManager.DISPLAY_FLOATING, taskManager.DISPLAY_SEARCH
+     */
+    public static void switchView(int view) {
+        switch (view) {
+            case DISPLAY_MAIN :
+                currentDisplayedList = DISPLAY_MAIN;
+                displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
+                break;
+            case DISPLAY_FLOATING :
+                currentDisplayedList = DISPLAY_FLOATING;
+                displayedTasks = (ArrayList<TaskEntity>) floatingTaskEntities.clone();
+                break;
+        }
+    }
+
+    /**
      * UI Interface function
      * Gets the currently displayed list of tasks
      * 
      * @return ArrayList containing the list of time sorted tasks
      */
     public static ArrayList<TaskEntity> getWorkingList() {
-        displayedTasks = mainTaskEntities;
         return displayedTasks;
     }
 
@@ -250,10 +294,16 @@ public class TaskManager {
     public static int add(TaskEntity newTask) {
         if(newTask.isFloating()){
             floatingTaskEntities.add(newTask);
+            if(currentDisplayedList == DISPLAY_FLOATING) {
+                displayedTasks.add(newTask);
+            }
             return floatingTaskEntities.size() - 1;
         }else{
             int idToInsert = findPositionToInsert(newTask);
             mainTaskEntities.add(idToInsert, newTask);
+            if(currentDisplayedList == DISPLAY_MAIN) {
+                displayedTasks.add(idToInsert, newTask);
+            }
             return idToInsert;
         }
     }
@@ -302,7 +352,7 @@ public class TaskManager {
         if(!deletionSuccess){
             return false;
         }
-        
+        displayedTasks.remove(index);
         return true;
     }
 
@@ -367,7 +417,7 @@ public class TaskManager {
      * 
      * @param startIndex - Index of the first item in the range to be deleted
      * @param endIndex - Index of the last item in the range to be deleted
-     * @return
+     * @return true if the index specified exists in the displayedTasks ArrayList
      */
     private static boolean checkValidIndex(int startIndex, int endIndex) {
         if (endIndex + 1 > displayedTasks.size()) {
