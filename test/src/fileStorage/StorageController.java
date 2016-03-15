@@ -18,11 +18,11 @@ public class StorageController implements StorageInterface {
         fm.writeToFile(jc.javaToJson(dummyTL));
         
         String data = fm.readFromExistingFile();
-        System.out.println(data);
+        //System.out.println(data);
         AllTaskLists convertedDummy = jc.jsonToJava(data);
         Calendar created = convertedDummy.getFloatingTaskList().get(0).getDateCreated();
         
-        System.out.println("Calendar :" + created);
+        //System.out.println("Calendar :" + created);
     }
 
     public AllTaskLists getTaskLists() {

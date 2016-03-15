@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,6 +16,7 @@ public class MainFileHandler {
     private File storedLists;
     private String allStoredTasks;
     private static Logger logger = Logger.getLogger("MainFileHandler");
+    private FileHandler fileHandler;
 
     public MainFileHandler() {
         filePath = "taskLists.txt";
@@ -90,11 +92,13 @@ public class MainFileHandler {
      * @return boolean
      */
     public boolean writeToFile(String data) {
-        logger.log(Level.INFO, "Start processing...");
         FileWriter fileWriter;
         long beforeModify = storedLists.lastModified();
         long afterModify = -1;
         try {
+            fileHandler = new FileHandler("storageLogFile.log");
+            logger.addHandler(fileHandler);
+            logger.log(Level.INFO, "Start processing...");
             fileWriter = new FileWriter(filePath); 
             fileWriter.write(data);
             fileWriter.flush();
