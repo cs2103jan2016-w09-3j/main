@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -98,14 +99,18 @@ public class TaskViewUserInterface implements ViewInterface {
 	public void initializeStage(Window owner, int applicationX, int applicationY, int stageWidth, int stageHeight) {
 		_stage = new Stage();
 		_stage.initOwner(owner);
-		_stage.initStyle(StageStyle.UNDECORATED);
+		_stage.initStyle(StageStyle.TRANSPARENT);
 		_stage.setX(applicationX);
 		_stage.setY(applicationY);
 
 		_mainVbox = new VBox();
 		_mainVbox.setPrefSize(stageWidth, stageHeight);
 		_mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
-		_stage.setScene(new Scene(_mainVbox, stageWidth, stageHeight));
+		_mainVbox.setId("cssRoot");
+		
+		Scene s = new Scene(_mainVbox, stageWidth, stageHeight);
+		s.setFill(Color.TRANSPARENT);
+		_stage.setScene(s);
 	}
 
 	public void show() {
