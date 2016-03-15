@@ -34,7 +34,9 @@ public class MainFileHandler {
         this.filePath = filePath;
     }
 
-    // if file exists, use file. Else, create new file
+    /**
+     * Reads and stores data from existing file if any, creates a new file otherwise
+     */
     private void processFile() {
         storedLists = new File(filePath);
 
@@ -54,7 +56,11 @@ public class MainFileHandler {
             e.printStackTrace();
         }
     }
-
+    
+    /**
+     * Reads data from an existing file and returns the appended string
+     * @return String
+     */
     public String readFromExistingFile() {        
         BufferedReader buffer;
         String readData = "";
@@ -73,7 +79,13 @@ public class MainFileHandler {
         }
         return readData.trim();
     }
-
+    
+    /**
+     * Returns true if data is written to a file, false otherwise
+     * Whether the data has been written depends on the last modified time of the file
+     * @param data
+     * @return boolean
+     */
     public boolean writeToFile(String data) {
         FileWriter fileWriter;
         long beforeModify = storedLists.lastModified();

@@ -15,6 +15,12 @@ public class JsonConverter {
         
     }
     
+    /**
+     * Converts Java Object to Json format via the Gson builder
+     * String returned will include nulls for empty fields 
+     * @param allLists
+     * @return String in Json format
+     */
     public String javaToJson(AllTaskLists allLists) {
         ArrayList<TaskEntity> mainTaskList = allLists.getMainTaskList();
         ArrayList<TaskEntity> floatingTaskList = allLists.getFloatingTaskList();
@@ -31,11 +37,16 @@ public class JsonConverter {
         return appendedToJson;
     }
     
-    public AllTaskLists jsonToJava(String readData) {
+    /**
+     * Converts Json format to Java Object via the Gson library
+     * @param input
+     * @return AllTaskLists
+     */
+    public AllTaskLists jsonToJava(String input) {
         Gson gson = new Gson();
 
         // Load JSON string into custom object using TypeToken
-        ArrayList<TaskEntity> allTasks = gson.fromJson(readData, new TypeToken<ArrayList<TaskEntity>>(){}.getType());
+        ArrayList<TaskEntity> allTasks = gson.fromJson(input, new TypeToken<ArrayList<TaskEntity>>(){}.getType());
         
         ArrayList<TaskEntity> mainTaskList = new ArrayList<TaskEntity>();
         ArrayList<TaskEntity> floatingTaskList = new ArrayList<TaskEntity>();
