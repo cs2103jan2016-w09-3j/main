@@ -33,6 +33,7 @@ public class JsonConverter {
         Gson gson = gsonBuilder.create();
         
         String appendedToJson = gson.toJson(appendedList);
+        assert appendedToJson != null;
         
         return appendedToJson;
     }

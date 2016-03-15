@@ -51,10 +51,12 @@ public class StorageController implements StorageInterface {
         ArrayList<TaskEntity> dummyMainList = new ArrayList<TaskEntity>();
         dummyMainList.add(new TaskEntity("firstTask"));
         dummyMainList.add(new TaskEntity("secondTask"));
+        assert dummyMainList.size() > 0;
         
         ArrayList<TaskEntity> dummyFloatingList = new ArrayList<TaskEntity>();
         dummyFloatingList.add(new TaskEntity("floatingTaskOne"));
         dummyFloatingList.add(new TaskEntity("floatingTaskTwo"));
+        assert dummyFloatingList.size() > 0;
         
         AllTaskLists dummyTL = new AllTaskLists();
         dummyTL.setFloatingTaskList(dummyFloatingList);

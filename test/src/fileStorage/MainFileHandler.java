@@ -6,12 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainFileHandler {
 
     private String filePath;
     private File storedLists;
     private String allStoredTasks;
+    private Logger logger;
 
     public MainFileHandler() {
         filePath = "taskLists.txt";
@@ -64,6 +67,7 @@ public class MainFileHandler {
     public String readFromExistingFile() {        
         BufferedReader buffer;
         String readData = "";
+        logger.log(Level.INFO, "Start processing...");
         try {
             buffer = new BufferedReader(new FileReader(filePath));
             String currentLine = "";
@@ -74,9 +78,12 @@ public class MainFileHandler {
             System.out.println("Read from file.");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            logger.log(Level.WARNING, "FileNotFoundException");
         } catch (IOException e) {
             e.printStackTrace();
+            logger.log(Level.WARNING, "IOException");
         }
+        logger.log(Level.INFO, "End processing...");
         return readData.trim();
     }
     
