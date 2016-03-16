@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -62,17 +63,20 @@ public class DetailComponent implements ViewInterface {
 	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight) {
 		_stage = new Stage();
 		_stage.initOwner(owner);
-		_stage.initStyle(StageStyle.UNDECORATED);
+		_stage.initStyle(StageStyle.TRANSPARENT);
 		_stage.setX(applicationX);
 		_stage.setY(applicationY);
 
 		_itemMaxWidth = _stageWidth - COMPONENT_INNER_MARGIN - COMPONENT_INNER_MARGIN;
 
 		_mainVbox = new VBox();
-		_mainVbox.setId("cssDescriptionMainBox");
 		_mainVbox.setMinSize(_stageWidth, _stageHeight);
 		_mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
-		_stage.setScene(new Scene(_mainVbox, windowWidth, windowHeight));
+		_mainVbox.setId("cssRoot");
+		
+		Scene scene = new Scene(_mainVbox, windowWidth, windowHeight);
+		scene.setFill(Color.TRANSPARENT);
+		_stage.setScene(scene);
 	}
 
 	public void buildComponent(TaskEntity task) {
