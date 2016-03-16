@@ -6,14 +6,21 @@
  */
 package mainLogic;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import entity.TaskEntity;
 
 public class TaskManager {
+    private static Logger logger = Logger.getLogger("TaskManager.log");
+    
     private static int currentDisplayedList;
     private static ArrayList<TaskEntity> displayedTasks;
     private static ArrayList<TaskEntity> floatingTaskEntities = new ArrayList<TaskEntity>();
@@ -198,8 +205,26 @@ public class TaskManager {
      * Initialization function to be called before usage of TaskManager class
      */
     public static void init (){
+        initLogger();
+        
+        logger.log(Level.FINEST, "TaskManager Initialized");
         displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
         currentDisplayedList = DISPLAY_MAIN;
+    }
+
+    /**
+     * Initializes the logger
+     */
+    private static void initLogger() {
+        try {
+            Handler fileHandler = new FileHandler("TaskManager.log");
+            logger.addHandler(fileHandler);
+            logger.setLevel(Level.FINEST);
+        } catch (SecurityException e) {
+            
+        } catch (IOException e) {
+            
+        }
     }
 
     /**
@@ -292,6 +317,8 @@ public class TaskManager {
      * @return ID of the task that has been inserted
      */
     public static int add(TaskEntity newTask) {
+        assert displayedTasks != null : "no view set in displayedTasks, probably not initialised!";
+        
         if(newTask.isFloating()){
             floatingTaskEntities.add(newTask);
             if(currentDisplayedList == DISPLAY_FLOATING) {
@@ -318,7 +345,7 @@ public class TaskManager {
      */
     private static int findPositionToInsert(TaskEntity newTask) {
         int idToInsert = Collections.binarySearch(mainTaskEntities, newTask, new TaskDateComparator());
-
+        
         // Due to Collections.binarySearch's implementation, all objects
         // that can't be found will return a negative value, which indicates
         // the position where the object that is being searched is supposed
@@ -352,7 +379,11 @@ public class TaskManager {
         if(!deletionSuccess){
             return false;
         }
-        displayedTasks.remove(index);
+        try{
+            displayedTasks.remove(index);
+        }catch (ArrayIndexOutOfBoundsException e) {
+            
+        }
         return true;
     }
 

@@ -1,10 +1,15 @@
 package fileStorage;
 
+import java.util.ArrayList;
+
 import entity.AllTaskLists;
+import entity.TaskEntity;
 
 public interface StorageInterface {
     
     AllTaskLists getTaskLists();
     
-    Boolean storeTaskLists(AllTaskLists allTaskLists);
+    boolean storeTaskLists(AllTaskLists allTaskLists);
+    
+    boolean storeTaskLists(ArrayList<TaskEntity> main, ArrayList<TaskEntity> floating);
 }

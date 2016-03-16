@@ -36,7 +36,7 @@ public class StorageController implements StorageInterface {
     }
 
     // Returns true if task lists written into file. False otherwise.
-    public Boolean storeTaskLists(AllTaskLists allTaskLists) {
+    public boolean storeTaskLists(AllTaskLists allTaskLists) {
         MainFileHandler mainHandler = new MainFileHandler();
         JsonConverter jsonConverter = new JsonConverter();
         
@@ -45,6 +45,13 @@ public class StorageController implements StorageInterface {
         boolean isStored = mainHandler.writeToFile(toStore);
         
         return isStored;
+    }
+    
+    public boolean storeTaskLists(ArrayList<TaskEntity> main, ArrayList<TaskEntity> floating){
+        AllTaskLists newList = new AllTaskLists();
+        newList.setFloatingTaskList(floating);
+        newList.setMainTaskList(main);
+        return storeTaskLists(newList);
     }
     
     private AllTaskLists createDummy() {
