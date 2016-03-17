@@ -16,12 +16,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.emory.mathcs.backport.java.util.Collections;
+import entity.AllTaskLists;
 import entity.TaskEntity;
+import fileStorage.StorageController;
 
 public class TaskManager {
-    private static Logger logger = Logger.getLogger("TaskManager.log");
+    private StorageController dataLoader = new StorageController();
     
-    private static int currentDisplayedList;
+    private TaskManager singleton;
+    private Logger logger = Logger.getLogger("TaskManager.log");
+    
+    private int currentDisplayedList;
     private static ArrayList<TaskEntity> displayedTasks;
     private static ArrayList<TaskEntity> floatingTaskEntities = new ArrayList<TaskEntity>();
     private static ArrayList<TaskEntity> mainTaskEntities = new ArrayList<TaskEntity>();
@@ -37,9 +42,8 @@ public class TaskManager {
      * 
      * @param args
      */
-    public static void main (String[] args)
+    public void main (String[] args)
     {
-        init();
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
         for(int i = 0; i < 5; i++)
         {
@@ -82,7 +86,7 @@ public class TaskManager {
      * TEST FUNCTION
      * Prints out the 2 arraylists
      */
-    private static void testDisplay() {
+    private void testDisplay() {
         displayedTasks = new ArrayList<TaskEntity>();
         displayedTasks.add(floatingTaskEntities.get(0));
         displayedTasks.add(floatingTaskEntities.get(5));
@@ -98,7 +102,7 @@ public class TaskManager {
      * Populates the displayedTasks and taskEntities array with fake data for
      * testing
      */
-    private static void populateArray() {
+    private void populateArray() {
         for (int i = 0; i < 30; i++) {
             TaskEntity new_task = new TaskEntity("Task " + Integer.toString(i));
             floatingTaskEntities.add(new_task);
@@ -109,7 +113,7 @@ public class TaskManager {
     /**
      * Testing function to print out the array contents
      */
-    private static void printList()
+    private void printList()
     {
         String output = "";
         
@@ -155,7 +159,7 @@ public class TaskManager {
     /**
      * Testing function for JUnit test to check the output
      */
-    public static String printListToString()
+    public String printListToString()
     {
         String output = "";
         if(displayedTasks == null){
@@ -204,24 +208,38 @@ public class TaskManager {
     /**
      * Initialization function to be called before usage of TaskManager class
      */
-    public static void init (){
+    private TaskManager (){
         initLogger();
         
-        logger.log(Level.FINEST, "TaskManager Initialized");
+        AllTaskLists taskdata = dataLoader.getTaskLists();
+        mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
+        floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
+        
+        //logger.log(Level.FINEST, "TaskManager Initialized");
         displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
         currentDisplayedList = DISPLAY_MAIN;
     }
 
     /**
+     * Gets the singleton instance of TaskManager
+     * 
+     * @return Singleton instance of TaskManager
+     */
+    public TaskManager getInstance (){
+        if (singleton == null) {
+            singleton = new TaskManager();
+        }
+        return singleton;
+    }
+    
+    /**
      * Initializes the logger
      */
-    private static void initLogger() {
+    private void initLogger() {
         try {
             Handler fileHandler = new FileHandler("TaskManager.log");
             logger.addHandler(fileHandler);
             logger.setLevel(Level.FINEST);
-        } catch (SecurityException e) {
-            
         } catch (IOException e) {
             
         }
@@ -232,7 +250,7 @@ public class TaskManager {
      * 
      * @param view TaskManager.DISPLAY_MAIN, taskManager.DISPLAY_FLOATING, taskManager.DISPLAY_SEARCH
      */
-    public static void switchView(int view) {
+    public void switchView(int view) {
         switch (view) {
             case DISPLAY_MAIN :
                 currentDisplayedList = DISPLAY_MAIN;
@@ -251,7 +269,7 @@ public class TaskManager {
      * 
      * @return ArrayList containing the list of time sorted tasks
      */
-    public static ArrayList<TaskEntity> getWorkingList() {
+    public ArrayList<TaskEntity> getWorkingList() {
         return displayedTasks;
     }
 
@@ -265,7 +283,7 @@ public class TaskManager {
      * @return id of new position of the modified task in the display list if
      *         succeeded in deleting the task, returns -1 if deletion failed
      */
-    public static int modify(int index, TaskEntity modifiedTask) {
+    public int modify(int index, TaskEntity modifiedTask) {
         if (delete(index) == false) {
             return -1;
         }
@@ -282,7 +300,7 @@ public class TaskManager {
      * @return id of new position of the modified task in the display list if
      *         succeeded in deleting the task, returns -1 otherwise
      */     
-    public static int modify(String index, TaskEntity modifiedTask) {
+    public int modify(String index, TaskEntity modifiedTask) {
         return modify(Utils.convertBase36ToDec(index), modifiedTask);
     }
     
@@ -293,7 +311,7 @@ public class TaskManager {
      * @param tasks - An arrayList of the tasks to be added
      * @return  ID of the first task that was inserted
      */
-    public static int add(ArrayList<TaskEntity> tasks)
+    public int add(ArrayList<TaskEntity> tasks)
     {
         int firstIndex = -1;
         if(tasks.size() >= 1) {
@@ -316,7 +334,7 @@ public class TaskManager {
      * @param newTask - Task to be inserted
      * @return ID of the task that has been inserted
      */
-    public static int add(TaskEntity newTask) {
+    public int add(TaskEntity newTask) {
         assert displayedTasks != null : "no view set in displayedTasks, probably not initialised!";
         
         if(newTask.isFloating()){
@@ -343,7 +361,7 @@ public class TaskManager {
      * @param newTask - The task object to be sorted
      * @return ID of the position where the task should be placed in the sorted list
      */
-    private static int findPositionToInsert(TaskEntity newTask) {
+    private int findPositionToInsert(TaskEntity newTask) {
         int idToInsert = Collections.binarySearch(mainTaskEntities, newTask, new TaskDateComparator());
         
         // Due to Collections.binarySearch's implementation, all objects
@@ -365,7 +383,7 @@ public class TaskManager {
      * @return false - if fail to delete
      *         true - if delete operation succeeded
      */
-    public static boolean delete(int index) {
+    public boolean delete(int index) {
         if(displayedTasks == null) {
             displayedTasks = mainTaskEntities;
         }
@@ -396,7 +414,7 @@ public class TaskManager {
      * @return true - if removal operation succeeded
      *         false - if removal operation failed
      */
-    private static boolean deleteFromMainList(TaskEntity itemToBeDeleted) {
+    private boolean deleteFromMainList(TaskEntity itemToBeDeleted) {
         if (itemToBeDeleted.isFloating()) {
             return floatingTaskEntities.remove(itemToBeDeleted);
         } else {
@@ -412,7 +430,7 @@ public class TaskManager {
      * @return - True if delete operation succeeded
      *         - False if delete operation failed
      */
-    public static boolean delete(String index) {
+    public boolean delete(String index) {
         return delete(Utils.convertBase36ToDec(index));
     }   
 
@@ -430,7 +448,7 @@ public class TaskManager {
      * @return - True if delete operation succeeded
      *         - False if delete operation failed
      */
-    public static boolean delete(int startIndex, int endIndex) {
+    public boolean delete(int startIndex, int endIndex) {
         if (checkValidIndex(startIndex, endIndex) == false) {
             return false;
         }
@@ -450,7 +468,7 @@ public class TaskManager {
      * @param endIndex - Index of the last item in the range to be deleted
      * @return true if the index specified exists in the displayedTasks ArrayList
      */
-    private static boolean checkValidIndex(int startIndex, int endIndex) {
+    private boolean checkValidIndex(int startIndex, int endIndex) {
         if (endIndex + 1 > displayedTasks.size()) {
             return false;
         } else if (startIndex > endIndex) {
@@ -474,7 +492,7 @@ public class TaskManager {
      * @return - True if delete operation succeeded
      *         - False if delete operation failed
      */
-    public static boolean delete(String startIndex, String endIndex) {
+    public boolean delete(String startIndex, String endIndex) {
         return delete(Utils.convertBase36ToDec(startIndex), Utils.convertBase36ToDec(endIndex));
     }
     
@@ -484,7 +502,7 @@ public class TaskManager {
      * 
      * @return ID of the task that is next, counting from the current time
      */
-    public static int getNextTimeListId() {
+    public int getNextTimeListId() {
         TaskEntity currentTimePlaceholder = new TaskEntity("", Calendar.getInstance(), false);
         int nextTimeId = findPositionToInsert(currentTimePlaceholder);
         return nextTimeId;
@@ -496,7 +514,7 @@ public class TaskManager {
      * 
      * @return The currently displayed list after the undo operation
      */
-    public static ArrayList<TaskEntity> undo() {
+    public ArrayList<TaskEntity> undo() {
         // TODO
         return getWorkingList();
     }
