@@ -219,6 +219,13 @@ public class TaskManager {
         displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
         currentDisplayedList = DISPLAY_MAIN;
     }
+    
+    /**
+     * Function to call for TaskManager before closing the program
+     */
+    public void closeTaskManager () {
+        dataLoader.storeTaskLists(mainTaskEntities, floatingTaskEntities);
+    }
 
     /**
      * Gets the singleton instance of TaskManager
