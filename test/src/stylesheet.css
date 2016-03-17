@@ -17,38 +17,27 @@
 	-fx-border-width: 2.0px;
 }
 
-#cssTaskViewVerticleBox {
-    -fx-background-color: black, rgba(237.0, 237.0, 237.0, 1.0);
-    -fx-background-insets: 0.0, 1.0 1.0 1.0 1.0;
-}
 
 #cssTaskViewWeek{
-	-fx-background-color: black, white;
-    -fx-background-insets: 0.0, 1.0 1.0 1.0 1.0;
+	-fx-background-color: rgba(255,255,255,0.9);
 }
 
 #cssTaskViewWeekSelected{
-	-fx-background-color: black, rgba(255.0,165.0,0.0,1.0), rgba(255.0, 255.0, 255.0, 0.90);
-    -fx-background-insets: 0.0,  1.0 0 1.0 0.0, 3.0 0 3.0 0.0;
+	-fx-background-color: rgba(193,230,255,0.95);
 }
 
-#cssTaskViewVerticleBoxSelected
+#cssTaskViewDayBox2
 {
-	-fx-background-color: black, rgba(255.0,165.0,0.0,1.0), white;
-    -fx-background-insets: 0.0, 1.0 0.0 1.0 1.0, 1.0 10.0 1.0 1.0;
+	-fx-background-color: rgba(255,255,255,1.0);
 }
 
 #cssTaskViewSelectedTask
 {
-	-fx-background-color:  rgba(0.0, 120.0, 255.0, 1.0), rgba(255.0, 255.0, 255.0, 0.90);
-    -fx-background-insets: 3.0 0.0 4.0 5.0, 3.0 0.0 4.0 10.0;
+	-fx-background-radius: 20.0; 
+	-fx-background-color:  rgba(255, 255, 255.0, 0.8);
+	-fx-background-insets: 1 5 1 5;
 }
 
-#cssTaskViewDayBox
-{
-	-fx-background-color: rgba(255.0,165.0,0.0,1.0), rgba(255.0, 255.0, 255.0, 0.7);
-    -fx-background-insets: 3.0 0.0 3.0 0.0 , 3.0 0.0 3.0 0.0;
-}
 
 #cssDescriptionMainBox
 {
