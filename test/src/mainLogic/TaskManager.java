@@ -23,7 +23,7 @@ import fileStorage.StorageController;
 public class TaskManager {
     private StorageController dataLoader = new StorageController();
     
-    private TaskManager singleton;
+    private static TaskManager singleton;
     private Logger logger = Logger.getLogger("TaskManager.log");
     
     private int currentDisplayedList;
@@ -42,8 +42,9 @@ public class TaskManager {
      * 
      * @param args
      */
-    public void main (String[] args)
+    public static void main (String[] args)
     {
+        TaskManager manager = TaskManager.getInstance();
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
         for(int i = 0; i < 5; i++)
         {
@@ -51,31 +52,31 @@ public class TaskManager {
             newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
             newList.add(new TaskEntity("Task " + Integer.toString(i+1), newDate, false));
         }
-        add(newList);
-        add(new TaskEntity("Task floating"));
+        manager.add(newList);
+        manager.add(new TaskEntity("Task floating"));
         Calendar newDate = Calendar.getInstance();
         newDate.clear();
         newDate.set(2016, 2, 5);
-        modify(0, new TaskEntity("2016/2/5", newDate, true));
+        manager.modify(0, new TaskEntity("2016/2/5", newDate, true));
         
         newDate = Calendar.getInstance();
         newDate.clear();
         newDate.set(2016, 2, 3);
-        modify(3, new TaskEntity("2016/2/3", newDate, true));
+        manager.modify(3, new TaskEntity("2016/2/3", newDate, true));
         
-        delete(1,3);
+        manager.delete(1,3);
         
         newDate = Calendar.getInstance();
         newDate.clear();
         newDate.set(2016, 3, 16);
-        add(new TaskEntity("2016/3/16", newDate, true));
+        manager.add(new TaskEntity("2016/3/16", newDate, true));
         
         newDate = Calendar.getInstance();
         newDate.clear();
         newDate.set(2016, 3, 15);
-        add(new TaskEntity("2016/3/15", newDate, true));
+        manager.add(new TaskEntity("2016/3/15", newDate, true));
         
-        printList();
+        manager.printList();
         
         //while(true){
         //    System.out.println(getNextTimeListId());
@@ -211,9 +212,9 @@ public class TaskManager {
     private TaskManager (){
         initLogger();
         
-        AllTaskLists taskdata = dataLoader.getTaskLists();
-        mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
-        floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
+        //AllTaskLists taskdata = dataLoader.getTaskLists();
+        //mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
+        //floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
         
         //logger.log(Level.FINEST, "TaskManager Initialized");
         displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
@@ -232,7 +233,7 @@ public class TaskManager {
      * 
      * @return Singleton instance of TaskManager
      */
-    public TaskManager getInstance (){
+    public static TaskManager getInstance (){
         if (singleton == null) {
             singleton = new TaskManager();
         }
