@@ -50,7 +50,16 @@ public class TaskManager {
 			newList.add(new TaskEntity("Task " + Integer.toString(i + 1), newDate, false));
 		}
 		manager.add(newList);
-		manager.add(new TaskEntity("Task floating"));
+		manager.add(new TaskEntity("Task floating 1"));
+        manager.add(new TaskEntity("Task floating 2"));
+        manager.add(new TaskEntity("Task floating 3"));
+        manager.add(new TaskEntity("Task floating 4"));
+
+        System.out.println(manager.getRandomFloating().getName());
+        System.out.println(manager.getRandomFloating().getName());
+        System.out.println(manager.getRandomFloating().getName());
+        System.out.println(manager.getRandomFloating().getName());
+		
 		Calendar newDate = Calendar.getInstance();
 		newDate.clear();
 		newDate.set(2016, 2, 5);
@@ -326,13 +335,6 @@ public class TaskManager {
 	}
 
 	/**
-	 * placeholder for now
-	 */
-	public TaskEntity getRandomFloating() {
-		return null;
-	}
-
-	/**
 	 * UI Interface function Adds a task into its respective arraylist,
 	 * appending to the bottom of floatingTaskEntities if it is a floating task,
 	 * and inserting into its sorted position if it is a timed task
@@ -521,6 +523,21 @@ public class TaskManager {
 		return nextTimeId;
 	}
 
+	/**
+	 * Gets a random floating task for display at UI
+	 * @return null - if floatingTaskEntities is empty
+	 *         A TaskEntity object that is a random floating task in floatingTaskEntities
+	 */
+	public TaskEntity getRandomFloating (){
+	    if( floatingTaskEntities.size() == 0) {
+	        return null;
+	    } else {
+	        Random rand = new Random();
+	        int randomNum = rand.nextInt(floatingTaskEntities.size());
+	        return floatingTaskEntities.get(randomNum);
+	    }
+	}
+	
 	/**
 	 * UI Interface function Undoes the last command performed by the user
 	 * 
