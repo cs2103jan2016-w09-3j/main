@@ -33,6 +33,7 @@ public class UserInterfaceController {
 	// variables for animation and changing views;
 	private int _currentView = TASK_VIEW;
 	private Thread _threadToAnimate;
+	private TaskViewDescriptionAnimation _expandAnimation;
 
 	// main logic class to interact
 	private TaskManager _taskManager;
@@ -76,7 +77,7 @@ public class UserInterfaceController {
 	public void initilizeFloatingBar() {
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		_floatingBarComponent.addTask("floating task");
-		FloatingTaskAnimationThread r= new FloatingTaskAnimationThread(this);
+		FloatingTaskAnimationThread r = new FloatingTaskAnimationThread(this);
 		r.start();
 	}
 
@@ -169,17 +170,24 @@ public class UserInterfaceController {
 		return temp;
 	}
 
+	/**
+	 * This method will start the service to animate the current view to the selected view.
+	 */
 	public void startThreadToAnimate() {
-		TaskViewDescriptionAnimation animation = new TaskViewDescriptionAnimation(this);
-		_threadToAnimate = new Thread(animation);
-		_threadToAnimate.start();
+		if (_expandAnimation != null) {
+			if (_expandAnimation.isRunning()) {
+				_expandAnimation.cancel();
+			}
+		}
+		_expandAnimation = new TaskViewDescriptionAnimation(this);
+		_expandAnimation.start();
 	}
 
 	public boolean updateFloatingBar(double percentageDone) {
 		boolean isDoneAnimating = _floatingBarComponent.animateView(percentageDone);
 		return isDoneAnimating;
 	}
-
+	
 	public void addRandomTaskToDisplay() {
 		TaskEntity task = _taskManager.getRandomFloating();
 		// mod here after qy add random task

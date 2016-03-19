@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class FloatingTaskAnimationThread extends Service {
+public class FloatingTaskAnimationThread extends Service<Void> {
 
 	UserInterfaceController ui;
 	private boolean isAdded;
@@ -27,10 +27,10 @@ public class FloatingTaskAnimationThread extends Service {
 	}
 
 	@Override
-	protected Task createTask() {
-		return new Task<String>() {
+	protected Task<Void> createTask() {
+		return new Task<Void>() {
 			@Override
-			protected String call() throws InterruptedException {
+			protected Void call() throws InterruptedException {
 				while (true) {
 					Thread.sleep(TIME_INTERVAL_FOR_NEXT_FLOATING_TASK);
 					reset();
