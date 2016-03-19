@@ -9,8 +9,8 @@ public class FloatingTaskAnimationThread extends Service {
 	UserInterfaceController ui;
 	private boolean isAdded;
 	private boolean isDoneAnimating;
-	private static final int ANIMATE_SPEED_TOTAL = 800;
-	private static final int ANIMATION_DELAY = 5;
+	private static final int ANIMATE_SPEED_TOTAL = 1500;
+	private static final int ANIMATION_DELAY = 10;
 	private static final int TIME_INTERVAL_FOR_NEXT_FLOATING_TASK = 10000;
 
 	private double _percentageDone;
@@ -37,7 +37,6 @@ public class FloatingTaskAnimationThread extends Service {
 					long timeStart = System.currentTimeMillis();
 					while (!isDoneAnimating) {
 						long timePast = System.currentTimeMillis() - timeStart;
-						Thread.sleep(300);
 						_percentageDone = timePast / (double)ANIMATE_SPEED_TOTAL;
 						Platform.runLater(new Runnable() {
 							public void run() {
