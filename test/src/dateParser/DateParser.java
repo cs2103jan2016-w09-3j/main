@@ -55,12 +55,43 @@ public class DateParser {
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
 			for (int j = 0; j < dates.size(); j++) {
-				returnDateList.add(dates.get(j));
+					returnDateList.add(dates.get(j));
 			}
+		}
+		if(returnDateList.size()>1){
+			returnDateList = checkMultiple(returnDateList, inputDate);
 		}
 		return returnDateList;
 	}
 
+	public List<Date> checkMultiple(List<Date> dateList, String input){
+		List<Date> returnList = new ArrayList<Date>();
+		if (checkKeyWord(input)){
+			Date endDate = dateList.get(dateList.size()-1);
+			Date curr = dateList.get(0);
+			while(!curr.after(endDate)){
+				Calendar c = Calendar.getInstance();
+				c.setTime(curr);
+				returnList.add(curr);
+				c.add(Calendar.DATE, 1);
+				curr = c.getTime();
+			}
+			return returnList;
+		}else{
+			return dateList;
+		}
+	}
+	
+	private boolean checkKeyWord(String input){
+		boolean returnBool= false;
+		if(input.contains("to")){
+			returnBool = true;
+		}
+		if(input.contains("till")){
+			returnBool = true;
+		}
+		return returnBool;
+	}
 	/**
 	 * takes in a string with date and adds XML to the date portions
 	 * 
@@ -227,13 +258,10 @@ public class DateParser {
 				tempNLP.hideErr();
 				List<Date> dates = tempNLP.parseToList(tempDate);
 				tempNLP.showErr();
-
-				String parseAgain = dates.get(0).toString();
-				dates = tempNLP.parseToList(parseAgain);
 				//System.out.println("test2"+dates);
 
 				tempNLP.hideErr();
-				System.out.println(tempNLP.xmlDate(tempDate));
+				System.out.println(dates);
 				tempNLP.showErr();
 			}
 		}
