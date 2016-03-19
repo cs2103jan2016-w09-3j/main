@@ -1,21 +1,17 @@
 package userInterface;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import entity.TaskEntity;
-import fileStorage.StorageInterface;
 import mainLogic.TaskManager;
 import mainLogic.Utils;
-
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class UserInterfaceController {
@@ -40,9 +36,20 @@ public class UserInterfaceController {
 	// main logic class to interact
 	private TaskManager _taskManager;
 
+	private static Logger logger = Logger.getLogger("UserInterfaceController");
+
 	public UserInterfaceController(Stage primaryStage) {
+		try {
+			Handler fh = new FileHandler("uiinterfaceLog.log");
+			logger.addHandler(fh);
+			logger.setLevel(Level.FINEST);
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+		logger.log(Level.INFO, "UserInterfaceController Init");
 		_parentStage = primaryStage;
 		_taskManager = new TaskManager();
+		_taskManager.init();
 	}
 
 	public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize) {
@@ -95,7 +102,7 @@ public class UserInterfaceController {
 
 	public void updateUI(int value) {
 		_taskViewInterface.update(value);
-		TaskEntity selectedTask= _taskViewInterface.setItemSelected(value);
+		TaskEntity selectedTask = _taskViewInterface.setItemSelected(value);
 		_detailComponent.buildComponent(selectedTask);
 		translateComponentsY(_taskViewInterface.getTranslationY());
 		updateDescriptionComponent();
@@ -178,14 +185,24 @@ public class UserInterfaceController {
 	}
 
 	public void addTask(TaskEntity task) {
-		/*
-		 * int date = task.getDueDate().get(Calendar.DATE); Random r = new
-		 * Random(); date += r.nextInt(10); date += 5;
-		 * task.getDueDate().set(Calendar.DATE, date);
-		 * task.getDueDate().set(Calendar.MONTH,
-		 * task.getDueDate().get(Calendar.MONTH) + 2);
-		 */
-		System.out.println(task.getDueDate());
+		int insertedTo = _taskManager.add(task);
+		int selected = _taskViewInterface.getSelectIndex();
+
+		if (selected == -1) {
+			selected = 0;
+		} else if (insertedTo <= selected) {
+			selected++;
+		}
+
+		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
+		updateUI(0);
+
+		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, insertedTo, this);
+		Thread t = new Thread(sAnimation);
+		t.start();
+	}
+	
+	public void addBatchTask(ArrayList<TaskEntity> task) {
 
 		int insertedTo = _taskManager.add(task);
 		int selected = _taskViewInterface.getSelectIndex();
@@ -203,6 +220,7 @@ public class UserInterfaceController {
 		Thread t = new Thread(sAnimation);
 		t.start();
 	}
+	
 
 	public boolean deleteTask(int idToDelete) {
 		boolean isDeleted = _taskManager.delete(idToDelete);

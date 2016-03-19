@@ -1,5 +1,6 @@
 package userInterface;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -107,7 +108,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		_mainVbox.setPrefSize(stageWidth, stageHeight);
 		_mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
 		_mainVbox.setId("cssRoot");
-		
+
 		Scene s = new Scene(_mainVbox, stageWidth, stageHeight);
 		s.setFill(Color.TRANSPARENT);
 		_stage.setScene(s);
@@ -200,13 +201,18 @@ public class TaskViewUserInterface implements ViewInterface {
 		HBox hbox = new HBox();
 		hbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT); // setMax
 
-		Label dateNLPLabel = new Label(getStringOfDate(taskEntity.getDueDate()));
+		SimpleDateFormat daySdf = new SimpleDateFormat("d");
+		//Label dateNLPLabel = new Label(getStringOfDate(taskEntity.getDueDate()));
+		Label dateNLPLabel = new Label(daySdf.format(taskEntity.getDueDate().getTime())+" ");
 		dateNLPLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
 		dateNLPLabel.setFont(FONT_LABEL);
 		dateNLPLabel.setAlignment(Pos.BOTTOM_CENTER);
 		hbox.getChildren().add(dateNLPLabel);
 
-		Label dateLabel = new Label("19/02/2016    <- eg. only placeholder");
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("MMMMM yyyy");
+        
+		Label dateLabel = new Label(sdf.format(taskEntity.getDueDate().getTime()));
 		dateLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
 		dateLabel.setFont(FONT_LABEL_DATE);
 		dateLabel.setAlignment(Pos.BOTTOM_CENTER);
@@ -215,26 +221,6 @@ public class TaskViewUserInterface implements ViewInterface {
 		vbox.getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(0, 0, 0, 20));
 		return vbox;
-	}
-
-	public String calculateVboxCssStyle(Calendar calendar) {
-		switch (calendar.get(Calendar.DAY_OF_WEEK)) {
-		case Calendar.SUNDAY:
-			return "cssTaskViewSunday";
-		case Calendar.SATURDAY:
-			return "cssTaskViewSaturday";
-		case Calendar.MONDAY:
-			return "cssTaskViewMonday";
-		case Calendar.TUESDAY:
-			return "cssTaskViewTuesday";
-		case Calendar.WEDNESDAY:
-			return "cssTaskViewWednesday";
-		case Calendar.THURSDAY:
-			return "cssTaskViewThursday";
-		case Calendar.FRIDAY:
-			return "cssTaskViewFriday";
-		}
-		return null;
 	}
 
 	public String getStringOfDate(Calendar c) {
@@ -292,11 +278,16 @@ public class TaskViewUserInterface implements ViewInterface {
 		descriptionLabel.setFont(FONT_TASK);
 		grid.add(descriptionLabel, 3, 0);
 
-		Label descriptionLabel2 = new Label(taskEntity.getDescription());
+		Label descriptionLabel2 = new Label("full description will be here");
 		descriptionLabel2.setMinHeight(0);
 		descriptionLabel2.setFont(FONT_TASK);
-		descriptionLabel2.setStyle("-fx-background-color:red");
 		grid.add(descriptionLabel2, 3, 1);
+		
+		Label hashTagLabel = new Label("#hashtags");
+		hashTagLabel.setMinHeight(0);
+		hashTagLabel.setFont(FONT_TASK);
+		grid.add(hashTagLabel, 3, 2);
+		
 		return grid;
 	}
 
@@ -337,44 +328,52 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	public void removeFirstTask() {
-		GridPane gp = _gridPanes.get(0);
-		VBox gpDayParent = (VBox) gp.getParent().getParent();
-		VBox gpWeekParent = (VBox) gpDayParent.getParent();
-		if (gpDayParent.getChildren().size() == 2) {
-			gpWeekParent.getChildren().remove(gpDayParent);
-			gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - gpDayParent.getMinHeight());
-			if (gpWeekParent.getChildren().size() == 0) {
-				_mainVbox.getChildren().remove(gpWeekParent);
-			}
-			transLationY = transLationY - gpDayParent.getMinHeight();
+		try {
+			GridPane gp = _gridPanes.get(0);
+			VBox gpDayParent = (VBox) gp.getParent().getParent();
+			VBox gpWeekParent = (VBox) gpDayParent.getParent();
+			if (gpDayParent.getChildren().size() == 2) {
+				gpWeekParent.getChildren().remove(gpDayParent);
+				gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - gpDayParent.getMinHeight());
+				if (gpWeekParent.getChildren().size() == 0) {
+					_mainVbox.getChildren().remove(gpWeekParent);
+				}
+				transLationY = transLationY - gpDayParent.getMinHeight();
 
-		} else {
-			HBox itemToRemove = (HBox) gpDayParent.getChildren().remove(1);
-			gpDayParent.setMinHeight(gpDayParent.getMinHeight() - itemToRemove.getMinHeight());
-			gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - itemToRemove.getMinHeight());
-			transLationY = transLationY - itemToRemove.getMinHeight();
+			} else {
+				HBox itemToRemove = (HBox) gpDayParent.getChildren().remove(1);
+				gpDayParent.setMinHeight(gpDayParent.getMinHeight() - itemToRemove.getMinHeight());
+				gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - itemToRemove.getMinHeight());
+				transLationY = transLationY - itemToRemove.getMinHeight();
+			}
+			_gridPanes.remove(0);
+			_startIndex += 1;
+		} catch (IndexOutOfBoundsException e) {
+
 		}
-		_gridPanes.remove(0);
-		_startIndex += 1;
 	}
 
 	public void removeLastTask() {
-		GridPane gp = _gridPanes.get(_gridPanes.size() - 1);
-		VBox gpDayParent = (VBox) gp.getParent().getParent();
-		VBox gpWeekParent = (VBox) gpDayParent.getParent();
-		if (gpDayParent.getChildren().size() == 2) {
-			gpWeekParent.getChildren().remove(gpDayParent);
-			gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - gpDayParent.getMinHeight());
-			if (gpWeekParent.getChildren().size() == 0) {
-				_mainVbox.getChildren().remove(gpWeekParent);
+		try {
+			GridPane gp = _gridPanes.get(_gridPanes.size() - 1);
+			VBox gpDayParent = (VBox) gp.getParent().getParent();
+			VBox gpWeekParent = (VBox) gpDayParent.getParent();
+			if (gpDayParent.getChildren().size() == 2) {
+				gpWeekParent.getChildren().remove(gpDayParent);
+				gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - gpDayParent.getMinHeight());
+				if (gpWeekParent.getChildren().size() == 0) {
+					_mainVbox.getChildren().remove(gpWeekParent);
+				}
+			} else {
+				HBox itemToRemove = (HBox) gpDayParent.getChildren().remove(gpDayParent.getChildren().size() - 1);
+				gpDayParent.setMinHeight(gpDayParent.getMinHeight() - itemToRemove.getMinHeight());
+				gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - itemToRemove.getMinHeight());
 			}
-		} else {
-			HBox itemToRemove = (HBox) gpDayParent.getChildren().remove(gpDayParent.getChildren().size() - 1);
-			gpDayParent.setMinHeight(gpDayParent.getMinHeight() - itemToRemove.getMinHeight());
-			gpWeekParent.setMinHeight(gpWeekParent.getMinHeight() - itemToRemove.getMinHeight());
+			_gridPanes.remove(_gridPanes.size() - 1);
+			_endIndex -= 1;
+		} catch (IndexOutOfBoundsException e) {
+
 		}
-		_gridPanes.remove(_gridPanes.size() - 1);
-		_endIndex -= 1;
 	}
 
 	public void addLastItem() {

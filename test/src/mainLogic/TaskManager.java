@@ -543,8 +543,9 @@ public class TaskManager {
             c.set(Calendar.DATE, dateBuffer);
             c.set(Calendar.HOUR, hourBuffer);
             
-            TaskEntity t = new TaskEntity(Integer.toString(k++), c, false, "yea");
+            TaskEntity t = new TaskEntity("Task Name", c, false, "task description");
             add(t);
+            k++;
         }
 
         System.out.println(k + " Fake data created");

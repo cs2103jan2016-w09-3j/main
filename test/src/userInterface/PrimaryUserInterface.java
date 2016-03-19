@@ -35,6 +35,7 @@ public class PrimaryUserInterface extends Application {
 	static final int DEFAULT_FONT_SIZE = 24;
 	static final String STYLE_SHEET = "stylesheet.css";
 
+	private double _commandBarWidth;
 	private Rectangle2D _screenBounds;
 	private Stage _primaryStage;
 	private CommandBar _commandBar;
@@ -47,6 +48,7 @@ public class PrimaryUserInterface extends Application {
 	 */
 	public PrimaryUserInterface() {
 		_screenBounds = Screen.getPrimary().getVisualBounds();
+		_commandBarWidth = _screenBounds.getWidth() * PREFERED_WINDOW_SCALE;
 		if (_screenBounds.getWidth() * PREFERED_WINDOW_SCALE <= PREFERED_WINDOW_WIDTH) {
 			_fixedSize = true;
 		}
@@ -77,16 +79,17 @@ public class PrimaryUserInterface extends Application {
 	private void initializePrimaryStage(Stage primaryStage) {
 		primaryStage.setAlwaysOnTop(true);
 		primaryStage.initStyle(StageStyle.TRANSPARENT);
-		primaryStage.setX((_screenBounds.getWidth() - COMMAND_BAR_WIDTH) / TWO);
+		primaryStage.setX((_screenBounds.getWidth() - _commandBarWidth) / TWO);
 		primaryStage.setY((_screenBounds.getHeight() - COMMAND_BAR_HEIGTH - COMMAND_BAR_BOTTOM_MARGIN));
-		Scene primaryScene = new Scene(initializeRootLayout(), COMMAND_BAR_WIDTH, COMMAND_BAR_HEIGTH);
+		Scene primaryScene = new Scene(initializeRootLayout(), _commandBarWidth, COMMAND_BAR_HEIGTH);
 		primaryScene.getStylesheets().add(STYLE_SHEET);
 		primaryStage.setScene(primaryScene);
 		_primaryStage.show();
 	}
 
 	/**
-	 * initialize the content inside the primary stage, BorderPane used as rootLayout 
+	 * initialize the content inside the primary stage, BorderPane used as
+	 * rootLayout
 	 * 
 	 * @return rootLayout.
 	 */
@@ -101,6 +104,7 @@ public class PrimaryUserInterface extends Application {
 
 	/**
 	 * initialize UserInterfaceController
+	 * 
 	 * @param primaryStage.
 	 */
 	private void initializeUiController(Stage primaryStage) {
@@ -157,6 +161,15 @@ public class PrimaryUserInterface extends Application {
 		return false;
 	}
 
+	public boolean executeBatchAdd(ArrayList<TaskEntity> task) {
+		for (int i = 0; i < task.size(); i++) {
+
+		}
+		uiController.addBatchTask(task);
+		_commandBar.focus();
+		return true;
+	}
+
 	/**
 	 * delete task from the system.
 	 * 
@@ -195,10 +208,12 @@ public class PrimaryUserInterface extends Application {
 
 		return false;
 	}
+
 	/**
 	 * Jump to index.
 	 * 
-	 * @param indexToJump : base36 format
+	 * @param indexToJump
+	 *            : base36 format
 	 * @return boolean, true if value found, false it value not found
 	 */
 	public boolean executeJump(String indexToJump) {
@@ -216,8 +231,10 @@ public class PrimaryUserInterface extends Application {
 				System.exit(0);
 			} else if (cmd.equals(COMMAND.ADD)) {
 				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
-				for (int i = 0; i < tasks.size(); i++) {
-					executeAdd(tasks.get(i));
+				if (tasks.size() == 1) {
+					executeAdd(tasks.get(0));
+				} else {
+					executeBatchAdd(tasks);
 				}
 			} else if (cmd.equals(COMMAND.EDIT)) {
 				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
