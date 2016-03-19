@@ -3,6 +3,7 @@ package userInterface;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Timer;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -48,8 +49,7 @@ public class UserInterfaceController {
 		}
 		logger.log(Level.INFO, "UserInterfaceController Init");
 		_parentStage = primaryStage;
-		_taskManager = new TaskManager();
-		_taskManager.init();
+		_taskManager = TaskManager.getInstance();
 	}
 
 	public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize) {
@@ -65,12 +65,19 @@ public class UserInterfaceController {
 	 */
 	public void initializeTaskView() {
 		_taskViewInterface = new TaskViewUserInterface(_parentStage, _screenBounds, _fixedSize);
+		initilizeFloatingBar();
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
-		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
 		_taskManager.generateFakeData();// replace when integrate with angie
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
 		updateUI(0);
+	}
+
+	public void initilizeFloatingBar() {
+		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
+		_floatingBarComponent.addTask("floating task");
+		FloatingTaskAnimationThread r= new FloatingTaskAnimationThread(this);
+		r.start();
 	}
 
 	/**
@@ -168,6 +175,17 @@ public class UserInterfaceController {
 		_threadToAnimate.start();
 	}
 
+	public boolean updateFloatingBar(double percentageDone) {
+		boolean isDoneAnimating = _floatingBarComponent.animateView(percentageDone);
+		return isDoneAnimating;
+	}
+
+	public void addRandomTaskToDisplay() {
+		TaskEntity task = _taskManager.getRandomFloating();
+		// mod here after qy add random task
+		_floatingBarComponent.addTask("new task");
+	}
+
 	/**
 	 * method for debugging purposes only.
 	 * 
@@ -201,26 +219,13 @@ public class UserInterfaceController {
 		Thread t = new Thread(sAnimation);
 		t.start();
 	}
-	
+
 	public void addBatchTask(ArrayList<TaskEntity> task) {
 
 		int insertedTo = _taskManager.add(task);
-		int selected = _taskViewInterface.getSelectIndex();
-
-		if (selected == -1) {
-			selected = 0;
-		} else if (insertedTo <= selected) {
-			selected++;
-		}
-
-		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
+		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), insertedTo);
 		updateUI(0);
-
-		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, insertedTo, this);
-		Thread t = new Thread(sAnimation);
-		t.start();
 	}
-	
 
 	public boolean deleteTask(int idToDelete) {
 		boolean isDeleted = _taskManager.delete(idToDelete);

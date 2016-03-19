@@ -1,11 +1,14 @@
 package userInterface;
 
+import entity.TaskEntity;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -19,17 +22,19 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	static final int COMPONENT_BOTTOM_MARGIN = 2;
 	private static final int POSITION_ZERO = 0;
 
-	static final int FONT_SIZE_TITLE_LABEL = 20;
-	static final int FONT_SIZE_TASK = 16;
+	private static final int LABEL_TITLE_WIDTH = 250;
+	private static final int FONT_SIZE_TITLE_LABEL = 20;
+	private static final int FONT_SIZE_TASK = 16;
 	private static final Font FONT_LABEL_TITLE = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_TITLE_LABEL);
 	private static final Font FONT_LABEL_TASK = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_TASK);
-	
+
 	private Stage _stage;
 	private int _stageWidth;
 	private int _stageHeight;
 	private int _windowPosX;
 	private int _windowPosY;
 	private HBox _mainHBox;
+	private VBox _mainfloatingTaskArea;
 
 	public FloatingBarViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
 		initializeVaribles(screenBounds, fixedSize);
@@ -59,35 +64,74 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		_stage.setY(applicationY);
 
 		_mainHBox = new HBox();
-		_mainHBox.setPrefHeight(200);
+		_mainHBox.setPrefHeight(_stageHeight);
+		_mainHBox.setMaxHeight(_stageHeight);
 		_mainHBox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
 		_mainHBox.setId("cssRoot");
 
 		Scene scene = new Scene(_mainHBox, windowWidth, windowHeight, Color.TRANSPARENT);
 		scene.setFill(Color.TRANSPARENT);
 		_stage.setScene(scene);
+
 		build();
 	}
 
 	public void build() {
-		GridPane gp = new GridPane();
-		gp.setId("cssFloatingTask");
-		gp.setMinWidth(_stageWidth);
+		/*
+		 * GridPane gp = new GridPane(); gp.setId("cssFloatingTask");
+		 * gp.setMinWidth(_stageWidth); gp.setMinHeight(_stageHeight);
+		 * gp.setMaxHeight(_stageHeight);
+		 * 
+		 * Label floatTitleLabel = new Label("Floating task of the day");
+		 * floatTitleLabel.setMinHeight(_stageHeight);
+		 * floatTitleLabel.setMinWidth(LABEL_TITLE_WIDTH);
+		 * floatTitleLabel.setId("cssFloatingTitleLabel");
+		 * floatTitleLabel.setAlignment(Pos.CENTER);
+		 * floatTitleLabel.setFont(FONT_LABEL_TITLE); gp.add(floatTitleLabel, 0,
+		 * 0);
+		 * 
+		 * _mainfloatingTaskArea = new VBox();
+		 * _mainfloatingTaskArea.setMinWidth(_stageWidth - LABEL_TITLE_WIDTH);
+		 * 
+		 * 
+		 * VBox fixBox = new VBox(); fixBox.setMaxHeight(_stageHeight);
+		 * fixBox.setStyle("-fx-background-color:red");
+		 * fixBox.getChildren().add(_mainfloatingTaskArea);
+		 * 
+		 * gp.add(fixBox, 1, 0); _mainHBox.getChildren().add(gp);
+		 */
+
 		Label floatTitleLabel = new Label("Floating task of the day");
 		floatTitleLabel.setMinHeight(_stageHeight);
-		floatTitleLabel.setMinWidth(250);
+		floatTitleLabel.setMinWidth(LABEL_TITLE_WIDTH);
 		floatTitleLabel.setId("cssFloatingTitleLabel");
 		floatTitleLabel.setAlignment(Pos.CENTER);
 		floatTitleLabel.setFont(FONT_LABEL_TITLE);
-		gp.add(floatTitleLabel, 0, 0);
-		
-		Label floatTaskLabel = new Label("Run 10KM and feel good about it!");
-		floatTaskLabel.setMinHeight(_stageHeight);
-		floatTaskLabel.setAlignment(Pos.CENTER_LEFT);
-		floatTaskLabel.setFont(FONT_LABEL_TASK);
-		floatTaskLabel.setId("cssFloatingTaskLabel");
-		gp.add(floatTaskLabel, 1, 0);
-		_mainHBox.getChildren().add(gp);
+
+		_mainfloatingTaskArea = new VBox();
+		_mainfloatingTaskArea.setMinWidth(_stageWidth - LABEL_TITLE_WIDTH);
+
+		_mainHBox.getChildren().add(floatTitleLabel);
+		_mainHBox.getChildren().add(_mainfloatingTaskArea);
+
+	}
+
+	int k = 0;
+
+	public void addTask(String taskDesc) {
+		Label floatTask = new Label(taskDesc + " " + k++);
+		floatTask.setMinHeight(_stageHeight);
+		floatTask.setMaxHeight(_stageHeight);
+		floatTask.setAlignment(Pos.CENTER);
+		floatTask.setFont(FONT_LABEL_TASK);
+		_mainfloatingTaskArea.getChildren().add(floatTask);
+	}
+
+	public void removeTopItem() {
+		if (_mainfloatingTaskArea.getChildren().size() > 1) {
+			_mainfloatingTaskArea.getChildren().remove(0);
+			_mainfloatingTaskArea.setTranslateY(0);
+		}
 	}
 
 	public void show() {
@@ -104,6 +148,17 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 
 	public void updateTranslateY(double posY) {
 
+	}
+
+	public boolean animateView(double percentageDone) {
+		double posY = percentageDone * (double) _stageHeight;
+		if (posY < _stageHeight) {
+			_mainfloatingTaskArea.setTranslateY(-posY);
+			return false;
+		} else {
+			removeTopItem();
+			return true;
+		}
 	}
 
 	public void destoryStage() {
