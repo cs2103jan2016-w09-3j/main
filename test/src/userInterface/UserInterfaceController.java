@@ -34,6 +34,7 @@ public class UserInterfaceController {
 	private int _currentView = TASK_VIEW;
 	private TaskViewDescriptionAnimation _expandAnimation;
 	private ScrollTaskAnimation _scorllAnimation;
+	private FloatingTaskAnimationThread _floatingThread;
 
 	// main logic class to interact
 	private TaskManager _taskManager;
@@ -65,20 +66,28 @@ public class UserInterfaceController {
 	 * DescriptionComponent, DetailsComponent
 	 */
 	public void initializeTaskView() {
+		_taskManager.generateFakeData();// replace when integrate with angie
+		
 		_taskViewInterface = new TaskViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		initilizeFloatingBar();
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
-		_taskManager.generateFakeData();// replace when integrate with angie
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
 		updateUI(0);
 	}
 
 	public void initilizeFloatingBar() {
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
-		_floatingBarComponent.addTask("floating task");
-		FloatingTaskAnimationThread r = new FloatingTaskAnimationThread(this);
-		r.start();
+		TaskEntity floatingTask = _taskManager.getRandomFloating();
+		if (floatingTask != null) {
+			_floatingBarComponent.addTask(_taskManager.getRandomFloating().getName());
+			startFloatingThread();
+		}
+	}
+
+	public void startFloatingThread() {
+		_floatingThread = new FloatingTaskAnimationThread(this);
+		_floatingThread.start();
 	}
 
 	/**
@@ -175,7 +184,8 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * This method will start the service to animate the current view to the selected view.
+	 * This method will start the service to animate the current view to the
+	 * selected view.
 	 */
 	public void startThreadToAnimate() {
 		if (_expandAnimation != null) {
@@ -191,11 +201,10 @@ public class UserInterfaceController {
 		boolean isDoneAnimating = _floatingBarComponent.animateView(percentageDone);
 		return isDoneAnimating;
 	}
-	
+
 	public void addRandomTaskToDisplay() {
 		TaskEntity task = _taskManager.getRandomFloating();
-		// mod here after qy add random task
-		_floatingBarComponent.addTask("new task");
+		_floatingBarComponent.addTask(task.getName());
 	}
 
 	/**
