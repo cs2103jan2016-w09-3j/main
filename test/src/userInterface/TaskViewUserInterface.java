@@ -278,11 +278,16 @@ public class TaskViewUserInterface implements ViewInterface {
 		descriptionLabel.setFont(FONT_TASK);
 		grid.add(descriptionLabel, 3, 0);
 
-		Label descriptionLabel2 = new Label(taskEntity.getDescription());
+		Label descriptionLabel2 = new Label("full description will be here");
 		descriptionLabel2.setMinHeight(0);
 		descriptionLabel2.setFont(FONT_TASK);
-		descriptionLabel2.setStyle("-fx-background-color:red");
 		grid.add(descriptionLabel2, 3, 1);
+		
+		Label hashTagLabel = new Label("#hashtags");
+		hashTagLabel.setMinHeight(0);
+		hashTagLabel.setFont(FONT_TASK);
+		grid.add(hashTagLabel, 3, 2);
+		
 		return grid;
 	}
 

@@ -48,3 +48,15 @@
 #cssRoot{
 	-fx-background-color: rgba(255,255,255,0.7);
 }
+
+#cssFloatingTask
+{
+	-fx-background-color: rgba(255,255,255,1);
+	-fx-background-insets: 2;
+}
+
+#cssFloatingTitleLabel
+{
+	-fx-background-color: rgba(255,255,255,1), rgba(255.0,178.5,127.5,1.0);
+	-fx-background-insets: 2, 0 10 0 235;
+}
