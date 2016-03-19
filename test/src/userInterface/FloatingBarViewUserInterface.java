@@ -77,30 +77,6 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	}
 
 	public void build() {
-		/*
-		 * GridPane gp = new GridPane(); gp.setId("cssFloatingTask");
-		 * gp.setMinWidth(_stageWidth); gp.setMinHeight(_stageHeight);
-		 * gp.setMaxHeight(_stageHeight);
-		 * 
-		 * Label floatTitleLabel = new Label("Floating task of the day");
-		 * floatTitleLabel.setMinHeight(_stageHeight);
-		 * floatTitleLabel.setMinWidth(LABEL_TITLE_WIDTH);
-		 * floatTitleLabel.setId("cssFloatingTitleLabel");
-		 * floatTitleLabel.setAlignment(Pos.CENTER);
-		 * floatTitleLabel.setFont(FONT_LABEL_TITLE); gp.add(floatTitleLabel, 0,
-		 * 0);
-		 * 
-		 * _mainfloatingTaskArea = new VBox();
-		 * _mainfloatingTaskArea.setMinWidth(_stageWidth - LABEL_TITLE_WIDTH);
-		 * 
-		 * 
-		 * VBox fixBox = new VBox(); fixBox.setMaxHeight(_stageHeight);
-		 * fixBox.setStyle("-fx-background-color:red");
-		 * fixBox.getChildren().add(_mainfloatingTaskArea);
-		 * 
-		 * gp.add(fixBox, 1, 0); _mainHBox.getChildren().add(gp);
-		 */
-
 		Label floatTitleLabel = new Label("Floating task of the day");
 		floatTitleLabel.setMinHeight(_stageHeight);
 		floatTitleLabel.setMinWidth(LABEL_TITLE_WIDTH);
@@ -113,7 +89,6 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 
 		_mainHBox.getChildren().add(floatTitleLabel);
 		_mainHBox.getChildren().add(_mainfloatingTaskArea);
-
 	}
 
 	int k = 0;

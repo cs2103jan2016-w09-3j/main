@@ -20,7 +20,7 @@ public class UserInterfaceController {
 	// view indicators
 	final static int CALENDAR_VIEW = 0;
 	final static int TASK_VIEW = 1;
-	final static int DETAILED_VIEW = 2;
+	final static int EXPANDED_VIEW = 2;
 
 	private Stage _parentStage;
 	private TaskViewUserInterface _taskViewInterface;
@@ -32,7 +32,6 @@ public class UserInterfaceController {
 
 	// variables for animation and changing views;
 	private int _currentView = TASK_VIEW;
-	private Thread _threadToAnimate;
 	private TaskViewDescriptionAnimation _expandAnimation;
 	private ScrollTaskAnimation _scorllAnimation;
 
@@ -91,7 +90,7 @@ public class UserInterfaceController {
 			_descriptionComponent.show();
 			_floatingBarComponent.show();
 			_detailComponent.show();
-		} else if (_currentView == DETAILED_VIEW) {
+		} else if (_currentView == EXPANDED_VIEW) {
 			_taskViewInterface.show();
 			_descriptionComponent.show();
 			_floatingBarComponent.show();
@@ -121,8 +120,8 @@ public class UserInterfaceController {
 		if (_currentView == TASK_VIEW) {
 			_taskViewInterface.rebuildDescriptionLabelsForWeek();
 			_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
-		} else if (_currentView == DETAILED_VIEW) {
-			_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(), DETAILED_VIEW);
+		} else if (_currentView == EXPANDED_VIEW) {
+			_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(), EXPANDED_VIEW);
 		}
 	}
 
@@ -141,12 +140,16 @@ public class UserInterfaceController {
 		case TASK_VIEW: {
 			_currentView = view;
 			_taskViewInterface.setView(_currentView);
+			_detailComponent.setView(_currentView);
+			updateUI(0);
 			startThreadToAnimate();
 			break;
 		}
-		case DETAILED_VIEW: {
+		case EXPANDED_VIEW: {
 			_currentView = view;
 			_taskViewInterface.setView(_currentView);
+			_detailComponent.setView(_currentView);
+			updateUI(0);
 			startThreadToAnimate();
 			break;
 		}
@@ -157,11 +160,11 @@ public class UserInterfaceController {
 
 	public boolean animateView() {
 		boolean temp = false;
-		if (_currentView == TASK_VIEW || _currentView == DETAILED_VIEW) {
-			if (_currentView == DETAILED_VIEW) {
+		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW) {
+			if (_currentView == EXPANDED_VIEW) {
 				temp = _taskViewInterface.isAtDetailedView(1);
 				_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(),
-						DETAILED_VIEW);
+						EXPANDED_VIEW);
 			} else {
 				temp = _taskViewInterface.isAtTaskView(-1);
 				_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
