@@ -1,9 +1,11 @@
 package userInterface;
 
 import javafx.application.Platform;
+import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class ScrollTaskAnimation extends Task<Integer> {
+
+public class ScrollTaskAnimation extends Service<Integer> {
 
 	private int currentIndex;
 	private int indexToGo;
@@ -20,33 +22,40 @@ public class ScrollTaskAnimation extends Task<Integer> {
 	Runnable r;
 
 	@Override
-	protected Integer call() throws Exception {
-		direction = 0;
-		if (currentIndex < indexToGo) {
-			direction = 1;
-		} else {
-			direction = -1;
-		}
-		
-		long startTime = System.currentTimeMillis();
-
-		while (currentIndex != indexToGo) {
-			startTime = checkTime(startTime);
-			checkExceed();
-			if (r == null) {
-				r = new Runnable() {
-					public void run() {
-						ui.updateUI(direction);
-						currentIndex = currentIndex + direction;
-						r =null;
+	protected Task<Integer> createTask() {
+		return new Task<Integer>() {
+			@Override
+			protected Integer call() throws InterruptedException {
+				while (true) {
+					direction = 0;
+					if (currentIndex < indexToGo) {
+						direction = 1;
+					} else {
+						direction = -1;
 					}
-				};
-				Platform.runLater(r);
-			}
-			Thread.sleep(80);
-		}
+					
+					long startTime = System.currentTimeMillis();
 
-		return 1;
+					while (currentIndex != indexToGo) {
+						startTime = checkTime(startTime);
+						checkExceed();
+						if (r == null) {
+							r = new Runnable() {
+								public void run() {
+									ui.updateUI(direction);
+									currentIndex = currentIndex + direction;
+									r =null;
+								}
+							};
+							Platform.runLater(r);
+						}
+						Thread.sleep(80);
+					}
+
+					return 1;
+				}
+			}
+		};
 	}
 
 	private long checkTime(long startTime) {

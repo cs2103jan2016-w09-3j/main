@@ -34,6 +34,7 @@ public class UserInterfaceController {
 	private int _currentView = TASK_VIEW;
 	private Thread _threadToAnimate;
 	private TaskViewDescriptionAnimation _expandAnimation;
+	private ScrollTaskAnimation _scorllAnimation;
 
 	// main logic class to interact
 	private TaskManager _taskManager;
@@ -223,9 +224,8 @@ public class UserInterfaceController {
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
 		updateUI(0);
 
-		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, insertedTo, this);
-		Thread t = new Thread(sAnimation);
-		t.start();
+		_scorllAnimation = new ScrollTaskAnimation(selected, insertedTo, this);
+		_scorllAnimation.start();
 	}
 
 	public void addBatchTask(ArrayList<TaskEntity> task) {
@@ -286,9 +286,8 @@ public class UserInterfaceController {
 
 	public void jumpToIndex(String indexToJump) {
 		int selected = _taskViewInterface.getSelectIndex();
-		ScrollTaskAnimation sAnimation = new ScrollTaskAnimation(selected, Utils.convertBase36ToDec(indexToJump), this);
-		Thread t = new Thread(sAnimation);
-		t.start();
+		_scorllAnimation = new ScrollTaskAnimation(selected, Utils.convertBase36ToDec(indexToJump), this);
+		_scorllAnimation.start();
 	}
 
 }
