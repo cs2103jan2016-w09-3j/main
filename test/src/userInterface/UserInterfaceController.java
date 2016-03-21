@@ -99,12 +99,19 @@ public class UserInterfaceController {
 			_descriptionComponent.show();
 			_floatingBarComponent.show();
 			_detailComponent.show();
-		} else if (_currentView == EXPANDED_VIEW) {
+		} else if (_currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
 			_taskViewInterface.show();
 			_descriptionComponent.show();
 			_floatingBarComponent.show();
 			_detailComponent.show();
 		}
+	}
+
+	public void hide() {
+		_taskViewInterface.hide();
+		_descriptionComponent.hide();
+		_floatingBarComponent.hide();
+		_detailComponent.hide();
 	}
 
 	/**
@@ -126,7 +133,7 @@ public class UserInterfaceController {
 			updateDescriptionComponent();
 		} else if (_currentView == ASSOCIATE_VIEW) {
 			_detailComponent.update(value);
-		}	
+		}
 	}
 
 	public void updateDescriptionComponent() {
@@ -168,7 +175,7 @@ public class UserInterfaceController {
 		}
 		case ASSOCIATE_VIEW: {
 			_currentView = view;
-			//_taskViewInterface.setView(_currentView);
+			// _taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
 			updateUI(0);
 			break;

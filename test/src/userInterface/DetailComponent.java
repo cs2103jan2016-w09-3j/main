@@ -234,6 +234,7 @@ public class DetailComponent implements ViewInterface {
 	}
 
 	public void hide() {
+		_stage.hide();
 	}
 
 	public void destoryStage() {
