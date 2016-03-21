@@ -4,16 +4,27 @@ import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-
 public class ScrollTaskAnimation extends Service<Integer> {
 
 	private int currentIndex;
 	private int indexToGo;
 	private int direction;
 	private int numberOfMilliSecondsBeforeIncreaseSpeed = 300;
-	UserInterfaceController ui;
+	private UserInterfaceController ui;
+	private static ScrollTaskAnimation _myInstance;
 
-	public ScrollTaskAnimation(int currentIndex, int indexToGo, UserInterfaceController userInterfaceController) {
+	public static ScrollTaskAnimation getInstance(int currentIndex, int indexToGo,
+			UserInterfaceController userInterfaceController) {
+		if (_myInstance != null) {
+			if (_myInstance.isRunning()) {
+				_myInstance.cancel();
+			}
+		}
+		_myInstance = new ScrollTaskAnimation(currentIndex, indexToGo, userInterfaceController);
+		return _myInstance;
+	}
+
+	private ScrollTaskAnimation(int currentIndex, int indexToGo, UserInterfaceController userInterfaceController) {
 		this.currentIndex = currentIndex;
 		this.indexToGo = indexToGo;
 		ui = userInterfaceController;
@@ -23,39 +34,36 @@ public class ScrollTaskAnimation extends Service<Integer> {
 
 	@Override
 	protected Task<Integer> createTask() {
-		return new Task<Integer>() {
-			@Override
-			protected Integer call() throws InterruptedException {
-				while (true) {
-					direction = 0;
-					if (currentIndex < indexToGo) {
-						direction = 1;
-					} else {
-						direction = -1;
-					}
-					
-					long startTime = System.currentTimeMillis();
+		return new MyTask();
+	}
 
-					while (currentIndex != indexToGo) {
-						startTime = checkTime(startTime);
-						checkExceed();
-						if (r == null) {
-							r = new Runnable() {
-								public void run() {
-									ui.updateUI(direction);
-									currentIndex = currentIndex + direction;
-									r =null;
-								}
-							};
-							Platform.runLater(r);
-						}
-						Thread.sleep(80);
-					}
-
-					return 1;
-				}
+	private class MyTask extends Task<Integer> {
+		@Override
+		protected Integer call() throws Exception {
+			direction = 0;
+			if (currentIndex < indexToGo) {
+				direction = 1;
+			} else {
+				direction = -1;
 			}
-		};
+			long startTime = System.currentTimeMillis();
+			while (currentIndex != indexToGo) {
+				startTime = checkTime(startTime);
+				checkExceed();
+				if (r == null) {
+					r = new Runnable() {
+						public void run() {
+							ui.updateUI(direction);
+							currentIndex = currentIndex + direction;
+							r = null;
+						}
+					};
+					Platform.runLater(r);
+				}
+				Thread.sleep(80);
+			}
+			return 1;
+		}
 	}
 
 	private long checkTime(long startTime) {

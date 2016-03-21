@@ -66,9 +66,7 @@ public class PrimaryUserInterface extends Application {
 		initializeControls();
 		initializePrimaryStage(primaryStage);
 		initializeUiController(primaryStage);
-		// temp method for v0.1 demo
-		// initializeData();
-		_primaryStage.requestFocus();
+		focus();
 	}
 
 	/**
@@ -108,7 +106,7 @@ public class PrimaryUserInterface extends Application {
 	 * @param primaryStage.
 	 */
 	private void initializeUiController(Stage primaryStage) {
-		uiController = new UserInterfaceController(primaryStage);
+		uiController = UserInterfaceController.getInstance(primaryStage);
 		uiController.initializeInterface(_screenBounds, _fixedSize);
 	}
 
@@ -155,7 +153,7 @@ public class PrimaryUserInterface extends Application {
 			uiController.addTask(task);
 			_commandBar.getTextField().setText("");
 			_commandBar.addSessionCmds(_commandBar.get_textInField());
-			_commandBar.focus();
+			focus();
 			return true;
 		}
 		return false;
@@ -166,7 +164,7 @@ public class PrimaryUserInterface extends Application {
 
 		}
 		uiController.addBatchTask(task);
-		_commandBar.focus();
+		focus();
 		return true;
 	}
 
@@ -224,8 +222,29 @@ public class PrimaryUserInterface extends Application {
 
 	private void processKeyInputs(TextField textField, KeyEvent event) {
 		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
+
 			COMMAND cmd = _commandBar.onEnter(textField.getText());
 			String t = _commandBar.get_textInField();
+
+			// Ten add to mod to cater for theses commands
+			if (t.equals("hide")) {
+				uiController.hide();
+				textField.setText("");
+				focus();
+				return;
+			} else if (t.equals("show")) {
+				uiController.show();
+				textField.setText("");
+				focus();
+				return;
+			} else if (t.indexOf(" ") != -1) {
+				if (t.substring(0, t.indexOf(" ")).equals("jump")) {
+					String indexToDelete = t.substring(t.indexOf(" ") + 1);
+					executeJump(indexToDelete);
+					return;
+				}
+			}
+
 			if (cmd.equals(COMMAND.EXIT)) {
 				// uiController.saveToFile(_commandBar.get_allSessionCmds());
 				System.exit(0);
@@ -247,9 +266,6 @@ public class PrimaryUserInterface extends Application {
 					executeDelete(tasks.get(i));
 				}
 
-			} else if (t.substring(0, t.indexOf(" ")).equals("jump")) {
-				String indexToDelete = t.substring(t.indexOf(" ") + 1);
-				executeJump(indexToDelete);
 			}
 		} else if (event.getCode().compareTo(KeyCode.SPACE) == 0) {
 			String input = textField.getText();
@@ -264,9 +280,11 @@ public class PrimaryUserInterface extends Application {
 		}
 
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && !event.isShiftDown()) {
+			uiController.stopScrollingAnimation();
 			uiController.updateUI(1);
 		}
 		if (event.getCode().compareTo(KeyCode.UP) == 0 && event.isControlDown() && !event.isShiftDown()) {
+			uiController.stopScrollingAnimation();
 			uiController.updateUI(-1);
 		}
 
@@ -277,6 +295,11 @@ public class PrimaryUserInterface extends Application {
 			uiController.changeView(-1);
 		}
 		_primaryStage.requestFocus();
+	}
+
+	public void focus() {
+		_primaryStage.requestFocus();
+		_commandBar.focus();
 	}
 
 }

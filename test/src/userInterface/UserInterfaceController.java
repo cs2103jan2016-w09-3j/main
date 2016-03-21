@@ -3,7 +3,6 @@ package userInterface;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Timer;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -17,10 +16,14 @@ import javafx.stage.Stage;
 
 public class UserInterfaceController {
 
+	// Singeleton
+	private static int numberOfInstance = 0;
+
 	// view indicators
 	final static int CALENDAR_VIEW = 0;
 	final static int TASK_VIEW = 1;
-	final static int DETAILED_VIEW = 2;
+	final static int EXPANDED_VIEW = 2;
+	final static int ASSOCIATE_VIEW = 3;
 
 	private Stage _parentStage;
 	private TaskViewUserInterface _taskViewInterface;
@@ -32,24 +35,34 @@ public class UserInterfaceController {
 
 	// variables for animation and changing views;
 	private int _currentView = TASK_VIEW;
-	private Thread _threadToAnimate;
-	private TaskViewDescriptionAnimation _expandAnimation;
 	private ScrollTaskAnimation _scorllAnimation;
+	private FloatingTaskAnimationThread _floatingThread;
 
 	// main logic class to interact
 	private TaskManager _taskManager;
 
+	// Debug purpose
 	private static Logger logger = Logger.getLogger("UserInterfaceController");
 
-	public UserInterfaceController(Stage primaryStage) {
+	public static UserInterfaceController getInstance(Stage primaryStage) {
+		if (numberOfInstance == 0) {
+			numberOfInstance++;
+			return new UserInterfaceController(primaryStage);
+		} else {
+			return null;
+		}
+	}
+
+	private UserInterfaceController(Stage primaryStage) {
 		try {
-			Handler fh = new FileHandler("uiinterfaceLog.log");
-			logger.addHandler(fh);
+			Handler handler = new FileHandler("uiinterfaceLog.log");
+			logger.addHandler(handler);
 			logger.setLevel(Level.FINEST);
 		} catch (IOException e) {
 			System.out.println(e);
 		}
 		logger.log(Level.INFO, "UserInterfaceController Init");
+
 		_parentStage = primaryStage;
 		_taskManager = TaskManager.getInstance();
 	}
@@ -66,20 +79,27 @@ public class UserInterfaceController {
 	 * DescriptionComponent, DetailsComponent
 	 */
 	public void initializeTaskView() {
+		_taskManager.generateFakeData();// replace when integrate with angie
 		_taskViewInterface = new TaskViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		initilizeFloatingBar();
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
-		_taskManager.generateFakeData();// replace when integrate with angie
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
 		updateUI(0);
 	}
 
 	public void initilizeFloatingBar() {
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
-		_floatingBarComponent.addTask("floating task");
-		FloatingTaskAnimationThread r = new FloatingTaskAnimationThread(this);
-		r.start();
+		TaskEntity floatingTask = _taskManager.getRandomFloating();
+		if (floatingTask != null) {
+			_floatingBarComponent.addTask(_taskManager.getRandomFloating().getName());
+			startFloatingThread();
+		}
+	}
+
+	public void startFloatingThread() {
+		_floatingThread = new FloatingTaskAnimationThread(this);
+		_floatingThread.start();
 	}
 
 	/**
@@ -91,12 +111,22 @@ public class UserInterfaceController {
 			_descriptionComponent.show();
 			_floatingBarComponent.show();
 			_detailComponent.show();
-		} else if (_currentView == DETAILED_VIEW) {
+		} else if (_currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
 			_taskViewInterface.show();
 			_descriptionComponent.show();
 			_floatingBarComponent.show();
 			_detailComponent.show();
 		}
+	}
+
+	/**
+	 * Hide all views other then the PrimaryUserInterface.
+	 */
+	public void hide() {
+		_taskViewInterface.hide();
+		_descriptionComponent.hide();
+		_floatingBarComponent.hide();
+		_detailComponent.hide();
 	}
 
 	/**
@@ -110,19 +140,24 @@ public class UserInterfaceController {
 	}
 
 	public void updateUI(int value) {
-		_taskViewInterface.update(value);
-		TaskEntity selectedTask = _taskViewInterface.setItemSelected(value);
-		_detailComponent.buildComponent(selectedTask);
-		translateComponentsY(_taskViewInterface.getTranslationY());
-		updateDescriptionComponent();
+
+		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW) {
+			_taskViewInterface.update(value);
+			TaskEntity selectedTask = _taskViewInterface.setItemSelected(value);
+			_detailComponent.buildComponent(selectedTask);
+			translateComponentsY(_taskViewInterface.getTranslationY());
+			updateDescriptionComponent();
+		} else if (_currentView == ASSOCIATE_VIEW) {
+			_detailComponent.update(value);
+		}
 	}
 
 	public void updateDescriptionComponent() {
 		if (_currentView == TASK_VIEW) {
 			_taskViewInterface.rebuildDescriptionLabelsForWeek();
 			_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
-		} else if (_currentView == DETAILED_VIEW) {
-			_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(), DETAILED_VIEW);
+		} else if (_currentView == EXPANDED_VIEW) {
+			_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(), EXPANDED_VIEW);
 		}
 	}
 
@@ -141,13 +176,23 @@ public class UserInterfaceController {
 		case TASK_VIEW: {
 			_currentView = view;
 			_taskViewInterface.setView(_currentView);
-			startThreadToAnimate();
+			_detailComponent.setView(_currentView);
+			updateUI(0);
+			startExpandAnimation(1);
 			break;
 		}
-		case DETAILED_VIEW: {
+		case EXPANDED_VIEW: {
 			_currentView = view;
 			_taskViewInterface.setView(_currentView);
-			startThreadToAnimate();
+			_detailComponent.setView(_currentView);
+			updateUI(0);
+			startExpandAnimation(-1);
+			break;
+		}
+		case ASSOCIATE_VIEW: {
+			_currentView = view;
+			_detailComponent.setView(_currentView);
+			updateUI(0);
 			break;
 		}
 		default:
@@ -155,44 +200,36 @@ public class UserInterfaceController {
 		}
 	}
 
-	public boolean animateView() {
-		boolean temp = false;
-		if (_currentView == TASK_VIEW || _currentView == DETAILED_VIEW) {
-			if (_currentView == DETAILED_VIEW) {
-				temp = _taskViewInterface.isAtDetailedView(1);
-				_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(),
-						DETAILED_VIEW);
-			} else {
-				temp = _taskViewInterface.isAtTaskView(-1);
-				_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
-			}
-			translateComponentsY(_taskViewInterface.getTranslationY());
-		}
-		return temp;
+	/**
+	 * This method will start the service to animate the current view to the
+	 * selected view.
+	 */
+	public void startExpandAnimation(int direction) {
+		TaskViewDescriptionAnimation.getInstance(this, direction).start();
 	}
 
-	/**
-	 * This method will start the service to animate the current view to the selected view.
-	 */
-	public void startThreadToAnimate() {
-		if (_expandAnimation != null) {
-			if (_expandAnimation.isRunning()) {
-				_expandAnimation.cancel();
-			}
-		}
-		_expandAnimation = new TaskViewDescriptionAnimation(this);
-		_expandAnimation.start();
+	public boolean animateToExpanedView() {
+		boolean isDoneTranslating = _taskViewInterface.isAtDetailedView(1);
+		_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(), EXPANDED_VIEW);
+		translateComponentsY(_taskViewInterface.getTranslationY());
+		return isDoneTranslating;
+	}
+
+	public boolean animateToTaskView() {
+		boolean isDoneTranslating = _taskViewInterface.isAtTaskView(-1);
+		_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
+		translateComponentsY(_taskViewInterface.getTranslationY());
+		return isDoneTranslating;
+	}
+
+	public void addRandomTaskToDisplay() {
+		TaskEntity task = _taskManager.getRandomFloating();
+		_floatingBarComponent.addTask(task.getName());
 	}
 
 	public boolean updateFloatingBar(double percentageDone) {
 		boolean isDoneAnimating = _floatingBarComponent.animateView(percentageDone);
 		return isDoneAnimating;
-	}
-	
-	public void addRandomTaskToDisplay() {
-		TaskEntity task = _taskManager.getRandomFloating();
-		// mod here after qy add random task
-		_floatingBarComponent.addTask("new task");
 	}
 
 	/**
@@ -224,7 +261,7 @@ public class UserInterfaceController {
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
 		updateUI(0);
 
-		_scorllAnimation = new ScrollTaskAnimation(selected, insertedTo, this);
+		_scorllAnimation = ScrollTaskAnimation.getInstance(selected, insertedTo, this);
 		_scorllAnimation.start();
 	}
 
@@ -286,8 +323,17 @@ public class UserInterfaceController {
 
 	public void jumpToIndex(String indexToJump) {
 		int selected = _taskViewInterface.getSelectIndex();
-		_scorllAnimation = new ScrollTaskAnimation(selected, Utils.convertBase36ToDec(indexToJump), this);
+		_scorllAnimation = ScrollTaskAnimation.getInstance(selected, Utils.convertBase36ToDec(indexToJump), this);
 		_scorllAnimation.start();
+	}
+
+	public void stopScrollingAnimation() {
+		if (_scorllAnimation != null) {
+			if (_scorllAnimation.isRunning()) {
+				_scorllAnimation.cancel();
+			}
+		}
+		_scorllAnimation = null;
 	}
 
 }
