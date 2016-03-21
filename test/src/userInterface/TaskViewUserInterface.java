@@ -353,8 +353,13 @@ public class TaskViewUserInterface implements ViewInterface {
 	private HBox buildIndividualTask(TaskEntity taskEntity, int index) {
 		HBox hbox = new HBox();
 		GridPane gridPane = createGridPaneForTask(taskEntity, index);
-		hbox.setMinHeight(gridPane.getMinHeight());
-		hbox.setMaxHeight(gridPane.getMinHeight());
+		if (_view == UserInterfaceController.TASK_VIEW) {
+			hbox.setMinHeight(gridPane.getMinHeight());
+			hbox.setMaxHeight(gridPane.getMinHeight());
+		} else if (_view == UserInterfaceController.EXPANDED_VIEW) {
+			hbox.setMinHeight(gridPane.getMinHeight());
+			hbox.setMaxHeight(gridPane.getMinHeight());
+		}
 		_gridPanes.add(gridPane);
 		hbox.getChildren().add(gridPane);
 		return hbox;
@@ -668,10 +673,6 @@ public class TaskViewUserInterface implements ViewInterface {
 		_mainVbox.setTranslateY(itemPosY);
 	}
 
-	public static Label createLabelForDay(TaskEntity taskEntity) {
-		return new Label(taskEntity.getDueDate().toString());
-	}
-
 	// get from logic side
 	public static boolean isSameDay(TaskEntity task1, TaskEntity task2) {
 		if (task1 == null) { // new day
@@ -852,6 +853,7 @@ public class TaskViewUserInterface implements ViewInterface {
 				}
 				gp.setMinHeight(gp.getMinHeight() + value);
 				gpParent.setMinHeight(gpParent.getMinHeight() + value);
+				gpParent.setMaxHeight(gpParent.getMinHeight());
 				dayParent.setMinHeight(dayParent.getMinHeight() + value);
 				weekParent.setMinHeight(weekParent.getMinHeight() + value);
 			} else {

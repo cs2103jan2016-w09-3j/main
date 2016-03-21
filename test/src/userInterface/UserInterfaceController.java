@@ -152,7 +152,6 @@ public class UserInterfaceController {
 	public void updateComponents(int value) {
 		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW) {
 			_taskViewInterface.update(value);
-			System.out.println(value);
 			TaskEntity selectedTask = _taskViewInterface.setItemSelected(value);
 			_detailComponent.buildComponent(selectedTask);
 			translateComponentsY(_taskViewInterface.getTranslationY());

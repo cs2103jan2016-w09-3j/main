@@ -122,10 +122,11 @@ public class DetailComponent implements ViewInterface {
 	}
 
 	public void buildUIForExpandedView(TaskEntity task) {
-		System.out.println("buildExpanded");
 		_mainVbox[EXPANDED_VIEW].getChildren().clear();
-		VBox childToAdd = buildAssociationList(task);
-		_mainVbox[EXPANDED_VIEW].getChildren().add(childToAdd);
+		if (task != null) {
+			VBox childToAdd = buildAssociationList(task);
+			_mainVbox[EXPANDED_VIEW].getChildren().add(childToAdd);
+		}
 	}
 
 	public VBox buildAssociationList(TaskEntity task) {
@@ -158,6 +159,9 @@ public class DetailComponent implements ViewInterface {
 	 * @param index
 	 */
 	public void setSelectedIndex(int index) {
+		if (index < 0 || index > (_mainVbox[EXPANDED_VIEW].getChildren().size() - 1)) {
+			return;
+		}
 		VBox parent = (VBox) _mainVbox[EXPANDED_VIEW].getChildren().get(0);
 		if (parent.getChildren().size() > index && index > -1) {
 			if (_selectedIndex != -1) {
