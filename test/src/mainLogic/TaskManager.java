@@ -568,14 +568,6 @@ public class TaskManager {
 			add(t);
 			k++;
 		}
-		
-		//generate floating task
-		for(int i=0; i < 10; i ++)
-		{
-			TaskEntity t = new TaskEntity("floating "+i);
-			add(t);
-			k++;
-		}
 
 		System.out.println(k + " Fake data created");
 		return mainTaskEntities;
