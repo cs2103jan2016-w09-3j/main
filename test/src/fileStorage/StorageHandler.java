@@ -189,7 +189,6 @@ public class StorageHandler {
         return isModified(beforeModify, afterModify); 
     }
 
-
     /**
      * Returns true if timeAfterMod is after timeBeforeMod, false otherwise
      * @param timeBeforeModification
