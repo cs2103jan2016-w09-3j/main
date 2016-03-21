@@ -43,6 +43,9 @@ public class TaskManager {
 	 */
 	public static void main(String[] args) {
 		TaskManager manager = TaskManager.getInstance();
+		manager.floatingTaskEntities.clear();
+		manager.mainTaskEntities.clear();
+		manager.switchView(manager.DISPLAY_MAIN);
 		ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
 		for (int i = 0; i < 5; i++) {
 			Calendar newDate = Calendar.getInstance();
@@ -54,29 +57,32 @@ public class TaskManager {
         manager.add(new TaskEntity("Task floating 2"));
         manager.add(new TaskEntity("Task floating 3"));
         manager.add(new TaskEntity("Task floating 4"));
-
-        System.out.println(manager.getRandomFloating().getName());
-        System.out.println(manager.getRandomFloating().getName());
-        System.out.println(manager.getRandomFloating().getName());
-        System.out.println(manager.getRandomFloating().getName());
 		
+        
 		Calendar newDate = Calendar.getInstance();
 		newDate.clear();
 		newDate.set(2016, 2, 5);
-		manager.modify(0, new TaskEntity("2016/2/5", newDate, true));
+		TaskEntity headTask = new TaskEntity("2016/2/5", newDate, true);
+		manager.modify(1, headTask);
 
 		newDate = Calendar.getInstance();
 		newDate.clear();
 		newDate.set(2016, 2, 3);
-		manager.modify(3, new TaskEntity("2016/2/3", newDate, true));
+		TaskEntity childTask = new TaskEntity("2016/2/3", newDate, true);
+		manager.modify(3, childTask);
 
-		manager.delete(1, 3);
-
+		manager.link(headTask, childTask);
+		
 		newDate = Calendar.getInstance();
 		newDate.clear();
 		newDate.set(2016, 3, 16);
-		manager.add(new TaskEntity("2016/3/16", newDate, true));
+		childTask = new TaskEntity("2016/3/16", newDate, true);
+		manager.add(childTask);
+		manager.link(headTask, childTask);
 
+		if(manager.link(childTask, headTask)) System.out.println("wth");
+		else System.out.println("phew");
+		
 		newDate = Calendar.getInstance();
 		newDate.clear();
 		newDate.set(2016, 3, 15);
@@ -84,6 +90,42 @@ public class TaskManager {
 
 		manager.printList();
 
+		manager.link(manager.floatingTaskEntities.get(0), manager.mainTaskEntities.get(6));
+
+        newDate = Calendar.getInstance();
+        newDate.clear();
+        newDate.set(2016, 3, 15);
+        manager.modify(6, new TaskEntity("Modified task", newDate, true));
+
+		ArrayList<TaskEntity> tasks_under = manager.getWorkingList().get(1).getAssociations();
+		
+		for(int i = 0; i < tasks_under.size(); i++) {
+		    System.out.println(tasks_under.get(i).getName());
+		}
+		
+		tasks_under = manager.mainTaskEntities.get(1).getAssociations();
+		
+        for(int i = 0; i < tasks_under.size(); i++) {
+            System.out.println(tasks_under.get(i).getName());
+        }
+        
+        tasks_under = manager.mainTaskEntities.get(0).getAssociations();
+        
+        for(int i = 0; i < tasks_under.size(); i++) {
+            System.out.println(tasks_under.get(i).getName());
+        }
+        
+        tasks_under = manager.mainTaskEntities.get(6).getAssociations();
+        
+        for(int i = 0; i < tasks_under.size(); i++) {
+            System.out.println(tasks_under.get(i).getName());
+        }
+        
+        tasks_under = manager.floatingTaskEntities.get(0).getAssociations();
+        
+        for(int i = 0; i < tasks_under.size(); i++) {
+            System.out.println(tasks_under.get(i).getName());
+        }
 		// while(true){
 		// System.out.println(getNextTimeListId());
 		// }
@@ -205,21 +247,28 @@ public class TaskManager {
 	/**
 	 * Initialization function to be called before usage of TaskManager class
 	 */
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     private TaskManager() {
-		initLogger();
+        initLogger();
 
-		 AllTaskLists taskdata = dataLoader.getTaskLists();
-		 mainTaskEntities = (ArrayList<TaskEntity>)
-		 taskdata.getMainTaskList().clone();
-		 floatingTaskEntities = (ArrayList<TaskEntity>)
-		 taskdata.getFloatingTaskList().clone();
+        AllTaskLists taskdata = dataLoader.getTaskLists();
+        mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
+        floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
 
-		 logger.log(Level.FINEST, "TaskManager Initialized");
-		displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
-		currentDisplayedList = DISPLAY_MAIN;
+        logger.log(Level.FINEST, "TaskManager Initialized");
+        displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
+        currentDisplayedList = DISPLAY_MAIN;
 	}
 
+    /**
+     * function to log error messages into TaskManager
+     * 
+     * @param errorMessage
+     */
+    public void logError (String errorMessage) {
+        logger.log(Level.SEVERE, errorMessage); 
+    }
+    
 	/**
 	 * Function to call for TaskManager before closing the program
 	 */
@@ -293,8 +342,21 @@ public class TaskManager {
 	 *         succeeded in deleting the task, returns -1 if deletion failed
 	 */
 	public int modify(int index, TaskEntity modifiedTask) {
+	    if( index > displayedTasks.size() -1 ) {
+	        return -1;
+	    }
+	    
+	    boolean hasAssociation = false;
+	    if (displayedTasks.get(index).getAssociationState() == TaskEntity.ASSOCIATED) {
+	        hasAssociation = true;
+	    }
+	    TaskEntity projectHead = displayedTasks.get(index).getProjectHead();
 		if (delete(index) == false) {
 			return -1;
+		}
+		
+		if(hasAssociation == true) {
+		    link(projectHead, modifiedTask);
 		}
 		return add(modifiedTask);
 	}
@@ -395,6 +457,8 @@ public class TaskManager {
 	 * @return false - if fail to delete true - if delete operation succeeded
 	 */
 	public boolean delete(int index) {
+	    assert displayedTasks != null : "No list in focus";
+	    
 		if (displayedTasks == null) {
 			displayedTasks = mainTaskEntities;
 		}
@@ -408,10 +472,13 @@ public class TaskManager {
 		if (!deletionSuccess) {
 			return false;
 		}
+		
+		itemToBeDeleted.removeSelfFromProject();
+		
 		try {
 			displayedTasks.remove(index);
 		} catch (ArrayIndexOutOfBoundsException e) {
-
+		    logError("Error at delete, removing from index that does not exist");
 		}
 		return true;
 	}
@@ -473,6 +540,24 @@ public class TaskManager {
 		}
 		return true;
 	}
+	
+    /**
+     * Associates a task to a project head task
+     * 
+     * @param projectHead - Task to be linked to
+     * @param linkedTask - Task to be linked
+     * @return True if success in linking
+     *         false if failed to link
+     */
+    public boolean link(TaskEntity projectHead, TaskEntity linkedTask) {
+        boolean linkSuccess = projectHead.addAssociation(linkedTask);
+        if(!linkSuccess) {
+            return false;
+        }
+        
+        linkedTask.setAssociationHead(projectHead);
+        return true;
+    }
 
 	/**
 	 * Checks if the Index passed in for deletion is a valid index
