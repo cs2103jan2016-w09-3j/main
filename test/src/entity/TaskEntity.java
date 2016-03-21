@@ -124,12 +124,25 @@ public class TaskEntity {
      * @param projectHead - Task to be added under
      */
     public void setAssociationHead (TaskEntity projectHead) {
+        //Unlink from last project first
+        removeSelfFromProject();
+        
         _associations.clear();
+        
         //Tasks under other tasks only have the project head in their associations array
         _associations.add(projectHead);
         _association_status = ASSOCIATED;
     }
     
+    public boolean removeSelfFromProject(){
+        if(getAssociationState() == TaskEntity.ASSOCIATED) {
+            TaskEntity prevProjectHead = getAssociations().get(0);
+            prevProjectHead.getAssociations().remove(this);
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * Function to link an object under this task
      * 
