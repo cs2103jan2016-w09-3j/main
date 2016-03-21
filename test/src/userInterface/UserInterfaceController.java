@@ -35,7 +35,6 @@ public class UserInterfaceController {
 
 	// variables for animation and changing views;
 	private int _currentView = TASK_VIEW;
-	private TaskViewDescriptionAnimation _expandAnimation;
 	private ScrollTaskAnimation _scorllAnimation;
 	private FloatingTaskAnimationThread _floatingThread;
 
@@ -120,6 +119,9 @@ public class UserInterfaceController {
 		}
 	}
 
+	/**
+	 * Hide all views other then the PrimaryUserInterface.
+	 */
 	public void hide() {
 		_taskViewInterface.hide();
 		_descriptionComponent.hide();
@@ -138,6 +140,7 @@ public class UserInterfaceController {
 	}
 
 	public void updateUI(int value) {
+
 		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW) {
 			_taskViewInterface.update(value);
 			TaskEntity selectedTask = _taskViewInterface.setItemSelected(value);
@@ -175,7 +178,7 @@ public class UserInterfaceController {
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
 			updateUI(0);
-			startThreadToAnimate(1);
+			startExpandAnimation(1);
 			break;
 		}
 		case EXPANDED_VIEW: {
@@ -183,12 +186,11 @@ public class UserInterfaceController {
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
 			updateUI(0);
-			startThreadToAnimate(-1);
+			startExpandAnimation(-1);
 			break;
 		}
 		case ASSOCIATE_VIEW: {
 			_currentView = view;
-			// _taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
 			updateUI(0);
 			break;
@@ -198,20 +200,12 @@ public class UserInterfaceController {
 		}
 	}
 
-	public boolean animateView() {
-		boolean temp = false;
-		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
-			if (_currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
-				temp = _taskViewInterface.isAtDetailedView(1);
-				_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(),
-						EXPANDED_VIEW);
-			} else {
-				temp = _taskViewInterface.isAtTaskView(-1);
-				_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
-			}
-			translateComponentsY(_taskViewInterface.getTranslationY());
-		}
-		return temp;
+	/**
+	 * This method will start the service to animate the current view to the
+	 * selected view.
+	 */
+	public void startExpandAnimation(int direction) {
+		TaskViewDescriptionAnimation.getInstance(this, direction).start();
 	}
 
 	public boolean animateToExpanedView() {
@@ -228,28 +222,14 @@ public class UserInterfaceController {
 		return isDoneTranslating;
 	}
 
-	/**
-	 * This method will start the service to animate the current view to the
-	 * selected view.
-	 */
-	public void startThreadToAnimate(int direction) {
-		if (_expandAnimation != null) {
-			if (_expandAnimation.isRunning()) {
-				_expandAnimation.cancel();
-			}
-		}
-		_expandAnimation = new TaskViewDescriptionAnimation(this, direction);
-		_expandAnimation.start();
+	public void addRandomTaskToDisplay() {
+		TaskEntity task = _taskManager.getRandomFloating();
+		_floatingBarComponent.addTask(task.getName());
 	}
 
 	public boolean updateFloatingBar(double percentageDone) {
 		boolean isDoneAnimating = _floatingBarComponent.animateView(percentageDone);
 		return isDoneAnimating;
-	}
-
-	public void addRandomTaskToDisplay() {
-		TaskEntity task = _taskManager.getRandomFloating();
-		_floatingBarComponent.addTask(task.getName());
 	}
 
 	/**
@@ -281,7 +261,7 @@ public class UserInterfaceController {
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
 		updateUI(0);
 
-		_scorllAnimation = new ScrollTaskAnimation(selected, insertedTo, this);
+		_scorllAnimation = ScrollTaskAnimation.getInstance(selected, insertedTo, this);
 		_scorllAnimation.start();
 	}
 
@@ -343,8 +323,17 @@ public class UserInterfaceController {
 
 	public void jumpToIndex(String indexToJump) {
 		int selected = _taskViewInterface.getSelectIndex();
-		_scorllAnimation = new ScrollTaskAnimation(selected, Utils.convertBase36ToDec(indexToJump), this);
+		_scorllAnimation = ScrollTaskAnimation.getInstance(selected, Utils.convertBase36ToDec(indexToJump), this);
 		_scorllAnimation.start();
+	}
+
+	public void stopScrollingAnimation() {
+		if (_scorllAnimation != null) {
+			if (_scorllAnimation.isRunning()) {
+				_scorllAnimation.cancel();
+			}
+		}
+		_scorllAnimation = null;
 	}
 
 }
