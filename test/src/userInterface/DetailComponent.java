@@ -159,29 +159,43 @@ public class DetailComponent implements ViewInterface {
 	 * @param index
 	 */
 	public void setSelectedIndex(int index) {
-		if (index < 0 || index > (_mainVbox[EXPANDED_VIEW].getChildren().size() - 1)) {
-			return;
-		}
-		VBox parent = (VBox) _mainVbox[EXPANDED_VIEW].getChildren().get(0);
-		if (parent.getChildren().size() > index && index > -1) {
-			if (_selectedIndex != -1) {
-				VBox prev = (VBox) parent.getChildren().get(_selectedIndex);
-				prev.setId("cssExpandedViewVBox");
-			}
 
-			VBox curr = (VBox) parent.getChildren().get(index);
-			curr.setId("cssExpandedViewVBoxSelected");
-			_selectedIndex = index;
-
-			if (parent.getHeight() > _stageHeight) {
-				double sizeOnTop = 0;
-				for (int i = 0; i < index; i++) {
-					VBox tempVBox = (VBox) parent.getChildren().get(i);
-					sizeOnTop += tempVBox.getHeight() + SPACING_SIZE;
+		if (isValidIndex(index)) {
+			VBox parent = (VBox) _mainVbox[EXPANDED_VIEW].getChildren().get(0);
+			if (parent.getChildren().size() > index && index > -1) {
+				if (_selectedIndex != -1) {
+					VBox prev = (VBox) parent.getChildren().get(_selectedIndex);
+					prev.setId("cssExpandedViewVBox");
 				}
-				parent.setTranslateY(-sizeOnTop);
+
+				VBox curr = (VBox) parent.getChildren().get(index);
+				curr.setId("cssExpandedViewVBoxSelected");
+				_selectedIndex = index;
+
+				if (parent.getHeight() > _stageHeight) {
+					double sizeOnTop = 0;
+					for (int i = 0; i < index; i++) {
+						VBox tempVBox = (VBox) parent.getChildren().get(i);
+						sizeOnTop += tempVBox.getHeight() + SPACING_SIZE;
+					}
+					parent.setTranslateY(-sizeOnTop);
+				}
 			}
 		}
+	}
+
+	public boolean isValidIndex(int index) {
+		if (_mainVbox[EXPANDED_VIEW].getChildren().size() == 0) {
+			return false;
+		}
+		if (index < 0) {
+			return false;
+		}
+		VBox child = (VBox) _mainVbox[EXPANDED_VIEW].getChildren().get(0);
+		if (child.getChildren().size() > index) {
+			return true;
+		}
+		return false;
 	}
 
 	public VBox buildTask(TaskEntity task) {
