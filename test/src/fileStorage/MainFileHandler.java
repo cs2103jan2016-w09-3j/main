@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.FileHandler;
@@ -17,13 +16,13 @@ public class MainFileHandler {
 
     private String tasksFilePath;
     private String commandsFilePath;
-    
+
     private File tasksFile;
     private File commandsFile;
-    
+
     private String allStoredTasks;
     private Queue<String> allCommandsQueue;
-    
+
     private static Logger logger = Logger.getLogger("MainFileHandler");
     private FileHandler fileHandler;
 
@@ -40,7 +39,7 @@ public class MainFileHandler {
     public void setMainFilePath(String filePath) {
         this.tasksFilePath = filePath;
     }
-    
+
     public String getCommandFilePath() {
         return commandsFilePath;
     }
@@ -48,7 +47,7 @@ public class MainFileHandler {
     public void setCommandFilePath(String filePath) {
         this.commandsFilePath = filePath;
     }
-    
+
     public String getAllStoredTasks() {
         return allStoredTasks;
     }
@@ -56,7 +55,7 @@ public class MainFileHandler {
     public void setAllStoredTasks(String allStoredTasks) {
         this.allStoredTasks = allStoredTasks;
     }
-    
+
     public Queue<String> getAllCommandsQueue() {
         return allCommandsQueue;
     }
@@ -77,7 +76,7 @@ public class MainFileHandler {
         } else {
             createNewFile(tasksFile);
         }
-        
+
         if (commandsFile.exists()) {
             setAllCommandsQueue(readFromExistingCommandFile());
             System.out.println("Command file found, begin reading...");
@@ -94,12 +93,12 @@ public class MainFileHandler {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Reads data from an existing file and returns the appended string
      * @return String
      */
-    public String readFromExistingMainFile() {        
+    private String readFromExistingMainFile() {        
         BufferedReader buffer;
         String readData = "";
         try {
@@ -109,7 +108,7 @@ public class MainFileHandler {
                 readData = readData + currentLine.trim();
             }
             buffer.close();
-            System.out.println("Read from file.");
+            System.out.println("Tasks: Read from file.");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -117,13 +116,27 @@ public class MainFileHandler {
         }
         return readData.trim();
     }
-    
+
     private Queue<String> readFromExistingCommandFile() {
         Queue<String> readCommands = new LinkedList<String>();
-        
+        BufferedReader buffer;
+        try {
+            buffer = new BufferedReader(new FileReader(commandsFilePath));
+            String currentLine = "";
+            while ((currentLine = buffer.readLine()) != null) {
+                readCommands.offer(currentLine);
+            }
+            buffer.close();
+            System.out.println("Commands: Read from file.");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return readCommands;
     }
-    
+
     /**
      * Returns true if data is written to a file, false otherwise
      * Whether the data has been written depends on the last modified time of the file
@@ -150,16 +163,21 @@ public class MainFileHandler {
         logger.log(Level.INFO, "End processing...");
         return isModified(beforeModify, afterModify);
     }
-    
-    // TODO change ArrayList to Queue<String>
-    public boolean writeToCommandFile(ArrayList<String> commands) {
+
+    /**
+     * Returns true if data is written to a file, false otherwise
+     * Whether the data has been written depends on the last modified time of the file
+     * @param writeCommands
+     * @return boolean
+     */
+    public boolean writeToCommandFile(Queue<String> writeCommands) {
         FileWriter fileWriter;
         long beforeModify = commandsFile.lastModified();
         long afterModify = -1;
         try {
             fileWriter = new FileWriter(commandsFilePath); 
-            for (int i = 0; i < commands.size(); i++) {
-                fileWriter.write(commands.get(i) + '\n');
+            while (!writeCommands.isEmpty()) {
+                fileWriter.write(writeCommands.poll());
             }
             fileWriter.flush();
             fileWriter.close();
@@ -167,9 +185,16 @@ public class MainFileHandler {
         } catch (IOException e) {
             e.printStackTrace();  
         }
-        return isModified(beforeModify, afterModify);
+        return isModified(beforeModify, afterModify); 
     }
 
+
+    /**
+     * Returns true if timeAfterMod is after timeBeforeMod, false otherwise
+     * @param timeBeforeModification
+     * @param timeAfterModification
+     * @return boolean
+     */
     private boolean isModified(long timeBeforeModification, long timeAfterModification) {
         return timeAfterModification > timeBeforeModification;
     }

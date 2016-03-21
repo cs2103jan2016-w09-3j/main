@@ -25,9 +25,9 @@ public class StorageController implements StorageInterface {
         
         //System.out.println("Calendar :" + created);
         ArrayList<String> dummyCommands = sh.createDummyCommands();
-        System.out.println(ch.writeToCommandFile(dummyCommands));
+        //System.out.println(ch.writeToCommandFile(dummyCommands));
         
-        System.out.println(ch.readFromExistingCommandFile());
+        //System.out.println(ch.readFromExistingCommandFile());
         
     }
 
