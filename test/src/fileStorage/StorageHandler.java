@@ -12,7 +12,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MainFileHandler {
+public class StorageHandler {
 
     private String tasksFilePath;
     private String commandsFilePath;
@@ -26,7 +26,7 @@ public class MainFileHandler {
     private static Logger logger = Logger.getLogger("MainFileHandler");
     private FileHandler fileHandler;
 
-    public MainFileHandler() {
+    public StorageHandler() {
         tasksFilePath = "tasksList.txt";
         commandsFilePath = "commandsList.txt";
         processFile();
@@ -69,6 +69,7 @@ public class MainFileHandler {
      */
     private void processFile() {
         tasksFile = new File(tasksFilePath);
+        commandsFile = new File(commandsFilePath);
 
         if (tasksFile.exists()) {
             setAllStoredTasks(readFromExistingMainFile());
@@ -175,9 +176,9 @@ public class MainFileHandler {
         long beforeModify = commandsFile.lastModified();
         long afterModify = -1;
         try {
-            fileWriter = new FileWriter(commandsFilePath); 
+            fileWriter = new FileWriter(commandsFilePath, true); // True to append to file
             while (!writeCommands.isEmpty()) {
-                fileWriter.write(writeCommands.poll());
+                fileWriter.write(writeCommands.poll() + '\n');
             }
             fileWriter.flush();
             fileWriter.close();
