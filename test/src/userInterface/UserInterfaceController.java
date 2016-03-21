@@ -21,6 +21,7 @@ public class UserInterfaceController {
 	final static int CALENDAR_VIEW = 0;
 	final static int TASK_VIEW = 1;
 	final static int EXPANDED_VIEW = 2;
+	final static int ASSOCIATE_VIEW = 3;
 
 	private Stage _parentStage;
 	private TaskViewUserInterface _taskViewInterface;
@@ -67,7 +68,6 @@ public class UserInterfaceController {
 	 */
 	public void initializeTaskView() {
 		_taskManager.generateFakeData();// replace when integrate with angie
-		
 		_taskViewInterface = new TaskViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		initilizeFloatingBar();
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
@@ -118,11 +118,15 @@ public class UserInterfaceController {
 	}
 
 	public void updateUI(int value) {
-		_taskViewInterface.update(value);
-		TaskEntity selectedTask = _taskViewInterface.setItemSelected(value);
-		_detailComponent.buildComponent(selectedTask);
-		translateComponentsY(_taskViewInterface.getTranslationY());
-		updateDescriptionComponent();
+		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW) {
+			_taskViewInterface.update(value);
+			TaskEntity selectedTask = _taskViewInterface.setItemSelected(value);
+			_detailComponent.buildComponent(selectedTask);
+			translateComponentsY(_taskViewInterface.getTranslationY());
+			updateDescriptionComponent();
+		} else if (_currentView == ASSOCIATE_VIEW) {
+			_detailComponent.update(value);
+		}	
 	}
 
 	public void updateDescriptionComponent() {
@@ -162,6 +166,13 @@ public class UserInterfaceController {
 			startThreadToAnimate();
 			break;
 		}
+		case ASSOCIATE_VIEW: {
+			_currentView = view;
+			//_taskViewInterface.setView(_currentView);
+			_detailComponent.setView(_currentView);
+			updateUI(0);
+			break;
+		}
 		default:
 			break;
 		}
@@ -169,8 +180,8 @@ public class UserInterfaceController {
 
 	public boolean animateView() {
 		boolean temp = false;
-		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW) {
-			if (_currentView == EXPANDED_VIEW) {
+		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
+			if (_currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
 				temp = _taskViewInterface.isAtDetailedView(1);
 				_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(),
 						EXPANDED_VIEW);

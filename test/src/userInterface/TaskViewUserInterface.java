@@ -454,7 +454,6 @@ public class TaskViewUserInterface implements ViewInterface {
 
 				_selectedIndex = index;
 				updateTranslationY();
-
 			}
 		} else {
 			if (value > 0) {
