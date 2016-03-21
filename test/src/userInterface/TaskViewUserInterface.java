@@ -472,6 +472,8 @@ public class TaskViewUserInterface implements ViewInterface {
 			updateTranslationY();
 		}
 		if (_selectedIndex < workingList.size()) {
+			if(workingList.size()==0)
+				return null;
 			return workingList.get(_selectedIndex);
 		}
 		return null;
