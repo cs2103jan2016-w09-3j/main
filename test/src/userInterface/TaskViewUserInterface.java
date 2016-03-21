@@ -24,6 +24,8 @@ import mainLogic.Utils;
 
 public class TaskViewUserInterface implements ViewInterface {
 
+	private static TaskViewUserInterface _myInstance;
+
 	private static final int GAP_SIZE = 10;
 	private static final int THRESHOLD = 50;
 
@@ -61,7 +63,12 @@ public class TaskViewUserInterface implements ViewInterface {
 	private ArrayList<GridPane> _gridPanes = new ArrayList<GridPane>();
 	private ArrayList<TaskEntity> workingList;
 
-	public TaskViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
+	public static TaskViewUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
+		_myInstance = new TaskViewUserInterface(primaryStage, screenBounds, fixedSize);
+		return _myInstance;
+	}
+
+	private TaskViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
 		initializeVaribles(screenBounds, fixedSize);
 		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
 	}
@@ -202,16 +209,16 @@ public class TaskViewUserInterface implements ViewInterface {
 		hbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT); // setMax
 
 		SimpleDateFormat daySdf = new SimpleDateFormat("d");
-		//Label dateNLPLabel = new Label(getStringOfDate(taskEntity.getDueDate()));
-		Label dateNLPLabel = new Label(daySdf.format(taskEntity.getDueDate().getTime())+" ");
+		// Label dateNLPLabel = new
+		// Label(getStringOfDate(taskEntity.getDueDate()));
+		Label dateNLPLabel = new Label(daySdf.format(taskEntity.getDueDate().getTime()) + " ");
 		dateNLPLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
 		dateNLPLabel.setFont(FONT_LABEL);
 		dateNLPLabel.setAlignment(Pos.BOTTOM_CENTER);
 		hbox.getChildren().add(dateNLPLabel);
 
-		
 		SimpleDateFormat sdf = new SimpleDateFormat("MMMMM yyyy");
-        
+
 		Label dateLabel = new Label(sdf.format(taskEntity.getDueDate().getTime()));
 		dateLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
 		dateLabel.setFont(FONT_LABEL_DATE);
@@ -282,12 +289,12 @@ public class TaskViewUserInterface implements ViewInterface {
 		descriptionLabel2.setMinHeight(0);
 		descriptionLabel2.setFont(FONT_TASK);
 		grid.add(descriptionLabel2, 3, 1);
-		
+
 		Label hashTagLabel = new Label("#hashtags");
 		hashTagLabel.setMinHeight(0);
 		hashTagLabel.setFont(FONT_TASK);
 		grid.add(hashTagLabel, 3, 2);
-		
+
 		return grid;
 	}
 
@@ -307,6 +314,7 @@ public class TaskViewUserInterface implements ViewInterface {
 				value = _selectedIndex;
 			}
 		}
+
 		for (int i = 0; i < Math.abs(value); i++) {
 			if (value > 0)// ctrl down
 			{
@@ -472,7 +480,7 @@ public class TaskViewUserInterface implements ViewInterface {
 			updateTranslationY();
 		}
 		if (_selectedIndex < workingList.size()) {
-			if(workingList.size()==0)
+			if (workingList.size() == 0)
 				return null;
 			return workingList.get(_selectedIndex);
 		}
@@ -482,6 +490,10 @@ public class TaskViewUserInterface implements ViewInterface {
 	// set transLationY to be desired tranlationY, which is current selected
 	// item position + threshold
 	public void updateTranslationY() {
+		System.out.println(_selectedIndex + " " + _startIndex);
+		if ((_selectedIndex - _startIndex) >= _gridPanes.size()) {
+			return;
+		}
 		GridPane gp = _gridPanes.get(_selectedIndex - _startIndex);
 		HBox gpParent = (HBox) gp.getParent();
 		VBox dayParent = (VBox) gpParent.getParent();
