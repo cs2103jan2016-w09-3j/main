@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -43,6 +44,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	private static final Font FONT_TASK = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_TASK);
 	private static final Font FONT_INDEX = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_INDEX);
 	private static final Font FONT_LABEL_DATE = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_LABEL_DATE);
+
 	private Stage _stage;
 	private int _stageWidth;
 	private int _stageHeight;
@@ -59,6 +61,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	private int _view = UserInterfaceController.TASK_VIEW;
 
 	private VBox _mainVbox; // main parent for items.
+
 	// container to store current gridPanes builded for easy reference.
 	private ArrayList<GridPane> _gridPanes = new ArrayList<GridPane>();
 	private ArrayList<TaskEntity> workingList;
@@ -102,6 +105,7 @@ public class TaskViewUserInterface implements ViewInterface {
 			_windowPosY = (int) screenBounds.getHeight() - _stageHeight - PrimaryUserInterface.COMMAND_BAR_HEIGTH
 					- PrimaryUserInterface.COMMAND_BAR_TOP_MARGIN - PrimaryUserInterface.COMMAND_BAR_BOTTOM_MARGIN;
 		}
+		_individualItemWidth = _stageWidth;
 	}
 
 	public void initializeStage(Window owner, int applicationX, int applicationY, int stageWidth, int stageHeight) {
@@ -141,60 +145,162 @@ public class TaskViewUserInterface implements ViewInterface {
 		return _stageHeight;
 	}
 
+	/**
+	 * Builds the items inside taskView base on the workingList and the
+	 * workingIndex.
+	 * 
+	 * @param workingList
+	 *            - this is the list of all task that can be shown in the
+	 *            taskView.
+	 * @param workingIndex
+	 *            - this is the selected index of the task.
+	 */
 	public void buildComponent(ArrayList<TaskEntity> workingList, int workingIndex) {
+
 		_mainVbox.getChildren().clear();
 		_gridPanes = new ArrayList<GridPane>();
 
 		this.workingList = workingList;
-		_individualItemWidth = _stageWidth;
-
 		if (workingList.size() > 0) {
-			int startIndex = 0;
-			int endIndex = workingList.size() - 1;
-			if (workingIndex - THRESHOLD > startIndex) {
-				startIndex = workingIndex - THRESHOLD;
-			}
-			if (workingIndex + THRESHOLD < endIndex) {
-				endIndex = workingIndex + THRESHOLD;
-			}
 
-			VBox weekBox = createWeekParent();
-			VBox topBox = createDayParent(workingList.get(startIndex));
-			HBox item = buildIndividualTask(workingList.get(startIndex), startIndex);
-			topBox.getChildren().add(item);
-			topBox.setMinHeight(topBox.getMinHeight() + item.getMinHeight());
-			for (int i = startIndex + 1; i <= endIndex; i++) {
-				if (!isSameWeek(workingList.get(i - 1), workingList.get(i))) {
-					weekBox.getChildren().add(topBox);
-					weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
-					_mainVbox.getChildren().add(weekBox);
-					weekBox = createWeekParent();
-					topBox = createDayParent(workingList.get(i));
+			assert (workingIndex < workingList.size());
+			assert (workingIndex > -1);
+
+			setIndexs(workingIndex);
+
+			int countItemSameWeek = 0;
+			ArrayList<TaskEntity> itemsInSameWeek = new ArrayList<TaskEntity>();
+			for (int i = _startIndex; i < _endIndex + 1; i++) {
+				if (countItemSameWeek == 0) {
+					countItemSameWeek++;
+					itemsInSameWeek.add(workingList.get(i));
 				} else {
-					if (!isSameDay(workingList.get(i - 1), workingList.get(i))) {
-						weekBox.getChildren().add(topBox);
-						weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
-						topBox = createDayParent(workingList.get(i));
+					if (isSameWeek(workingList.get(i), itemsInSameWeek.get(0))) {
+						itemsInSameWeek.add(workingList.get(i));
+					} else {
+						_mainVbox.getChildren().add(creatWeek(itemsInSameWeek));
+						countItemSameWeek = 1;
+						itemsInSameWeek = new ArrayList<TaskEntity>();
+						itemsInSameWeek.add(workingList.get(i));
 					}
 				}
-				HBox itemToAdd = buildIndividualTask(workingList.get(i), i);
-				topBox.getChildren().add(itemToAdd);
-				topBox.setMinHeight(topBox.getMinHeight() + itemToAdd.getMinHeight());
 			}
-			weekBox.getChildren().add(topBox);
-			weekBox.setMinHeight(weekBox.getMinHeight() + topBox.getMinHeight());
-			_mainVbox.getChildren().add(weekBox);
-			_startIndex = startIndex;
-			_endIndex = endIndex;
+			if (itemsInSameWeek.size() > 0) {
+				_mainVbox.getChildren().add(creatWeek(itemsInSameWeek));
+			}
+
+			/*
+			 * VBox weekBox = createWeekParent(); VBox topBox =
+			 * createDayParent(workingList.get(_startIndex)); HBox item =
+			 * buildIndividualTask(workingList.get(_startIndex), _startIndex);
+			 * topBox.getChildren().add(item);
+			 * topBox.setMinHeight(topBox.getMinHeight() + item.getMinHeight());
+			 * for (int i = _startIndex + 1; i <= _endIndex; i++) { if
+			 * (!isSameWeek(workingList.get(i - 1), workingList.get(i))) {
+			 * weekBox.getChildren().add(topBox);
+			 * weekBox.setMinHeight(weekBox.getMinHeight() +
+			 * topBox.getMinHeight()); _mainVbox.getChildren().add(weekBox);
+			 * weekBox = createWeekParent(); topBox =
+			 * createDayParent(workingList.get(i)); } else { if
+			 * (!isSameDay(workingList.get(i - 1), workingList.get(i))) {
+			 * weekBox.getChildren().add(topBox);
+			 * weekBox.setMinHeight(weekBox.getMinHeight() +
+			 * topBox.getMinHeight()); topBox =
+			 * createDayParent(workingList.get(i)); } } HBox itemToAdd =
+			 * buildIndividualTask(workingList.get(i), i);
+			 * topBox.getChildren().add(itemToAdd);
+			 * topBox.setMinHeight(topBox.getMinHeight() +
+			 * itemToAdd.getMinHeight()); } weekBox.getChildren().add(topBox);
+			 * weekBox.setMinHeight(weekBox.getMinHeight() +
+			 * topBox.getMinHeight()); _mainVbox.getChildren().add(weekBox);
+			 */
 			_selectedIndex = workingIndex;
 		}
 	}
 
-	public void jumpToIndex(int workingIndex) {
-
+	/**
+	 * Sets _startIndex and _endIndex values base on the workingIndex,
+	 * workingList and THRESHOLD.
+	 * 
+	 * @param workingIndex
+	 */
+	private void setIndexs(int workingIndex) {
+		_startIndex = 0;
+		_endIndex = workingList.size() - 1;
+		if (workingIndex - THRESHOLD > _startIndex) {
+			_startIndex = workingIndex - THRESHOLD;
+		}
+		if (workingIndex + THRESHOLD < _endIndex) {
+			_endIndex = workingIndex + THRESHOLD;
+		}
 	}
 
-	public VBox createWeekParent() {
+	/**
+	 * Add child into the parent, and increase parent height base on child
+	 * height.
+	 * 
+	 * @param parent
+	 * @param child
+	 */
+	private void childToParent(Pane parent, Pane child) {
+		double pHeight = parent.getMinHeight();
+		parent.setMinHeight(pHeight + child.getMinHeight());
+		parent.getChildren().add(child);
+	}
+
+	/**
+	 * Creates VBox for the items, items must belong to same Week.
+	 * 
+	 * @param items
+	 * @return VBox
+	 */
+	private VBox creatWeek(ArrayList<TaskEntity> items) {
+		VBox weekParent = createWeekParent();
+		int countItemSameDay = 0;
+		ArrayList<TaskEntity> itemsSameDay = new ArrayList<TaskEntity>();
+		for (int i = 0; i < items.size(); i++) {
+			if (countItemSameDay == 0) {
+				countItemSameDay++;
+				itemsSameDay.add(items.get(i));
+			} else {
+				if (isSameDay(items.get(i), itemsSameDay.get(0))) {
+					itemsSameDay.add(items.get(i));
+				} else {
+					childToParent(weekParent, createDayForWeek(itemsSameDay));
+					countItemSameDay = 1;
+					itemsSameDay = new ArrayList<TaskEntity>();
+					itemsSameDay.add(items.get(i));
+				}
+			}
+		}
+		if (itemsSameDay.size() > 0) {
+			childToParent(weekParent, createDayForWeek(itemsSameDay));
+		}
+		return weekParent;
+	}
+
+	int temp = 0;
+
+	/**
+	 * Creates VBox for the items, items must belong to same day.
+	 * 
+	 * @param items
+	 * @return VBox
+	 */
+	private VBox createDayForWeek(ArrayList<TaskEntity> items) {
+		VBox dayParent = createDayParent(items.get(0));
+		for (int i = 0; i < items.size(); i++) {
+			childToParent(dayParent, buildIndividualTask(items.get(i), temp++));
+		}
+		return dayParent;
+	}
+
+	/**
+	 * Creates the warper for week.
+	 * 
+	 * @return VBox.
+	 */
+	private VBox createWeekParent() {
 		VBox vbox = new VBox();
 		vbox.setId("cssTaskViewWeek");
 		vbox.setMinWidth(_stageWidth);
@@ -202,7 +308,12 @@ public class TaskViewUserInterface implements ViewInterface {
 		return vbox;
 	}
 
-	public VBox createDayParent(TaskEntity taskEntity) {
+	/**
+	 * Creates the warper for day with the label.
+	 * 
+	 * @return VBox.
+	 */
+	private VBox createDayParent(TaskEntity taskEntity) {
 		VBox vbox = new VBox();
 		vbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT);
 		HBox hbox = new HBox();
@@ -230,11 +341,16 @@ public class TaskViewUserInterface implements ViewInterface {
 		return vbox;
 	}
 
-	public String getStringOfDate(Calendar c) {
+	private String getStringOfDate(Calendar c) {
 		return ReverseParser.reParse(c);
 	}
 
-	public HBox buildIndividualTask(TaskEntity taskEntity, int index) {
+	/**
+	 * Creates UI for the taskEntity.
+	 * 
+	 * @return VBox.
+	 */
+	private HBox buildIndividualTask(TaskEntity taskEntity, int index) {
 		HBox hbox = new HBox();
 		GridPane gridPane = createGridPaneForTask(taskEntity, index);
 		hbox.setMinHeight(gridPane.getMinHeight());
@@ -244,7 +360,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		return hbox;
 	}
 
-	public GridPane createGridPaneForTask(TaskEntity taskEntity, int index) {
+	private GridPane createGridPaneForTask(TaskEntity taskEntity, int index) {
 		GridPane grid = new GridPane();
 		grid.setStyle(null);
 		grid.setId("");
@@ -298,23 +414,25 @@ public class TaskViewUserInterface implements ViewInterface {
 		return grid;
 	}
 
-	// inclusive
-	public boolean isBetweenStartEnd(int index) {
+	/**
+	 * Check if the index is between the _startIndex and _endIndex, inclusive.
+	 * 
+	 * @param index.
+	 * @return boolean.
+	 */
+	private boolean isBetweenStartEnd(int index) {
 		if (index >= _startIndex && index <= _endIndex) {
 			return true;
 		}
 		return false;
 	}
 
+	/**
+	 * This method updates the selector index by the amount of value. Items are
+	 * added and removed to maintain THRESHOLD.
+	 * 
+	 */
 	public void update(int value) {
-		if (!isBetweenStartEnd(value + _selectedIndex)) {
-			if (value > 0) {
-				value = _gridPanes.size() - _selectedIndex - 1;
-			} else if (value < 0) {
-				value = _selectedIndex;
-			}
-		}
-
 		for (int i = 0; i < Math.abs(value); i++) {
 			if (value > 0)// ctrl down
 			{
@@ -323,6 +441,8 @@ public class TaskViewUserInterface implements ViewInterface {
 						removeFirstTask();
 					}
 					addLastItem();
+				} else {
+					break;
 				}
 			} else if (value < 0) {
 				if (_startIndex > 0) {
@@ -330,12 +450,14 @@ public class TaskViewUserInterface implements ViewInterface {
 						removeLastTask();
 					}
 					addFirstItem();
+				} else {
+					break;
 				}
 			}
 		}
 	}
 
-	public void removeFirstTask() {
+	private void removeFirstTask() {
 		try {
 			GridPane gp = _gridPanes.get(0);
 			VBox gpDayParent = (VBox) gp.getParent().getParent();
@@ -361,7 +483,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		}
 	}
 
-	public void removeLastTask() {
+	private void removeLastTask() {
 		try {
 			GridPane gp = _gridPanes.get(_gridPanes.size() - 1);
 			VBox gpDayParent = (VBox) gp.getParent().getParent();
@@ -384,7 +506,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		}
 	}
 
-	public void addLastItem() {
+	private void addLastItem() {
 		GridPane gp = _gridPanes.get(_gridPanes.size() - 1);
 		VBox gpDayParent = (VBox) gp.getParent().getParent();
 		VBox gpWeekParent = (VBox) gpDayParent.getParent();
@@ -411,7 +533,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		_endIndex = _endIndex + 1;
 	}
 
-	public void addFirstItem() {
+	private void addFirstItem() {
 		GridPane gp = _gridPanes.get(0);
 		VBox gpDayParent = (VBox) gp.getParent().getParent();
 		VBox gpWeekParent = (VBox) gpDayParent.getParent();
@@ -443,54 +565,58 @@ public class TaskViewUserInterface implements ViewInterface {
 
 	public TaskEntity setItemSelected(int value) {
 		int index = value + _selectedIndex;
-		if (isBetweenStartEnd(index)) {
-			if (_gridPanes.size() > 0) {
-
-				GridPane gpPrevious = _gridPanes.get(_selectedIndex - _startIndex);
-				gpPrevious.setId(null);
-				VBox previousParent = (VBox) gpPrevious.getParent().getParent();
-				previousParent.setId(null);
-				VBox weekParent = (VBox) previousParent.getParent();
-				weekParent.setId("cssTaskViewWeek");
-
-				GridPane selectedGp = _gridPanes.get(index - _startIndex);
-				selectedGp.setId("cssTaskViewSelectedTask");
-				VBox selectedParent = (VBox) selectedGp.getParent().getParent();
-				selectedParent.setId("cssTaskViewDayBox");
-				VBox weekParentSelected = (VBox) selectedParent.getParent();
-				weekParentSelected.setId("cssTaskViewWeekSelected");
-
-				_selectedIndex = index;
-				updateTranslationY();
-			}
-		} else {
-			if (value > 0) {
-				if (_gridPanes.size() > 0) {
-					_gridPanes.get(_selectedIndex - _startIndex).setId(null);
-					_gridPanes.get(_gridPanes.size() - 1).setId("cssTaskViewSelectedTask");
-					_selectedIndex = _gridPanes.size() - 1;
+		if (_gridPanes.size() > 0) {
+			if (index > -1 && index < workingList.size()) {
+				if (isBetweenStartEnd(index)) {
+					if (_selectedIndex > -1) {
+						GridPane gpPrevious = _gridPanes.get(_selectedIndex - _startIndex);
+						setItemAsDeSelected(gpPrevious);
+					}
+					GridPane selectedGp = _gridPanes.get(index - _startIndex);
+					setItemAsSelected(selectedGp);
+					_selectedIndex = index;
+					updateTranslationY();
 				}
-			} else if (value < 0) {
-				if (_gridPanes.size() > 0) {
-					_gridPanes.get(_selectedIndex - _startIndex).setId(null);
-					_gridPanes.get(0).setId("cssTaskViewSelectedTask");
+			} else {
+				if (value > 0) {
+					GridPane gpPrevious = _gridPanes.get(_selectedIndex - _startIndex);
+					setItemAsDeSelected(gpPrevious);
+					GridPane selectedGp = _gridPanes.get(_gridPanes.size() - 1);
+					setItemAsSelected(selectedGp);
+					_selectedIndex = _endIndex;
+				} else if (value < 0) {
+					GridPane gpPrevious = _gridPanes.get(_selectedIndex - _startIndex);
+					setItemAsDeSelected(gpPrevious);
+					GridPane selectedGp = _gridPanes.get(0);
+					setItemAsSelected(selectedGp);
 					_selectedIndex = 0;
 				}
+				updateTranslationY();
 			}
-			updateTranslationY();
-		}
-		if (_selectedIndex < workingList.size()) {
-			if (workingList.size() == 0)
-				return null;
 			return workingList.get(_selectedIndex);
 		}
 		return null;
 	}
 
+	public void setItemAsSelected(GridPane selectedGp) {
+		selectedGp.setId("cssTaskViewSelectedTask");
+		VBox selectedParent = (VBox) selectedGp.getParent().getParent();
+		selectedParent.setId("cssTaskViewDayBox");
+		VBox weekParentSelected = (VBox) selectedParent.getParent();
+		weekParentSelected.setId("cssTaskViewWeekSelected");
+	}
+
+	public void setItemAsDeSelected(GridPane gpPrevious) {
+		gpPrevious.setId(null);
+		VBox previousParent = (VBox) gpPrevious.getParent().getParent();
+		previousParent.setId(null);
+		VBox weekParent = (VBox) previousParent.getParent();
+		weekParent.setId("cssTaskViewWeek");
+	}
+
 	// set transLationY to be desired tranlationY, which is current selected
 	// item position + threshold
 	public void updateTranslationY() {
-		System.out.println(_selectedIndex + " " + _startIndex);
 		if ((_selectedIndex - _startIndex) >= _gridPanes.size()) {
 			return;
 		}
