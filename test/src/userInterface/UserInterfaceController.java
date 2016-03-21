@@ -3,7 +3,6 @@ package userInterface;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Timer;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -16,6 +15,9 @@ import javafx.geometry.Rectangle2D;
 import javafx.stage.Stage;
 
 public class UserInterfaceController {
+
+	// Singeleton
+	private static int numberOfInstance = 0;
 
 	// view indicators
 	final static int CALENDAR_VIEW = 0;
@@ -40,17 +42,28 @@ public class UserInterfaceController {
 	// main logic class to interact
 	private TaskManager _taskManager;
 
+	// Debug purpose
 	private static Logger logger = Logger.getLogger("UserInterfaceController");
 
-	public UserInterfaceController(Stage primaryStage) {
+	public static UserInterfaceController getInstance(Stage primaryStage) {
+		if (numberOfInstance == 0) {
+			numberOfInstance++;
+			return new UserInterfaceController(primaryStage);
+		} else {
+			return null;
+		}
+	}
+
+	private UserInterfaceController(Stage primaryStage) {
 		try {
-			Handler fh = new FileHandler("uiinterfaceLog.log");
-			logger.addHandler(fh);
+			Handler handler = new FileHandler("uiinterfaceLog.log");
+			logger.addHandler(handler);
 			logger.setLevel(Level.FINEST);
 		} catch (IOException e) {
 			System.out.println(e);
 		}
 		logger.log(Level.INFO, "UserInterfaceController Init");
+
 		_parentStage = primaryStage;
 		_taskManager = TaskManager.getInstance();
 	}
@@ -162,7 +175,7 @@ public class UserInterfaceController {
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
 			updateUI(0);
-			startThreadToAnimate();
+			startThreadToAnimate(1);
 			break;
 		}
 		case EXPANDED_VIEW: {
@@ -170,7 +183,7 @@ public class UserInterfaceController {
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
 			updateUI(0);
-			startThreadToAnimate();
+			startThreadToAnimate(-1);
 			break;
 		}
 		case ASSOCIATE_VIEW: {
@@ -201,17 +214,31 @@ public class UserInterfaceController {
 		return temp;
 	}
 
+	public boolean animateToExpanedView() {
+		boolean isDoneTranslating = _taskViewInterface.isAtDetailedView(1);
+		_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(), EXPANDED_VIEW);
+		translateComponentsY(_taskViewInterface.getTranslationY());
+		return isDoneTranslating;
+	}
+
+	public boolean animateToTaskView() {
+		boolean isDoneTranslating = _taskViewInterface.isAtTaskView(-1);
+		_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
+		translateComponentsY(_taskViewInterface.getTranslationY());
+		return isDoneTranslating;
+	}
+
 	/**
 	 * This method will start the service to animate the current view to the
 	 * selected view.
 	 */
-	public void startThreadToAnimate() {
+	public void startThreadToAnimate(int direction) {
 		if (_expandAnimation != null) {
 			if (_expandAnimation.isRunning()) {
 				_expandAnimation.cancel();
 			}
 		}
-		_expandAnimation = new TaskViewDescriptionAnimation(this);
+		_expandAnimation = new TaskViewDescriptionAnimation(this, direction);
 		_expandAnimation.start();
 	}
 

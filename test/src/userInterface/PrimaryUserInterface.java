@@ -106,7 +106,7 @@ public class PrimaryUserInterface extends Application {
 	 * @param primaryStage.
 	 */
 	private void initializeUiController(Stage primaryStage) {
-		uiController = new UserInterfaceController(primaryStage);
+		uiController = UserInterfaceController.getInstance(primaryStage);
 		uiController.initializeInterface(_screenBounds, _fixedSize);
 	}
 
@@ -223,10 +223,9 @@ public class PrimaryUserInterface extends Application {
 	private void processKeyInputs(TextField textField, KeyEvent event) {
 		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
 
-			
 			COMMAND cmd = _commandBar.onEnter(textField.getText());
 			String t = _commandBar.get_textInField();
-			
+
 			// Ten add to mod to cater for theses commands
 			if (t.equals("hide")) {
 				uiController.hide();
@@ -245,7 +244,7 @@ public class PrimaryUserInterface extends Application {
 					return;
 				}
 			}
-			
+
 			if (cmd.equals(COMMAND.EXIT)) {
 				// uiController.saveToFile(_commandBar.get_allSessionCmds());
 				System.exit(0);
