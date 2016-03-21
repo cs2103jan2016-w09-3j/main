@@ -1,112 +1,47 @@
 package fileStorage;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class CommandHandler {
+public class CommandHandler extends TimerTask {
     
-    private String commandFilePath;
-    private File commandFile;
-    private ArrayList<String> commandArrayList;
-
+    private static final int MILLISECONDS_TO_SECONDS = 1000;
+    private static final int QUEUE_SIZE = 20;
+    private StorageHandler mfh;
+    
     public CommandHandler() {
-        commandFilePath = "commandFile.txt";
-        processCommandFile();
+        mfh = new StorageHandler();
     }
     
-    public ArrayList<String> getCommandArray() {
-        return commandArrayList;
-    }
-
-    public void setCommandArray(ArrayList<String> commandArray) {
-        this.commandArrayList = commandArray;
-    }
-    
-    /**
-     * Reads and stores data from existing file if any, creates a new file otherwise
-     */
-    private void processCommandFile() {
-        commandFile = new File(commandFilePath);
-
-        if (commandFile.exists()) {
-            setCommandArray(readFromExistingCommandFile());
-        } else {
-            createNewCommandFile(commandFile);
+    public boolean saveUponFullQueue(String command) {
+        boolean isSaved = false;
+        Queue<String> commandsQueue = mfh.getAllCommandsQueue();
+        commandsQueue.offer(command);
+        if (commandsQueue.size() >= QUEUE_SIZE) {
+            isSaved = mfh.writeToCommandFile(commandsQueue);
+            commandsQueue.clear();
         }
-    }
-
-    private void createNewCommandFile(File storedCommands) {
-        try {
-            storedCommands.createNewFile();
-            System.out.println("Created new file.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return isSaved;
     }
     
-    /**
-     * Reads data from an existing file and returns the appended string
-     * @return ArrayList<String>
-     */
-    public ArrayList<String> readFromExistingCommandFile() {        
-        BufferedReader buffer;
-        ArrayList<String> readCommands = new ArrayList<String>();
-        try {
-            buffer = new BufferedReader(new FileReader(commandFilePath));
-            String currentLine = "";
-            while ((currentLine = buffer.readLine()) != null) {
-                readCommands.add(currentLine);
-            }
-            buffer.close();
-            System.out.println("Read from file.");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return readCommands;
-    }
-    
-    /**
-     * Returns true if data is written to a file, false otherwise
-     * Whether the data has been written depends on the last modified time of the file
-     * @param data
-     * @return boolean
-     */
-    public boolean writeToCommandFile(ArrayList<String> commands) {
-        FileWriter fileWriter;
-        long beforeModify = commandFile.lastModified();
-        long afterModify = -1;
-        try {
-            fileWriter = new FileWriter(commandFilePath); 
-            for (int i = 0; i < commands.size(); i++) {
-                fileWriter.write(commands.get(i) + '\n');
-            }
-            fileWriter.flush();
-            fileWriter.close();
-            afterModify = commandFile.lastModified();
-        } catch (IOException e) {
-            e.printStackTrace();  
-        }
-        return isModified(beforeModify, afterModify);
-    }
-
-    private boolean isModified(long timeBeforeModification, long timeAfterModification) {
-        return timeAfterModification > timeBeforeModification;
-    }
-    
-    private void saveUponExit(boolean isExit) {
+    public boolean saveUponExit(boolean isExit) {
+        boolean isSaved = false;
         if (isExit == true) {
-            writeToCommandFile(commandArrayList);
+            System.out.println("Saved upon exit.");
+            isSaved = mfh.writeToCommandFile(mfh.getAllCommandsQueue());
         }
+        return isSaved;
     }
     
-    private void saveUponTimeOut() {
+    public void run() {
+        System.out.println(mfh.writeToCommandFile(mfh.getAllCommandsQueue()));
+    }
+    
+    public void saveUponTimeOut() {
+        TimerTask saveInterval = new CommandHandler();
+        Timer timer = new Timer();
         
+        timer.schedule(saveInterval, 0, 20*MILLISECONDS_TO_SECONDS); 
     }
 }
