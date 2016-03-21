@@ -205,16 +205,17 @@ public class TaskManager {
 	/**
 	 * Initialization function to be called before usage of TaskManager class
 	 */
-	private TaskManager() {
+	@SuppressWarnings("unchecked")
+    private TaskManager() {
 		initLogger();
 
-		// AllTaskLists taskdata = dataLoader.getTaskLists();
-		// mainTaskEntities = (ArrayList<TaskEntity>)
-		// taskdata.getMainTaskList().clone();
-		// floatingTaskEntities = (ArrayList<TaskEntity>)
-		// taskdata.getFloatingTaskList().clone();
+		 AllTaskLists taskdata = dataLoader.getTaskLists();
+		 mainTaskEntities = (ArrayList<TaskEntity>)
+		 taskdata.getMainTaskList().clone();
+		 floatingTaskEntities = (ArrayList<TaskEntity>)
+		 taskdata.getFloatingTaskList().clone();
 
-		// logger.log(Level.FINEST, "TaskManager Initialized");
+		 logger.log(Level.FINEST, "TaskManager Initialized");
 		displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
 		currentDisplayedList = DISPLAY_MAIN;
 	}
