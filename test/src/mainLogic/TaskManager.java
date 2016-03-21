@@ -520,7 +520,14 @@ public class TaskManager {
 	 */
 	public int getNextTimeListId() {
 		TaskEntity currentTimePlaceholder = new TaskEntity("", Calendar.getInstance(), false);
-		int nextTimeId = findPositionToInsert(currentTimePlaceholder);
+        int nextTimeId = findPositionToInsert(currentTimePlaceholder);
+        
+        // Setting ID to the last index in the list if all tasks comes before
+        // current time
+        if (nextTimeId > mainTaskEntities.size() - 1) {
+		    nextTimeId = mainTaskEntities.size() - 1;
+		}
+        
 		return nextTimeId;
 	}
 
