@@ -47,7 +47,7 @@ public class TaskManager {
 		for (int i = 0; i < 5; i++) {
 			Calendar newDate = Calendar.getInstance();
 			newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
-			newList.add(new TaskEntity("Task " + Integer.toString(i + 1), newDate, false));
+			newList.add(new TaskEntity("Task " + Integer.toString(i + 1), newDate, false, "some desc"));
 		}
 		manager.add(newList);
 		manager.add(new TaskEntity("Task floating 1"));
