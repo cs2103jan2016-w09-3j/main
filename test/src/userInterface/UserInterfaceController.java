@@ -79,7 +79,7 @@ public class UserInterfaceController {
 	 * DescriptionComponent, DetailsComponent
 	 */
 	public void initializeTaskView() {
-		_taskManager.generateFakeData();// replace when integrate with angie
+		//_taskManager.generateFakeData();// replace when integrate with angie
 		_taskViewInterface = new TaskViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		initilizeFloatingBar();
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
