@@ -6,7 +6,7 @@ import javafx.concurrent.Task;
 
 public class FloatingTaskAnimationThread extends Service<Void> {
 
-	UserInterfaceController ui;
+	private UserInterfaceController ui;
 	private boolean isAdded;
 	private boolean isDoneAnimating;
 	private static final int ANIMATE_SPEED_TOTAL = 1500;
@@ -28,32 +28,36 @@ public class FloatingTaskAnimationThread extends Service<Void> {
 
 	@Override
 	protected Task<Void> createTask() {
-		return new Task<Void>() {
-			@Override
-			protected Void call() throws InterruptedException {
-				while (true) {
-					Thread.sleep(TIME_INTERVAL_FOR_NEXT_FLOATING_TASK);
-					reset();
-					long timeStart = System.currentTimeMillis();
-					while (!isDoneAnimating) {
-						long timePast = System.currentTimeMillis() - timeStart;
-						_percentageDone = timePast / (double)ANIMATE_SPEED_TOTAL;
-						Platform.runLater(new Runnable() {
-							public void run() {
-								if (!isAdded) {
-									ui.addRandomTaskToDisplay();
-									isAdded = true;
-								}
-								isDoneAnimating = ui.updateFloatingBar(_percentageDone);
-								if (_percentageDone > 1) {
-									isDoneAnimating = true;
-								}
+		return new MyTask();
+	}
+
+	private class MyTask extends Task<Void> {
+
+		@Override
+		protected Void call() throws Exception {
+			while (true) {
+				Thread.sleep(TIME_INTERVAL_FOR_NEXT_FLOATING_TASK);
+				reset();
+				long timeStart = System.currentTimeMillis();
+				while (!isDoneAnimating) {
+					long timePast = System.currentTimeMillis() - timeStart;
+					_percentageDone = timePast / (double) ANIMATE_SPEED_TOTAL;
+					Platform.runLater(new Runnable() {
+						public void run() {
+							if (!isAdded) {
+								ui.addRandomTaskToDisplay();
+								isAdded = true;
 							}
-						});
-						Thread.sleep(ANIMATION_DELAY);
-					}
+							isDoneAnimating = ui.updateFloatingBar(_percentageDone);
+							if (_percentageDone > 1) {
+								isDoneAnimating = true;
+							}
+						}
+					});
+					Thread.sleep(ANIMATION_DELAY);
 				}
 			}
-		};
+		}
+
 	}
 }

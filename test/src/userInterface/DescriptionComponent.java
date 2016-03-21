@@ -81,9 +81,6 @@ public class DescriptionComponent implements ViewInterface {
 		_stage.setScene(scene);
 	}
 
-	public void initializeContent(ArrayList<DescriptionLabel> descriptionLabels) {
-	}
-
 	public void buildComponent(ArrayList<DescriptionLabel> descriptionLabels, int view) {
 		_currentView = view;
 		_mainVbox.getChildren().clear();
@@ -110,10 +107,8 @@ public class DescriptionComponent implements ViewInterface {
 		VBox vbox = new VBox();
 		vbox.setMinHeight(dLabel.getHeight());
 		vbox.setMinWidth(CONPONENT_WIDTH);
-
 		double posYStart = _translationY + totalBuildedHeight;
 		double posYEnd = posYStart + dLabel.getHeight();
-
 		createLabelBaseOnHeight(posYStart, posYEnd, vbox, dLabel);
 		return vbox;
 	}
@@ -175,7 +170,6 @@ public class DescriptionComponent implements ViewInterface {
 
 	private Label setLabelForDetailedView(Label label, DescriptionLabel dLabel, double height) {
 		if (height > LABEL_SIZE_MEDIUM) {
-
 			label.setMinHeight(CONPONENT_WIDTH);
 			label.setMinWidth(height);
 			label.setRotate(270);
@@ -188,7 +182,6 @@ public class DescriptionComponent implements ViewInterface {
 			} else {
 				label.setText(dLabel.getMediumDayLabel());
 			}
-
 		} else if (height <= LABEL_SIZE_MEDIUM) {
 			label.setText(dLabel.getSmallDayLabel());
 			label.setMinWidth(CONPONENT_WIDTH);
@@ -199,7 +192,6 @@ public class DescriptionComponent implements ViewInterface {
 
 	private Label setLabelForTaskView(Label label, DescriptionLabel dLabel, double height) {
 		if (height > LABEL_SIZE_MEDIUM) {
-
 			label.setMinHeight(CONPONENT_WIDTH);
 			label.setMinWidth(height);
 			label.setRotate(270);
@@ -212,7 +204,6 @@ public class DescriptionComponent implements ViewInterface {
 			} else {
 				label.setText(dLabel.getMediumWeekLabel());
 			}
-
 		} else if (height <= LABEL_SIZE_MEDIUM) {
 			label.setText(dLabel.getSmallWeekLabel());
 			label.setMinWidth(CONPONENT_WIDTH);

@@ -140,7 +140,6 @@ public class UserInterfaceController {
 	}
 
 	public void updateUI(int value) {
-
 		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW) {
 			_taskViewInterface.update(value);
 			TaskEntity selectedTask = _taskViewInterface.setItemSelected(value);
@@ -336,4 +335,8 @@ public class UserInterfaceController {
 		_scorllAnimation = null;
 	}
 
+	public void saveStuff()
+	{
+		_taskManager.closeTaskManager();
+	}
 }

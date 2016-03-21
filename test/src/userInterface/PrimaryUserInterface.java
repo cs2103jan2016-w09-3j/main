@@ -247,6 +247,7 @@ public class PrimaryUserInterface extends Application {
 
 			if (cmd.equals(COMMAND.EXIT)) {
 				// uiController.saveToFile(_commandBar.get_allSessionCmds());
+				uiController.saveStuff();
 				System.exit(0);
 			} else if (cmd.equals(COMMAND.ADD)) {
 				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
