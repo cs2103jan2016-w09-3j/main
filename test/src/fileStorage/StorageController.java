@@ -13,16 +13,22 @@ public class StorageController implements StorageInterface {
         StorageController sh = new StorageController();
         MainFileHandler fm = new MainFileHandler();
         JsonConverter jc = new JsonConverter();
+        CommandHandler ch = new CommandHandler();
         
-        AllTaskLists dummyTL = sh.createDummy();
-        fm.writeToFile(jc.javaToJson(dummyTL));
+        //AllTaskLists dummyTL = sh.createDummy();
+        //fm.writeToFile(jc.javaToJson(dummyTL));
         
-        String data = fm.readFromExistingFile();
+        //String data = fm.readFromExistingFile();
         //System.out.println(data);
-        AllTaskLists convertedDummy = jc.jsonToJava(data);
-        Calendar created = convertedDummy.getFloatingTaskList().get(0).getDateCreated();
+        //AllTaskLists convertedDummy = jc.jsonToJava(data);
+        //Calendar created = convertedDummy.getFloatingTaskList().get(0).getDateCreated();
         
         //System.out.println("Calendar :" + created);
+        ArrayList<String> dummyCommands = sh.createDummyCommands();
+        System.out.println(ch.writeToCommandFile(dummyCommands));
+        
+        System.out.println(ch.readFromExistingCommandFile());
+        
     }
 
     public AllTaskLists getTaskLists() {
@@ -69,5 +75,13 @@ public class StorageController implements StorageInterface {
         dummyTL.setFloatingTaskList(dummyFloatingList);
         dummyTL.setMainTaskList(dummyMainList);
         return dummyTL;
+    }
+    
+    private ArrayList<String> createDummyCommands() {
+        ArrayList<String> dummyCommands = new ArrayList<String>();
+        dummyCommands.add("add whatever : blah blah at blah time blah data");
+        dummyCommands.add("add hello : blah blah at blah time blah data");
+        dummyCommands.add("add annyeong : blah blah at blah time blah data");
+        return dummyCommands;
     }
 }

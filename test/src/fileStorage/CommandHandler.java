@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class CommandHandler {
     
@@ -107,6 +109,9 @@ public class CommandHandler {
     }
     
     private void saveUponTimeOut() {
+        CommandTimer commandTimer = new CommandTimer();
         
     }
+    
+
 }
