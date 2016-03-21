@@ -47,7 +47,7 @@ public class TaskManager {
 		for (int i = 0; i < 5; i++) {
 			Calendar newDate = Calendar.getInstance();
 			newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
-			newList.add(new TaskEntity("Task " + Integer.toString(i + 1), newDate, false));
+			newList.add(new TaskEntity("Task " + Integer.toString(i + 1), newDate, false, "some desc"));
 		}
 		manager.add(newList);
 		manager.add(new TaskEntity("Task floating 1"));
@@ -520,7 +520,14 @@ public class TaskManager {
 	 */
 	public int getNextTimeListId() {
 		TaskEntity currentTimePlaceholder = new TaskEntity("", Calendar.getInstance(), false);
-		int nextTimeId = findPositionToInsert(currentTimePlaceholder);
+        int nextTimeId = findPositionToInsert(currentTimePlaceholder);
+        
+        // Setting ID to the last index in the list if all tasks comes before
+        // current time
+        if (nextTimeId > mainTaskEntities.size() - 1) {
+		    nextTimeId = mainTaskEntities.size() - 1;
+		}
+        
 		return nextTimeId;
 	}
 
@@ -566,14 +573,6 @@ public class TaskManager {
 			c.set(Calendar.HOUR, hourBuffer);
 
 			TaskEntity t = new TaskEntity("Task Name", c, false, "task description");
-			add(t);
-			k++;
-		}
-		
-		//generate floating task
-		for(int i=0; i < 10; i ++)
-		{
-			TaskEntity t = new TaskEntity("floating "+i);
 			add(t);
 			k++;
 		}
