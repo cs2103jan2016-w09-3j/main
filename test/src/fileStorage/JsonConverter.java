@@ -65,7 +65,6 @@ public class JsonConverter {
         } else {
             allLists = new AllTaskLists();
         }
-
         return allLists;
     }
 }

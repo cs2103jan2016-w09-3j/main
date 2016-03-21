@@ -8,7 +8,8 @@ public class AllTaskLists {
     private ArrayList<TaskEntity> floatingTaskList;
     
     public AllTaskLists() {
-        
+        mainTaskList = new ArrayList<TaskEntity>();
+        floatingTaskList = new ArrayList<TaskEntity>();
     }
     
     public AllTaskLists(ArrayList<TaskEntity> main, ArrayList<TaskEntity> floating) {
