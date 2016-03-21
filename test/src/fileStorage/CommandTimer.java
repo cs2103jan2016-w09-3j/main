@@ -6,6 +6,7 @@ import java.util.TimerTask;
 public class CommandTimer extends TimerTask {
     public void run() {
         System.out.println("Timer print.");
+        
     }
     
     public static void main (String args[]) {

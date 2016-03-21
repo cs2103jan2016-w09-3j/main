@@ -29,28 +29,7 @@ public class CommandHandler {
         this.commandArrayList = commandArray;
     }
     
-    /**
-     * Reads and stores data from existing file if any, creates a new file otherwise
-     */
-    private void processCommandFile() {
-        commandFile = new File(commandFilePath);
 
-        if (commandFile.exists()) {
-            setCommandArray(readFromExistingCommandFile());
-        } else {
-            createNewCommandFile(commandFile);
-        }
-    }
-
-    private void createNewCommandFile(File storedCommands) {
-        try {
-            storedCommands.createNewFile();
-            System.out.println("Created new file.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
     /**
      * Reads data from an existing file and returns the appended string
      * @return ArrayList<String>
@@ -112,6 +91,4 @@ public class CommandHandler {
         CommandTimer commandTimer = new CommandTimer();
         
     }
-    
-
 }
