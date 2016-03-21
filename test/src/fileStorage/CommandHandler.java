@@ -6,42 +6,51 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 
 public class CommandHandler {
     
     private String commandFilePath;
-    private File storedCommands;
-    
+    private File commandFile;
+    private ArrayList<String> commandArrayList;
+
     public CommandHandler() {
-        commandFilePath = "commandLists.txt";
-        processFile();
+        commandFilePath = "commandFile.txt";
+        processCommandFile();
+    }
+    
+    public ArrayList<String> getCommandArray() {
+        return commandArrayList;
+    }
+
+    public void setCommandArray(ArrayList<String> commandArray) {
+        this.commandArrayList = commandArray;
     }
     
     private void saveUponExit(boolean isExit) {
         if (isExit == true) {
-            writeToFile();
+            writeToCommandFile(commandArrayList);
         }
     }
     
     /**
      * Reads and stores data from existing file if any, creates a new file otherwise
      */
-    private void processFile() {
-        storedCommands = new File(commandFilePath);
+    private void processCommandFile() {
+        commandFile = new File(commandFilePath);
 
-        if (storedCommands.exists()) {
-            setAllStoredTasks(readFromExistingFile());
-            System.out.println("File found, begin reading...");
+        if (commandFile.exists()) {
+            setCommandArray(readFromExistingCommandFile());
         } else {
-            createNewFile(storedCommands);
+            createNewCommandFile(commandFile);
         }
     }
 
-    private void createNewFile(File storedLists) {
+    private void createNewCommandFile(File storedCommands) {
         try {
-            storedLists.createNewFile();
+            storedCommands.createNewFile();
             System.out.println("Created new file.");
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,16 +59,16 @@ public class CommandHandler {
     
     /**
      * Reads data from an existing file and returns the appended string
-     * @return String
+     * @return ArrayList<String>
      */
-    public String readFromExistingFile() {        
+    public ArrayList<String> readFromExistingCommandFile() {        
         BufferedReader buffer;
-        String readData = "";
+        ArrayList<String> readCommands = new ArrayList<String>();
         try {
-            buffer = new BufferedReader(new FileReader(filePath));
+            buffer = new BufferedReader(new FileReader(commandFilePath));
             String currentLine = "";
             while ((currentLine = buffer.readLine()) != null) {
-                readData = readData + currentLine.trim();
+                readCommands.add(currentLine);
             }
             buffer.close();
             System.out.println("Read from file.");
@@ -68,7 +77,7 @@ public class CommandHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return readData.trim();
+        return readCommands;
     }
     
     /**
@@ -77,24 +86,21 @@ public class CommandHandler {
      * @param data
      * @return boolean
      */
-    public boolean writeToFile(String data) {
+    public boolean writeToCommandFile(ArrayList<String> commands) {
         FileWriter fileWriter;
-        long beforeModify = storedLists.lastModified();
+        long beforeModify = commandFile.lastModified();
         long afterModify = -1;
         try {
-            fileHandler = new FileHandler("storageLogFile.log");
-            logger.addHandler(fileHandler);
-            logger.log(Level.INFO, "Start processing...");
-            fileWriter = new FileWriter(filePath); 
-            fileWriter.write(data);
+            fileWriter = new FileWriter(commandFilePath); 
+            for (int i = 0; i < commands.size(); i++) {
+                fileWriter.write(commands.get(i) + '\n');
+            }
             fileWriter.flush();
             fileWriter.close();
-            afterModify = storedLists.lastModified();
+            afterModify = commandFile.lastModified();
         } catch (IOException e) {
-            e.printStackTrace();
-            logger.log(Level.WARNING, "IOException");
+            e.printStackTrace();  
         }
-        logger.log(Level.INFO, "End processing...");
         return isModified(beforeModify, afterModify);
     }
 
