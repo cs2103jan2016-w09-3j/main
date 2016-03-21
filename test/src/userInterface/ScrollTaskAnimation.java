@@ -12,7 +12,17 @@ public class ScrollTaskAnimation extends Service<Integer> {
 	private int numberOfMilliSecondsBeforeIncreaseSpeed = 300;
 	private UserInterfaceController ui;
 	private static ScrollTaskAnimation _myInstance;
+	private Runnable _thread;
 
+	/**
+	 * Return an instance of the animation, existing Thread will be discarded.
+	 * 
+	 * @param currentIndex
+	 * @param indexToGo
+	 * @param userInterfaceController
+	 * 
+	 * @return instance
+	 */
 	public static ScrollTaskAnimation getInstance(int currentIndex, int indexToGo,
 			UserInterfaceController userInterfaceController) {
 		if (_myInstance != null) {
@@ -29,8 +39,6 @@ public class ScrollTaskAnimation extends Service<Integer> {
 		this.indexToGo = indexToGo;
 		ui = userInterfaceController;
 	}
-
-	Runnable r;
 
 	@Override
 	protected Task<Integer> createTask() {
@@ -50,15 +58,15 @@ public class ScrollTaskAnimation extends Service<Integer> {
 			while (currentIndex != indexToGo) {
 				startTime = checkTime(startTime);
 				checkExceed();
-				if (r == null) {
-					r = new Runnable() {
+				if (_thread == null) {
+					_thread = new Runnable() {
 						public void run() {
 							ui.updateUI(direction);
 							currentIndex = currentIndex + direction;
-							r = null;
+							_thread = null;
 						}
 					};
-					Platform.runLater(r);
+					Platform.runLater(_thread);
 				}
 				Thread.sleep(80);
 			}

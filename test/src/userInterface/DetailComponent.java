@@ -40,7 +40,6 @@ public class DetailComponent implements ViewInterface {
 	private VBox[] _mainVbox;
 	private Scene[] _scenes;
 	private int _currentSelectView;
-	private boolean isInSelectMode;
 	private int _selectedIndex;
 
 	public DetailComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize) {
@@ -61,7 +60,6 @@ public class DetailComponent implements ViewInterface {
 			_scenes[i] = new Scene(_mainVbox[i], _stageWidth, _stageHeight);
 			_scenes[i].setFill(Color.TRANSPARENT);
 		}
-		isInSelectMode = false;
 	}
 
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
@@ -110,9 +108,7 @@ public class DetailComponent implements ViewInterface {
 		_currentSelectView = view;
 		if (_currentSelectView == ASSOCIATE_VIEW) {
 			_stage.setScene(_scenes[EXPANDED_VIEW]);
-			isInSelectMode = true;
 		} else {
-			isInSelectMode = false;
 			_stage.setScene(_scenes[_currentSelectView]);
 		}
 	}
@@ -140,7 +136,7 @@ public class DetailComponent implements ViewInterface {
 		box.getChildren().add(buildTask(task));
 
 		// change when qy done. add associates
-		for (int i = 1; i < 5; i++) {
+		for (int i = 1; i < 2; i++) {
 			Random r = new Random();
 			int t = r.nextInt(1);
 			String p = "what ";
