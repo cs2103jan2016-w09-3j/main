@@ -70,7 +70,7 @@ public class UserInterfaceController {
 	public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize) {
 		this._screenBounds = screenBounds;
 		this._fixedSize = fixedSize;
-		initializeTaskView();
+		initializeViews();
 		show();
 	}
 
@@ -78,17 +78,21 @@ public class UserInterfaceController {
 	 * Initialize floatingBar Component, TaskViewUserInterface,
 	 * DescriptionComponent, DetailsComponent
 	 */
-	public void initializeTaskView() {
-		//_taskManager.generateFakeData();// replace when integrate with angie
-		_taskViewInterface = new TaskViewUserInterface(_parentStage, _screenBounds, _fixedSize);
+	public void initializeViews() {
+		// _taskManager.generateFakeData();// replace when integrate with angie
 		initilizeFloatingBar();
+		initilizeTaskView();
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
-		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
-		updateUI(0);
+		updateComponents(0);
 	}
 
-	public void initilizeFloatingBar() {
+	private void initilizeTaskView() {
+		_taskViewInterface = TaskViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize);
+		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
+	}
+
+	private void initilizeFloatingBar() {
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		TaskEntity floatingTask = _taskManager.getRandomFloating();
 		if (floatingTask != null) {
@@ -139,7 +143,13 @@ public class UserInterfaceController {
 		_detailComponent.destoryStage();
 	}
 
-	public void updateUI(int value) {
+	/**
+	 * This method update the taskViewInterface, DetailComponent,
+	 * DescriptionComponet according to the selected value;
+	 * 
+	 * @param value
+	 */
+	public void updateComponents(int value) {
 		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW) {
 			_taskViewInterface.update(value);
 			TaskEntity selectedTask = _taskViewInterface.setItemSelected(value);
@@ -176,7 +186,7 @@ public class UserInterfaceController {
 			_currentView = view;
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
-			updateUI(0);
+			updateComponents(0);
 			startExpandAnimation(1);
 			break;
 		}
@@ -184,14 +194,14 @@ public class UserInterfaceController {
 			_currentView = view;
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
-			updateUI(0);
+			updateComponents(0);
 			startExpandAnimation(-1);
 			break;
 		}
 		case ASSOCIATE_VIEW: {
 			_currentView = view;
 			_detailComponent.setView(_currentView);
-			updateUI(0);
+			updateComponents(0);
 			break;
 		}
 		default:
@@ -257,18 +267,19 @@ public class UserInterfaceController {
 			selected++;
 		}
 
-		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selected);
-		updateUI(0);
-
-		_scorllAnimation = ScrollTaskAnimation.getInstance(selected, insertedTo, this);
-		_scorllAnimation.start();
+		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), insertedTo);
+		updateComponents(0);
 	}
 
 	public void addBatchTask(ArrayList<TaskEntity> task) {
-
+		System.out.println("batch add");
 		int insertedTo = _taskManager.add(task);
-		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), insertedTo);
-		updateUI(0);
+		if (insertedTo == -1) {
+
+		} else {
+			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), insertedTo);
+			updateComponents(0);
+		}
 	}
 
 	public boolean deleteTask(int idToDelete) {
@@ -280,7 +291,7 @@ public class UserInterfaceController {
 				index = 0;
 			}
 			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
-			updateUI(0);
+			updateComponents(0);
 			return true;
 		}
 		return false;
@@ -316,7 +327,7 @@ public class UserInterfaceController {
 			return false;
 		}
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
-		updateUI(0);
+		updateComponents(0);
 		return true;
 	}
 
@@ -335,8 +346,7 @@ public class UserInterfaceController {
 		_scorllAnimation = null;
 	}
 
-	public void saveStuff()
-	{
+	public void saveStuff() {
 		_taskManager.closeTaskManager();
 	}
 }
