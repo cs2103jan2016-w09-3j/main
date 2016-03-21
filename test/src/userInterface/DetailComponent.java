@@ -115,8 +115,10 @@ public class DetailComponent implements ViewInterface {
 
 	public void buildUIForTaskView(TaskEntity task) {
 		_mainVbox[TASK_VIEW].getChildren().clear();
-		VBox childToAdd = buildTask(task);
-		_mainVbox[TASK_VIEW].getChildren().add(childToAdd);
+		if (task != null) {
+			VBox childToAdd = buildTask(task);
+			_mainVbox[TASK_VIEW].getChildren().add(childToAdd);
+		}
 	}
 
 	public void buildUIForExpandedView(TaskEntity task) {
