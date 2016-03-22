@@ -101,6 +101,21 @@ public class TaskEntity {
     }
     
     /**
+     * Builds an ArrayList of all task's ID in associations for saving. Used to
+     * rebuild associations on load from file
+     * 
+     * @return - ArrayList matching associations, but instead of having the task
+     *         object, has its corresponding ID
+     */
+    public ArrayList<Integer> getAssociationsId () {
+       ArrayList<Integer> associationIds = new ArrayList<Integer>(); 
+       for(int i = 0; i < _associations.size(); i++) {
+           associationIds.add((Integer) _associations.get(i).getId());
+       }
+       return associationIds;
+    }
+    
+    /**
      * Gets the task representing the project head
      * 
      * @return null if project head cant be found, or if this task is not under
