@@ -259,16 +259,18 @@ public class UserInterfaceController {
 
 	public void addTask(TaskEntity task) {
 		int insertedTo = _taskManager.add(task);
-		int selected = _taskViewInterface.getSelectIndex();
+		if (insertedTo != -1) {
+			int selected = _taskViewInterface.getSelectIndex();
 
-		if (selected == -1) {
-			selected = 0;
-		} else if (insertedTo <= selected) {
-			selected++;
+			if (selected == -1) {
+				selected = 0;
+			} else if (insertedTo <= selected) {
+				selected++;
+			}
+
+			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), insertedTo);
+			updateComponents(0);
 		}
-
-		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), insertedTo);
-		updateComponents(0);
 	}
 
 	public void addBatchTask(ArrayList<TaskEntity> task) {
