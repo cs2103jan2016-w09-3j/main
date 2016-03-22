@@ -49,15 +49,20 @@ public class Utils {
     }
 
     /**
-     * Converts a base 36 number represented by a string into a base 10 int value
+     * Converts a base 36 number represented by a string into a base 10 int
+     * value. Function will strip ALL spaces in the string
      * 
      * @param base36 - String representation of a base36 number
      * @return - positive integer
+     *         -1 if unexpected input is given
      */
     public static int convertBase36ToDec(String base36) {
         int decNumber = 0;
         //digitValue increases by 36x per character in the string
         int digitWeight = 1;
+        
+        //Additional variable to check if string passed in is just spaces
+        boolean hasValue = false;
         
         while (base36.length() > 0) {
             //Get the current last character of the base36 string
@@ -82,9 +87,17 @@ public class Utils {
             if(checkIfAsciiSpaceChar(lastCharAsciiValue)){
                 decNumber += characterValue * digitWeight;
                 digitWeight *= 36;
-            }    
+                hasValue = true;
+            }
             base36 = base36.substring(0, base36.length() - 1);
         }
+
+        // Return error message of -1 if there are only spaces or no characters
+        // in the string
+        if(hasValue == false) {
+            return -1;
+        }
+        
         return decNumber;
     }
 
