@@ -68,24 +68,28 @@ public class StorageHandler {
     /**
      * Reads and stores data from existing file if any, creates a new file otherwise
      */
-    private void processFile() {
+    public void processFile() {
         tasksFile = new File(tasksFilePath);
         commandsFile = new File(commandsFilePath);
 
-        if (tasksFile.exists()) {
+        if (isExists(tasksFile)) {
             setAllStoredTasks(readFromExistingMainFile());
             System.out.println("Main file found, begin reading...");
         } else {
             createNewFile(tasksFile);
         }
 
-        if (commandsFile.exists()) {
+        if (isExists(commandsFile)) {
             setAllCommandsQueue(readFromExistingCommandFile());
             System.out.println("Command file found, begin reading...");
             System.out.println("Queue size " + getAllCommandsQueue().size());
         } else {
             createNewFile(commandsFile);
         }
+    }
+
+    public boolean isExists(File file) {
+        return file.exists();
     }
 
     private void createNewFile(File file) {
@@ -101,7 +105,7 @@ public class StorageHandler {
      * Reads data from an existing file and returns the appended string
      * @return String
      */
-    private String readFromExistingMainFile() {        
+    public String readFromExistingMainFile() {        
         BufferedReader buffer;
         String readData = "";
         try {
@@ -124,7 +128,7 @@ public class StorageHandler {
      * Reads commands from an existing file and returns the queue
      * @return Queue<String>
      */
-    private Queue<String> readFromExistingCommandFile() {
+    public Queue<String> readFromExistingCommandFile() {
         Queue<String> readCommands = new LinkedList<String>();
         BufferedReader buffer;
         try {
@@ -140,7 +144,6 @@ public class StorageHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return readCommands;
     }
 
