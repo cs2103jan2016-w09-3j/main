@@ -49,94 +49,92 @@ public class TaskManager {
 	public static void main(String[] args) {
 		TaskManager manager = TaskManager.getInstance();
 		manager.unloadFile();
-        
-        ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
-        for (int i = 0; i < 5; i++) {
-            Calendar newDate = Calendar.getInstance();
-            newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
-            newList.add(new TaskEntity("Task " + Integer.toString(i + 1), newDate, false, "some desc"));
-        }
-        manager.add(newList);
-        
-        TaskEntity firstFloating = new TaskEntity("Task floating 1"); 
-        manager.add(firstFloating);
-        manager.add(new TaskEntity("Task floating 2"));
-        manager.add(new TaskEntity("Task floating 3"));
-        manager.add(new TaskEntity("Task floating 4"));
-        
-        
-        Calendar newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 2, 5);
-        TaskEntity headTask = new TaskEntity("2016/2/5", newDate, true);
-        manager.modify(1, headTask);
 
-        newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 2, 3);
-        TaskEntity childTask = new TaskEntity("2016/2/3", newDate, true);
-        manager.modify(3, childTask);
-
-        manager.link(headTask, childTask);
-        
-        newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 3, 16);
-        childTask = new TaskEntity("2016/3/16", newDate, true);
-        manager.add(childTask);
-        manager.link(headTask, childTask);
-
-        manager.link(childTask, headTask);
-        
-        newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 3, 15);
-        manager.add(new TaskEntity("2016/3/15", newDate, true));
-
-        manager.link(firstFloating, childTask);
-        
-        newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 3, 15);
-        manager.modify(6, new TaskEntity("Modified task", newDate, true));
-
-        System.out.println(manager.printArrayContentsToString(DISPLAY_OTHERS));
-        System.out.println(manager.printArrayContentsToString(DISPLAY_FLOATING));
-        System.out.println(manager.printArrayContentsToString(DISPLAY_MAIN));
-
-        //manager.printList();
-        
-		ArrayList<TaskEntity> tasks_under = manager.getWorkingList().get(1).getAssociations();
-		
-		for(int i = 0; i < tasks_under.size(); i++) {
-		    System.out.println(tasks_under.get(i).getName());
+		ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
+		for (int i = 0; i < 5; i++) {
+			Calendar newDate = Calendar.getInstance();
+			newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
+			newList.add(new TaskEntity("Task " + Integer.toString(i + 1), newDate, false, "some desc"));
 		}
-		
-		tasks_under = manager.mainTaskEntities.get(1).getAssociations();
-		
-        for(int i = 0; i < tasks_under.size(); i++) {
-            System.out.println(tasks_under.get(i).getName());
-        }
-        
-        tasks_under = manager.mainTaskEntities.get(0).getAssociations();
-        
-        for(int i = 0; i < tasks_under.size(); i++) {
-            System.out.println(tasks_under.get(i).getName());
-        }
-        
-        tasks_under = manager.mainTaskEntities.get(6).getAssociations();
-        
-        for(int i = 0; i < tasks_under.size(); i++) {
-            System.out.println(tasks_under.get(i).getName());
-        }
-        
-        tasks_under = manager.floatingTaskEntities.get(0).getAssociations();
-        
-        for(int i = 0; i < tasks_under.size(); i++) {
-            System.out.println(tasks_under.get(i).getName());
-        }
-	}
+		manager.add(newList);
 
+		TaskEntity firstFloating = new TaskEntity("Task floating 1");
+		manager.add(firstFloating);
+		manager.add(new TaskEntity("Task floating 2"));
+		manager.add(new TaskEntity("Task floating 3"));
+		manager.add(new TaskEntity("Task floating 4"));
+
+		Calendar newDate = Calendar.getInstance();
+		newDate.clear();
+		newDate.set(2016, 2, 5);
+		TaskEntity headTask = new TaskEntity("2016/2/5", newDate, true);
+		manager.modify(1, headTask);
+
+		newDate = Calendar.getInstance();
+		newDate.clear();
+		newDate.set(2016, 2, 3);
+		TaskEntity childTask = new TaskEntity("2016/2/3", newDate, true);
+		manager.modify(3, childTask);
+
+		manager.link(headTask, childTask);
+
+		newDate = Calendar.getInstance();
+		newDate.clear();
+		newDate.set(2016, 3, 16);
+		childTask = new TaskEntity("2016/3/16", newDate, true);
+		manager.add(childTask);
+		manager.link(headTask, childTask);
+
+		manager.link(childTask, headTask);
+
+		newDate = Calendar.getInstance();
+		newDate.clear();
+		newDate.set(2016, 3, 15);
+		manager.add(new TaskEntity("2016/3/15", newDate, true));
+
+		manager.link(firstFloating, childTask);
+
+		newDate = Calendar.getInstance();
+		newDate.clear();
+		newDate.set(2016, 3, 15);
+		manager.modify(6, new TaskEntity("Modified task", newDate, true));
+
+		System.out.println(manager.printArrayContentsToString(DISPLAY_OTHERS));
+		System.out.println(manager.printArrayContentsToString(DISPLAY_FLOATING));
+		System.out.println(manager.printArrayContentsToString(DISPLAY_MAIN));
+
+		// manager.printList();
+
+		ArrayList<TaskEntity> tasks_under = manager.getWorkingList().get(1).getAssociations();
+
+		for (int i = 0; i < tasks_under.size(); i++) {
+			System.out.println(tasks_under.get(i).getName());
+		}
+
+		tasks_under = manager.mainTaskEntities.get(1).getAssociations();
+
+		for (int i = 0; i < tasks_under.size(); i++) {
+			System.out.println(tasks_under.get(i).getName());
+		}
+
+		tasks_under = manager.mainTaskEntities.get(0).getAssociations();
+
+		for (int i = 0; i < tasks_under.size(); i++) {
+			System.out.println(tasks_under.get(i).getName());
+		}
+
+		tasks_under = manager.mainTaskEntities.get(6).getAssociations();
+
+		for (int i = 0; i < tasks_under.size(); i++) {
+			System.out.println(tasks_under.get(i).getName());
+		}
+
+		tasks_under = manager.floatingTaskEntities.get(0).getAssociations();
+
+		for (int i = 0; i < tasks_under.size(); i++) {
+			System.out.println(tasks_under.get(i).getName());
+		}
+	}
 
 	/**
 	 * Testing function to print out the array contents
@@ -181,158 +179,162 @@ public class TaskManager {
 	}
 
 	/**
-     * Prints out all the names of the tasks in the main array
-     * 
-     * @param display - default - to print out the array currently in focus
-     *            (inclusive of DISPLAY_OTHERS)
-     *            - DISPLAY_MAIN - to print out the timed tasks array
-     *            - DISPLAY_FLOATING - to print out the floating tasks array
-     *            - DISPLAY_SEARCH - to print out the searched tasks array
-     * 
-     * @return a string containing all the names of the tasks in the arraylist
-     *         printed, seperated by a ", " including at the end of the last
-     *         task printed
-     */
-	public String printArrayContentsToString (int display) {
-	    ArrayList<TaskEntity> arrayToBePrinted;
-	    
-	    if(display == DISPLAY_MAIN) {
-	        arrayToBePrinted = mainTaskEntities;
-	    } else if (display == DISPLAY_FLOATING ) {
-            arrayToBePrinted = floatingTaskEntities;
-        } else if (display == DISPLAY_SEARCH ) {
-            arrayToBePrinted = searchedTasks;
-        } else {
-            arrayToBePrinted = displayedTasks;
-        }
-	    
-	    String arrayContents = "";
-	    for(int i = 0; i < arrayToBePrinted.size(); i++) {
-	        arrayContents += arrayToBePrinted.get(i).getName() + ", ";
-	    }
-	    return arrayContents;
+	 * Prints out all the names of the tasks in the main array
+	 * 
+	 * @param display
+	 *            - default - to print out the array currently in focus
+	 *            (inclusive of DISPLAY_OTHERS) - DISPLAY_MAIN - to print out
+	 *            the timed tasks array - DISPLAY_FLOATING - to print out the
+	 *            floating tasks array - DISPLAY_SEARCH - to print out the
+	 *            searched tasks array
+	 * 
+	 * @return a string containing all the names of the tasks in the arraylist
+	 *         printed, seperated by a ", " including at the end of the last
+	 *         task printed
+	 */
+	public String printArrayContentsToString(int display) {
+		ArrayList<TaskEntity> arrayToBePrinted;
+
+		if (display == DISPLAY_MAIN) {
+			arrayToBePrinted = mainTaskEntities;
+		} else if (display == DISPLAY_FLOATING) {
+			arrayToBePrinted = floatingTaskEntities;
+		} else if (display == DISPLAY_SEARCH) {
+			arrayToBePrinted = searchedTasks;
+		} else {
+			arrayToBePrinted = displayedTasks;
+		}
+
+		String arrayContents = "";
+		for (int i = 0; i < arrayToBePrinted.size(); i++) {
+			arrayContents += arrayToBePrinted.get(i).getName() + ", ";
+		}
+		return arrayContents;
 	}
-	
-    /**
-     * Function to clear saved file data from its array. For Junit testing
-     */
-	public void unloadFile () {
-	    floatingTaskEntities.clear();
-        mainTaskEntities.clear();
-        switchView(DISPLAY_MAIN);
+
+	/**
+	 * Function to clear saved file data from its array. For Junit testing
+	 */
+	public void unloadFile() {
+		floatingTaskEntities.clear();
+		mainTaskEntities.clear();
+		switchView(DISPLAY_MAIN);
 	}
-	
+
 	/**
 	 * Initialization function to be called before usage of TaskManager class
 	 */
-    @SuppressWarnings("unchecked")
-    private TaskManager() {
-        initLogger();
+	@SuppressWarnings("unchecked")
+	private TaskManager() {
+		initLogger();
 
-        AllTaskLists taskdata = dataLoader.getTaskLists();
-        mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
-        floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
+		AllTaskLists taskdata = dataLoader.getTaskLists();
+		mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
+		floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
 
-        updateTaskEntityCurrentId();
-        
-        logger.log(Level.FINEST, "TaskManager Initialized");
-        displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
-        
-        initializeAssociations();
-        currentDisplayedList = DISPLAY_MAIN;
+		updateTaskEntityCurrentId();
+
+		logger.log(Level.FINEST, "TaskManager Initialized");
+		displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
+
+		initializeAssociations();
+		currentDisplayedList = DISPLAY_MAIN;
 	}
 
+	/**
+	 * Sets the currentId in TaskEntity to be 1 more than the largest ID loaded
+	 * so that it there will not be an Id Clash when creating new tasks
+	 */
+	private void updateTaskEntityCurrentId() {
+		for (int i = 0; i < mainTaskEntities.size(); i++) {
+			if (mainTaskEntities.get(i).getId() > TaskEntity.getCurrentId()) {
+				TaskEntity.setCurrentId(mainTaskEntities.get(i).getId() + 1);
+			}
+		}
 
-    /**
-     * Sets the currentId in TaskEntity to be 1 more than the largest ID loaded
-     * so that it there will not be an Id Clash when creating new tasks
-     */
-    private void updateTaskEntityCurrentId() {
-        for(int i = 0; i < mainTaskEntities.size(); i ++) {
-            if( mainTaskEntities.get(i).getId() > TaskEntity.getCurrentId() ) {
-                TaskEntity.setCurrentId(mainTaskEntities.get(i).getId() + 1);
-            }
-        }
-        
-        for(int i = 0; i < floatingTaskEntities.size(); i ++) {
-            if( floatingTaskEntities.get(i).getId() > TaskEntity.getCurrentId() ) {
-                TaskEntity.setCurrentId(floatingTaskEntities.get(i).getId() + 1);
-            }
-        }
-    }
-    
-    /**
-     * Creates the associations of the tasks based off the string
-     * 
-     * Pre-condition : Assumes id will not be repeated 
-     */
-    private void initializeAssociations () {
-        for(int i = 0; i < mainTaskEntities.size(); i++) {
-            String[] associationIdList = mainTaskEntities.get(i).getSavedAssociations().split(",");
-            
-            for (int j = 0; j < associationIdList.length; j++) {
-                int taskToAdd = Integer.parseInt(associationIdList[j]);
+		for (int i = 0; i < floatingTaskEntities.size(); i++) {
+			if (floatingTaskEntities.get(i).getId() > TaskEntity.getCurrentId()) {
+				TaskEntity.setCurrentId(floatingTaskEntities.get(i).getId() + 1);
+			}
+		}
+	}
 
-                for (int k = 0; k < mainTaskEntities.size(); k++) {
-                    if (taskToAdd == mainTaskEntities.get(k).getId()) {
-                        mainTaskEntities.get(i).loadAssociation(mainTaskEntities.get(k));
-                        break;
-                    }
-                }
-                
-                for (int k = 0; k < floatingTaskEntities.size(); k++) {
-                    if (taskToAdd == floatingTaskEntities.get(k).getId()) {
-                        mainTaskEntities.get(i).loadAssociation(floatingTaskEntities.get(k));
-                        break;
-                    }
-                }
-            }
-        }
-        
-        for(int i = 0; i < floatingTaskEntities.size(); i++) {
-            String[] associationIdList = floatingTaskEntities.get(i).getSavedAssociations().split(",");
-            
-            for (int j = 0; j < associationIdList.length; j++) {
-                int taskToAdd = Integer.parseInt(associationIdList[j]);
+	/**
+	 * Creates the associations of the tasks based off the string
+	 * 
+	 * Pre-condition : Assumes id will not be repeated
+	 */
+	private void initializeAssociations() {
+		for (int i = 0; i < mainTaskEntities.size(); i++) {
+			String[] associationIdList = mainTaskEntities.get(i).getSavedAssociations().split(",");
 
-                for (int k = 0; k < mainTaskEntities.size(); k++) {
-                    if (taskToAdd == mainTaskEntities.get(k).getId()) {
-                        floatingTaskEntities.get(i).loadAssociation(mainTaskEntities.get(k));
-                        break;
-                    }
-                }
-                
-                for (int k = 0; k < floatingTaskEntities.size(); k++) {
-                    if (taskToAdd == floatingTaskEntities.get(k).getId()) {
-                        floatingTaskEntities.get(i).loadAssociation(floatingTaskEntities.get(k));
-                        break;
-                    }
-                }
-            }
-        }
-    }
+			for (int j = 0; j < associationIdList.length; j++) {
+				if (!associationIdList[0].equals("")) {
+					int taskToAdd = Integer.parseInt(associationIdList[j]);
 
-    /**
-     * function to log error messages into TaskManager
-     * 
-     * @param errorMessage
-     */
-    public void logError (String errorMessage) {
-        logger.log(Level.SEVERE, errorMessage); 
-    }
-    
+					for (int k = 0; k < mainTaskEntities.size(); k++) {
+						if (taskToAdd == mainTaskEntities.get(k).getId()) {
+							mainTaskEntities.get(i).loadAssociation(mainTaskEntities.get(k));
+							break;
+						}
+					}
+
+					for (int k = 0; k < floatingTaskEntities.size(); k++) {
+						if (taskToAdd == floatingTaskEntities.get(k).getId()) {
+							mainTaskEntities.get(i).loadAssociation(floatingTaskEntities.get(k));
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < floatingTaskEntities.size(); i++) {
+			String[] associationIdList = floatingTaskEntities.get(i).getSavedAssociations().split(",");
+
+			for (int j = 0; j < associationIdList.length; j++) {
+				if (!associationIdList[0].equals("")) {
+					int taskToAdd = Integer.parseInt(associationIdList[j]);
+
+					for (int k = 0; k < mainTaskEntities.size(); k++) {
+						if (taskToAdd == mainTaskEntities.get(k).getId()) {
+							floatingTaskEntities.get(i).loadAssociation(mainTaskEntities.get(k));
+							break;
+						}
+					}
+
+					for (int k = 0; k < floatingTaskEntities.size(); k++) {
+						if (taskToAdd == floatingTaskEntities.get(k).getId()) {
+							floatingTaskEntities.get(i).loadAssociation(floatingTaskEntities.get(k));
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * function to log error messages into TaskManager
+	 * 
+	 * @param errorMessage
+	 */
+	public void logError(String errorMessage) {
+		logger.log(Level.SEVERE, errorMessage);
+	}
+
 	/**
 	 * Function to call for TaskManager before closing the program
 	 */
 	public void closeTaskManager() {
-	    for(int i = 0; i < mainTaskEntities.size(); i++) {
-	        mainTaskEntities.get(i).buildAssociationsId();
-	    }
-	    
-	    for(int i = 0; i < floatingTaskEntities.size(); i++) {
-            floatingTaskEntities.get(i).buildAssociationsId();
-        }
-	    
+		for (int i = 0; i < mainTaskEntities.size(); i++) {
+			mainTaskEntities.get(i).buildAssociationsId();
+		}
+
+		for (int i = 0; i < floatingTaskEntities.size(); i++) {
+			floatingTaskEntities.get(i).buildAssociationsId();
+		}
+
 		dataLoader.storeTaskLists(mainTaskEntities, floatingTaskEntities);
 	}
 
@@ -390,69 +392,69 @@ public class TaskManager {
 		return displayedTasks;
 	}
 
-    /**
-     * UI Interface function Modifies the selected task, effectively deleting it
-     * and adding a new task. Base10 version. Will relink all the task's
-     * associations
-     * 
-     * @param index
-     *            - int(in base10) index of task to be modified
-     * @param modifiedTask
-     *            - New data of the task
-     * @return id of new position of the modified task in the display list if
-     *         succeeded in deleting the task
-     *         returns -1 if after modification, the task is no longer in
-     *         displayedTasks
-     *         returns -2 if the modification failed (Index out of bounds or
-     *         deletion failed)
-     */
+	/**
+	 * UI Interface function Modifies the selected task, effectively deleting it
+	 * and adding a new task. Base10 version. Will relink all the task's
+	 * associations
+	 * 
+	 * @param index
+	 *            - int(in base10) index of task to be modified
+	 * @param modifiedTask
+	 *            - New data of the task
+	 * @return id of new position of the modified task in the display list if
+	 *         succeeded in deleting the task returns -1 if after modification,
+	 *         the task is no longer in displayedTasks returns -2 if the
+	 *         modification failed (Index out of bounds or deletion failed)
+	 */
 	public int modify(int index, TaskEntity modifiedTask) {
-	    if( index > displayedTasks.size() -1 ) {
-	        return -2;
-	    }
-	    
-	    
-	    int initialDisplayedArraySize = displayedTasks.size();
-	    int associationState = displayedTasks.get(index).getAssociationState();
-	    TaskEntity projectHead = displayedTasks.get(index).getProjectHead();
-	    ArrayList<TaskEntity> childTasks = displayedTasks.get(index).getAssociations();
-	    
+		if (index > displayedTasks.size() - 1) {
+			return -2;
+		}
+
+		int initialDisplayedArraySize = displayedTasks.size();
+		int associationState = displayedTasks.get(index).getAssociationState();
+		TaskEntity projectHead = displayedTasks.get(index).getProjectHead();
+		ArrayList<TaskEntity> childTasks = displayedTasks.get(index).getAssociations();
+
 		if (delete(index) == false) {
 			return -2;
 		}
-		
+
 		relinkAssociations(modifiedTask, associationState, projectHead, childTasks);
-		
+
 		int newIndex = add(modifiedTask);
-		if( initialDisplayedArraySize == displayedTasks.size() ) {
-		    return newIndex;
+		if (initialDisplayedArraySize == displayedTasks.size()) {
+			return newIndex;
 		} else {
-		    return -1;
+			return -1;
 		}
 	}
 
-    /**
-     * Function for modify to link the deleted task's associations onto the new
-     * task its modified to
-     * 
-     * @param modifiedTask - new task to replace the delete task
-     * @param associationState - Association status of the task deleted
-     * @param projectHead - Task that the delete task belonged to if it was
-     *            associated to it
-     * @param childTasks - Tasks that is under the deleted task if it is a
-     *            project head
-     */
-    private void relinkAssociations(TaskEntity modifiedTask, int associationState, TaskEntity projectHead,
-            ArrayList<TaskEntity> childTasks) {
-        if (associationState == TaskEntity.ASSOCIATED) {
-            link(projectHead, modifiedTask);
-        } else if (associationState == TaskEntity.PROJECT_HEAD) {
-            for (int i = 0; i < childTasks.size(); i++) {
-                link(modifiedTask, childTasks.get(i));
-                ;
-            }
-        }
-    }
+	/**
+	 * Function for modify to link the deleted task's associations onto the new
+	 * task its modified to
+	 * 
+	 * @param modifiedTask
+	 *            - new task to replace the delete task
+	 * @param associationState
+	 *            - Association status of the task deleted
+	 * @param projectHead
+	 *            - Task that the delete task belonged to if it was associated
+	 *            to it
+	 * @param childTasks
+	 *            - Tasks that is under the deleted task if it is a project head
+	 */
+	private void relinkAssociations(TaskEntity modifiedTask, int associationState, TaskEntity projectHead,
+			ArrayList<TaskEntity> childTasks) {
+		if (associationState == TaskEntity.ASSOCIATED) {
+			link(projectHead, modifiedTask);
+		} else if (associationState == TaskEntity.PROJECT_HEAD) {
+			for (int i = 0; i < childTasks.size(); i++) {
+				link(modifiedTask, childTasks.get(i));
+				;
+			}
+		}
+	}
 
 	/**
 	 * UI Interface function Modifies the selected task, effectively deleting it
@@ -497,8 +499,9 @@ public class TaskManager {
 	 * 
 	 * @param newTask
 	 *            - Task to be inserted
-	 * @return ID of the task that has been inserted if it is inserted into displayedTask
-	 *         -1 if it is inserted into a list that is not in view
+	 * @return ID of the task that has been inserted if it is inserted into
+	 *         displayedTask -1 if it is inserted into a list that is not in
+	 *         view
 	 */
 	public int add(TaskEntity newTask) {
 		assert displayedTasks != null : "no view set in displayedTasks, probably not initialised!";
@@ -513,23 +516,23 @@ public class TaskManager {
 		}
 	}
 
-    private int updateMainDisplay(TaskEntity newTask, int idToInsert) {
-        if (currentDisplayedList == DISPLAY_MAIN) {
-        	displayedTasks.add(idToInsert, newTask);
-            return idToInsert;
-        } else {
-            return -1;
-        }
-    }
+	private int updateMainDisplay(TaskEntity newTask, int idToInsert) {
+		if (currentDisplayedList == DISPLAY_MAIN) {
+			displayedTasks.add(idToInsert, newTask);
+			return idToInsert;
+		} else {
+			return -1;
+		}
+	}
 
-    private int updateFloatingDisplay(TaskEntity newTask) {
-        if (currentDisplayedList == DISPLAY_FLOATING) {
-        	displayedTasks.add(newTask);
-        	return floatingTaskEntities.size() - 1;
-        } else {
-            return -1;
-        }
-    }
+	private int updateFloatingDisplay(TaskEntity newTask) {
+		if (currentDisplayedList == DISPLAY_FLOATING) {
+			displayedTasks.add(newTask);
+			return floatingTaskEntities.size() - 1;
+		} else {
+			return -1;
+		}
+	}
 
 	/**
 	 * UI Interface function Searches for the position to insert a newTask into
@@ -563,8 +566,8 @@ public class TaskManager {
 	 * @return false - if fail to delete true - if delete operation succeeded
 	 */
 	public boolean delete(int index) {
-	    assert displayedTasks != null : "No list in focus";
-	    
+		assert displayedTasks != null : "No list in focus";
+
 		if (displayedTasks == null) {
 			displayedTasks = mainTaskEntities;
 		}
@@ -578,13 +581,13 @@ public class TaskManager {
 		if (!deletionSuccess) {
 			return false;
 		}
-		
+
 		itemToBeDeleted.removeSelfFromProject();
-		
+
 		try {
 			displayedTasks.remove(index);
 		} catch (ArrayIndexOutOfBoundsException e) {
-		    logError("Error at delete, removing from index that does not exist");
+			logError("Error at delete, removing from index that does not exist");
 		}
 		return true;
 	}
@@ -646,24 +649,25 @@ public class TaskManager {
 		}
 		return true;
 	}
-	
-    /**
-     * Associates a task to a project head task
-     * 
-     * @param projectHead - Task to be linked to
-     * @param linkedTask - Task to be linked
-     * @return True if success in linking
-     *         false if failed to link
-     */
-    public boolean link(TaskEntity projectHead, TaskEntity linkedTask) {
-        boolean linkSuccess = projectHead.addAssociation(linkedTask);
-        if(!linkSuccess) {
-            return false;
-        }
-        
-        linkedTask.setAssociationHead(projectHead);
-        return true;
-    }
+
+	/**
+	 * Associates a task to a project head task
+	 * 
+	 * @param projectHead
+	 *            - Task to be linked to
+	 * @param linkedTask
+	 *            - Task to be linked
+	 * @return True if success in linking false if failed to link
+	 */
+	public boolean link(TaskEntity projectHead, TaskEntity linkedTask) {
+		boolean linkSuccess = projectHead.addAssociation(linkedTask);
+		if (!linkSuccess) {
+			return false;
+		}
+
+		linkedTask.setAssociationHead(projectHead);
+		return true;
+	}
 
 	/**
 	 * Checks if the Index passed in for deletion is a valid index
@@ -711,32 +715,33 @@ public class TaskManager {
 	 */
 	public int getNextTimeListId() {
 		TaskEntity currentTimePlaceholder = new TaskEntity("", Calendar.getInstance(), false);
-        int nextTimeId = findPositionToInsert(currentTimePlaceholder);
-        
-        // Setting ID to the last index in the list if all tasks comes before
-        // current time
-        if (nextTimeId > mainTaskEntities.size() - 1) {
-		    nextTimeId = mainTaskEntities.size() - 1;
+		int nextTimeId = findPositionToInsert(currentTimePlaceholder);
+
+		// Setting ID to the last index in the list if all tasks comes before
+		// current time
+		if (nextTimeId > mainTaskEntities.size() - 1) {
+			nextTimeId = mainTaskEntities.size() - 1;
 		}
-        
+
 		return nextTimeId;
 	}
 
 	/**
 	 * Gets a random floating task for display at UI
-	 * @return null - if floatingTaskEntities is empty
-	 *         A TaskEntity object that is a random floating task in floatingTaskEntities
+	 * 
+	 * @return null - if floatingTaskEntities is empty A TaskEntity object that
+	 *         is a random floating task in floatingTaskEntities
 	 */
-	public TaskEntity getRandomFloating (){
-	    if( floatingTaskEntities.size() == 0) {
-	        return null;
-	    } else {
-	        Random rand = new Random();
-	        int randomNum = rand.nextInt(floatingTaskEntities.size());
-	        return floatingTaskEntities.get(randomNum);
-	    }
+	public TaskEntity getRandomFloating() {
+		if (floatingTaskEntities.size() == 0) {
+			return null;
+		} else {
+			Random rand = new Random();
+			int randomNum = rand.nextInt(floatingTaskEntities.size());
+			return floatingTaskEntities.get(randomNum);
+		}
 	}
-	
+
 	/**
 	 * UI Interface function Undoes the last command performed by the user
 	 * 
