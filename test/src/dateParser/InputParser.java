@@ -28,6 +28,7 @@ public class InputParser {
 	 * @param input String to be parsed
 	 */
 	public InputParser(String input) {
+		/**
 		try{
 			Handler fh = new FileHandler("inputParser.log");
 			logger.addHandler(fh);
@@ -36,6 +37,8 @@ public class InputParser {
 			
 		}
 		logger.log(Level.INFO,"InputParser init");
+		
+		**/
 		setInput(input);
 		dateParser = new DateParser();
 		cmdParser = new CommandParser();
