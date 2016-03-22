@@ -139,9 +139,9 @@ public class DetailComponent implements ViewInterface {
 		box.getChildren().add(buildTask(task));
 
 		// change when qy done. add associates
-		for (int i = 1; i < 2; i++) {
+		for (int i = 1; i < 10; i++) {
 			Random r = new Random();
-			int t = r.nextInt(1);
+			int t = r.nextInt(5);
 			String p = "what ";
 			for (int k = 0; k < t; k++) {
 				p += p;
@@ -159,27 +159,24 @@ public class DetailComponent implements ViewInterface {
 	 * @param index
 	 */
 	public void setSelectedIndex(int index) {
-
 		if (isValidIndex(index)) {
 			VBox parent = (VBox) _mainVbox[EXPANDED_VIEW].getChildren().get(0);
-			if (parent.getChildren().size() > index && index > -1) {
-				if (_selectedIndex != -1) {
-					VBox prev = (VBox) parent.getChildren().get(_selectedIndex);
-					prev.setId("cssExpandedViewVBox");
-				}
+			if (_selectedIndex != -1) {
+				VBox prev = (VBox) parent.getChildren().get(_selectedIndex);
+				prev.setId("cssExpandedViewVBox");
+			}
 
-				VBox curr = (VBox) parent.getChildren().get(index);
-				curr.setId("cssExpandedViewVBoxSelected");
-				_selectedIndex = index;
+			VBox curr = (VBox) parent.getChildren().get(index);
+			curr.setId("cssExpandedViewVBoxSelected");
+			_selectedIndex = index;
 
-				if (parent.getHeight() > _stageHeight) {
-					double sizeOnTop = 0;
-					for (int i = 0; i < index; i++) {
-						VBox tempVBox = (VBox) parent.getChildren().get(i);
-						sizeOnTop += tempVBox.getHeight() + SPACING_SIZE;
-					}
-					parent.setTranslateY(-sizeOnTop);
+			if (parent.getHeight() > _stageHeight) {
+				double sizeOnTop = 0;
+				for (int i = 0; i < index; i++) {
+					VBox tempVBox = (VBox) parent.getChildren().get(i);
+					sizeOnTop += tempVBox.getHeight() + SPACING_SIZE;
 				}
+				parent.setTranslateY(-sizeOnTop);
 			}
 		}
 	}

@@ -18,6 +18,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -353,13 +355,8 @@ public class TaskViewUserInterface implements ViewInterface {
 	private HBox buildIndividualTask(TaskEntity taskEntity, int index) {
 		HBox hbox = new HBox();
 		GridPane gridPane = createGridPaneForTask(taskEntity, index);
-		if (_view == UserInterfaceController.TASK_VIEW) {
-			hbox.setMinHeight(gridPane.getMinHeight());
-			hbox.setMaxHeight(gridPane.getMinHeight());
-		} else if (_view == UserInterfaceController.EXPANDED_VIEW) {
-			hbox.setMinHeight(gridPane.getMinHeight());
-			hbox.setMaxHeight(gridPane.getMinHeight());
-		}
+		hbox.setMinHeight(gridPane.getMinHeight());
+		hbox.setMaxHeight(gridPane.getMinHeight());
 		_gridPanes.add(gridPane);
 		hbox.getChildren().add(gridPane);
 		return hbox;
@@ -372,19 +369,14 @@ public class TaskViewUserInterface implements ViewInterface {
 		grid.setHgap(GAP_SIZE);
 		grid.setMinWidth(_individualItemWidth);
 
-		if (_view == UserInterfaceController.TASK_VIEW) {
-			grid.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
-		} else {
-			grid.setMinHeight(DETAILED_VIEW_ITEM_HEIGHT);
-		}
-		grid.setMaxHeight(DETAILED_VIEW_ITEM_HEIGHT);
-
 		Label indexLabel = new Label(Utils.convertDecToBase36(index));
 		indexLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		indexLabel.setMinWidth(50);
 		indexLabel.setAlignment(Pos.CENTER);
 		indexLabel.setFont(FONT_INDEX);
 		grid.add(indexLabel, 0, 0);
+		
+		HBox topBox = new HBox();
 
 		Label timeLabel = new Label();
 		if (taskEntity.isFullDay()) {
@@ -394,27 +386,43 @@ public class TaskViewUserInterface implements ViewInterface {
 		}
 		timeLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		timeLabel.setFont(FONT_TASK);
-		grid.add(timeLabel, 1, 0);
+		topBox.getChildren().add(timeLabel);
 
 		Label titleLabel = new Label(taskEntity.getName());
 		titleLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		titleLabel.setFont(FONT_TASK);
-		grid.add(titleLabel, 2, 0);
+		topBox.getChildren().add(titleLabel);
+		grid.add(topBox, 1, 0);
 
-		Label descriptionLabel = new Label(taskEntity.getDescription());
-		descriptionLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
-		descriptionLabel.setFont(FONT_TASK);
-		grid.add(descriptionLabel, 3, 0);
-
-		Label descriptionLabel2 = new Label("full description will be here");
+		HBox midBox = new HBox();
+		midBox.setMinHeight(0);
+		
+		//change to desc in future
+		String text = taskEntity.getDescription();
+		Label descriptionLabel2 = new Label(text);
 		descriptionLabel2.setMinHeight(0);
+		descriptionLabel2.setMaxWidth(_individualItemWidth-60);
+		descriptionLabel2.setWrapText(true);
 		descriptionLabel2.setFont(FONT_TASK);
-		grid.add(descriptionLabel2, 3, 1);
+		
+		Text t = new Text(text);
+		t.setWrappingWidth(_individualItemWidth-60);
+		
+		midBox.getChildren().add(descriptionLabel2);
+		grid.add(midBox, 1, 1);
 
 		Label hashTagLabel = new Label("#hashtags");
 		hashTagLabel.setMinHeight(0);
 		hashTagLabel.setFont(FONT_TASK);
-		grid.add(hashTagLabel, 3, 2);
+		grid.add(hashTagLabel, 1, 2);
+		
+		if (_view == UserInterfaceController.TASK_VIEW) {
+			grid.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
+		} else {
+			grid.setMinHeight(DETAILED_VIEW_ITEM_HEIGHT + t.getBoundsInLocal().getHeight());
+		}
+		grid.setMaxHeight(DETAILED_VIEW_ITEM_HEIGHT + t.getBoundsInLocal().getHeight());
+
 
 		return grid;
 	}
