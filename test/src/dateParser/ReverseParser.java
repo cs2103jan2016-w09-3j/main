@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.plaf.InputMapUIResource;
 
 public class ReverseParser {
-	private static Map<Integer,String> dictionary = new HashMap<Integer,String> ();
+	private static Map<Long,String> dictionary = new HashMap<Long,String> ();
 	
 	public ReverseParser(){
 		try {
@@ -24,7 +24,7 @@ public class ReverseParser {
 				line = br.readLine();
 				Scanner sc = new Scanner(line);
 				sc.useDelimiter(",");
-				int index = Integer.parseInt(sc.next());
+				Long index = Long.parseLong(sc.next());
 				String value = sc.next();
 				System.out.println(index+" "+value);
 				dictionary.put(index, value);
@@ -48,7 +48,7 @@ public class ReverseParser {
 		input.clear(Calendar.SECOND);
 		input.clear(Calendar.MILLISECOND);
 		long mills = input.getTimeInMillis()-curr.getTimeInMillis();
-		int days = (int) TimeUnit.MILLISECONDS.toDays(mills);
+		long days = TimeUnit.MILLISECONDS.toDays(mills);
 		output = dictionary.get(days);
 		
 		return output;
@@ -56,7 +56,7 @@ public class ReverseParser {
 	
 	public static void main(String args[]){
 		Calendar c = Calendar.getInstance();
-		c.set(2016, 2, 22);
+		c.set(2016, 2, 23,23,59,59);
 
 		ReverseParser rp = new ReverseParser();
 		System.out.println(rp.reParse(c));
