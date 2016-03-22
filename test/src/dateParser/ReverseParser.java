@@ -39,18 +39,20 @@ public class ReverseParser {
 	public String reParse(Calendar input){
 		String output = null;
 		Calendar curr = Calendar.getInstance();
-		curr.set(Calendar.HOUR, 0);
+		curr.set(Calendar.HOUR_OF_DAY, 0);
 		curr.clear(Calendar.MINUTE);
 		curr.clear(Calendar.SECOND);
 		curr.clear(Calendar.MILLISECOND);
-		input.set(Calendar.HOUR, 0);
+		input.set(Calendar.HOUR_OF_DAY, 0);
 		input.clear(Calendar.MINUTE);
 		input.clear(Calendar.SECOND);
 		input.clear(Calendar.MILLISECOND);
+		System.out.println(curr);
+		System.out.println(input);
 		long mills = input.getTimeInMillis()-curr.getTimeInMillis();
+		System.out.println(mills);
 		long days =(long) Math.floor(mills/86400000);
 		output = dictionary.get(days);
-		
 		return output;
 	}
 	

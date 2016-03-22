@@ -64,7 +64,7 @@ public class TaskViewUserInterface implements ViewInterface {
 
 	private VBox _mainVbox; // main parent for items.
 	private int _itemIndexCounter = 0;
-	
+
 	ReverseParser r = new ReverseParser();
 
 	// container to store current gridPanes builded for easy reference.
@@ -179,7 +179,7 @@ public class TaskViewUserInterface implements ViewInterface {
 
 			setIndexs(workingIndex);
 
-			_itemIndexCounter= _startIndex;
+			_itemIndexCounter = _startIndex;
 			int countItemSameWeek = 0;
 			ArrayList<TaskEntity> itemsInSameWeek = new ArrayList<TaskEntity>();
 			for (int i = _startIndex; i < _endIndex + 1; i++) {
@@ -329,6 +329,12 @@ public class TaskViewUserInterface implements ViewInterface {
 		HBox hbox = new HBox();
 		hbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT); // setMax
 
+		String labelText = getStringOfDate(taskEntity.getDueDate());
+		System.out.println(taskEntity.getDueDate().get(Calendar.DATE));
+		System.out.println(labelText);
+		if (labelText == null) {
+
+		}
 		SimpleDateFormat daySdf = new SimpleDateFormat("d");
 		// Label dateNLPLabel = new
 		// Label(getStringOfDate(taskEntity.getDueDate()));
