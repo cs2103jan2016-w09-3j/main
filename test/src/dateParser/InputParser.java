@@ -20,6 +20,7 @@ public class InputParser {
 	private DateParser dateParser;
 	private CommandParser cmdParser;
 	private InformationParser infoParser;
+	private IdParser idParser;
 	
 	private static Logger logger = Logger.getLogger("InputParser");
 
@@ -43,6 +44,7 @@ public class InputParser {
 		dateParser = new DateParser();
 		cmdParser = new CommandParser();
 		infoParser = new InformationParser();
+		idParser = new IdParser();
 	}
 
 
@@ -54,8 +56,13 @@ public class InputParser {
 		logger.log(Level.INFO,"Add xml to input");
 		assert (input!=null) : "Input is null";
 		addXMLDate();
+		addXMLID();
 		addXMLCmd();
 		addXMLTitleDesc();
+	}
+	
+	private void addXMLID() {
+		input = idParser.xmlID(input);
 	}
 
 	/**
@@ -136,6 +143,10 @@ public class InputParser {
 			}
 		}
 		return tasks;
+	}
+	
+	public String getID(){
+		return idParser.getID(input);
 	}
 	
 	public static void main(String args[]) {
