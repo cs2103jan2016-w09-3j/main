@@ -56,7 +56,7 @@ public class ReverseParser {
 	
 	public static void main(String args[]){
 		Calendar c = Calendar.getInstance();
-		c.set(2016, 2, 23,23,59,59);
+		c.set(2016, 2, 23,0,0,0);
 
 		ReverseParser rp = new ReverseParser();
 		System.out.println(rp.reParse(c));
