@@ -39,12 +39,11 @@ public class ReverseParser {
 	public String reParse(Calendar input){
 		String output = null;
 		Calendar curr = Calendar.getInstance();
-		curr.clear(Calendar.HOUR);
+		curr.set(Calendar.HOUR, 0);
 		curr.clear(Calendar.MINUTE);
 		curr.clear(Calendar.SECOND);
 		curr.clear(Calendar.MILLISECOND);
-
-		input.clear(Calendar.HOUR);
+		input.set(Calendar.HOUR, 0);
 		input.clear(Calendar.MINUTE);
 		input.clear(Calendar.SECOND);
 		input.clear(Calendar.MILLISECOND);

@@ -126,6 +126,7 @@ public class InputParser {
 			for(int i=0; i<dates.size(); i++){
 				Calendar c = Calendar.getInstance();
 				c.setTime(dates.get(i));
+				c.clear(Calendar.SECOND);
 				c.clear(Calendar.MILLISECOND);
 				TaskEntity toAdd = new TaskEntity(name, c, false, desc);
 				tasks.add(toAdd);
