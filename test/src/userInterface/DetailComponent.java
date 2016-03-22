@@ -1,5 +1,6 @@
 package userInterface;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -138,17 +139,13 @@ public class DetailComponent implements ViewInterface {
 		// add itself first
 		box.getChildren().add(buildTask(task));
 
-		// change when qy done. add associates
-		for (int i = 1; i < 10; i++) {
-			Random r = new Random();
-			int t = r.nextInt(5);
-			String p = "what ";
-			for (int k = 0; k < t; k++) {
-				p += p;
-			}
-			task.setDescription(p);
-			box.getChildren().add(buildTask(task));
+		ArrayList<TaskEntity> association = task.getAssociations();
+		for(int i=0; i<association.size(); i ++)
+		{
+			box.getChildren().add(buildTask(association.get(i)));
 		}
+		
+		
 		return box;
 	}
 

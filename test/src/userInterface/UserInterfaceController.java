@@ -356,6 +356,18 @@ public class UserInterfaceController {
 		_scorllAnimation = null;
 	}
 
+	public void link(String indexZZ1, String indexZZ2) {
+		int index1 = Utils.convertBase36ToDec(indexZZ1);
+		int index2 = Utils.convertBase36ToDec(indexZZ2);
+		if (index1 != -1 && index2 != -1) {
+			_taskManager.getWorkingList().get(index1);
+			_taskManager.getWorkingList().get(index2);
+			boolean r = _taskManager.link(_taskManager.getWorkingList().get(index1),
+					_taskManager.getWorkingList().get(index2));
+			System.out.println("linking = " + r);
+		}
+	}
+
 	public void saveStuff() {
 		_taskManager.closeTaskManager();
 	}

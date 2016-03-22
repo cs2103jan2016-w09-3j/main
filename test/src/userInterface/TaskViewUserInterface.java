@@ -63,6 +63,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	private int _view = UserInterfaceController.TASK_VIEW;
 
 	private VBox _mainVbox; // main parent for items.
+	private int _itemIndexCounter = 0;
 
 	// container to store current gridPanes builded for easy reference.
 	private ArrayList<GridPane> _gridPanes = new ArrayList<GridPane>();
@@ -176,6 +177,7 @@ public class TaskViewUserInterface implements ViewInterface {
 
 			setIndexs(workingIndex);
 
+			_itemIndexCounter= _startIndex;
 			int countItemSameWeek = 0;
 			ArrayList<TaskEntity> itemsInSameWeek = new ArrayList<TaskEntity>();
 			for (int i = _startIndex; i < _endIndex + 1; i++) {
@@ -287,8 +289,6 @@ public class TaskViewUserInterface implements ViewInterface {
 		return weekParent;
 	}
 
-	int temp = 0;
-
 	/**
 	 * Creates VBox for the items, items must belong to same day.
 	 * 
@@ -298,7 +298,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	private VBox createDayForWeek(ArrayList<TaskEntity> items) {
 		VBox dayParent = createDayParent(items.get(0));
 		for (int i = 0; i < items.size(); i++) {
-			childToParent(dayParent, buildIndividualTask(items.get(i), temp++));
+			childToParent(dayParent, buildIndividualTask(items.get(i), _itemIndexCounter++));
 		}
 		return dayParent;
 	}

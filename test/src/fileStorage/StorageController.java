@@ -1,7 +1,6 @@
 package fileStorage;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -23,18 +22,32 @@ public class StorageController implements StorageInterface {
         //String data = fm.readFromExistingFile();
         //System.out.println(data);
         //AllTaskLists convertedDummy = jc.jsonToJava(data);
-        //Calendar created = convertedDummy.getFloatingTaskList().get(0).getDateCreated();
         
-        //System.out.println("Calendar :" + created);
         Queue<String> dummyCommands = sc.createDummyCommands();
         
-        sh.writeToCommandFile(dummyCommands);
-        ch.saveUponExit(true);
+        sh.setAllCommandsQueue(dummyCommands);
+        //
         ch.saveUponTimeOut();
-        
+        ch.saveUponFullQueue("Add blah blah angie awesome1");
+        ch.saveUponFullQueue("Add blah blah angie awesome2");
+        ch.saveUponFullQueue("Add blah blah angie awesome3");
+        ch.saveUponFullQueue("Add blah blah angie awesome4");
+        ch.saveUponFullQueue("Add blah blah angie awesome5");
+        ch.saveUponFullQueue("Add blah blah angie awesome6");
+        ch.saveUponFullQueue("Add blah blah angie awesome7");
+        ch.saveUponFullQueue("Add blah blah angie awesome8");
+        ch.saveUponFullQueue("Add blah blah angie awesome9");
+        ch.saveUponFullQueue("Add blah blah angie awesome10");
+        ch.saveUponFullQueue("Add blah blah angie awesome11");
+        ch.saveUponFullQueue("Add blah blah angie awesome12");
+        //ch.saveUponExit(true);
         //System.out.println(ch.readFromExistingCommandFile()); 
     }
 
+    /**
+     * Retrieve all tasks previously saved in the text file.
+     * @return AllTaskLists
+     */
     public AllTaskLists getTaskLists() {
         StorageHandler mainHandler = new StorageHandler();
         JsonConverter jsonConverter = new JsonConverter();
@@ -45,18 +58,25 @@ public class StorageController implements StorageInterface {
         return retrievedList;
     }
 
-    // Returns true if task lists written into file. False otherwise.
+    /** 
+     * Returns true if tasks are written to file, false otherwise. 
+     * @return boolean
+     */    
     public boolean storeTaskLists(AllTaskLists allTaskLists) {
         StorageHandler mainHandler = new StorageHandler();
         JsonConverter jsonConverter = new JsonConverter();
         
         String toStore = jsonConverter.javaToJson(allTaskLists);
         
-        boolean isStored = mainHandler.writeToFile(toStore);
+        boolean isSaved = mainHandler.writeToMainFile(toStore);
         
-        return isStored;
+        return isSaved;
     }
     
+    /** 
+     * Returns true if tasks are written to file, false otherwise. 
+     * @return boolean
+     */
     public boolean storeTaskLists(ArrayList<TaskEntity> main, ArrayList<TaskEntity> floating){
         AllTaskLists newList = new AllTaskLists();
         newList.setFloatingTaskList(floating);

@@ -236,9 +236,15 @@ public class PrimaryUserInterface extends Application {
 				return;
 			} else if (t.indexOf(" ") != -1) {
 				if (t.substring(0, t.indexOf(" ")).equals("jump")) {
-					String indexToDelete = t.substring(t.indexOf(" ") + 1);
-					executeJump(indexToDelete);
+					String indexToJump = t.substring(t.indexOf(" ") + 1);
+					executeJump(indexToJump);
 					return;
+				} else if (t.substring(0, t.indexOf(" ")).equals("link")) {
+					String[] spilt = t.split(" ");
+					if (spilt.length == 3) {
+						System.out.println("link " + spilt[1] + " to " + spilt[2]);
+						uiController.link(spilt[1],spilt[2]);
+					}
 				}
 			}
 
