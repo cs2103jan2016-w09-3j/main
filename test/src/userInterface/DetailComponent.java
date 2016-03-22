@@ -223,7 +223,7 @@ public class DetailComponent implements ViewInterface {
 
 	public String getDate(Calendar cal) {
 		String date = "";
-		date += cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.YEAR) + " "
+		date += cal.get(Calendar.DAY_OF_MONTH) + "/" + (cal.get(Calendar.MONTH)+1) + "/" + cal.get(Calendar.YEAR) + " "
 				+ cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE);
 		return date;
 

@@ -64,6 +64,8 @@ public class TaskViewUserInterface implements ViewInterface {
 
 	private VBox _mainVbox; // main parent for items.
 	private int _itemIndexCounter = 0;
+	
+	ReverseParser r = new ReverseParser();
 
 	// container to store current gridPanes builded for easy reference.
 	private ArrayList<GridPane> _gridPanes = new ArrayList<GridPane>();
@@ -350,7 +352,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	private String getStringOfDate(Calendar c) {
-		return ReverseParser.reParse(c);
+		return r.reParse(c);
 	}
 
 	/**

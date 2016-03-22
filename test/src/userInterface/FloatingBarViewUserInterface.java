@@ -94,7 +94,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	int k = 0;
 
 	public void addTask(String taskDesc) {
-		Label floatTask = new Label(taskDesc + " " + k++);
+		Label floatTask = new Label(taskDesc);
 		floatTask.setMinHeight(_stageHeight);
 		floatTask.setMaxHeight(_stageHeight);
 		floatTask.setAlignment(Pos.CENTER);
