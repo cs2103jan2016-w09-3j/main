@@ -339,26 +339,36 @@ public class TaskManager {
 	 * @param modifiedTask
 	 *            - New data of the task
 	 * @return id of new position of the modified task in the display list if
-	 *         succeeded in deleting the task, returns -1 if deletion failed
+	 *         succeeded in deleting the task
+	 *         returns -1 if after modification, the task is no longer in displayedTasks
+	 *         returns -2 if the modification failed (Index out of bounds or deletion failed)
 	 */
 	public int modify(int index, TaskEntity modifiedTask) {
 	    if( index > displayedTasks.size() -1 ) {
-	        return -1;
+	        return -2;
 	    }
 	    
+	    
+	    int initialDisplayedArraySize = displayedTasks.size();
 	    boolean hasAssociation = false;
 	    if (displayedTasks.get(index).getAssociationState() == TaskEntity.ASSOCIATED) {
 	        hasAssociation = true;
 	    }
+	    
 	    TaskEntity projectHead = displayedTasks.get(index).getProjectHead();
 		if (delete(index) == false) {
-			return -1;
+			return -2;
 		}
 		
 		if(hasAssociation == true) {
 		    link(projectHead, modifiedTask);
 		}
-		return add(modifiedTask);
+		int newIndex = add(modifiedTask);
+		if( initialDisplayedArraySize == displayedTasks.size() ) {
+		    return newIndex;
+		} else {
+		    return -1;
+		}
 	}
 
 	/**
@@ -404,26 +414,39 @@ public class TaskManager {
 	 * 
 	 * @param newTask
 	 *            - Task to be inserted
-	 * @return ID of the task that has been inserted
+	 * @return ID of the task that has been inserted if it is inserted into displayedTask
+	 *         -1 if it is inserted into a list that is not in view
 	 */
 	public int add(TaskEntity newTask) {
 		assert displayedTasks != null : "no view set in displayedTasks, probably not initialised!";
 
 		if (newTask.isFloating()) {
 			floatingTaskEntities.add(newTask);
-			if (currentDisplayedList == DISPLAY_FLOATING) {
-				displayedTasks.add(newTask);
-			}
-			return floatingTaskEntities.size() - 1;
+			return updateFloatingDisplay(newTask);
 		} else {
 			int idToInsert = findPositionToInsert(newTask);
 			mainTaskEntities.add(idToInsert, newTask);
-			if (currentDisplayedList == DISPLAY_MAIN) {
-				displayedTasks.add(idToInsert, newTask);
-			}
-			return idToInsert;
+			return updateMainDisplay(newTask, idToInsert);
 		}
 	}
+
+    private int updateMainDisplay(TaskEntity newTask, int idToInsert) {
+        if (currentDisplayedList == DISPLAY_MAIN) {
+        	displayedTasks.add(idToInsert, newTask);
+            return idToInsert;
+        } else {
+            return -1;
+        }
+    }
+
+    private int updateFloatingDisplay(TaskEntity newTask) {
+        if (currentDisplayedList == DISPLAY_FLOATING) {
+        	displayedTasks.add(newTask);
+        	return floatingTaskEntities.size() - 1;
+        } else {
+            return -1;
+        }
+    }
 
 	/**
 	 * UI Interface function Searches for the position to insert a newTask into
