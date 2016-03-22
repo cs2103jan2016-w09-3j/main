@@ -139,9 +139,9 @@ public class DetailComponent implements ViewInterface {
 		box.getChildren().add(buildTask(task));
 
 		// change when qy done. add associates
-		for (int i = 1; i < 2; i++) {
+		for (int i = 1; i < 10; i++) {
 			Random r = new Random();
-			int t = r.nextInt(1);
+			int t = r.nextInt(5);
 			String p = "what ";
 			for (int k = 0; k < t; k++) {
 				p += p;
@@ -159,11 +159,8 @@ public class DetailComponent implements ViewInterface {
 	 * @param index
 	 */
 	public void setSelectedIndex(int index) {
-		if (index < 0 || index > (_mainVbox[EXPANDED_VIEW].getChildren().size() - 1)) {
-			return;
-		}
-		VBox parent = (VBox) _mainVbox[EXPANDED_VIEW].getChildren().get(0);
-		if (parent.getChildren().size() > index && index > -1) {
+		if (isValidIndex(index)) {
+			VBox parent = (VBox) _mainVbox[EXPANDED_VIEW].getChildren().get(0);
 			if (_selectedIndex != -1) {
 				VBox prev = (VBox) parent.getChildren().get(_selectedIndex);
 				prev.setId("cssExpandedViewVBox");
@@ -182,6 +179,20 @@ public class DetailComponent implements ViewInterface {
 				parent.setTranslateY(-sizeOnTop);
 			}
 		}
+	}
+
+	public boolean isValidIndex(int index) {
+		if (_mainVbox[EXPANDED_VIEW].getChildren().size() == 0) {
+			return false;
+		}
+		if (index < 0) {
+			return false;
+		}
+		VBox child = (VBox) _mainVbox[EXPANDED_VIEW].getChildren().get(0);
+		if (child.getChildren().size() > index) {
+			return true;
+		}
+		return false;
 	}
 
 	public VBox buildTask(TaskEntity task) {
