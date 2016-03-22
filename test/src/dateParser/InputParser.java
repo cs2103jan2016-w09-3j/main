@@ -146,7 +146,7 @@ public class InputParser {
 	}
 	
 	public String getID(){
-		return idParser.getID(input);
+		return idParser.getID(XMLParser.removeAllTags(input));
 	}
 	
 	public static void main(String args[]) {
