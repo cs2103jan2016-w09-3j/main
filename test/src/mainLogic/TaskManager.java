@@ -6,6 +6,8 @@
  */
 package mainLogic;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,10 +32,12 @@ public class TaskManager {
 	private static ArrayList<TaskEntity> displayedTasks;
 	private static ArrayList<TaskEntity> floatingTaskEntities = new ArrayList<TaskEntity>();
 	private static ArrayList<TaskEntity> mainTaskEntities = new ArrayList<TaskEntity>();
+	private static ArrayList<TaskEntity> searchedTasks = new ArrayList<TaskEntity>();
 
 	public final static int DISPLAY_MAIN = 0;
 	public final static int DISPLAY_FLOATING = 1;
 	public final static int DISPLAY_SEARCH = 2;
+	public final static int DISPLAY_OTHERS = 3;
 
 	/**
 	 * TEST FUNCTION Function for manually testing functions(First
@@ -43,60 +47,64 @@ public class TaskManager {
 	 */
 	public static void main(String[] args) {
 		TaskManager manager = TaskManager.getInstance();
-		manager.floatingTaskEntities.clear();
-		manager.mainTaskEntities.clear();
-		manager.switchView(manager.DISPLAY_MAIN);
-		ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
-		for (int i = 0; i < 5; i++) {
-			Calendar newDate = Calendar.getInstance();
-			newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
-			newList.add(new TaskEntity("Task " + Integer.toString(i + 1), newDate, false, "some desc"));
-		}
-		manager.add(newList);
-		manager.add(new TaskEntity("Task floating 1"));
+manager.unloadFile();
+        
+        ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
+        for (int i = 0; i < 5; i++) {
+            Calendar newDate = Calendar.getInstance();
+            newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
+            newList.add(new TaskEntity("Task " + Integer.toString(i + 1), newDate, false, "some desc"));
+        }
+        manager.add(newList);
+        
+        TaskEntity firstFloating = new TaskEntity("Task floating 1"); 
+        manager.add(firstFloating);
         manager.add(new TaskEntity("Task floating 2"));
         manager.add(new TaskEntity("Task floating 3"));
         manager.add(new TaskEntity("Task floating 4"));
-		
         
-		Calendar newDate = Calendar.getInstance();
-		newDate.clear();
-		newDate.set(2016, 2, 5);
-		TaskEntity headTask = new TaskEntity("2016/2/5", newDate, true);
-		manager.modify(1, headTask);
+        
+        Calendar newDate = Calendar.getInstance();
+        newDate.clear();
+        newDate.set(2016, 2, 5);
+        TaskEntity headTask = new TaskEntity("2016/2/5", newDate, true);
+        manager.modify(1, headTask);
 
-		newDate = Calendar.getInstance();
-		newDate.clear();
-		newDate.set(2016, 2, 3);
-		TaskEntity childTask = new TaskEntity("2016/2/3", newDate, true);
-		manager.modify(3, childTask);
+        newDate = Calendar.getInstance();
+        newDate.clear();
+        newDate.set(2016, 2, 3);
+        TaskEntity childTask = new TaskEntity("2016/2/3", newDate, true);
+        manager.modify(3, childTask);
 
-		manager.link(headTask, childTask);
-		
-		newDate = Calendar.getInstance();
-		newDate.clear();
-		newDate.set(2016, 3, 16);
-		childTask = new TaskEntity("2016/3/16", newDate, true);
-		manager.add(childTask);
-		manager.link(headTask, childTask);
+        manager.link(headTask, childTask);
+        
+        newDate = Calendar.getInstance();
+        newDate.clear();
+        newDate.set(2016, 3, 16);
+        childTask = new TaskEntity("2016/3/16", newDate, true);
+        manager.add(childTask);
+        manager.link(headTask, childTask);
 
-		if(manager.link(childTask, headTask)) System.out.println("wth");
-		else System.out.println("phew");
-		
-		newDate = Calendar.getInstance();
-		newDate.clear();
-		newDate.set(2016, 3, 15);
-		manager.add(new TaskEntity("2016/3/15", newDate, true));
+        assertEquals(manager.link(childTask, headTask), false);
+        
+        newDate = Calendar.getInstance();
+        newDate.clear();
+        newDate.set(2016, 3, 15);
+        manager.add(new TaskEntity("2016/3/15", newDate, true));
 
-		manager.printList();
-
-		manager.link(manager.floatingTaskEntities.get(0), manager.mainTaskEntities.get(6));
-
+        manager.link(firstFloating, childTask);
+        
         newDate = Calendar.getInstance();
         newDate.clear();
         newDate.set(2016, 3, 15);
         manager.modify(6, new TaskEntity("Modified task", newDate, true));
 
+        System.out.println(manager.printArrayContentsToString(DISPLAY_OTHERS));
+        System.out.println(manager.printArrayContentsToString(DISPLAY_FLOATING));
+        System.out.println(manager.printArrayContentsToString(DISPLAY_MAIN));
+
+        //manager.printList();
+        
 		ArrayList<TaskEntity> tasks_under = manager.getWorkingList().get(1).getAssociations();
 		
 		for(int i = 0; i < tasks_under.size(); i++) {
@@ -126,36 +134,8 @@ public class TaskManager {
         for(int i = 0; i < tasks_under.size(); i++) {
             System.out.println(tasks_under.get(i).getName());
         }
-		// while(true){
-		// System.out.println(getNextTimeListId());
-		// }
 	}
 
-	/**
-	 * TEST FUNCTION Prints out the 2 arraylists
-	 */
-	private void testDisplay() {
-		displayedTasks = new ArrayList<TaskEntity>();
-		displayedTasks.add(floatingTaskEntities.get(0));
-		displayedTasks.add(floatingTaskEntities.get(5));
-		displayedTasks.add(floatingTaskEntities.get(10));
-		displayedTasks.add(floatingTaskEntities.get(8));
-		displayedTasks.add(floatingTaskEntities.get(15));
-		displayedTasks.add(floatingTaskEntities.get(3));
-		displayedTasks.add(floatingTaskEntities.get(6));
-	}
-
-	/**
-	 * TESTING FUNCTION Populates the displayedTasks and taskEntities array with
-	 * fake data for testing
-	 */
-	private void populateArray() {
-		for (int i = 0; i < 30; i++) {
-			TaskEntity new_task = new TaskEntity("Task " + Integer.toString(i));
-			floatingTaskEntities.add(new_task);
-		}
-		displayedTasks = (ArrayList<TaskEntity>) floatingTaskEntities.clone();
-	}
 
 	/**
 	 * Testing function to print out the array contents
@@ -200,50 +180,47 @@ public class TaskManager {
 	}
 
 	/**
-	 * Testing function for JUnit test to check the output
-	 */
-	public String printListToString() {
-		String output = "";
-		if (displayedTasks == null) {
-			displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
-		}
-
-		output += "Display\n";
-		int j = 0;
-		for (int i = 0; i < displayedTasks.size(); i++) {
-			output += Utils.convertDecToBase36(i) + ". " + displayedTasks.get(i).getName() + "     ";
-			j++;
-			if (j >= 4) {
-				output += "\n";
-				j = 0;
-			}
-		}
-
-		output += "\nFloating\n";
-		j = 0;
-		for (int i = 0; i < floatingTaskEntities.size(); i++) {
-			output += Utils.convertDecToBase36(i) + ". " + floatingTaskEntities.get(i).getName() + "     ";
-			j++;
-			if (j >= 4) {
-				output += "\n";
-				j = 0;
-			}
-		}
-
-		output += "\nTime based\n";
-
-		j = 0;
-		for (int i = 0; i < mainTaskEntities.size(); i++) {
-			output += Utils.convertDecToBase36(i) + ". " + mainTaskEntities.get(i).getName() + "     ";
-			j++;
-			if (j >= 4) {
-				output += "\n";
-				j = 0;
-			}
-		}
-		return output;
+     * Prints out all the names of the tasks in the main array
+     * 
+     * @param display - default - to print out the array currently in focus
+     *            (inclusive of DISPLAY_OTHERS)
+     *            - DISPLAY_MAIN - to print out the timed tasks array
+     *            - DISPLAY_FLOATING - to print out the floating tasks array
+     *            - DISPLAY_SEARCH - to print out the searched tasks array
+     * 
+     * @return a string containing all the names of the tasks in the arraylist
+     *         printed, seperated by a ", " including at the end of the last
+     *         task printed
+     */
+	public String printArrayContentsToString (int display) {
+	    ArrayList<TaskEntity> arrayToBePrinted;
+	    
+	    if(display == DISPLAY_MAIN) {
+	        arrayToBePrinted = mainTaskEntities;
+	    } else if (display == DISPLAY_FLOATING ) {
+            arrayToBePrinted = floatingTaskEntities;
+        } else if (display == DISPLAY_SEARCH ) {
+            arrayToBePrinted = searchedTasks;
+        } else {
+            arrayToBePrinted = displayedTasks;
+        }
+	    
+	    String arrayContents = "";
+	    for(int i = 0; i < arrayToBePrinted.size(); i++) {
+	        arrayContents += arrayToBePrinted.get(i).getName() + ", ";
+	    }
+	    return arrayContents;
 	}
-
+	
+    /**
+     * Function to clear saved file data from its array. For Junit testing
+     */
+	public void unloadFile () {
+	    floatingTaskEntities.clear();
+        mainTaskEntities.clear();
+        switchView(DISPLAY_MAIN);
+	}
+	
 	/**
 	 * Initialization function to be called before usage of TaskManager class
 	 */
@@ -330,19 +307,22 @@ public class TaskManager {
 		return displayedTasks;
 	}
 
-	/**
-	 * UI Interface function Modifies the selected task, effectively deleting it
-	 * and adding a new task. Base10 version
-	 * 
-	 * @param index
-	 *            - int(in base10) index of task to be modified
-	 * @param modifiedTask
-	 *            - New data of the task
-	 * @return id of new position of the modified task in the display list if
-	 *         succeeded in deleting the task
-	 *         returns -1 if after modification, the task is no longer in displayedTasks
-	 *         returns -2 if the modification failed (Index out of bounds or deletion failed)
-	 */
+    /**
+     * UI Interface function Modifies the selected task, effectively deleting it
+     * and adding a new task. Base10 version. Will relink all the task's
+     * associations
+     * 
+     * @param index
+     *            - int(in base10) index of task to be modified
+     * @param modifiedTask
+     *            - New data of the task
+     * @return id of new position of the modified task in the display list if
+     *         succeeded in deleting the task
+     *         returns -1 if after modification, the task is no longer in
+     *         displayedTasks
+     *         returns -2 if the modification failed (Index out of bounds or
+     *         deletion failed)
+     */
 	public int modify(int index, TaskEntity modifiedTask) {
 	    if( index > displayedTasks.size() -1 ) {
 	        return -2;
@@ -368,15 +348,27 @@ public class TaskManager {
 		}
 	}
 
+    /**
+     * Function for modify to link the deleted task's associations onto the new
+     * task its modified to
+     * 
+     * @param modifiedTask - new task to replace the delete task
+     * @param associationState - Association status of the task deleted
+     * @param projectHead - Task that the delete task belonged to if it was
+     *            associated to it
+     * @param childTasks - Tasks that is under the deleted task if it is a
+     *            project head
+     */
     private void relinkAssociations(TaskEntity modifiedTask, int associationState, TaskEntity projectHead,
             ArrayList<TaskEntity> childTasks) {
-        if(associationState == TaskEntity.ASSOCIATED) {
-		    link(projectHead, modifiedTask);
-		} else if (associationState == TaskEntity.PROJECT_HEAD) {
-		    for(int i = 0; i < childTasks.size(); i++) {
-		        link(modifiedTask, childTasks.get(i));;
-		    }
-		}
+        if (associationState == TaskEntity.ASSOCIATED) {
+            link(projectHead, modifiedTask);
+        } else if (associationState == TaskEntity.PROJECT_HEAD) {
+            for (int i = 0; i < childTasks.size(); i++) {
+                link(modifiedTask, childTasks.get(i));
+                ;
+            }
+        }
     }
 
 	/**
