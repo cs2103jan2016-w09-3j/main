@@ -217,12 +217,13 @@ public class DateParser {
 		int currMonth = Calendar.getInstance().get(Calendar.MONTH) + CONVERSION_FROM_GREGORIAN_CAL;
 		int inputMonth = Integer.parseInt(monthStr);
 		int inputDay = Integer.parseInt(dayStr);
+		/*
 		if (currMonth > inputMonth) {
 			currYear++;
 		} else if ((currMonth == inputMonth) && (currDay > inputDay)) {
 			currYear++;
 		}
-
+		*/
 		return Integer.toString(currYear);
 	}
 
