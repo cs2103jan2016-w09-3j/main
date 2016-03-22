@@ -27,19 +27,18 @@ public class StorageController implements StorageInterface {
         
         sh.setAllCommandsQueue(dummyCommands);
         //
-        ch.saveUponTimeOut();
-        ch.saveUponFullQueue("Add blah blah angie awesome1");
-        ch.saveUponFullQueue("Add blah blah angie awesome2");
-        ch.saveUponFullQueue("Add blah blah angie awesome3");
-        ch.saveUponFullQueue("Add blah blah angie awesome4");
-        ch.saveUponFullQueue("Add blah blah angie awesome5");
-        ch.saveUponFullQueue("Add blah blah angie awesome6");
-        ch.saveUponFullQueue("Add blah blah angie awesome7");
-        ch.saveUponFullQueue("Add blah blah angie awesome8");
-        ch.saveUponFullQueue("Add blah blah angie awesome9");
-        ch.saveUponFullQueue("Add blah blah angie awesome10");
-        ch.saveUponFullQueue("Add blah blah angie awesome11");
-        ch.saveUponFullQueue("Add blah blah angie awesome12");
+        ch.saveCommand("Add blah blah angie awesome1");
+        ch.saveCommand("Add blah blah angie awesome2");
+        ch.saveCommand("Add blah blah angie awesome3");
+        ch.saveCommand("Add blah blah angie awesome4");
+        ch.saveCommand("Add blah blah angie awesome5");
+        ch.saveCommand("Add blah blah angie awesome6");
+        ch.saveCommand("Add blah blah angie awesome7");
+        ch.saveCommand("Add blah blah angie awesome8");
+        ch.saveCommand("Add blah blah angie awesome9");
+        ch.saveCommand("Add blah blah angie awesome10");
+        ch.saveCommand("Add blah blah angie awesome11");
+        ch.saveCommand("Add blah blah angie awesome12");
         //ch.saveUponExit(true);
         //System.out.println(ch.readFromExistingCommandFile()); 
     }

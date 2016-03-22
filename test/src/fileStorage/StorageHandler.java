@@ -177,15 +177,13 @@ public class StorageHandler {
      * @param writeCommands
      * @return boolean
      */
-    public boolean writeToCommandFile() {
+    public boolean writeToCommandFile(String command) {
         FileWriter fileWriter;
         long beforeModify = commandsFile.lastModified();
         long afterModify = -1;
         try {
             fileWriter = new FileWriter(commandsFilePath, true); // True to append to file
-            while (!allCommandsQueue.isEmpty()) {
-                fileWriter.write(allCommandsQueue.poll() + '\n');
-            }
+            fileWriter.write(command + '\n');
             fileWriter.flush();
             fileWriter.close();
             afterModify = commandsFile.lastModified();
@@ -204,9 +202,9 @@ public class StorageHandler {
     private boolean isModified(long timeBeforeModification, long timeAfterModification) {
         return timeAfterModification > timeBeforeModification;
     }
-    
+
     // Clear command file every time it commits
-    private void clearCommandFile() {
+    public void clearCommandFileUponExit() {
         FileWriter fileWriter;
         try {
             fileWriter = new FileWriter(commandsFilePath);
