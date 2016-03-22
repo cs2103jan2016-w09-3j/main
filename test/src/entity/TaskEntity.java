@@ -3,6 +3,8 @@ package entity;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import edu.emory.mathcs.backport.java.util.Collections;
+import mainLogic.TaskDateComparator;
 import mainLogic.TaskManager;
 
 public class TaskEntity {
@@ -155,9 +157,23 @@ public class TaskEntity {
             return false;
         } else {
             _association_status = PROJECT_HEAD;
-            _associations.add(childTask);
+            int idToInsert = findPositionToInsert(childTask);
+            _associations.add(idToInsert, childTask);
             return true;
         }
+    }
+    
+    private int findPositionToInsert(TaskEntity newTask) {
+        int idToInsert = Collections.binarySearch(_associations, newTask, new TaskDateComparator());
+
+        // Due to Collections.binarySearch's implementation, all objects
+        // that can't be found will return a negative value, which indicates
+        // the position where the object that is being searched is supposed
+        // to be minus 1. This if case figures out the position to slot it in
+        if (idToInsert < 0) {
+            idToInsert = -(idToInsert + 1);
+        }
+        return idToInsert;
     }
     
     public String getName() {

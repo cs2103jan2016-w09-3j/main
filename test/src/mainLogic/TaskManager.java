@@ -350,19 +350,16 @@ public class TaskManager {
 	    
 	    
 	    int initialDisplayedArraySize = displayedTasks.size();
-	    boolean hasAssociation = false;
-	    if (displayedTasks.get(index).getAssociationState() == TaskEntity.ASSOCIATED) {
-	        hasAssociation = true;
-	    }
-	    
+	    int associationState = displayedTasks.get(index).getAssociationState();
 	    TaskEntity projectHead = displayedTasks.get(index).getProjectHead();
+	    ArrayList<TaskEntity> childTasks = displayedTasks.get(index).getAssociations();
+	    
 		if (delete(index) == false) {
 			return -2;
 		}
 		
-		if(hasAssociation == true) {
-		    link(projectHead, modifiedTask);
-		}
+		relinkAssociations(modifiedTask, associationState, projectHead, childTasks);
+		
 		int newIndex = add(modifiedTask);
 		if( initialDisplayedArraySize == displayedTasks.size() ) {
 		    return newIndex;
@@ -370,6 +367,17 @@ public class TaskManager {
 		    return -1;
 		}
 	}
+
+    private void relinkAssociations(TaskEntity modifiedTask, int associationState, TaskEntity projectHead,
+            ArrayList<TaskEntity> childTasks) {
+        if(associationState == TaskEntity.ASSOCIATED) {
+		    link(projectHead, modifiedTask);
+		} else if (associationState == TaskEntity.PROJECT_HEAD) {
+		    for(int i = 0; i < childTasks.size(); i++) {
+		        link(modifiedTask, childTasks.get(i));;
+		    }
+		}
+    }
 
 	/**
 	 * UI Interface function Modifies the selected task, effectively deleting it
