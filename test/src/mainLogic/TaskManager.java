@@ -47,7 +47,7 @@ public class TaskManager {
 	 */
 	public static void main(String[] args) {
 		TaskManager manager = TaskManager.getInstance();
-manager.unloadFile();
+		manager.unloadFile();
         
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
         for (int i = 0; i < 5; i++) {
@@ -85,7 +85,7 @@ manager.unloadFile();
         manager.add(childTask);
         manager.link(headTask, childTask);
 
-        assertEquals(manager.link(childTask, headTask), false);
+        manager.link(childTask, headTask);
         
         newDate = Calendar.getInstance();
         newDate.clear();
@@ -232,10 +232,31 @@ manager.unloadFile();
         mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
         floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
 
+        updateTaskEntityCurrentId();
+        
         logger.log(Level.FINEST, "TaskManager Initialized");
         displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
         currentDisplayedList = DISPLAY_MAIN;
 	}
+
+
+    /**
+     * Sets the currentId in TaskEntity to be 1 more than the largest ID loaded
+     * so that it there will not be an Id Clash when creating new tasks
+     */
+    private void updateTaskEntityCurrentId() {
+        for(int i = 0; i < mainTaskEntities.size(); i ++) {
+            if( mainTaskEntities.get(i).getId() > TaskEntity.getCurrentId() ) {
+                TaskEntity.setCurrentId(mainTaskEntities.get(i).getId() + 1);
+            }
+        }
+        
+        for(int i = 0; i < floatingTaskEntities.size(); i ++) {
+            if( floatingTaskEntities.get(i).getId() > TaskEntity.getCurrentId() ) {
+                TaskEntity.setCurrentId(floatingTaskEntities.get(i).getId() + 1);
+            }
+        }
+    }
 
     /**
      * function to log error messages into TaskManager
@@ -250,6 +271,14 @@ manager.unloadFile();
 	 * Function to call for TaskManager before closing the program
 	 */
 	public void closeTaskManager() {
+	    for(int i = 0; i < mainTaskEntities.size(); i++) {
+	        mainTaskEntities.get(i).buildAssociationsId();
+	    }
+	    
+	    for(int i = 0; i < floatingTaskEntities.size(); i++) {
+            floatingTaskEntities.get(i).buildAssociationsId();
+        }
+	    
 		dataLoader.storeTaskLists(mainTaskEntities, floatingTaskEntities);
 	}
 

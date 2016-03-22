@@ -21,9 +21,18 @@ public class TaskEntity {
     private int _id;
     private int _association_status;
     private ArrayList<TaskEntity> _associations;
+    private String _associationIDs;
 
-    private static int currentID = 0;
+    private static int currentId = 0;
 
+    public static void setCurrentId (int newId) {
+        currentId = newId;
+    }
+    
+    public static int getCurrentId () {
+        return currentId;
+    }
+    
     public int getId() {
         return _id;
     }
@@ -41,8 +50,8 @@ public class TaskEntity {
      * used by task's constructor
      */
     private void initCommonData() {
-        _id = currentID;
-        currentID++;
+        _id = currentId;
+        currentId++;
         _dateCreated = Calendar.getInstance();
         _association_status = NOT_ASSOCIATED;
         _associations = new ArrayList<TaskEntity>();
@@ -107,12 +116,12 @@ public class TaskEntity {
      * @return - ArrayList matching associations, but instead of having the task
      *         object, has its corresponding ID
      */
-    public ArrayList<Integer> getAssociationsId () {
-       ArrayList<Integer> associationIds = new ArrayList<Integer>(); 
+    public void buildAssociationsId () {
+       _associationIDs = ""; 
        for(int i = 0; i < _associations.size(); i++) {
-           associationIds.add((Integer) _associations.get(i).getId());
+           _associationIDs += Integer.toString(_associations.get(i).getId()) + ",";
        }
-       return associationIds;
+       _associations = null;
     }
     
     /**
