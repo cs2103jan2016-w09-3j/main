@@ -65,6 +65,8 @@ public class TaskViewUserInterface implements ViewInterface {
 	private VBox _mainVbox; // main parent for items.
 	private int _itemIndexCounter = 0;
 
+	ReverseParser r = new ReverseParser();
+
 	// container to store current gridPanes builded for easy reference.
 	private ArrayList<GridPane> _gridPanes = new ArrayList<GridPane>();
 	private ArrayList<TaskEntity> workingList;
@@ -177,7 +179,7 @@ public class TaskViewUserInterface implements ViewInterface {
 
 			setIndexs(workingIndex);
 
-			_itemIndexCounter= _startIndex;
+			_itemIndexCounter = _startIndex;
 			int countItemSameWeek = 0;
 			ArrayList<TaskEntity> itemsInSameWeek = new ArrayList<TaskEntity>();
 			for (int i = _startIndex; i < _endIndex + 1; i++) {
@@ -326,23 +328,30 @@ public class TaskViewUserInterface implements ViewInterface {
 		vbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT);
 		HBox hbox = new HBox();
 		hbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT); // setMax
-
-		SimpleDateFormat daySdf = new SimpleDateFormat("d");
-		// Label dateNLPLabel = new
-		// Label(getStringOfDate(taskEntity.getDueDate()));
-		Label dateNLPLabel = new Label(daySdf.format(taskEntity.getDueDate().getTime()) + " ");
+		
+		Label dateNLPLabel = new Label();
 		dateNLPLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
 		dateNLPLabel.setFont(FONT_LABEL);
 		dateNLPLabel.setAlignment(Pos.BOTTOM_CENTER);
-		hbox.getChildren().add(dateNLPLabel);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("MMMMM yyyy");
-
-		Label dateLabel = new Label(sdf.format(taskEntity.getDueDate().getTime()));
+		Label dateLabel = new Label();
 		dateLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
 		dateLabel.setFont(FONT_LABEL_DATE);
 		dateLabel.setAlignment(Pos.BOTTOM_CENTER);
-		hbox.getChildren().add(dateLabel);
+		
+		String labelText = getStringOfDate(taskEntity.getDueDate());
+		if (labelText != null) {
+			dateNLPLabel.setText(labelText);
+			hbox.getChildren().add(dateNLPLabel);
+		}else 
+		{
+			SimpleDateFormat daySdf = new SimpleDateFormat("d");
+			dateNLPLabel.setText(daySdf.format(taskEntity.getDueDate().getTime()) + " ");
+			hbox.getChildren().add(dateNLPLabel);
+			SimpleDateFormat sdf = new SimpleDateFormat("MMMMM yyyy");
+			dateLabel.setText(sdf.format(taskEntity.getDueDate().getTime()));
+			hbox.getChildren().add(dateLabel);
+		}
 
 		vbox.getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(0, 0, 0, 20));
@@ -350,7 +359,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	private String getStringOfDate(Calendar c) {
-		return ReverseParser.reParse(c);
+		return r.reParse(c);
 	}
 
 	/**

@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.plaf.InputMapUIResource;
 
 public class ReverseParser {
-	private static Map<Integer,String> dictionary = new HashMap<Integer,String> ();
+	private static Map<Long,String> dictionary = new HashMap<Long,String> ();
 	
 	public ReverseParser(){
 		try {
@@ -24,7 +24,7 @@ public class ReverseParser {
 				line = br.readLine();
 				Scanner sc = new Scanner(line);
 				sc.useDelimiter(",");
-				int index = Integer.parseInt(sc.next());
+				Long index = Long.parseLong(sc.next());
 				String value = sc.next();
 				System.out.println(index+" "+value);
 				dictionary.put(index, value);
@@ -39,25 +39,26 @@ public class ReverseParser {
 	public String reParse(Calendar input){
 		String output = null;
 		Calendar curr = Calendar.getInstance();
-		curr.clear(Calendar.HOUR);
+		curr.set(Calendar.HOUR_OF_DAY, 0);
 		curr.clear(Calendar.MINUTE);
 		curr.clear(Calendar.SECOND);
 		curr.clear(Calendar.MILLISECOND);
-
-		input.clear(Calendar.HOUR);
+		input.set(Calendar.HOUR_OF_DAY, 0);
 		input.clear(Calendar.MINUTE);
 		input.clear(Calendar.SECOND);
 		input.clear(Calendar.MILLISECOND);
+		System.out.println(curr);
+		System.out.println(input);
 		long mills = input.getTimeInMillis()-curr.getTimeInMillis();
-		int days = (int) TimeUnit.MILLISECONDS.toDays(mills);
+		System.out.println(mills);
+		long days =(long) Math.floor(mills/86400000);
 		output = dictionary.get(days);
-		
 		return output;
 	}
 	
 	public static void main(String args[]){
 		Calendar c = Calendar.getInstance();
-		c.set(2016, 2, 22);
+		c.set(2016, 2, 23,0,0,0);
 
 		ReverseParser rp = new ReverseParser();
 		System.out.println(rp.reParse(c));
