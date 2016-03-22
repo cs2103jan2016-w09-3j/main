@@ -117,14 +117,19 @@ public class InputParser {
 		infoParser.setInformation(this.input);
 		String name = infoParser.getTitle();
 		String desc = infoParser.getDescription();
-		for(int i=0; i<dates.size(); i++){
-			Calendar c = Calendar.getInstance();
-			dates.get(i).setHours(0);
-			dates.get(i).setMinutes(0);
-			dates.get(i).setSeconds(0);
-			c.setTime(dates.get(i));
-			TaskEntity toAdd = new TaskEntity(name, c, false, desc);
+		if(dates.size() == 0){
+			TaskEntity toAdd = new TaskEntity(name, null, false, desc);
+			toAdd.setFloating(true);
 			tasks.add(toAdd);
+		}
+		else{
+			for(int i=0; i<dates.size(); i++){
+				Calendar c = Calendar.getInstance();
+				c.setTime(dates.get(i));
+				c.clear(Calendar.MILLISECOND);
+				TaskEntity toAdd = new TaskEntity(name, c, false, desc);
+				tasks.add(toAdd);
+			}
 		}
 		return tasks;
 	}
