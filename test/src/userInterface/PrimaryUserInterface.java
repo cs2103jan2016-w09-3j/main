@@ -17,6 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import mainLogic.Utils;
 
 public class PrimaryUserInterface extends Application {
 
@@ -184,6 +185,15 @@ public class PrimaryUserInterface extends Application {
 		return false;
 	}
 
+	public boolean executeDelete(String indexZZ) {
+		int indexToDelete = Utils.convertBase36ToDec(indexZZ);
+		if (indexToDelete != -1) {
+			return uiController.deleteTask(indexToDelete);
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * modify a task.
 	 * 
@@ -243,7 +253,7 @@ public class PrimaryUserInterface extends Application {
 					String[] spilt = t.split(" ");
 					if (spilt.length == 3) {
 						System.out.println("link " + spilt[1] + " to " + spilt[2]);
-						uiController.link(spilt[1],spilt[2]);
+						uiController.link(spilt[1], spilt[2]);
 					}
 				}
 			}
