@@ -10,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.logging.FileHandler;
@@ -236,6 +237,8 @@ public class TaskManager {
         
         logger.log(Level.FINEST, "TaskManager Initialized");
         displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
+        
+        initializeAssociations();
         currentDisplayedList = DISPLAY_MAIN;
 	}
 
@@ -254,6 +257,57 @@ public class TaskManager {
         for(int i = 0; i < floatingTaskEntities.size(); i ++) {
             if( floatingTaskEntities.get(i).getId() > TaskEntity.getCurrentId() ) {
                 TaskEntity.setCurrentId(floatingTaskEntities.get(i).getId() + 1);
+            }
+        }
+    }
+    
+    /**
+     * Creates the associations of the tasks based off the string
+     * 
+     * Pre-condition : Assumes id will not be repeated 
+     */
+    private void initializeAssociations () {
+        for(int i = 0; i < mainTaskEntities.size(); i++) {
+            String[] associationIdList = mainTaskEntities.get(i).getSavedAssociations().split(",");
+            
+            for (int j = 0; j < associationIdList.length; j++) {
+                int taskToAdd = Integer.parseInt(associationIdList[j]);
+
+                for (int k = 0; k < mainTaskEntities.size(); k++) {
+                    if (taskToAdd == mainTaskEntities.get(k).getId()) {
+                        mainTaskEntities.get(i).loadAssociation(mainTaskEntities.get(k));
+                        break;
+                    }
+                }
+                
+                for (int k = 0; k < floatingTaskEntities.size(); k++) {
+                    if (taskToAdd == floatingTaskEntities.get(k).getId()) {
+                        mainTaskEntities.get(i).loadAssociation(floatingTaskEntities.get(k));
+                        break;
+                    }
+                }
+            }
+        }
+        
+        for(int i = 0; i < floatingTaskEntities.size(); i++) {
+            String[] associationIdList = floatingTaskEntities.get(i).getSavedAssociations().split(",");
+            
+            for (int j = 0; j < associationIdList.length; j++) {
+                int taskToAdd = Integer.parseInt(associationIdList[j]);
+
+                for (int k = 0; k < mainTaskEntities.size(); k++) {
+                    if (taskToAdd == mainTaskEntities.get(k).getId()) {
+                        floatingTaskEntities.get(i).loadAssociation(mainTaskEntities.get(k));
+                        break;
+                    }
+                }
+                
+                for (int k = 0; k < floatingTaskEntities.size(); k++) {
+                    if (taskToAdd == floatingTaskEntities.get(k).getId()) {
+                        floatingTaskEntities.get(i).loadAssociation(floatingTaskEntities.get(k));
+                        break;
+                    }
+                }
             }
         }
     }

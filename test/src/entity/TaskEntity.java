@@ -125,6 +125,15 @@ public class TaskEntity {
     }
     
     /**
+     * Gets the saved string of IDs for the association list
+     * 
+     * @return String of all association IDs seperated by a comma
+     */
+    public String getSavedAssociations () {
+        return _associationIDs;
+    }
+    
+    /**
      * Gets the task representing the project head
      * 
      * @return null if project head cant be found, or if this task is not under
@@ -169,6 +178,19 @@ public class TaskEntity {
             return false;
         }
     }
+    
+    /**
+     * Function for init function to reload all the associations
+     *  
+     * @param taskToInsert - Task to be inserted into the associations list
+     */
+    public void loadAssociation (TaskEntity taskToInsert) {
+        if ( _associations == null ) {
+            _associations = new ArrayList<TaskEntity>();
+        }
+        _associations.add(taskToInsert);
+    }
+    
     /**
      * Function to link an object under this task
      * 
