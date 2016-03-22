@@ -69,8 +69,14 @@ public class TaskViewUserInterface implements ViewInterface {
 	private ArrayList<TaskEntity> workingList;
 
 	public static TaskViewUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
-		_myInstance = new TaskViewUserInterface(primaryStage, screenBounds, fixedSize);
-		return _myInstance;
+		if (_myInstance == null) {
+			if (primaryStage == null || screenBounds == null) {
+				return null;
+			}
+			_myInstance = new TaskViewUserInterface(primaryStage, screenBounds, fixedSize);
+			return _myInstance;
+		}
+		return null;
 	}
 
 	private TaskViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
@@ -375,7 +381,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		indexLabel.setAlignment(Pos.CENTER);
 		indexLabel.setFont(FONT_INDEX);
 		grid.add(indexLabel, 0, 0);
-		
+
 		HBox topBox = new HBox();
 
 		Label timeLabel = new Label();
@@ -396,18 +402,17 @@ public class TaskViewUserInterface implements ViewInterface {
 
 		HBox midBox = new HBox();
 		midBox.setMinHeight(0);
-		
-		//change to desc in future
+
 		String text = taskEntity.getDescription();
 		Label descriptionLabel2 = new Label(text);
 		descriptionLabel2.setMinHeight(0);
-		descriptionLabel2.setMaxWidth(_individualItemWidth-60);
+		descriptionLabel2.setMaxWidth(_individualItemWidth - 60);
 		descriptionLabel2.setWrapText(true);
 		descriptionLabel2.setFont(FONT_TASK);
-		
+
 		Text t = new Text(text);
-		t.setWrappingWidth(_individualItemWidth-60);
-		
+		t.setWrappingWidth(_individualItemWidth - 60);
+
 		midBox.getChildren().add(descriptionLabel2);
 		grid.add(midBox, 1, 1);
 
@@ -415,14 +420,13 @@ public class TaskViewUserInterface implements ViewInterface {
 		hashTagLabel.setMinHeight(0);
 		hashTagLabel.setFont(FONT_TASK);
 		grid.add(hashTagLabel, 1, 2);
-		
+
 		if (_view == UserInterfaceController.TASK_VIEW) {
 			grid.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		} else {
 			grid.setMinHeight(DETAILED_VIEW_ITEM_HEIGHT + t.getBoundsInLocal().getHeight());
 		}
 		grid.setMaxHeight(DETAILED_VIEW_ITEM_HEIGHT + t.getBoundsInLocal().getHeight());
-
 
 		return grid;
 	}
