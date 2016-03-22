@@ -47,10 +47,7 @@ public class ReverseParser {
 		input.clear(Calendar.MINUTE);
 		input.clear(Calendar.SECOND);
 		input.clear(Calendar.MILLISECOND);
-		System.out.println(curr);
-		System.out.println(input);
 		long mills = input.getTimeInMillis()-curr.getTimeInMillis();
-		System.out.println(mills);
 		long days =(long) Math.floor(mills/86400000);
 		output = dictionary.get(days);
 		return output;

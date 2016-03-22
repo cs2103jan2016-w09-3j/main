@@ -392,7 +392,6 @@ public class TaskViewUserInterface implements ViewInterface {
 		grid.add(indexLabel, 0, 0);
 
 		HBox topBox = new HBox();
-
 		Label timeLabel = new Label();
 		if (taskEntity.isFullDay()) {
 			timeLabel.setText("Full Day Event");
@@ -406,6 +405,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		Label titleLabel = new Label(taskEntity.getName());
 		titleLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		titleLabel.setFont(FONT_TASK);
+		HBox.setMargin(titleLabel, new Insets(0,10,0,10));
 		topBox.getChildren().add(titleLabel);
 		grid.add(topBox, 1, 0);
 
