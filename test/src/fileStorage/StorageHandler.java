@@ -29,6 +29,7 @@ public class StorageHandler {
     public StorageHandler() {
         tasksFilePath = "tasksList.txt";
         commandsFilePath = "commandsList.txt";
+        allCommandsQueue = new LinkedList<String>();
         processFile();
     }
 
@@ -81,6 +82,7 @@ public class StorageHandler {
         if (commandsFile.exists()) {
             setAllCommandsQueue(readFromExistingCommandFile());
             System.out.println("Command file found, begin reading...");
+            System.out.println("Queue size " + getAllCommandsQueue().size());
         } else {
             createNewFile(commandsFile);
         }
@@ -118,6 +120,10 @@ public class StorageHandler {
         return readData.trim();
     }
 
+    /**
+     * Reads commands from an existing file and returns the queue
+     * @return Queue<String>
+     */
     private Queue<String> readFromExistingCommandFile() {
         Queue<String> readCommands = new LinkedList<String>();
         BufferedReader buffer;
@@ -144,7 +150,7 @@ public class StorageHandler {
      * @param data
      * @return boolean
      */
-    public boolean writeToFile(String data) {
+    public boolean writeToMainFile(String data) {
         FileWriter fileWriter;
         long beforeModify = tasksFile.lastModified();
         long afterModify = -1;
@@ -166,19 +172,19 @@ public class StorageHandler {
     }
 
     /**
-     * Returns true if data is written to a file, false otherwise
-     * Whether the data has been written depends on the last modified time of the file
+     * Returns true if commands written to a file, false otherwise
+     * Whether the commands have been written depends on the last modified time of the file
      * @param writeCommands
      * @return boolean
      */
-    public boolean writeToCommandFile(Queue<String> writeCommands) {
+    public boolean writeToCommandFile() {
         FileWriter fileWriter;
         long beforeModify = commandsFile.lastModified();
         long afterModify = -1;
         try {
             fileWriter = new FileWriter(commandsFilePath, true); // True to append to file
-            while (!writeCommands.isEmpty()) {
-                fileWriter.write(writeCommands.poll() + '\n');
+            while (!allCommandsQueue.isEmpty()) {
+                fileWriter.write(allCommandsQueue.poll() + '\n');
             }
             fileWriter.flush();
             fileWriter.close();
@@ -197,5 +203,18 @@ public class StorageHandler {
      */
     private boolean isModified(long timeBeforeModification, long timeAfterModification) {
         return timeAfterModification > timeBeforeModification;
+    }
+    
+    // Clear command file every time it commits
+    private void clearCommandFile() {
+        FileWriter fileWriter;
+        try {
+            fileWriter = new FileWriter(commandsFilePath);
+            fileWriter.write("");
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
