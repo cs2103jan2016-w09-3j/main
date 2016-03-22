@@ -233,7 +233,12 @@ public class UserInterfaceController {
 
 	public void addRandomTaskToDisplay() {
 		TaskEntity task = _taskManager.getRandomFloating();
-		_floatingBarComponent.addTask(task.getName());
+		if (task != null) {
+			_floatingBarComponent.addTask(task.getName());
+			if (_floatingThread == null) {
+				startFloatingThread();
+			}
+		}
 	}
 
 	public boolean updateFloatingBar(double percentageDone) {
@@ -258,6 +263,7 @@ public class UserInterfaceController {
 	}
 
 	public void addTask(TaskEntity task) {
+		System.out.println("add");
 		int insertedTo = _taskManager.add(task);
 		if (insertedTo != -1) {
 			int selected = _taskViewInterface.getSelectIndex();
@@ -270,6 +276,8 @@ public class UserInterfaceController {
 
 			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), insertedTo);
 			updateComponents(0);
+		} else {
+			addRandomTaskToDisplay();
 		}
 	}
 

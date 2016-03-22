@@ -160,9 +160,6 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	public boolean executeBatchAdd(ArrayList<TaskEntity> task) {
-		for (int i = 0; i < task.size(); i++) {
-
-		}
 		uiController.addBatchTask(task);
 		focus();
 		return true;
