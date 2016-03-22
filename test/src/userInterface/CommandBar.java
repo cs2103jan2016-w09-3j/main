@@ -72,6 +72,13 @@ public class CommandBar {
 		InputParser parser = new InputParser(input);
 		return parser.getTask();
 	}
+	
+	public String HasId(String input){
+		String returnVal = null;
+		InputParser parser = new InputParser(input);
+		returnVal = parser.getID();
+		return returnVal;
+	}
 
 	public void setTextFieldHandler(EventHandler<KeyEvent> mainEventHandler) {
 		_textField.setOnKeyPressed(mainEventHandler);
