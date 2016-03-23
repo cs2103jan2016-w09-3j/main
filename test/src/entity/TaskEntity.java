@@ -3,6 +3,8 @@ package entity;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import edu.emory.mathcs.backport.java.util.Collections;
+import mainLogic.TaskDateComparator;
 import mainLogic.TaskManager;
 
 public class TaskEntity {
@@ -19,9 +21,18 @@ public class TaskEntity {
     private int _id;
     private int _association_status;
     private ArrayList<TaskEntity> _associations;
+    private String _associationIDs;
 
-    private static int currentID = 0;
+    private static int currentId = 0;
 
+    public static void setCurrentId (int newId) {
+        currentId = newId;
+    }
+    
+    public static int getCurrentId () {
+        return currentId;
+    }
+    
     public int getId() {
         return _id;
     }
@@ -39,8 +50,8 @@ public class TaskEntity {
      * used by task's constructor
      */
     private void initCommonData() {
-        _id = currentID;
-        currentID++;
+        _id = currentId;
+        currentId++;
         _dateCreated = Calendar.getInstance();
         _association_status = NOT_ASSOCIATED;
         _associations = new ArrayList<TaskEntity>();
@@ -99,6 +110,30 @@ public class TaskEntity {
     }
     
     /**
+     * Builds an ArrayList of all task's ID in associations for saving. Used to
+     * rebuild associations on load from file
+     * 
+     * @return - ArrayList matching associations, but instead of having the task
+     *         object, has its corresponding ID
+     */
+    public void buildAssociationsId () {
+       _associationIDs = ""; 
+       for(int i = 0; i < _associations.size(); i++) {
+           _associationIDs += Integer.toString(_associations.get(i).getId()) + ",";
+       }
+       _associations = null;
+    }
+    
+    /**
+     * Gets the saved string of IDs for the association list
+     * 
+     * @return String of all association IDs seperated by a comma
+     */
+    public String getSavedAssociations () {
+        return _associationIDs;
+    }
+    
+    /**
      * Gets the task representing the project head
      * 
      * @return null if project head cant be found, or if this task is not under
@@ -143,6 +178,19 @@ public class TaskEntity {
             return false;
         }
     }
+    
+    /**
+     * Function for init function to reload all the associations
+     *  
+     * @param taskToInsert - Task to be inserted into the associations list
+     */
+    public void loadAssociation (TaskEntity taskToInsert) {
+        if ( _associations == null ) {
+            _associations = new ArrayList<TaskEntity>();
+        }
+        _associations.add(taskToInsert);
+    }
+    
     /**
      * Function to link an object under this task
      * 
@@ -155,9 +203,23 @@ public class TaskEntity {
             return false;
         } else {
             _association_status = PROJECT_HEAD;
-            _associations.add(childTask);
+            int idToInsert = findPositionToInsert(childTask);
+            _associations.add(idToInsert, childTask);
             return true;
         }
+    }
+    
+    private int findPositionToInsert(TaskEntity newTask) {
+        int idToInsert = Collections.binarySearch(_associations, newTask, new TaskDateComparator());
+
+        // Due to Collections.binarySearch's implementation, all objects
+        // that can't be found will return a negative value, which indicates
+        // the position where the object that is being searched is supposed
+        // to be minus 1. This if case figures out the position to slot it in
+        if (idToInsert < 0) {
+            idToInsert = -(idToInsert + 1);
+        }
+        return idToInsert;
     }
     
     public String getName() {

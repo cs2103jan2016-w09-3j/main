@@ -17,6 +17,7 @@ public class XMLParser {
 	public static final String CMD_TAG = "cmd";
 	public static final String TITLE_TAG = "title";
 	public static final String DESC_TAG = "desc";
+	public static final String ID_TAG = "ID";
 	
 	public static Document loadXMLFromString(String xml) throws Exception{
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -57,6 +58,7 @@ public class XMLParser {
 			input = removeAttribute(input, tempXMLDoc,CMD_TAG);
 			input = removeAttribute(input, tempXMLDoc,DESC_TAG);
 			input = removeAttribute(input, tempXMLDoc,DATE_TAG);
+			input = removeAttribute(input, tempXMLDoc,ID_TAG);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -78,6 +80,7 @@ public class XMLParser {
 		input = removeTags(input, TITLE_TAG);
 		input = removeTags(input, DESC_TAG);
 		input = removeTags(input, DATE_TAG);
+		input = removeTags(input, ID_TAG);
 		return input;
 	}
 	

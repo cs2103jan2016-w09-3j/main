@@ -20,6 +20,7 @@ public class InputParser {
 	private DateParser dateParser;
 	private CommandParser cmdParser;
 	private InformationParser infoParser;
+	private IdParser idParser;
 	
 	private static Logger logger = Logger.getLogger("InputParser");
 
@@ -28,6 +29,7 @@ public class InputParser {
 	 * @param input String to be parsed
 	 */
 	public InputParser(String input) {
+		/**
 		try{
 			Handler fh = new FileHandler("inputParser.log");
 			logger.addHandler(fh);
@@ -36,10 +38,13 @@ public class InputParser {
 			
 		}
 		logger.log(Level.INFO,"InputParser init");
+		
+		**/
 		setInput(input);
 		dateParser = new DateParser();
 		cmdParser = new CommandParser();
 		infoParser = new InformationParser();
+		idParser = new IdParser();
 	}
 
 
@@ -51,8 +56,13 @@ public class InputParser {
 		logger.log(Level.INFO,"Add xml to input");
 		assert (input!=null) : "Input is null";
 		addXMLDate();
+		addXMLID();
 		addXMLCmd();
 		addXMLTitleDesc();
+	}
+	
+	private void addXMLID() {
+		input = idParser.xmlID(input);
 	}
 
 	/**
@@ -117,16 +127,26 @@ public class InputParser {
 		infoParser.setInformation(this.input);
 		String name = infoParser.getTitle();
 		String desc = infoParser.getDescription();
-		for(int i=0; i<dates.size(); i++){
-			Calendar c = Calendar.getInstance();
-			dates.get(i).setHours(0);
-			dates.get(i).setMinutes(0);
-			dates.get(i).setSeconds(0);
-			c.setTime(dates.get(i));
-			TaskEntity toAdd = new TaskEntity(name, c, false, desc);
+		if(dates.size() == 0){
+			TaskEntity toAdd = new TaskEntity(name, null, false, desc);
+			toAdd.setFloating(true);
 			tasks.add(toAdd);
 		}
+		else{
+			for(int i=0; i<dates.size(); i++){
+				Calendar c = Calendar.getInstance();
+				c.setTime(dates.get(i));
+				c.clear(Calendar.SECOND);
+				c.clear(Calendar.MILLISECOND);
+				TaskEntity toAdd = new TaskEntity(name, c, false, desc);
+				tasks.add(toAdd);
+			}
+		}
 		return tasks;
+	}
+	
+	public String getID(){
+		return idParser.getID(XMLParser.removeAllTags(input));
 	}
 	
 	public static void main(String args[]) {

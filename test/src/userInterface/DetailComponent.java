@@ -140,12 +140,11 @@ public class DetailComponent implements ViewInterface {
 		box.getChildren().add(buildTask(task));
 
 		ArrayList<TaskEntity> association = task.getAssociations();
-		for(int i=0; i<association.size(); i ++)
-		{
-			box.getChildren().add(buildTask(association.get(i)));
+		if (association != null) {
+			for (int i = 0; i < association.size(); i++) {
+				box.getChildren().add(buildTask(association.get(i)));
+			}
 		}
-		
-		
 		return box;
 	}
 
@@ -223,8 +222,8 @@ public class DetailComponent implements ViewInterface {
 
 	public String getDate(Calendar cal) {
 		String date = "";
-		date += cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.YEAR) + " "
-				+ cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE);
+		date += cal.get(Calendar.DAY_OF_MONTH) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR)
+				+ " " + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE);
 		return date;
 
 	}
