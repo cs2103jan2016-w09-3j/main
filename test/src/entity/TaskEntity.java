@@ -282,7 +282,7 @@ public class TaskEntity {
 		if (_isFullDay) {
 			return "Full Day event";
 		}
-		return _dueDate.get(Calendar.HOUR) + ":" + _dueDate.get(Calendar.MINUTE);
+		return _dueDate.get(Calendar.HOUR_OF_DAY) + ":" + _dueDate.get(Calendar.MINUTE);
 
 	}
 }
