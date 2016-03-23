@@ -234,7 +234,15 @@ public class PrimaryUserInterface extends Application {
 			String t = _commandBar.get_textInField();
 
 			// Ten add to mod to cater for theses commands
-			if (t.equals("hide")) {
+			if (t.equals("float")) {
+				uiController.showFloatingView();
+				textField.setText("");
+				focus();
+			} else if (t.equals("main")) {
+				uiController.showMainView();
+				textField.setText("");
+				focus();
+			} else if (t.equals("hide")) {
 				uiController.hide();
 				textField.setText("");
 				focus();
@@ -276,9 +284,9 @@ public class PrimaryUserInterface extends Application {
 				}
 			} else if (cmd.equals(COMMAND.DELETE)) {
 				String id = _commandBar.HasId(textField.getText());
-				if(id!=null){
+				if (id != null) {
 					executeDelete(id);
-				}else{
+				} else {
 					ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
 					for (int i = 0; i < tasks.size(); i++) {
 						executeDelete(tasks.get(i));

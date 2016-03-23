@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class FloatingTaskAnimationThread extends Service<Void> {
+public class FloatingBarAnimationThread extends Service<Void> {
 
 	private UserInterfaceController ui;
 	private boolean isAdded;
@@ -15,7 +15,7 @@ public class FloatingTaskAnimationThread extends Service<Void> {
 
 	private double _percentageDone;
 
-	public FloatingTaskAnimationThread(UserInterfaceController userInterfaceController) {
+	public FloatingBarAnimationThread(UserInterfaceController userInterfaceController) {
 		ui = userInterfaceController;
 		_percentageDone = 0;
 	}

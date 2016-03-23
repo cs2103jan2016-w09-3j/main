@@ -24,9 +24,12 @@ public class UserInterfaceController {
 	final static int TASK_VIEW = 1;
 	final static int EXPANDED_VIEW = 2;
 	final static int ASSOCIATE_VIEW = 3;
+	final static int FLOATING_VIEW = 4;
+	private int _previousView = -1;
 
 	private Stage _parentStage;
 	private TaskViewUserInterface _taskViewInterface;
+	private FloatingTaskUserInterface _floatingViewInterface;
 	private DescriptionComponent _descriptionComponent;
 	private DetailComponent _detailComponent;
 	private FloatingBarViewUserInterface _floatingBarComponent;
@@ -36,7 +39,7 @@ public class UserInterfaceController {
 	// variables for animation and changing views;
 	private int _currentView = TASK_VIEW;
 	private ScrollTaskAnimation _scorllAnimation;
-	private FloatingTaskAnimationThread _floatingThread;
+	private FloatingBarAnimationThread _floatingThread;
 
 	// main logic class to interact
 	private TaskManager _taskManager;
@@ -80,19 +83,26 @@ public class UserInterfaceController {
 	 */
 	public void initializeViews() {
 		// _taskManager.generateFakeData();// replace when integrate with angie
-		initilizeFloatingBar();
-		initilizeTaskView();
+		initializeFloatingBar();
+		initializeFloatingView();
+		initializeTaskView();
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
 		updateComponents(0);
 	}
 
-	private void initilizeTaskView() {
+	private void initializeTaskView() {
 		_taskViewInterface = TaskViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize);
 		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
 	}
 
-	private void initilizeFloatingBar() {
+	private void initializeFloatingView() {
+		_floatingViewInterface = FloatingTaskUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize);
+		ArrayList<TaskEntity> floatingList = new ArrayList<TaskEntity>();
+		_floatingViewInterface.buildComponent(floatingList);
+	}
+
+	private void initializeFloatingBar() {
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		TaskEntity floatingTask = _taskManager.getRandomFloating();
 		if (floatingTask != null) {
@@ -102,7 +112,7 @@ public class UserInterfaceController {
 	}
 
 	public void startFloatingThread() {
-		_floatingThread = new FloatingTaskAnimationThread(this);
+		_floatingThread = new FloatingBarAnimationThread(this);
 		_floatingThread.start();
 	}
 
@@ -115,11 +125,19 @@ public class UserInterfaceController {
 			_descriptionComponent.show();
 			_floatingBarComponent.show();
 			_detailComponent.show();
+			_floatingViewInterface.hide();
 		} else if (_currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
 			_taskViewInterface.show();
 			_descriptionComponent.show();
 			_floatingBarComponent.show();
 			_detailComponent.show();
+			_floatingViewInterface.hide();
+		} else if (_currentView == FLOATING_VIEW) {
+			_taskViewInterface.hide();
+			_descriptionComponent.hide();
+			_floatingBarComponent.show();
+			_detailComponent.show();
+			_floatingViewInterface.show();
 		}
 	}
 
@@ -131,6 +149,7 @@ public class UserInterfaceController {
 		_descriptionComponent.hide();
 		_floatingBarComponent.hide();
 		_detailComponent.hide();
+		_floatingViewInterface.hide();
 	}
 
 	/**
@@ -368,7 +387,23 @@ public class UserInterfaceController {
 		}
 	}
 
+	public void showFloatingView() {
+		if (_currentView != FLOATING_VIEW) {
+			_previousView = _currentView;
+		}
+		_currentView = FLOATING_VIEW;
+		show();
+	}
+
+	public void showMainView() {
+		if (_previousView != -1) {
+			_currentView = _previousView;
+		}
+		show();
+	}
+
 	public void saveStuff() {
 		_taskManager.closeTaskManager();
 	}
+
 }

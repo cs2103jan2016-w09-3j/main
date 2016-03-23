@@ -200,32 +200,6 @@ public class TaskViewUserInterface implements ViewInterface {
 			if (itemsInSameWeek.size() > 0) {
 				_mainVbox.getChildren().add(creatWeek(itemsInSameWeek));
 			}
-
-			/*
-			 * VBox weekBox = createWeekParent(); VBox topBox =
-			 * createDayParent(workingList.get(_startIndex)); HBox item =
-			 * buildIndividualTask(workingList.get(_startIndex), _startIndex);
-			 * topBox.getChildren().add(item);
-			 * topBox.setMinHeight(topBox.getMinHeight() + item.getMinHeight());
-			 * for (int i = _startIndex + 1; i <= _endIndex; i++) { if
-			 * (!isSameWeek(workingList.get(i - 1), workingList.get(i))) {
-			 * weekBox.getChildren().add(topBox);
-			 * weekBox.setMinHeight(weekBox.getMinHeight() +
-			 * topBox.getMinHeight()); _mainVbox.getChildren().add(weekBox);
-			 * weekBox = createWeekParent(); topBox =
-			 * createDayParent(workingList.get(i)); } else { if
-			 * (!isSameDay(workingList.get(i - 1), workingList.get(i))) {
-			 * weekBox.getChildren().add(topBox);
-			 * weekBox.setMinHeight(weekBox.getMinHeight() +
-			 * topBox.getMinHeight()); topBox =
-			 * createDayParent(workingList.get(i)); } } HBox itemToAdd =
-			 * buildIndividualTask(workingList.get(i), i);
-			 * topBox.getChildren().add(itemToAdd);
-			 * topBox.setMinHeight(topBox.getMinHeight() +
-			 * itemToAdd.getMinHeight()); } weekBox.getChildren().add(topBox);
-			 * weekBox.setMinHeight(weekBox.getMinHeight() +
-			 * topBox.getMinHeight()); _mainVbox.getChildren().add(weekBox);
-			 */
 			_selectedIndex = workingIndex;
 		}
 	}
