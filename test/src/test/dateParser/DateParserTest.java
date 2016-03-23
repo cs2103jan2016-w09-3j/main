@@ -23,6 +23,7 @@ public class DateParserTest {
 	@Test
 	public void testXMLDate(){
 		assertEquals("<dates>tmr</dates> blah blah ",dp.xmlDate("tmr blah blah"));
+		assertEquals("",dp.xmlDate(""));
 	}
 	
 	

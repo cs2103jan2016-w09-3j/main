@@ -24,22 +24,9 @@ public class StorageController implements StorageInterface {
         //AllTaskLists convertedDummy = jc.jsonToJava(data);
         
         Queue<String> dummyCommands = sc.createDummyCommands();
+        sh.writeToCommandFile("HELLO COMMAND");
+        sh.writeToMainFile("HELLO MAIN");
         
-        sh.setAllCommandsQueue(dummyCommands);
-        //
-        ch.saveUponTimeOut();
-        ch.saveUponFullQueue("Add blah blah angie awesome1");
-        ch.saveUponFullQueue("Add blah blah angie awesome2");
-        ch.saveUponFullQueue("Add blah blah angie awesome3");
-        ch.saveUponFullQueue("Add blah blah angie awesome4");
-        ch.saveUponFullQueue("Add blah blah angie awesome5");
-        ch.saveUponFullQueue("Add blah blah angie awesome6");
-        ch.saveUponFullQueue("Add blah blah angie awesome7");
-        ch.saveUponFullQueue("Add blah blah angie awesome8");
-        ch.saveUponFullQueue("Add blah blah angie awesome9");
-        ch.saveUponFullQueue("Add blah blah angie awesome10");
-        ch.saveUponFullQueue("Add blah blah angie awesome11");
-        ch.saveUponFullQueue("Add blah blah angie awesome12");
         //ch.saveUponExit(true);
         //System.out.println(ch.readFromExistingCommandFile()); 
     }
@@ -82,6 +69,23 @@ public class StorageController implements StorageInterface {
         newList.setFloatingTaskList(floating);
         newList.setMainTaskList(main);
         return storeTaskLists(newList);
+    }
+    
+    public String arrayListToString(ArrayList<String> arrayList) {
+        String output = "";
+        for (int i = 0; i < arrayList.size(); i++) {
+            output = output + arrayList.get(i) + '\n';
+        }
+        return output;
+    }
+    
+    public ArrayList<String> stringToArrayList(String input) {
+        ArrayList<String> arrayList = new ArrayList<String>();
+        String[] splitString = input.split("\n");
+        for (int i = 0; i < splitString.length; i++) {
+            arrayList.add(splitString[i]);
+        }
+        return arrayList;
     }
     
     private AllTaskLists createDummy() {

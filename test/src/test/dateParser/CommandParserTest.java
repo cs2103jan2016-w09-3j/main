@@ -19,5 +19,7 @@ public class CommandParserTest {
 	@Test
 	public void testAddXML(){
 		assertEquals("<cmd>add</cmd> basketball",cp.xmlFirstWord("add basketball"));
+		//todo: fix if no text
+		assertEquals("<cmd></cmd>",cp.xmlFirstWord(""));
 	}
 }
