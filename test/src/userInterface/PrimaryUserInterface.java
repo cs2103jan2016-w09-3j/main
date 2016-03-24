@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.scene.web.HTMLEditor;
 import mainLogic.Utils;
 
 public class PrimaryUserInterface extends Application {
@@ -165,8 +166,8 @@ public class PrimaryUserInterface extends Application {
 	public boolean executeAdd(TaskEntity task) {
 		if (task != null) {
 			uiController.addTask(task);
-			_commandBar.getTextField().setText("");
-			_commandBar.addSessionCmds(_commandBar.get_textInField());
+			_commandBar.getTextField().setHtmlText("");
+			//_commandBar.getTextField().setText("");
 			focus();
 			return true;
 		}
@@ -190,8 +191,8 @@ public class PrimaryUserInterface extends Application {
 		if (indexToDelete > -1) {
 			boolean temp = uiController.deleteTask(indexToDelete);
 			if (temp) {
-				_commandBar.addSessionCmds(_commandBar.get_textInField());
-				_commandBar.getTextField().setText("");
+				_commandBar.getTextField().setHtmlText("");
+				//_commandBar.getTextField().setText("");
 				return true;
 			}
 		}
@@ -218,8 +219,8 @@ public class PrimaryUserInterface extends Application {
 		if (indexToModify > -1) {
 			boolean temp = uiController.modifyTask(indexToModify, taskToCheck);
 			if (temp) {
-				_commandBar.addSessionCmds(_commandBar.get_textInField());
-				_commandBar.getTextField().setText("");
+				_commandBar.getTextField().setHtmlText("");
+				//_commandBar.getTextField().setText("");
 				return true;
 			}
 		}
@@ -236,23 +237,25 @@ public class PrimaryUserInterface extends Application {
 	 */
 	public boolean executeJump(String indexToJump) {
 		uiController.jumpToIndex(indexToJump);
-		_commandBar.getTextField().setText("");
+		_commandBar.getTextField().setHtmlText("");
+		//_commandBar.getTextField().setText("");
 		return true;
 	}
 
-	private void processKeyReleased(TextField textField, KeyEvent event) {
-		String input = textField.getText();
+	private void processKeyReleased(HTMLEditor textField, KeyEvent event) {
+		String input = _commandBar.removeHtml(textField.getHtmlText());
 		_commandBar.onKeyReleased(input);
+		textField.requestFocus();
 	}
 
-	private void processKeyInputs(TextField textField, KeyEvent event) {
+	private void processKeyInputs(HTMLEditor textField, KeyEvent event) {
 		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
-			COMMAND cmd = _commandBar.onEnter(textField.getText());
-			String t = XMLParser.removeAllTags(textField.getText());
+			COMMAND cmd = _commandBar.onEnter(_commandBar.removeHtml(textField.getHtmlText()));
 			// Ten add to mod to cater for theses commands
+			String t = _commandBar.removeHtml(textField.getHtmlText());
 			if (t.equals("float")) {
 				uiController.showFloatingView();
-				textField.setText("");
+				textField.setHtmlText("");
 				focus();
 			}   else if (t.indexOf(" ") != -1) {
 				if (t.substring(0, t.indexOf(" ")).equals("jump")) {
@@ -286,7 +289,7 @@ public class PrimaryUserInterface extends Application {
 					executeModify(tasks.get(i));
 				}
 			} else if (cmd.equals(COMMAND.DELETE)) {
-				String id = _commandBar.HasId(textField.getText());
+				String id = _commandBar.getId(_commandBar.removeHtml(textField.getHtmlText()));
 				if (id != null) {
 					executeDelete(id);
 				} else {
@@ -295,24 +298,24 @@ public class PrimaryUserInterface extends Application {
 						executeDelete(tasks.get(i));
 					}
 				}
-				textField.setText("");
+				textField.setHtmlText("");
 			} else if (cmd.equals(COMMAND.MAIN)) {
 				uiController.showMainView(-1);
-				textField.setText("");
+				textField.setHtmlText("");
 				focus();
 			}else if (cmd.equals(COMMAND.HIDE)) {
 				uiController.hide();
-				textField.setText("");
+				textField.setHtmlText("");
 				focus();
 				return;
 			} else if (cmd.equals(COMMAND.SHOW)) {
 				uiController.show();
-				textField.setText("");
+				textField.setHtmlText("");
 				focus();
 				return;
 			} else if (cmd.equals(COMMAND.FLOAT)) {
 				uiController.showFloatingView();
-				textField.setText("");
+				textField.setHtmlText("");
 				focus();
 			}  
 		}
@@ -341,6 +344,7 @@ public class PrimaryUserInterface extends Application {
 		}
 
 		_primaryStage.requestFocus();
+		textField.requestFocus();
 	}
 
 	public void focus() {
