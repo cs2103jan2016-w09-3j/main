@@ -3,7 +3,7 @@ package dateParser;
 public class CommandParser {
 
 	public enum COMMAND {
-		ADD, EDIT, DELETE, EXIT, INVALID;
+		ADD, EDIT, DELETE, EXIT, MAIN, HIDE, SHOW, FLOAT, INVALID;
 	};
 
 	public CommandParser() {
@@ -26,6 +26,14 @@ public class CommandParser {
 			returnVal = COMMAND.DELETE;
 		} else if (inputCmd.equalsIgnoreCase("exit")) {
 			returnVal = COMMAND.EXIT;
+		}else if (inputCmd.equalsIgnoreCase("main")) {
+			returnVal = COMMAND.MAIN;
+		}else if (inputCmd.equalsIgnoreCase("hide")) {
+			returnVal = COMMAND.HIDE;
+		}else if (inputCmd.equalsIgnoreCase("show")) {
+			returnVal = COMMAND.SHOW;
+		}else if (inputCmd.equalsIgnoreCase("float")) {
+			returnVal = COMMAND.FLOAT;
 		}
 		return returnVal;
 	}
@@ -38,7 +46,9 @@ public class CommandParser {
 	public String xmlFirstWord(String input) {
 		String inputFirstWord = ParserCommons.getFirstWord(input);
 		String returnStrVal = input;
-		returnStrVal = input.replace(inputFirstWord, "<cmd>" + inputFirstWord + "</cmd>");
+		if(!inputFirstWord.trim().equals("")){
+			returnStrVal = input.replace(inputFirstWord, "<cmd>" + inputFirstWord + "</cmd>");
+		}
 		return returnStrVal;
 	}
 }

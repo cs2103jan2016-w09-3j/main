@@ -14,6 +14,7 @@ public class CommandParserTest {
 		assertTrue(CommandParser.COMMAND.EDIT.equals(cp.getCommand("edit something something")));
 		assertTrue(CommandParser.COMMAND.EXIT.equals(cp.getCommand("exit something something")));
 		assertTrue(CommandParser.COMMAND.INVALID.equals(cp.getCommand("munchkin something something")));
+		assertTrue(CommandParser.COMMAND.INVALID.equals(cp.getCommand("")));
 	}
 	
 	@Test

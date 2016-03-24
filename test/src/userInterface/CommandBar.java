@@ -50,26 +50,25 @@ public class CommandBar {
 		_textField.setBorder(null);
 	}
 
-	public void onSpace(String input) {
-		_textInField = XMLParser.removeAllTags(input);
-		System.out.println(_textInField);
-		InputParser parser = new InputParser(_textInField);
+	public void onKeyReleased(String input) {
+		input = XMLParser.removeAllTags(input);
+		//System.out.println(input);
+		InputParser parser = new InputParser(input);
 		parser.addXML();
-
 		String textToShow = parser.getInput();
 		_textField.setText(textToShow);
-		_textField.positionCaret(textToShow.length() - 1);
+		_textField.positionCaret(textToShow.length()-1);
 	}
 
 	public COMMAND onEnter(String input) {
-		onSpace(input);
-		InputParser parser = new InputParser(_textInField);
+		onKeyReleased(input);
+		InputParser parser = new InputParser(XMLParser.removeAllTags(input));
 		COMMAND cmd = parser.getCommand();
 		return cmd;
 	}
 
 	public ArrayList<TaskEntity> getTasks(String input) {
-		InputParser parser = new InputParser(input);
+		InputParser parser = new InputParser(XMLParser.removeAllTags(input));
 		return parser.getTask();
 	}
 	
@@ -80,8 +79,9 @@ public class CommandBar {
 		return returnVal;
 	}
 
-	public void setTextFieldHandler(EventHandler<KeyEvent> mainEventHandler) {
+	public void setTextFieldHandler(EventHandler<KeyEvent> mainEventHandler,EventHandler<KeyEvent> keyReleasedEventHandler) {
 		_textField.setOnKeyPressed(mainEventHandler);
+		_textField.setOnKeyReleased(keyReleasedEventHandler);
 	}
 
 	public TaskEntity executeLine(String userInput) {
