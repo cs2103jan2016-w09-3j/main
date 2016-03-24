@@ -18,14 +18,14 @@ public class CommandHandler extends TimerTask {
         return mfh.writeToCommandFile(command);
     }
     
-    public boolean saveUponFullQueue(String command) {
+    /*public boolean saveUponFullQueue(String command) {
         boolean isSaved = false;
         mfh.getAllCommandsQueue().offer(command);
         if (mfh.getAllCommandsQueue().size() >= QUEUE_SIZE) {
             isSaved = mfh.storeTaskLists();
         }
         return isSaved;
-    }
+    }*/
     
     public Queue<String> retrieveCommand() {
         return mfh.getAllCommandsQueue();
@@ -36,9 +36,9 @@ public class CommandHandler extends TimerTask {
     }
     
     public void run() {
-        boolean isSaved = sc.storeTaskLists();
+        /*boolean isSaved = sc.storeTaskLists();
         mfh.clearCommandFileUponCommit();
-        System.out.println(isSaved);
+        System.out.println(isSaved);*/
     }
     
     public void commitUponTimeOut() {
