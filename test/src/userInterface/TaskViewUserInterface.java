@@ -18,6 +18,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -302,7 +303,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		vbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT);
 		HBox hbox = new HBox();
 		hbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT); // setMax
-		
+
 		Label dateNLPLabel = new Label();
 		dateNLPLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
 		dateNLPLabel.setFont(FONT_LABEL);
@@ -312,13 +313,12 @@ public class TaskViewUserInterface implements ViewInterface {
 		dateLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
 		dateLabel.setFont(FONT_LABEL_DATE);
 		dateLabel.setAlignment(Pos.BOTTOM_CENTER);
-		
+
 		String labelText = getStringOfDate(taskEntity.getDueDate());
 		if (labelText != null) {
 			dateNLPLabel.setText(labelText);
 			hbox.getChildren().add(dateNLPLabel);
-		}else 
-		{
+		} else {
 			SimpleDateFormat daySdf = new SimpleDateFormat("d");
 			dateNLPLabel.setText(daySdf.format(taskEntity.getDueDate().getTime()) + " ");
 			hbox.getChildren().add(dateNLPLabel);
@@ -360,9 +360,9 @@ public class TaskViewUserInterface implements ViewInterface {
 
 		Label indexLabel = new Label(Utils.convertDecToBase36(index));
 		indexLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
+		indexLabel.setFont(Font.font(PrimaryUserInterface.DEFAULT_FONT, FontWeight.BOLD, FONT_SIZE_TASK));
 		indexLabel.setMinWidth(50);
 		indexLabel.setAlignment(Pos.CENTER);
-		indexLabel.setFont(FONT_INDEX);
 		grid.add(indexLabel, 0, 0);
 
 		HBox topBox = new HBox();
@@ -375,7 +375,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		Label titleLabel = new Label(taskEntity.getName());
 		titleLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		titleLabel.setFont(FONT_TASK);
-		HBox.setMargin(titleLabel, new Insets(0,10,0,10));
+		HBox.setMargin(titleLabel, new Insets(0, 10, 0, 10));
 		topBox.getChildren().add(titleLabel);
 		grid.add(topBox, 1, 0);
 

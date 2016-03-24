@@ -136,14 +136,13 @@ public class DetailComponent implements ViewInterface {
 		box.setMinWidth(_stageWidth);
 		box.setId("cssDetailAssociationListBox");
 
-		// add itself first
-		box.getChildren().add(buildTask(task));
-
 		ArrayList<TaskEntity> association = task.getDisplayAssociations();
+
 		if (association != null) {
 			for (int i = 0; i < association.size(); i++) {
 				box.getChildren().add(buildTask(association.get(i)));
 			}
+			_selectedIndex =task.getAssociationPosition();
 		}
 		return box;
 	}
