@@ -220,6 +220,21 @@ public class TaskManager {
 		}
 		return arrayContents;
 	}
+	
+	/**
+	 * Function for JUnit test case to print out the display associations of a task
+	 * @param taskToBePrinted - Task whose array is to be printed
+	 */
+	public String printAssociationsToString (TaskEntity taskToBePrinted){
+	    String printedAssociations = "";
+        ArrayList<TaskEntity> displayedAssociations = taskToBePrinted.getDisplayAssociations();
+        
+        for (int i = 0; i < displayedAssociations.size(); i++) {
+            printedAssociations += displayedAssociations.get(i).getName() + ",";
+        }
+        
+        return printedAssociations;
+	}
 
 	/**
 	 * Function to clear saved file data from its array. For Junit testing

@@ -249,11 +249,39 @@ public class TaskEntity {
 		}
 	}
 	
+	/**
+     * Gets this TaskEntity's position in its association list
+     * 
+     * @return slot number in the project head's _association array, or -1 if it
+     *         doesn't belong to any projects
+     */
+    public int getAssociationPosition() {
+        if (_association_status == PROJECT_HEAD) {
+            return 0;
+        } else if (_association_status == ASSOCIATED) {
+            ArrayList<TaskEntity> displayedAssociations = getProjectHead().getAssociations();
+            for (int i = 0; i < displayedAssociations.size(); i++) {
+                if (displayedAssociations.get(i) == this) {
+                    // i + 1 because accounting for project head being slotted
+                    // into the first position of the list
+                    return i + 1;
+                }
+            }
+            return -1;
+        } else {
+            return -1;
+        }
+    }
+	
 	public ArrayList<TaskEntity> getDisplayAssociations () {
 	    if( _association_status == PROJECT_HEAD ) {
-	        return _associations;
+	        ArrayList<TaskEntity> displayedAssociations = (ArrayList<TaskEntity>) _associations.clone();
+	        displayedAssociations.add(0, this);
+	        return displayedAssociations;
 	    } else if ( _association_status == ASSOCIATED ) {
-	        return getProjectHead().getAssociations();
+	        ArrayList<TaskEntity> displayedAssociations =  (ArrayList<TaskEntity>) getProjectHead().getAssociations().clone();
+	        displayedAssociations.add(0, this);
+            return displayedAssociations;
 	    } else {
 	        return new ArrayList<TaskEntity>();
 	    }
