@@ -36,13 +36,13 @@ public class InformationParser {
 	public boolean setInformation(String input) {
 		input = XMLParser.removeAllAttributes(input);
 		boolean success = false;
-		System.out.println(input);
+		//System.out.println(input);
 		if (!input.trim().equalsIgnoreCase(":"))
 		{
 			String[] inputs = input.split(":");
 			if (inputs.length == 2) {
 				setTitle(inputs[0].trim());
-				System.out.println(inputs[1]);
+				//System.out.println(inputs[1]);
 				if(!inputs[1].trim().isEmpty())
 				{
 					setDescription(inputs[1].trim());

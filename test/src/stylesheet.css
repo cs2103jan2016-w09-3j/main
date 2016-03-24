@@ -82,3 +82,12 @@
 {
 	-fx-background-color: rgba(255.0,178.5,127.5,1.0);
 }
+#cssFloatingSelected{
+	-fx-background-radius: 20.0; 
+	-fx-background-color:  rgba(255.0,178.5,127.5,1.0);
+	-fx-background-insets: 1.0 5.0 1.0 5.0;
+}
+
+#cssSearchTitle{
+	-fx-background-color: rgba(128,0,128,1.0);
+}

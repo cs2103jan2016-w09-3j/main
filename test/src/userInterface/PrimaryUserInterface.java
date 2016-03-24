@@ -2,8 +2,11 @@ package userInterface;
 
 import userInterface.CommandBar;
 import userInterface.UserInterfaceController;
+
+import java.awt.Event;
 import java.util.ArrayList;
 import dateParser.CommandParser.COMMAND;
+import dateParser.XMLParser;
 import entity.TaskEntity;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -116,12 +119,20 @@ public class PrimaryUserInterface extends Application {
 	 * 
 	 */
 	public void initializeControls() {
+
 		EventHandler<KeyEvent> mainEventHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				processKeyInputs(_commandBar.getTextField(), event);
+
+			}
+
+		};
+		EventHandler<KeyEvent> keyReleasedEventHandler = new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent event) {
+				processKeyReleased(_commandBar.getTextField(), event);
 			}
 		};
-		_commandBar.setTextFieldHandler(mainEventHandler);
+		_commandBar.setTextFieldHandler(mainEventHandler, keyReleasedEventHandler);
 	}
 
 	/*
@@ -227,32 +238,21 @@ public class PrimaryUserInterface extends Application {
 		return true;
 	}
 
+	private void processKeyReleased(TextField textField, KeyEvent event) {
+		String input = textField.getText();
+		_commandBar.onKeyReleased(input);
+	}
+
 	private void processKeyInputs(TextField textField, KeyEvent event) {
 		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
-
 			COMMAND cmd = _commandBar.onEnter(textField.getText());
-			String t = _commandBar.get_textInField();
-
+			String t = XMLParser.removeAllTags(textField.getText());
 			// Ten add to mod to cater for theses commands
 			if (t.equals("float")) {
 				uiController.showFloatingView();
 				textField.setText("");
 				focus();
-			} else if (t.equals("main")) {
-				uiController.showMainView(-1);
-				textField.setText("");
-				focus();
-			} else if (t.equals("hide")) {
-				uiController.hide();
-				textField.setText("");
-				focus();
-				return;
-			} else if (t.equals("show")) {
-				uiController.show();
-				textField.setText("");
-				focus();
-				return;
-			} else if (t.indexOf(" ") != -1) {
+			}   else if (t.indexOf(" ") != -1) {
 				if (t.substring(0, t.indexOf(" ")).equals("jump")) {
 					String indexToJump = t.substring(t.indexOf(" ") + 1);
 					executeJump(indexToJump);
@@ -272,6 +272,7 @@ public class PrimaryUserInterface extends Application {
 				System.exit(0);
 			} else if (cmd.equals(COMMAND.ADD)) {
 				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
+				// System.out.println(tasks.get(0).getName());
 				if (tasks.size() == 1) {
 					executeAdd(tasks.get(0));
 				} else {
@@ -292,11 +293,25 @@ public class PrimaryUserInterface extends Application {
 						executeDelete(tasks.get(i));
 					}
 				}
-
-			}
-		} else if (event.getCode().compareTo(KeyCode.SPACE) == 0) {
-			String input = textField.getText();
-			_commandBar.onSpace(input);
+			} else if (cmd.equals(COMMAND.MAIN)) {
+				uiController.showMainView(-1);
+				textField.setText("");
+				focus();
+			}else if (cmd.equals(COMMAND.HIDE)) {
+				uiController.hide();
+				textField.setText("");
+				focus();
+				return;
+			} else if (cmd.equals(COMMAND.SHOW)) {
+				uiController.show();
+				textField.setText("");
+				focus();
+				return;
+			} else if (cmd.equals(COMMAND.FLOAT)) {
+				uiController.showFloatingView();
+				textField.setText("");
+				focus();
+			}  
 		}
 
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
@@ -321,6 +336,7 @@ public class PrimaryUserInterface extends Application {
 		if (event.getCode().compareTo(KeyCode.LEFT) == 0 && event.isControlDown() && !event.isShiftDown()) {
 			uiController.changeView(-1);
 		}
+
 		_primaryStage.requestFocus();
 	}
 

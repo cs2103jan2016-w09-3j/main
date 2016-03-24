@@ -15,9 +15,9 @@ public class IdParser {
 			for(int i=0;i<words.length; i++){
 				String toCheck = words[i].substring(0,2);
 				if(toCheck.equals("ID")){
-					System.out.println("TEST");
+					//System.out.println("TEST");
 					id = words[i].substring(2,words[i].length());
-					System.out.println(id);
+					//System.out.println(id);
 				}
 			}
 		}

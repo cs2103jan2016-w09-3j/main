@@ -26,7 +26,7 @@ public class ReverseParser {
 				sc.useDelimiter(",");
 				Long index = Long.parseLong(sc.next());
 				String value = sc.next();
-				System.out.println(index+" "+value);
+				//System.out.println(index+" "+value);
 				dictionary.put(index, value);
 			}
 		} catch (FileNotFoundException e) {
