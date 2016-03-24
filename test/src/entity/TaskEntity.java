@@ -105,6 +105,21 @@ public class TaskEntity {
 		_isFloating = true;
 	}
 
+    public TaskEntity(boolean isFloating, boolean isFullDay, Calendar dueDate, Calendar dateCreated,
+            String name, String description, int id, int association_status,
+            ArrayList<TaskEntity> associations, String associationIDs) {
+        _isFloating = isFloating;
+        _isFullDay = isFullDay;
+        _dueDate = dueDate;
+        _dateCreated = dateCreated;
+        _name = name;
+        _description = description;
+        _id = id;
+        _association_status = association_status;
+        _associations = associations;
+        _associationIDs = associationIDs;
+    }
+    
 	public int getAssociationState() {
 		return _association_status;
 	}
@@ -117,6 +132,10 @@ public class TaskEntity {
 	public ArrayList<TaskEntity> getAssociations() {
 		return _associations;
 	}
+	
+	public void initAssociations() {
+	    _associations = new ArrayList<TaskEntity>();
+	}
 
 	/**
 	 * Builds an ArrayList of all task's ID in associations for saving. Used to
@@ -127,12 +146,19 @@ public class TaskEntity {
 	 */
 	public void buildAssociationsId() {
 		_associationIDs = "";
-		if (_associations != null) {
-			for (int i = 0; i < _associations.size(); i++) {
-				_associationIDs += Integer.toString(_associations.get(i).getId()) + ",";
-			}
+		
+		assert _associations != null : "Associations is null at build associations!";
+		
+		for (int i = 0; i < _associations.size(); i++) {
+			_associationIDs += Integer.toString(_associations.get(i).getId()) + ",";
 		}
 		_associations = null;
+	}
+	
+    public TaskEntity clone() {
+        TaskEntity newInstance = new TaskEntity(_isFloating, _isFullDay, _dueDate, _dateCreated, _name,
+                _description, _id, _association_status, _associations, _associationIDs);
+        return newInstance;
 	}
 
 	/**
@@ -164,13 +190,18 @@ public class TaskEntity {
 		}
 	}
 
-	/**
-	 * Function to link this object as a task under projectHead
-	 * 
-	 * @param projectHead
-	 *            - Task to be added under
-	 */
+    /**
+     * Function to link this object as a task under projectHead. Project heads
+     * are not allowed to be under other tasks
+     * 
+     * @param projectHead
+     *            - Task to be added under
+     */
 	public void setAssociationHead(TaskEntity projectHead) {
+	    if(_association_status == PROJECT_HEAD) {
+	        return;
+	    }
+	    
 		if (_associations == null) {
 			_associations = new ArrayList<TaskEntity>();
 		} else {
@@ -224,6 +255,16 @@ public class TaskEntity {
 			_associations.add(idToInsert, childTask);
 			return true;
 		}
+	}
+	
+	public ArrayList<TaskEntity> getDisplayAssociations () {
+	    if( _association_status == PROJECT_HEAD ) {
+	        return _associations;
+	    } else if ( _association_status == ASSOCIATED ) {
+	        return getProjectHead().getAssociations();
+	    } else {
+	        return new ArrayList<TaskEntity>();
+	    }
 	}
 
 	private int findPositionToInsert(TaskEntity newTask) {
