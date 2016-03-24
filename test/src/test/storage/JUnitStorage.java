@@ -6,10 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import fileStorage.CommandHandler;
-import fileStorage.StorageController;
 import fileStorage.StorageHandler;
-
 
 public class JUnitStorage {
     
@@ -29,7 +26,7 @@ public class JUnitStorage {
     @Test
     public void testReadAndWriteCommand() {
         assertEquals(sh.writeToCommandFile("HELLO"), true);
-        assertEquals(sh.writeToCommandFile("IT'S ME"), true);
+        assertEquals(sh.writeToCommandFile("IT'S ME"), true); // Check if append
         sh.processFile();
         assertEquals(sh.getAllCommandsQueue().size(), 2);
     }
