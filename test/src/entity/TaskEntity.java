@@ -22,7 +22,8 @@ public class TaskEntity {
 	private String _description;
 	private int _id;
 	private int _association_status;
-	@JsonIgnore private ArrayList<TaskEntity> _associations;
+	@JsonIgnore
+	private ArrayList<TaskEntity> _associations;
 	private String _associationIDs;
 
 	private static int currentId = 0;
@@ -106,7 +107,7 @@ public class TaskEntity {
 	public int getAssociationState() {
 		return _association_status;
 	}
-	
+
 	@JsonIgnore
 	public ArrayList<TaskEntity> getAssociations() {
 		return _associations;
@@ -286,6 +287,5 @@ public class TaskEntity {
 			return "Full Day event";
 		}
 		return _dueDate.get(Calendar.HOUR_OF_DAY) + ":" + _dueDate.get(Calendar.MINUTE);
-
 	}
 }

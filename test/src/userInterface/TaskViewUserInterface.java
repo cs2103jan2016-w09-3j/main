@@ -367,11 +367,7 @@ public class TaskViewUserInterface implements ViewInterface {
 
 		HBox topBox = new HBox();
 		Label timeLabel = new Label();
-		if (taskEntity.isFullDay()) {
-			timeLabel.setText("Full Day Event");
-		} else {
-			timeLabel.setText(taskEntity.getTime());
-		}
+		timeLabel.setText(taskEntity.getTime());
 		timeLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		timeLabel.setFont(FONT_TASK);
 		topBox.getChildren().add(timeLabel);

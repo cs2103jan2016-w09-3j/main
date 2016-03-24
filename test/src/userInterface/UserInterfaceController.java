@@ -89,7 +89,6 @@ public class UserInterfaceController {
 		initializeFloatingBar();
 		initializeFloatingView();
 		initializeSearchView();
-
 		initializeTaskView();
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
@@ -289,8 +288,9 @@ public class UserInterfaceController {
 			_previousView = _currentView;
 		}
 		_currentView = SEARCH_VIEW;
-		_taskManager.switchView(TaskManager.DISPLAY_SEARCH);
-		ArrayList<TaskEntity> floatingList = _taskManager.getWorkingList();
+		_taskManager.switchView(TaskManager.DISPLAY_MAIN);//change this
+		ArrayList<TaskEntity> searchList = _taskManager.getWorkingList();
+		_searchViewInterface.buildContent(searchList);
 		show();
 	}
 

@@ -85,7 +85,6 @@ public class CommandBar {
 	}
 
 	public TaskEntity executeLine(String userInput) {
-
 		Calendar c = Calendar.getInstance();
 		TaskEntity t = new TaskEntity("name of task", c, false, userInput);
 		return t; // return null if not valid command.

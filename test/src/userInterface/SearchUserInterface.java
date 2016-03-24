@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -16,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+import mainLogic.Utils;
 
 public class SearchUserInterface implements ViewInterface {
 
@@ -124,6 +126,65 @@ public class SearchUserInterface implements ViewInterface {
 		StackPane.setAlignment(_secondaryVbox, Pos.TOP_LEFT);
 	}
 
+	public void buildContent(ArrayList<TaskEntity> searchList) {
+		_searchList = searchList;
+		_searchBoxes = new ArrayList<HBox>();
+		// when there are no floating task yet
+		if (_searchList == null || _searchList.size() == 0) {
+			buildHelpWithSearch();
+		} else {
+			buildSearchList(_searchList);
+		}
+	}
+
+	private void buildSearchList(ArrayList<TaskEntity> searchList) {
+		_secondaryVbox.getChildren().clear();
+		for (int i = 0; i < searchList.size(); i++) {
+			_secondaryVbox.getChildren().add(buildIndividualSearchItem(searchList.get(i),i));
+		}
+	}
+
+	private void buildHelpWithSearch() {
+		_secondaryVbox.getChildren().clear();
+		Label helpLabel = new Label("Start searching by typing search in the command bar");
+		helpLabel.setMinWidth(_stageWidth);
+		helpLabel.setMinHeight(_stageHeight - LABEL_TITLE_HEIGHT);
+		helpLabel.setAlignment(Pos.CENTER);
+		_secondaryVbox.getChildren().add(helpLabel);
+	}
+
+	private HBox buildIndividualSearchItem(TaskEntity task, int index) {
+		HBox parentBox = new HBox();
+		GridPane gp = new GridPane();
+		gp.setMinWidth(_stageWidth);
+		gp.setMaxWidth(_stageWidth);
+		
+		Label indexLabel = new Label(Utils.convertDecToBase36(index));
+		//Label indexLabel = new Label(Integer.toString(index));
+		indexLabel.setMinHeight(LABEL_TASK_HEIGHT);
+		indexLabel.setMinWidth(50);
+		indexLabel.setAlignment(Pos.CENTER);
+		indexLabel.setFont(FONT_INDEX);
+		gp.add(indexLabel, 0, 0);
+
+		Label timeLabel = new Label();
+		timeLabel.setText(task.getTime());
+		timeLabel.setMinHeight(LABEL_TASK_HEIGHT);
+		timeLabel.setAlignment(Pos.CENTER);
+		timeLabel.setFont(FONT_TASK);
+		gp.add(timeLabel, 1, 0);
+		
+		Label nameLabel = new Label();
+		nameLabel.setText(task.getName());
+		nameLabel.setMinHeight(LABEL_TASK_HEIGHT);
+		nameLabel.setAlignment(Pos.CENTER);
+		nameLabel.setFont(FONT_TASK);
+		gp.add(nameLabel, 2, 0);
+		
+		parentBox.getChildren().add(gp);
+		return parentBox;
+	}
+
 	public HBox buildTilteLabel() {
 		HBox titleLableBox = new HBox();
 		titleLableBox.setId("cssSearchTitle");
@@ -187,13 +248,40 @@ public class SearchUserInterface implements ViewInterface {
 		_secondaryVbox.getChildren().remove(item);
 	}
 
-	private HBox buildIndividualSearchItem(TaskEntity taskEntity, int index) {
-		
-		return null;
+
+	public void setSelected(int value) {
+		int temp = _selectedIndex + value;
+		if (isBetweenRange(temp)) {
+			HBox prevItem = _searchBoxes.get(_selectedIndex - _startIndex);
+			prevItem.setId("");
+			_selectedIndex = temp;
+			HBox item = _searchBoxes.get(_selectedIndex - _startIndex);
+			item.setId("cssSearchSelected");
+			translateY(getTopHeight(_selectedIndex - _startIndex));
+		}
 	}
 
-	public void updateTranslateY(double posY) {
+	public double getTopHeight(int index) {
+		double sizeTop = index * LABEL_TASK_HEIGHT;
+		return sizeTop;
+	}
 
+	public void translateY(double itemTopHeight) {
+		double posY = -LABEL_TITLE_HEIGHT;
+		int entireAreaHeight = _stageHeight - LABEL_TITLE_HEIGHT;
+		if (itemTopHeight + LABEL_TASK_HEIGHT > entireAreaHeight) {
+			posY += itemTopHeight + LABEL_TASK_HEIGHT - entireAreaHeight;
+		} else if (itemTopHeight < entireAreaHeight) {
+			
+		}
+		_secondaryVbox.setTranslateY(-posY);
+	}
+
+	public boolean isBetweenRange(int index) {
+		if (index >= _startIndex && index <= _endIndex) {
+			return true;
+		}
+		return false;
 	}
 
 	public void show() {
@@ -202,6 +290,11 @@ public class SearchUserInterface implements ViewInterface {
 
 	public void hide() {
 		_stage.hide();
+	}
+
+	public void updateTranslateY(double posY) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

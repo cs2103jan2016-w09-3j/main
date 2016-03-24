@@ -158,7 +158,6 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	}
 
 	public void updateTranslateY(double posY) {
-		_mainVbox.setTranslateY(posY);
 	}
 
 	public void show() {
@@ -215,11 +214,11 @@ public class FloatingTaskUserInterface implements ViewInterface {
 
 	public void buildHelpWithFloating() {
 		_secondaryVbox.getChildren().clear();
-		Label temp = new Label("You do not have any floating task yet.");
-		temp.setMinWidth(_stageWidth);
-		temp.setMinHeight(_stageHeight - LABEL_TITLE_HEIGHT);
-		temp.setAlignment(Pos.CENTER);
-		_secondaryVbox.getChildren().add(temp);
+		Label helpLabel = new Label("You do not have any floating task yet.");
+		helpLabel.setMinWidth(_stageWidth);
+		helpLabel.setMinHeight(_stageHeight - LABEL_TITLE_HEIGHT);
+		helpLabel.setAlignment(Pos.CENTER);
+		_secondaryVbox.getChildren().add(helpLabel);
 	}
 
 	public void buildFloatingList(ArrayList<TaskEntity> floatingList) {
