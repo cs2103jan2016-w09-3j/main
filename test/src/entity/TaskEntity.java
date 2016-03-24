@@ -7,8 +7,6 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import mainLogic.TaskDateComparator;
 import mainLogic.TaskManager;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class TaskEntity {
 	public static final int NOT_ASSOCIATED = 0;
 	public static final int ASSOCIATED = 1;
@@ -22,7 +20,10 @@ public class TaskEntity {
 	private String _description;
 	private int _id;
 	private int _association_status;
+<<<<<<< HEAD
 	@JsonIgnore
+=======
+>>>>>>> refs/remotes/origin/master
 	private ArrayList<TaskEntity> _associations;
 	private String _associationIDs;
 
@@ -107,8 +108,12 @@ public class TaskEntity {
 	public int getAssociationState() {
 		return _association_status;
 	}
+<<<<<<< HEAD
 
 	@JsonIgnore
+=======
+	
+>>>>>>> refs/remotes/origin/master
 	public ArrayList<TaskEntity> getAssociations() {
 		return _associations;
 	}

@@ -33,7 +33,7 @@ public class JUnitStorage {
     
     @After
     public void cleanUp() {
-        sh.clearCommandFileUponExit();
+        sh.clearCommandFileUponCommit();
     }
 
 }

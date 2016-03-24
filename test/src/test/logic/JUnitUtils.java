@@ -16,19 +16,17 @@ public class JUnitUtils {
 		String r3 = Utils.convertDecToBase36(10000);
 		String r4 = Utils.convertDecToBase36(100000);
 
-
 		assertEquals(r0, "0");
 		assertEquals(r1, "2S");
 		assertEquals(r2, "RS");
 		assertEquals(r3, "7PS");
 		assertEquals(r4, "255S");
 	}
-	
+
 	@Test
 	public void convertBase36ToDec() {
 		int r1 = Utils.convertBase36ToDec("AF");
 		int r2 = Utils.convertBase36ToDec("asd");
-		
 		int r3 = Utils.convertBase36ToDec("");
 		int r4 = Utils.convertBase36ToDec("-");
 
