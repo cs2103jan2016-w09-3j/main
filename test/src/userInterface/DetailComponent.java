@@ -139,7 +139,7 @@ public class DetailComponent implements ViewInterface {
 		// add itself first
 		box.getChildren().add(buildTask(task));
 
-		ArrayList<TaskEntity> association = task.getAssociations();
+		ArrayList<TaskEntity> association = task.getDisplayAssociations();
 		if (association != null) {
 			for (int i = 0; i < association.size(); i++) {
 				box.getChildren().add(buildTask(association.get(i)));
