@@ -98,6 +98,15 @@ public class TaskManager {
 		newDate.clear();
 		newDate.set(2016, 3, 15);
 		manager.modify(6, new TaskEntity("Modified task", newDate, true));
+		
+		manager.closeTaskManager();
+		
+		newDate = Calendar.getInstance();
+        newDate.clear();
+        newDate.set(2016, 10, 15);
+        manager.add(new TaskEntity("2016/10/15", newDate, true));
+       
+        manager.add(new TaskEntity("Another floating"));
 
 		System.out.println(manager.printArrayContentsToString(DISPLAY_OTHERS));
 		System.out.println(manager.printArrayContentsToString(DISPLAY_FLOATING));
@@ -264,18 +273,22 @@ public class TaskManager {
 	 * 
 	 * Pre-condition : Assumes id will not be repeated
 	 */
-	private void initializeAssociations() {
-		for (int i = 0; i < mainTaskEntities.size(); i++) {
-			String[] associationIdList = mainTaskEntities.get(i).getSavedAssociations().split(",");
+    private void initializeAssociations() {
+        for (int i = 0; i < mainTaskEntities.size(); i++) {
+            assert mainTaskEntities.get(i)
+                    .getSavedAssociations() != null : "Null associations string loaded from file";
+            
+            mainTaskEntities.get(i).initAssociations();
+            String[] associationIdList = mainTaskEntities.get(i).getSavedAssociations().split(",");
 
-			for (int j = 0; j < associationIdList.length; j++) {
-				if (!associationIdList[0].equals("")) {
-					int taskToAdd = Integer.parseInt(associationIdList[j]);
+            for (int j = 0; j < associationIdList.length; j++) {
+                if (!associationIdList[0].equals("")) {
+                    int taskToAdd = Integer.parseInt(associationIdList[j]);
 
-					for (int k = 0; k < mainTaskEntities.size(); k++) {
-						if (taskToAdd == mainTaskEntities.get(k).getId()) {
-							mainTaskEntities.get(i).loadAssociation(mainTaskEntities.get(k));
-							break;
+                    for (int k = 0; k < mainTaskEntities.size(); k++) {
+                        if (taskToAdd == mainTaskEntities.get(k).getId()) {
+                            mainTaskEntities.get(i).loadAssociation(mainTaskEntities.get(k));
+                            break;
 						}
 					}
 
@@ -290,6 +303,7 @@ public class TaskManager {
 		}
 
 		for (int i = 0; i < floatingTaskEntities.size(); i++) {
+		    floatingTaskEntities.get(i).initAssociations();
 			String[] associationIdList = floatingTaskEntities.get(i).getSavedAssociations().split(",");
 
 			for (int j = 0; j < associationIdList.length; j++) {
@@ -327,15 +341,22 @@ public class TaskManager {
 	 * Function to call for TaskManager before closing the program
 	 */
 	public void closeTaskManager() {
+        ArrayList<TaskEntity> savedMainTaskEntities = new ArrayList<TaskEntity>();
+        ArrayList<TaskEntity> savedFloatingTaskEntities = new ArrayList<TaskEntity>()
+                ;
 		for (int i = 0; i < mainTaskEntities.size(); i++) {
-			mainTaskEntities.get(i).buildAssociationsId();
+			TaskEntity clonedTask = mainTaskEntities.get(i).clone();
+			clonedTask.buildAssociationsId();
+			savedMainTaskEntities.add(clonedTask);
 		}
 
 		for (int i = 0; i < floatingTaskEntities.size(); i++) {
-			floatingTaskEntities.get(i).buildAssociationsId();
+		    TaskEntity clonedTask = floatingTaskEntities.get(i).clone();
+            clonedTask.buildAssociationsId();
+            savedFloatingTaskEntities.add(clonedTask);
 		}
 
-		dataLoader.storeTaskLists(mainTaskEntities, floatingTaskEntities);
+		dataLoader.storeTaskLists(savedMainTaskEntities, savedFloatingTaskEntities);
 	}
 
 	/**
@@ -650,16 +671,24 @@ public class TaskManager {
 		return true;
 	}
 
-	/**
-	 * Associates a task to a project head task
-	 * 
-	 * @param projectHead
-	 *            - Task to be linked to
-	 * @param linkedTask
-	 *            - Task to be linked
-	 * @return True if success in linking false if failed to link
-	 */
+    /**
+     * Associates a task to a project head task. Project heads are not allowed
+     * to be under other tasks (Checked in the first line to prevent the first
+     * link from happening) and projects under other project heads are not
+     * allowed to be project heads
+     * 
+     * @param projectHead
+     *            - Task to be linked to
+     * @param linkedTask
+     *            - Task to be linked
+     * @return True if success in linking false if failed to link
+     */
 	public boolean link(TaskEntity projectHead, TaskEntity linkedTask) {
+	    
+	    if(linkedTask.getAssociationState() == TaskEntity.PROJECT_HEAD) {
+	        return false;
+	    }
+	    
 		boolean linkSuccess = projectHead.addAssociation(linkedTask);
 		if (!linkSuccess) {
 			return false;
