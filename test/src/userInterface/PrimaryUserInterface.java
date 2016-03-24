@@ -239,7 +239,7 @@ public class PrimaryUserInterface extends Application {
 				textField.setText("");
 				focus();
 			} else if (t.equals("main")) {
-				uiController.showMainView();
+				uiController.showMainView(-1);
 				textField.setText("");
 				focus();
 			} else if (t.equals("hide")) {

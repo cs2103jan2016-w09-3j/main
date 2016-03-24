@@ -205,10 +205,12 @@ public class UserInterfaceController {
 		int view = _currentView + value;
 		switch (view) {
 		case CALENDAR_VIEW: {
+			_previousView = _currentView;
 			_currentView = view;
 			break;
 		}
 		case TASK_VIEW: {
+			_previousView = _currentView;
 			_currentView = view;
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
@@ -217,6 +219,7 @@ public class UserInterfaceController {
 			break;
 		}
 		case EXPANDED_VIEW: {
+			_previousView = _currentView;
 			_currentView = view;
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
@@ -225,14 +228,54 @@ public class UserInterfaceController {
 			break;
 		}
 		case ASSOCIATE_VIEW: {
-			_currentView = view;
-			_detailComponent.setView(_currentView);
-			updateComponents(0);
+			_previousView = _currentView;
+			if (_currentView == FLOATING_VIEW) {
+				showMainView(ASSOCIATE_VIEW);
+			} else {
+				_currentView = view;
+				_taskViewInterface.setView(_currentView);
+				_detailComponent.setView(_currentView);
+				updateComponents(0);
+			}
+			break;
+		}
+		case FLOATING_VIEW: {
+			_previousView = _currentView;
+			showFloatingView();
 			break;
 		}
 		default:
 			break;
 		}
+	}
+
+	public void showFloatingView() {
+		if (_currentView != FLOATING_VIEW) {
+			_previousView = _currentView;
+		}
+		_currentView = FLOATING_VIEW;
+		_taskManager.switchView(TaskManager.DISPLAY_FLOATING);
+		ArrayList<TaskEntity> floatingList = _taskManager.getWorkingList();
+		_floatingViewInterface.buildContent(floatingList);
+		show();
+	}
+
+	public void showMainView(int view) {
+		_taskManager.switchView(TaskManager.DISPLAY_MAIN);
+		if (view == -1) {
+			if (_currentView == FLOATING_VIEW) {
+				_currentView = _previousView;
+				_taskViewInterface.setView(_currentView);
+				_detailComponent.setView(_currentView);
+				updateComponents(0);
+			}
+		} else {
+			_currentView = ASSOCIATE_VIEW;
+			_taskViewInterface.setView(_currentView);
+			_detailComponent.setView(_currentView);
+			updateComponents(0);
+		}
+		show();
 	}
 
 	/**
@@ -257,10 +300,9 @@ public class UserInterfaceController {
 		return isDoneTranslating;
 	}
 
-	
 	/**
-	 * This method is called to add a random task into the floating bar. 
-	 * It starts the floating bar thread if it is not started.
+	 * This method is called to add a random task into the floating bar. It
+	 * starts the floating bar thread if it is not started.
 	 */
 	public void addRandomTaskToDisplay() {
 		TaskEntity task = _taskManager.getRandomFloating();
@@ -400,29 +442,6 @@ public class UserInterfaceController {
 			}
 			_floatingViewInterface.buildContent(floatingList);
 		}
-	}
-
-	public void showFloatingView() {
-		_taskManager.switchView(TaskManager.DISPLAY_FLOATING);
-		ArrayList<TaskEntity> floatingList = _taskManager.getWorkingList();
-		_floatingViewInterface.buildContent(floatingList);
-
-		if (_currentView != FLOATING_VIEW) {
-			_previousView = _currentView;
-		}
-		_currentView = FLOATING_VIEW;
-		show();
-	}
-
-	public void showMainView() {
-		if (_previousView != -1) {
-			_currentView = _previousView;
-		}
-		_taskManager.switchView(TaskManager.DISPLAY_MAIN);
-		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskViewInterface.getSelectIndex());
-		updateComponents(0);
-
-		show();
 	}
 
 	public void saveStuff() {

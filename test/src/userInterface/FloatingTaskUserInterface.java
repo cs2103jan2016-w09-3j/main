@@ -1,11 +1,6 @@
 package userInterface;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-
 import entity.TaskEntity;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,7 +14,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import mainLogic.TaskManager;
 import mainLogic.Utils;
 
 public class FloatingTaskUserInterface implements ViewInterface {
@@ -57,6 +51,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	private double transLationY = 0;
 
 	private ArrayList<TaskEntity> _floatingList;
+	private ArrayList<HBox> _floatingBoxes = new ArrayList<HBox>();
 
 	public static FloatingTaskUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds,
 			boolean fixedSize) {
@@ -119,6 +114,45 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	}
 
 	public void update(int value) {
+		if (value > 0)// ctrl down
+		{
+			if (_endIndex + 1 < _floatingList.size()) {
+				if (_selectedIndex - _startIndex >= THRESHOLD) {
+					removeFirstTask();
+				}
+				addLastItem();
+			}
+		} else if (value < 0) {
+			if (_startIndex > 0) {
+				if (_endIndex - _selectedIndex >= THRESHOLD) {
+					removeLastTask();
+				}
+				addFirstItem();
+			}
+		}
+	}
+
+	private void addFirstItem() {
+		_startIndex = _startIndex + 1;
+		HBox item = buildIndividualFloating(_floatingList.get(_startIndex), _startIndex);
+		_floatingBoxes.add(0, item);
+		_secondaryVbox.getChildren().add(0, item);
+	}
+
+	private void removeLastTask() {
+		HBox itemToRemove = _floatingBoxes.remove(_floatingBoxes.size() - 1);
+		_secondaryVbox.getChildren().remove(itemToRemove);
+	}
+
+	private void addLastItem() {
+		_endIndex++;
+		HBox item = buildIndividualFloating(_floatingList.get(_endIndex), _endIndex);
+		_secondaryVbox.getChildren().add(item);
+	}
+
+	private void removeFirstTask() {
+		HBox item = _floatingBoxes.remove(0);
+		_secondaryVbox.getChildren().remove(item);
 	}
 
 	public void updateTranslateY(double posY) {
@@ -145,8 +179,8 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	}
 
 	public void buildContent(ArrayList<TaskEntity> floatingList) {
-		System.out.println(floatingList.size()+" size");
 		_floatingList = floatingList;
+		_floatingBoxes = new ArrayList<HBox>();
 		_selectedIndex = 0;
 		// when there are no floating task yet
 		if (_floatingList == null || _floatingList.size() == 0) {
@@ -193,7 +227,9 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		}
 
 		for (int i = _startIndex; i <= _endIndex; i++) {
-			_secondaryVbox.getChildren().add(buildIndividualFloating(floatingList.get(i), i));
+			HBox item = buildIndividualFloating(floatingList.get(i), i);
+			_secondaryVbox.getChildren().add(item);
+			_floatingBoxes.add(item);
 		}
 	}
 
