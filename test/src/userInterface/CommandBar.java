@@ -13,9 +13,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import org.fxmisc.richtext.*;
 
 public class CommandBar {
-
 	private GridPane _mainPane;
 	private TextField _textField;
 	private int _numberOfItems = 0;
