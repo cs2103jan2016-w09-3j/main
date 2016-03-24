@@ -16,8 +16,8 @@ public class StorageController implements StorageInterface {
         JsonConverter jc = new JsonConverter();
         CommandHandler ch = new CommandHandler();
         
-        //AllTaskLists dummyTL = sh.createDummy();
-        //fm.writeToFile(jc.javaToJson(dummyTL));
+        AllTaskLists dummyTL = sc.createDummy();
+        sh.writeToMainFile(jc.javaToJson(dummyTL));
         
         //String data = fm.readFromExistingFile();
         //System.out.println(data);
@@ -25,7 +25,7 @@ public class StorageController implements StorageInterface {
         
         Queue<String> dummyCommands = sc.createDummyCommands();
         sh.writeToCommandFile("HELLO COMMAND");
-        sh.writeToMainFile("HELLO MAIN");
+        //sh.writeToMainFile("HELLO MAIN");
         
         //ch.saveUponExit(true);
         //System.out.println(ch.readFromExistingCommandFile()); 

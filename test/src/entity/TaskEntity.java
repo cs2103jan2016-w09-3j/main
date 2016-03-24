@@ -7,8 +7,6 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import mainLogic.TaskDateComparator;
 import mainLogic.TaskManager;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class TaskEntity {
 	public static final int NOT_ASSOCIATED = 0;
 	public static final int ASSOCIATED = 1;

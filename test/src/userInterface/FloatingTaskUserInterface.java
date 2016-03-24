@@ -8,6 +8,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -26,7 +27,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	private int _windowPosX;
 	private int _windowPosY;
 
-	private VBox _mainVbox;
+	private StackPane _mainVbox;
 	private VBox _secondaryVbox;
 
 	// font
@@ -41,7 +42,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 
 	static final int LABEL_TITLE_HEIGHT = 35;
 	static final int LABEL_TASK_HEIGHT = 30;
-	private static final int THRESHOLD = 50;
+	private static final int THRESHOLD = 20;
 
 	// variables to control items in floatingView.
 	private int _startIndex = -1;
@@ -73,8 +74,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
 		if (fixedSize) {
-			_stageWidth = (int) screenBounds.getWidth() - DetailComponent.COMPONENT_WIDTH
-					- DetailComponent.COMPONENT_LEFT_MARGIN;
+			_stageWidth = (int) screenBounds.getWidth();
 			_stageHeight = (int) (screenBounds.getHeight() - PrimaryUserInterface.COMMAND_BAR_HEIGTH
 					- PrimaryUserInterface.COMMAND_BAR_TOP_MARGIN - PrimaryUserInterface.COMMAND_BAR_BOTTOM_MARGIN
 					- FloatingBarViewUserInterface.COMPONENT_HEIGHT
@@ -83,8 +83,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 			_windowPosY = (int) screenBounds.getHeight() - _stageHeight - PrimaryUserInterface.COMMAND_BAR_HEIGTH
 					- PrimaryUserInterface.COMMAND_BAR_TOP_MARGIN - PrimaryUserInterface.COMMAND_BAR_BOTTOM_MARGIN;
 		} else {
-			_stageWidth = (int) (screenBounds.getWidth() * PrimaryUserInterface.PREFERED_WINDOW_SCALE)
-					- DetailComponent.COMPONENT_WIDTH - DetailComponent.COMPONENT_LEFT_MARGIN;
+			_stageWidth = (int) (screenBounds.getWidth() * PrimaryUserInterface.PREFERED_WINDOW_SCALE);
 			_stageHeight = (int) (screenBounds.getHeight() - PrimaryUserInterface.COMMAND_BAR_HEIGTH
 					- PrimaryUserInterface.COMMAND_BAR_TOP_MARGIN - PrimaryUserInterface.COMMAND_BAR_BOTTOM_MARGIN
 					- FloatingBarViewUserInterface.COMPONENT_HEIGHT - FloatingBarViewUserInterface.COMPONENT_TOP_MARGIN
@@ -103,7 +102,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		_stage.setX(applicationX);
 		_stage.setY(applicationY);
 
-		_mainVbox = new VBox();
+		_mainVbox = new StackPane();
 		_mainVbox.setPrefSize(stageWidth, stageHeight);
 		_mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
 		_mainVbox.setId("cssRoot");
@@ -119,27 +118,28 @@ public class FloatingTaskUserInterface implements ViewInterface {
 			if (_endIndex + 1 < _floatingList.size()) {
 				if (_selectedIndex - _startIndex >= THRESHOLD) {
 					removeFirstTask();
+					addLastItem();
 				}
-				addLastItem();
 			}
 		} else if (value < 0) {
 			if (_startIndex > 0) {
 				if (_endIndex - _selectedIndex >= THRESHOLD) {
 					removeLastTask();
+					addFirstItem();
 				}
-				addFirstItem();
 			}
 		}
 	}
 
 	private void addFirstItem() {
-		_startIndex = _startIndex + 1;
+		_startIndex--;
 		HBox item = buildIndividualFloating(_floatingList.get(_startIndex), _startIndex);
 		_floatingBoxes.add(0, item);
 		_secondaryVbox.getChildren().add(0, item);
 	}
 
 	private void removeLastTask() {
+		_endIndex--;
 		HBox itemToRemove = _floatingBoxes.remove(_floatingBoxes.size() - 1);
 		_secondaryVbox.getChildren().remove(itemToRemove);
 	}
@@ -147,15 +147,18 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	private void addLastItem() {
 		_endIndex++;
 		HBox item = buildIndividualFloating(_floatingList.get(_endIndex), _endIndex);
+		_floatingBoxes.add(item);
 		_secondaryVbox.getChildren().add(item);
 	}
 
 	private void removeFirstTask() {
+		_startIndex++;
 		HBox item = _floatingBoxes.remove(0);
 		_secondaryVbox.getChildren().remove(item);
 	}
 
 	public void updateTranslateY(double posY) {
+		_mainVbox.setTranslateY(posY);
 	}
 
 	public void show() {
@@ -169,19 +172,21 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	public void buildComponent() {
 
 		_mainVbox.getChildren().clear();
-		_mainVbox.getChildren().add(buildTilteLabel());
-
 		_secondaryVbox = new VBox();
 		_secondaryVbox.setMinHeight(_stageHeight - LABEL_TITLE_HEIGHT);
 		_secondaryVbox.setMaxHeight(_stageHeight - LABEL_TITLE_HEIGHT);
 		_secondaryVbox.setId("cssFloatingViewSecondaryBox");
+		
 		_mainVbox.getChildren().add(_secondaryVbox);
+		HBox labelTitle = buildTilteLabel();
+		_mainVbox.getChildren().add(labelTitle);
+		StackPane.setAlignment(labelTitle, Pos.TOP_LEFT);
+		StackPane.setAlignment(_secondaryVbox, Pos.TOP_LEFT);
 	}
 
 	public void buildContent(ArrayList<TaskEntity> floatingList) {
 		_floatingList = floatingList;
 		_floatingBoxes = new ArrayList<HBox>();
-		_selectedIndex = 0;
 		// when there are no floating task yet
 		if (_floatingList == null || _floatingList.size() == 0) {
 			buildHelpWithFloating();
@@ -219,11 +224,12 @@ public class FloatingTaskUserInterface implements ViewInterface {
 
 	public void buildFloatingList(ArrayList<TaskEntity> floatingList) {
 		_secondaryVbox.getChildren().clear();
+		_selectedIndex = 0;
 		_startIndex = 0;
-		if (floatingList.size() < THRESHOLD) {
+		if (floatingList.size() < THRESHOLD * 2) {
 			_endIndex = floatingList.size() - 1;
 		} else {
-			_endIndex = THRESHOLD;
+			_endIndex = THRESHOLD * 2;
 		}
 
 		for (int i = _startIndex; i <= _endIndex; i++) {
@@ -231,15 +237,18 @@ public class FloatingTaskUserInterface implements ViewInterface {
 			_secondaryVbox.getChildren().add(item);
 			_floatingBoxes.add(item);
 		}
+		setSelected(0);
 	}
 
 	public HBox buildIndividualFloating(TaskEntity task, int index) {
 		HBox floatingParent = new HBox();
+		floatingParent.toBack();
 		floatingParent.setMinHeight(LABEL_TASK_HEIGHT);
 		floatingParent.setMaxHeight(LABEL_TASK_HEIGHT);
 		floatingParent.setMinWidth(_stageWidth);
 
 		Label indexLabel = new Label(Utils.convertDecToBase36(index));
+		//Label indexLabel = new Label(Integer.toString(index));
 		indexLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		indexLabel.setMinWidth(50);
 		indexLabel.setAlignment(Pos.CENTER);
@@ -254,5 +263,44 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		floatingParent.getChildren().add(descriptionLabel);
 
 		return floatingParent;
+	}
+
+	public void setSelected(int value) {
+		int temp = _selectedIndex + value;
+		if (isBetweenRange(temp)) {
+			HBox prevItem = _floatingBoxes.get(_selectedIndex - _startIndex);
+			prevItem.setId("");
+			_selectedIndex = temp;
+			HBox item = _floatingBoxes.get(_selectedIndex - _startIndex);
+			item.setId("cssFloatingSelected");
+			translateY(getTopHeight(_selectedIndex - _startIndex));
+		}
+	}
+
+	public double getTopHeight(int index) {
+		double sizeTop = index * LABEL_TASK_HEIGHT;
+		return sizeTop;
+	}
+
+	public void translateY(double itemTopHeight) {
+		double posY = -LABEL_TITLE_HEIGHT;
+		int entireAreaHeight = _stageHeight - LABEL_TITLE_HEIGHT;
+		if (itemTopHeight + LABEL_TASK_HEIGHT > entireAreaHeight) {
+			posY += itemTopHeight + LABEL_TASK_HEIGHT - entireAreaHeight;
+		} else if (itemTopHeight < entireAreaHeight) {
+			
+		}
+		_secondaryVbox.setTranslateY(-posY);
+	}
+
+	public boolean isBetweenRange(int index) {
+		if (index >= _startIndex && index <= _endIndex) {
+			return true;
+		}
+		return false;
+	}
+
+	public StackPane getMainLayoutComponent() {
+		return _mainVbox;
 	}
 }

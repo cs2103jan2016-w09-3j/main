@@ -207,7 +207,7 @@ public class StorageHandler {
     }
 
     // Clear command file every time it commits
-    public void clearCommandFileUponExit() {
+    public void clearCommandFileUponCommit() {
         FileWriter fileWriter;
         try {
             fileWriter = new FileWriter(commandsFilePath);

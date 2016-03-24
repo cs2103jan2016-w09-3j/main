@@ -22,7 +22,7 @@ public class InputParser {
 	private InformationParser infoParser;
 	private IdParser idParser;
 	
-	private static Logger logger = Logger.getLogger("InputParser");
+	//private static Logger logger = Logger.getLogger("InputParser");
 
 	/**
 	 * Intializes parser and creates individual command parsers
@@ -53,7 +53,7 @@ public class InputParser {
 	 */
 	public void addXML() {
 		//DO NOT CHANGE ORDER!!
-		logger.log(Level.INFO,"Add xml to input");
+		//logger.log(Level.INFO,"Add xml to input");
 		assert (input!=null) : "Input is null";
 		addXMLDate();
 		addXMLID();
@@ -118,7 +118,7 @@ public class InputParser {
 	public ArrayList<TaskEntity> getTask(){
 		input = XMLParser.removeAllTags(input);
 		if(input.trim().equals("")){
-			logger.log(Level.WARNING, "Input is empty", new IllegalArgumentException("input is empty"));
+			//logger.log(Level.WARNING, "Input is empty", new IllegalArgumentException("input is empty"));
 		}
 		ArrayList<TaskEntity> tasks  = new ArrayList<TaskEntity>();
 		List<Date> dates = dateParser.parseToList(input);
