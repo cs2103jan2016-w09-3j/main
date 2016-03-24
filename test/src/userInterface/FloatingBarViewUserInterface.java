@@ -91,8 +91,6 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		_mainHBox.getChildren().add(_mainfloatingTaskArea);
 	}
 
-	int k = 0;
-
 	public void addTask(String taskDesc) {
 		Label floatTask = new Label(taskDesc);
 		floatTask.setMinHeight(_stageHeight);
@@ -102,11 +100,15 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		_mainfloatingTaskArea.getChildren().add(floatTask);
 	}
 
-	public void removeTopItem() {
+	private void removeTopItem() {
 		if (_mainfloatingTaskArea.getChildren().size() > 1) {
 			_mainfloatingTaskArea.getChildren().remove(0);
 			_mainfloatingTaskArea.setTranslateY(0);
 		}
+	}
+
+	public void clearFloatingBar() {
+		_mainfloatingTaskArea.getChildren().clear();
 	}
 
 	public void show() {

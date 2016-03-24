@@ -866,4 +866,8 @@ public class TaskViewUserInterface implements ViewInterface {
 	public int getSelectIndex() {
 		return _selectedIndex;
 	}
+
+	public void setSelectedIndex(int index) {
+		_selectedIndex = index;
+	}
 }

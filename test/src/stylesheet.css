@@ -74,6 +74,11 @@
 
 #cssDetailAssociationListBox
 {
-	-fx-background-color: rgba(255,255,255,0);
-	-fx-background-insets: 0 0 0 0;
+	-fx-background-color: rgba(255.0,255.0,255.0,0.0);
+	-fx-background-insets: 0.0 0.0 0.0 0.0;
+}
+
+#cssFloatingTitle
+{
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0);
 }
