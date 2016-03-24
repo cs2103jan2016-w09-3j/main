@@ -47,6 +47,16 @@ public class DateParser {
 	 * @return List of all possible dates
 	 */
 	public List<Date> parseToList(String inputDate) {
+		ArrayList<Integer> locationQuote= new ArrayList<Integer>();
+		for(int i=0; i< inputDate.length(); i++){
+			char temp = inputDate.charAt(i);
+			if(temp == '"'){
+				locationQuote.add(i);
+			}
+		}
+		for(int i=0; i<locationQuote.size(); i=i+2){
+			inputDate = inputDate.substring(0, locationQuote.get(i))+inputDate.substring( locationQuote.get(i+1),inputDate.length()-1);
+		}
 		inputDate = convertFormalDates(inputDate);
 		List<Date> returnDateList = new ArrayList<Date>();
 		hideErr();
@@ -102,7 +112,20 @@ public class DateParser {
 	public String xmlDate(String input) {
 		hideErr();
 		input = convertFormalDates(input);
+		
 		String returnVal = input;
+
+		ArrayList<Integer> locationQuote= new ArrayList<Integer>();
+		for(int i=0; i< input.length(); i++){
+			char temp = input.charAt(i);
+			if(temp == '"'){
+				locationQuote.add(i);
+			}
+		}
+		
+		for(int i=0; i<locationQuote.size(); i=i+2){
+			input = input.substring(0, locationQuote.get(i))+input.substring( locationQuote.get(i+1),input.length()-1);
+		}
 		List<DateGroup> dateGroups = nattyParser.parse(input);
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
