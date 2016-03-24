@@ -25,14 +25,17 @@ public class UserInterfaceController {
 	final static int EXPANDED_VIEW = 2;
 	final static int ASSOCIATE_VIEW = 3;
 	final static int FLOATING_VIEW = 4;
+	final static int SEARCH_VIEW = 5;
 	private int _previousView = -1;
 
 	private Stage _parentStage;
 	private TaskViewUserInterface _taskViewInterface;
-	private FloatingTaskUserInterface _floatingViewInterface;
 	private DescriptionComponent _descriptionComponent;
 	private DetailComponent _detailComponent;
 	private FloatingBarViewUserInterface _floatingBarComponent;
+
+	private FloatingTaskUserInterface _floatingViewInterface;
+	private SearchUserInterface _searchViewInterface;
 	private Rectangle2D _screenBounds;
 	private boolean _fixedSize;
 
@@ -85,6 +88,8 @@ public class UserInterfaceController {
 		// _taskManager.generateFakeData();// replace when integrate with angie
 		initializeFloatingBar();
 		initializeFloatingView();
+		initializeSearchView();
+
 		initializeTaskView();
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
@@ -109,6 +114,11 @@ public class UserInterfaceController {
 		}
 	}
 
+	private void initializeSearchView() {
+		_searchViewInterface = SearchUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize);
+
+	}
+
 	public void startFloatingThread() {
 		_floatingThread = new FloatingBarAnimationThread(this);
 		_floatingThread.start();
@@ -130,19 +140,34 @@ public class UserInterfaceController {
 			_descriptionComponent.show();
 			_floatingBarComponent.show();
 			_detailComponent.show();
+
 			_floatingViewInterface.hide();
+			_searchViewInterface.hide();
 		} else if (_currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
 			_taskViewInterface.show();
 			_descriptionComponent.show();
 			_floatingBarComponent.show();
 			_detailComponent.show();
+
 			_floatingViewInterface.hide();
+			_searchViewInterface.hide();
 		} else if (_currentView == FLOATING_VIEW) {
 			_taskViewInterface.hide();
 			_descriptionComponent.hide();
+			_detailComponent.hide();
+			_searchViewInterface.hide();
+
 			_floatingBarComponent.show();
-			_detailComponent.show();
 			_floatingViewInterface.show();
+		} else if (_currentView == SEARCH_VIEW) {
+			_taskViewInterface.hide();
+			_descriptionComponent.hide();
+			_detailComponent.hide();
+			_searchViewInterface.hide();
+			_floatingViewInterface.hide();
+
+			_floatingBarComponent.show();
+			_searchViewInterface.show();
 		}
 	}
 
@@ -184,6 +209,7 @@ public class UserInterfaceController {
 			_detailComponent.update(value);
 		} else if (_currentView == FLOATING_VIEW) {
 			_floatingViewInterface.update(value);
+			_floatingViewInterface.setSelected(value);
 		}
 	}
 
@@ -205,12 +231,12 @@ public class UserInterfaceController {
 		int view = _currentView + value;
 		switch (view) {
 		case CALENDAR_VIEW: {
-			_previousView = _currentView;
+			setPreviousView();
 			_currentView = view;
 			break;
 		}
 		case TASK_VIEW: {
-			_previousView = _currentView;
+			setPreviousView();
 			_currentView = view;
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
@@ -219,7 +245,7 @@ public class UserInterfaceController {
 			break;
 		}
 		case EXPANDED_VIEW: {
-			_previousView = _currentView;
+			setPreviousView();
 			_currentView = view;
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
@@ -228,7 +254,7 @@ public class UserInterfaceController {
 			break;
 		}
 		case ASSOCIATE_VIEW: {
-			_previousView = _currentView;
+			setPreviousView();
 			if (_currentView == FLOATING_VIEW) {
 				showMainView(ASSOCIATE_VIEW);
 			} else {
@@ -240,8 +266,11 @@ public class UserInterfaceController {
 			break;
 		}
 		case FLOATING_VIEW: {
-			_previousView = _currentView;
 			showFloatingView();
+			break;
+		}
+		case SEARCH_VIEW: {
+			showSearchView();
 			break;
 		}
 		default:
@@ -249,8 +278,24 @@ public class UserInterfaceController {
 		}
 	}
 
+	public void setPreviousView() {
+		if (_currentView != FLOATING_VIEW && _currentView != SEARCH_VIEW) {
+			_previousView = _currentView;
+		}
+	}
+
+	public void showSearchView() {
+		if (_currentView != FLOATING_VIEW && _currentView != SEARCH_VIEW) {
+			_previousView = _currentView;
+		}
+		_currentView = SEARCH_VIEW;
+		_taskManager.switchView(TaskManager.DISPLAY_SEARCH);
+		ArrayList<TaskEntity> floatingList = _taskManager.getWorkingList();
+		show();
+	}
+
 	public void showFloatingView() {
-		if (_currentView != FLOATING_VIEW) {
+		if (_currentView != FLOATING_VIEW && _currentView != SEARCH_VIEW) {
 			_previousView = _currentView;
 		}
 		_currentView = FLOATING_VIEW;
@@ -263,7 +308,7 @@ public class UserInterfaceController {
 	public void showMainView(int view) {
 		_taskManager.switchView(TaskManager.DISPLAY_MAIN);
 		if (view == -1) {
-			if (_currentView == FLOATING_VIEW) {
+			if (_currentView == FLOATING_VIEW || _currentView == SEARCH_VIEW) {
 				_currentView = _previousView;
 				_taskViewInterface.setView(_currentView);
 				_detailComponent.setView(_currentView);
@@ -328,14 +373,24 @@ public class UserInterfaceController {
 	 * 
 	 */
 	public void move(int value) {
-		if (value > 0) {
-			double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() + 50;
-			_taskViewInterface.updateTranslateY(t);
-			_descriptionComponent.updateTranslateY(t);
+		if (_currentView == FLOATING_VIEW) {
+			if (value > 0) {
+				double t = _floatingViewInterface.getMainLayoutComponent().getTranslateY() + 50;
+				_floatingViewInterface.updateTranslateY(t);
+			} else {
+				double t = _floatingViewInterface.getMainLayoutComponent().getTranslateY() - 50;
+				_floatingViewInterface.updateTranslateY(t);
+			}
 		} else {
-			double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() - 50;
-			_taskViewInterface.updateTranslateY(t);
-			_descriptionComponent.updateTranslateY(t);
+			if (value > 0) {
+				double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() + 50;
+				_taskViewInterface.updateTranslateY(t);
+				_descriptionComponent.updateTranslateY(t);
+			} else {
+				double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() - 50;
+				_taskViewInterface.updateTranslateY(t);
+				_descriptionComponent.updateTranslateY(t);
+			}
 		}
 	}
 
