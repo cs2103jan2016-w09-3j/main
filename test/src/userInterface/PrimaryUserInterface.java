@@ -6,6 +6,7 @@ import userInterface.UserInterfaceController;
 import java.awt.Event;
 import java.util.ArrayList;
 import dateParser.CommandParser.COMMAND;
+import dateParser.InputParser;
 import dateParser.XMLParser;
 import entity.TaskEntity;
 import javafx.application.Application;
@@ -70,6 +71,7 @@ public class PrimaryUserInterface extends Application {
 		initializeControls();
 		initializePrimaryStage(primaryStage);
 		initializeUiController(primaryStage);
+		InputParser p = new InputParser("");
 		focus();
 	}
 
@@ -293,6 +295,7 @@ public class PrimaryUserInterface extends Application {
 						executeDelete(tasks.get(i));
 					}
 				}
+				textField.setText("");
 			} else if (cmd.equals(COMMAND.MAIN)) {
 				uiController.showMainView(-1);
 				textField.setText("");
