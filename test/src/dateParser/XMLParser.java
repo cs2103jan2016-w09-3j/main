@@ -28,7 +28,7 @@ public class XMLParser {
 	
 	public static Map<String, ArrayList<String>> loadMapFromXML (String xml) throws Exception{
 		xml = "<xml>"+xml +"</xml>";
-		System.out.println(xml);
+		//System.out.println(xml);
 		Map<String,ArrayList<String>> returnVal = new HashMap<String,ArrayList<String>>();
 		Document xmlDoc = loadXMLFromString(xml);
 		NodeList children = xmlDoc.getChildNodes().item(0).getChildNodes();
