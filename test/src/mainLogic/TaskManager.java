@@ -33,12 +33,15 @@ public class TaskManager {
 	private static ArrayList<TaskEntity> displayedTasks;
 	private static ArrayList<TaskEntity> floatingTaskEntities = new ArrayList<TaskEntity>();
 	private static ArrayList<TaskEntity> mainTaskEntities = new ArrayList<TaskEntity>();
+    private static ArrayList<TaskEntity> completedTaskEntities = new ArrayList<TaskEntity>();
+    
 	private static ArrayList<TaskEntity> searchedTasks = new ArrayList<TaskEntity>();
 
 	public final static int DISPLAY_MAIN = 0;
 	public final static int DISPLAY_FLOATING = 1;
 	public final static int DISPLAY_SEARCH = 2;
-	public final static int DISPLAY_OTHERS = 3;
+	public final static int DISPLAY_COMPLETED = 3;
+	public final static int DISPLAY_OTHERS = 4;
 
 	/**
 	 * TEST FUNCTION Function for manually testing functions(First
@@ -48,101 +51,29 @@ public class TaskManager {
 	 */
 	public static void main(String[] args) {
 		TaskManager manager = TaskManager.getInstance();
-		manager.unloadFile();
-
-		ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
-		for (int i = 0; i < 5; i++) {
-			Calendar newDate = Calendar.getInstance();
-			newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
-			newList.add(new TaskEntity("Task " + Integer.toString(i + 1), newDate, false, "some desc"));
-		}
-		manager.add(newList);
-
-		TaskEntity firstFloating = new TaskEntity("Task floating 1");
-		manager.add(firstFloating);
-		manager.add(new TaskEntity("Task floating 2"));
-		manager.add(new TaskEntity("Task floating 3"));
-		manager.add(new TaskEntity("Task floating 4"));
-
-		Calendar newDate = Calendar.getInstance();
-		newDate.clear();
-		newDate.set(2016, 2, 5);
-		TaskEntity headTask = new TaskEntity("2016/2/5", newDate, true);
-		manager.modify(1, headTask);
-
-		newDate = Calendar.getInstance();
-		newDate.clear();
-		newDate.set(2016, 2, 3);
-		TaskEntity childTask = new TaskEntity("2016/2/3", newDate, true);
-		manager.modify(3, childTask);
-
-		manager.link(headTask, childTask);
-
-		newDate = Calendar.getInstance();
-		newDate.clear();
-		newDate.set(2016, 3, 16);
-		childTask = new TaskEntity("2016/3/16", newDate, true);
-		manager.add(childTask);
-		manager.link(headTask, childTask);
-
-		manager.link(childTask, headTask);
-
-		newDate = Calendar.getInstance();
-		newDate.clear();
-		newDate.set(2016, 3, 15);
-		manager.add(new TaskEntity("2016/3/15", newDate, true));
-
-		manager.link(firstFloating, childTask);
-
-		newDate = Calendar.getInstance();
-		newDate.clear();
-		newDate.set(2016, 3, 15);
-		manager.modify(6, new TaskEntity("Modified task", newDate, true));
-		
-		manager.closeTaskManager();
-		
-		newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 10, 15);
-        manager.add(new TaskEntity("2016/10/15", newDate, true));
-       
-        manager.add(new TaskEntity("Another floating"));
-
-		System.out.println(manager.printArrayContentsToString(DISPLAY_OTHERS));
-		System.out.println(manager.printArrayContentsToString(DISPLAY_FLOATING));
-		System.out.println(manager.printArrayContentsToString(DISPLAY_MAIN));
-
-		// manager.printList();
-
-		ArrayList<TaskEntity> tasks_under = manager.getWorkingList().get(1).getAssociations();
-
-		for (int i = 0; i < tasks_under.size(); i++) {
-			System.out.println(tasks_under.get(i).getName());
-		}
-
-		tasks_under = manager.mainTaskEntities.get(1).getAssociations();
-
-		for (int i = 0; i < tasks_under.size(); i++) {
-			System.out.println(tasks_under.get(i).getName());
-		}
-
-		tasks_under = manager.mainTaskEntities.get(0).getAssociations();
-
-		for (int i = 0; i < tasks_under.size(); i++) {
-			System.out.println(tasks_under.get(i).getName());
-		}
-
-		tasks_under = manager.mainTaskEntities.get(6).getAssociations();
-
-		for (int i = 0; i < tasks_under.size(); i++) {
-			System.out.println(tasks_under.get(i).getName());
-		}
-
-		tasks_under = manager.floatingTaskEntities.get(0).getAssociations();
-
-		for (int i = 0; i < tasks_under.size(); i++) {
-			System.out.println(tasks_under.get(i).getName());
-		}
+		 manager.unloadFile();
+	        
+	        ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
+	        for (int i = 0; i < 9; i++) {
+	            Calendar newDate = Calendar.getInstance();
+	            newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
+	            newList.add(new TaskEntity("Task " + Integer.toString(i + 1), newDate, false, "some desc"));
+	        }
+	        for (int i = 0; i < 9; i++) {
+	            newList.add(new TaskEntity("Floating Task " + Integer.toString(i + 1)));
+	        }
+	        
+	        manager.add(newList);
+	        
+	        manager.switchView(manager.DISPLAY_MAIN);
+	        manager.getWorkingList().get(0).markAsDone();
+	        manager.getWorkingList().get(8).markAsDone();
+	        manager.switchView(manager.DISPLAY_FLOATING);
+	        manager.getWorkingList().get(0).markAsDone();
+	        manager.getWorkingList().get(8).markAsDone();
+	        manager.buildCompletedTasks();
+	        
+	        System.out.println(manager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
 	}
 
 	/**
@@ -210,6 +141,8 @@ public class TaskManager {
 			arrayToBePrinted = floatingTaskEntities;
 		} else if (display == DISPLAY_SEARCH) {
 			arrayToBePrinted = searchedTasks;
+		} else if (display == DISPLAY_COMPLETED) {
+		    arrayToBePrinted = completedTaskEntities;
 		} else {
 			arrayToBePrinted = displayedTasks;
 		}
@@ -242,6 +175,7 @@ public class TaskManager {
 	public void unloadFile() {
 		floatingTaskEntities.clear();
 		mainTaskEntities.clear();
+		completedTaskEntities.clear();
 		switchView(DISPLAY_MAIN);
 	}
 
@@ -256,6 +190,8 @@ public class TaskManager {
 		mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
 		floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
 
+		buildCompletedTasks();
+		
 		updateTaskEntityCurrentId();
 
 		logger.log(Level.FINEST, "TaskManager Initialized");
@@ -265,6 +201,26 @@ public class TaskManager {
 		currentDisplayedList = DISPLAY_MAIN;
 	}
 
+	public void buildCompletedTasks () {
+	    completedTaskEntities = new ArrayList<TaskEntity>();
+	    
+	    for(int i = 0; i < mainTaskEntities.size(); i++) {
+            if ( mainTaskEntities.get(i).isCompleted() ) {
+                completedTaskEntities.add(mainTaskEntities.get(i));
+                mainTaskEntities.remove(i);
+                i--;
+            }
+        }
+	    
+	    for(int i = 0; i < floatingTaskEntities.size(); i++) {
+            if ( floatingTaskEntities.get(i).isCompleted() ) {
+                completedTaskEntities.add(floatingTaskEntities.get(i));
+                floatingTaskEntities.remove(i);
+                i--;
+            }
+        }
+	}
+	
 	/**
 	 * Sets the currentId in TaskEntity to be 1 more than the largest ID loaded
 	 * so that it there will not be an Id Clash when creating new tasks
@@ -286,7 +242,7 @@ public class TaskManager {
 	/**
 	 * Creates the associations of the tasks based off the string
 	 * 
-	 * Pre-condition : Assumes id will not be repeated
+	 * Pre-condition : Assumes id of tasks will not be repeated
 	 */
     private void initializeAssociations() {
         for (int i = 0; i < mainTaskEntities.size(); i++) {
@@ -357,8 +313,8 @@ public class TaskManager {
 	 */
 	public void closeTaskManager() {
         ArrayList<TaskEntity> savedMainTaskEntities = new ArrayList<TaskEntity>();
-        ArrayList<TaskEntity> savedFloatingTaskEntities = new ArrayList<TaskEntity>()
-                ;
+        ArrayList<TaskEntity> savedFloatingTaskEntities = new ArrayList<TaskEntity>();
+        
 		for (int i = 0; i < mainTaskEntities.size(); i++) {
 			TaskEntity clonedTask = mainTaskEntities.get(i).clone();
 			clonedTask.buildAssociationsId();
@@ -371,6 +327,16 @@ public class TaskManager {
             savedFloatingTaskEntities.add(clonedTask);
 		}
 
+		for (int i = 0; i < completedTaskEntities.size(); i++ ) {
+		    TaskEntity clonedTask = completedTaskEntities.get(i).clone();
+            clonedTask.buildAssociationsId();
+            
+            if ( clonedTask.isFloating() ) {
+                savedFloatingTaskEntities.add(clonedTask);
+            } else {
+                savedMainTaskEntities.add(clonedTask);
+            }
+		}
 		dataLoader.storeTaskLists(savedMainTaskEntities, savedFloatingTaskEntities);
 	}
 
@@ -551,6 +517,46 @@ public class TaskManager {
 			return updateMainDisplay(newTask, idToInsert);
 		}
 	}
+	
+	/**
+	 * Marks a task as done
+	 * @param index
+	 * @return
+	 */
+    public boolean markAsDone(int index) {
+        if ( (index > displayedTasks.size() - 1) || (currentDisplayedList == DISPLAY_COMPLETED) ) {
+            return false;
+        } else {
+            //Checks for deletion failure
+            if ( !deleteFromMainList(displayedTasks.get(index)) ) {
+                return false;
+            }
+
+            completedTaskEntities.add(displayedTasks.get(index));
+            displayedTasks.get(index).markAsDone();
+
+            markAssociationsUnderComplete(index);
+            
+            //Remove it from displayedTasks only after processing it
+            displayedTasks.remove(index);
+            return true;
+        }
+	}
+
+    private void markAssociationsUnderComplete(int index) {
+        if (displayedTasks.get(index).getAssociationState() == TaskEntity.PROJECT_HEAD) {
+            
+            ArrayList<TaskEntity> associationsToMarkComplete = displayedTasks.get(index).getAssociations();
+            
+            for(int i = 0; i < associationsToMarkComplete.size(); i++) {
+                deleteFromMainList(associationsToMarkComplete.get(i));
+                associationsToMarkComplete.get(i).markAsDone();
+                completedTaskEntities.add(associationsToMarkComplete.get(i));
+                displayedTasks.remove(associationsToMarkComplete.get(i));
+            }
+            
+        }
+    }
 
 	private int updateMainDisplay(TaskEntity newTask, int idToInsert) {
 		if (currentDisplayedList == DISPLAY_MAIN) {
@@ -639,10 +645,16 @@ public class TaskManager {
 	 *         operation failed
 	 */
 	private boolean deleteFromMainList(TaskEntity itemToBeDeleted) {
-		if (itemToBeDeleted.isFloating()) {
+		if (currentDisplayedList == DISPLAY_FLOATING) {
 			return floatingTaskEntities.remove(itemToBeDeleted);
+		} else if(currentDisplayedList == DISPLAY_MAIN) {
+        	return mainTaskEntities.remove(itemToBeDeleted);
+		} else if(currentDisplayedList == DISPLAY_SEARCH) {
+		    return searchedTasks.remove(itemToBeDeleted);
+		} else if(currentDisplayedList == DISPLAY_COMPLETED) {
+            return mainTaskEntities.remove(itemToBeDeleted);
 		} else {
-			return mainTaskEntities.remove(itemToBeDeleted);
+		    return false;
 		}
 	}
 

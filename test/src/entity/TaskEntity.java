@@ -20,6 +20,7 @@ public class TaskEntity {
 	private String _description;
 	private int _id;
 	private int _association_status;
+	private boolean _isCompleted;
 
 	private ArrayList<TaskEntity> _associations;
 	private String _associationIDs;
@@ -104,7 +105,7 @@ public class TaskEntity {
 
     public TaskEntity(boolean isFloating, boolean isFullDay, Calendar dueDate, Calendar dateCreated,
             String name, String description, int id, int association_status,
-            ArrayList<TaskEntity> associations, String associationIDs) {
+            ArrayList<TaskEntity> associations, String associationIDs, boolean isCompleted) {
         _isFloating = isFloating;
         _isFullDay = isFullDay;
         _dueDate = dueDate;
@@ -115,6 +116,7 @@ public class TaskEntity {
         _association_status = association_status;
         _associations = associations;
         _associationIDs = associationIDs;
+        _isCompleted = isCompleted;
     }
     
 	public int getAssociationState() {
@@ -125,8 +127,29 @@ public class TaskEntity {
 		return _associations;
 	}
 	
+	public void markAsDone () {
+	    _isCompleted = true;
+
+	    //Mark all tasks associated under the project head once its done
+        if (_association_status == PROJECT_HEAD) {
+            for(int i = 0; i < _associations.size(); i++) {
+                _associations.get(i).markAsDone();
+            }
+        }
+	}
+	
+	public boolean isCompleted () {
+	    return _isCompleted;
+	}
+	
+    /**
+     * Function to initialize associations array if it is null (Used for
+     * overwriting it being set to null by the file loader)
+     */
 	public void initAssociations() {
-	    _associations = new ArrayList<TaskEntity>();
+	    if( _associations == null ){
+	        _associations = new ArrayList<TaskEntity>();
+	    }
 	}
 
 	/**
@@ -149,7 +172,7 @@ public class TaskEntity {
 	
     public TaskEntity clone() {
         TaskEntity newInstance = new TaskEntity(_isFloating, _isFullDay, _dueDate, _dateCreated, _name,
-                _description, _id, _association_status, _associations, _associationIDs);
+                _description, _id, _association_status, _associations, _associationIDs, _isCompleted);
         return newInstance;
 	}
 
