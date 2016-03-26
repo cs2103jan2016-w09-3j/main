@@ -166,7 +166,7 @@ public class PrimaryUserInterface extends Application {
 	public boolean executeAdd(TaskEntity task) {
 		if (task != null) {
 			uiController.addTask(task);
-			_commandBar.getTextField().setHtmlText("");
+			_commandBar.getTextField().setText("");
 			//_commandBar.getTextField().setText("");
 			focus();
 			return true;
@@ -191,7 +191,7 @@ public class PrimaryUserInterface extends Application {
 		if (indexToDelete > -1) {
 			boolean temp = uiController.deleteTask(indexToDelete);
 			if (temp) {
-				_commandBar.getTextField().setHtmlText("");
+				_commandBar.getTextField().setText("");
 				//_commandBar.getTextField().setText("");
 				return true;
 			}
@@ -219,8 +219,7 @@ public class PrimaryUserInterface extends Application {
 		if (indexToModify > -1) {
 			boolean temp = uiController.modifyTask(indexToModify, taskToCheck);
 			if (temp) {
-				_commandBar.getTextField().setHtmlText("");
-				//_commandBar.getTextField().setText("");
+				_commandBar.getTextField().setText("");
 				return true;
 			}
 		}
@@ -237,25 +236,23 @@ public class PrimaryUserInterface extends Application {
 	 */
 	public boolean executeJump(String indexToJump) {
 		uiController.jumpToIndex(indexToJump);
-		_commandBar.getTextField().setHtmlText("");
-		//_commandBar.getTextField().setText("");
+		_commandBar.getTextField().setText("");
 		return true;
 	}
 
-	private void processKeyReleased(HTMLEditor textField, KeyEvent event) {
-		String input = _commandBar.removeHtml(textField.getHtmlText());
+	private void processKeyReleased(TextField textField, KeyEvent event) {
+		String input = textField.getText();
 		_commandBar.onKeyReleased(input);
-		textField.requestFocus();
 	}
 
-	private void processKeyInputs(HTMLEditor textField, KeyEvent event) {
+	private void processKeyInputs(TextField textField, KeyEvent event) {
 		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
-			COMMAND cmd = _commandBar.onEnter(_commandBar.removeHtml(textField.getHtmlText()));
+			COMMAND cmd = _commandBar.onEnter(textField.getText());
 			// Ten add to mod to cater for theses commands
-			String t = _commandBar.removeHtml(textField.getHtmlText());
+			String t = _commandBar.getTextField().getText();
 			if (t.equals("float")) {
 				uiController.showFloatingView();
-				textField.setHtmlText("");
+				textField.setText("");
 				focus();
 			}   else if (t.indexOf(" ") != -1) {
 				if (t.substring(0, t.indexOf(" ")).equals("jump")) {
@@ -289,7 +286,7 @@ public class PrimaryUserInterface extends Application {
 					executeModify(tasks.get(i));
 				}
 			} else if (cmd.equals(COMMAND.DELETE)) {
-				String id = _commandBar.getId(_commandBar.removeHtml(textField.getHtmlText()));
+				String id = _commandBar.getId(textField.getText());
 				if (id != null) {
 					executeDelete(id);
 				} else {
@@ -298,24 +295,24 @@ public class PrimaryUserInterface extends Application {
 						executeDelete(tasks.get(i));
 					}
 				}
-				textField.setHtmlText("");
+				textField.setText("");
 			} else if (cmd.equals(COMMAND.MAIN)) {
 				uiController.showMainView(-1);
-				textField.setHtmlText("");
+				textField.setText("");
 				focus();
 			}else if (cmd.equals(COMMAND.HIDE)) {
 				uiController.hide();
-				textField.setHtmlText("");
+				textField.setText("");
 				focus();
 				return;
 			} else if (cmd.equals(COMMAND.SHOW)) {
 				uiController.show();
-				textField.setHtmlText("");
+				textField.setText("");
 				focus();
 				return;
 			} else if (cmd.equals(COMMAND.FLOAT)) {
 				uiController.showFloatingView();
-				textField.setHtmlText("");
+				textField.setText("");
 				focus();
 			}  
 		}

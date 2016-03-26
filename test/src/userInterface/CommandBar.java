@@ -20,53 +20,25 @@ import org.jsoup.Jsoup;;
 
 public class CommandBar {
 	private GridPane _mainPane;
-	//private TextField _textField;
-	// private TextFlow _textField;
+	private TextField _textField;
 	private int _numberOfItems = 0;
-	HTMLEditor _textField;
 
 	private ArrayList<String> _allSessionCmds = new ArrayList<String>();
 
 	public CommandBar() {
 		initializeMainPane();
-		//initializeTextBox();
+		initializeTextBox();
 		initializeHTMLEditor();
-		//_mainPane.add(_textField, _numberOfItems++, 0);
 		_mainPane.add(_textField, _numberOfItems++, 0);
 	}
 
 	public void initializeHTMLEditor() {
-		_textField = new HTMLEditor();
+		_textField = new TextField();
 		_textField.setId("testUserInput");
 		_textField.setPrefWidth(800.0);
-		hideHTMLEditorToolbars(_textField);
 		_textField.setBorder(null);
 	}
 	
-
-
-	@SuppressWarnings("restriction")
-	public void hideHTMLEditorToolbars(final HTMLEditor editor)
-	{
-	    editor.setVisible(false);
-	    Platform.runLater(new Runnable()
-	    {
-	        @Override
-	        public void run()
-	        {
-	            Node[] nodes = editor.lookupAll(".tool-bar").toArray(new Node[0]);
-	            for(Node node : nodes)
-	            {
-	                node.setVisible(false);
-	                node.setManaged(false);
-	            }
-	            editor.setVisible(true);
-	        }
-	    });
-	}
-
-
-
 	public void initializeMainPane() {
 		_mainPane = new GridPane();
 		_mainPane.setMaxHeight(30);
@@ -75,30 +47,25 @@ public class CommandBar {
 		_mainPane.setAlignment(Pos.CENTER);
 	}
 
-	/*
+	
 	public void initializeTextBox() {
 		_textField = new TextField();
 		_textField.setId("mainUserInput");
 		_textField.setPrefWidth(800.0);
 		_textField.setBorder(null);
 	}
-	*/
+	
 	public void onKeyReleased(String input) {
 		// System.out.println(input);
 		InputParser parser = new InputParser(XMLParser.removeAllTags(input));
 		System.out.println(input);
 		parser.addXML();
 		String textToShow = parser.getInput();
-		_textField.setHtmlText(textToShow);
-		_mainPane.requestFocus();
-		_textField.requestFocus();
+		_textField.setText(textToShow);
 		//_textField.setText(textToShow);
-		//_textField.positionCaret(textToShow.length() - 1);
+		_textField.positionCaret(textToShow.length() - 1);
 	}
 	
-	public static String removeHtml(String html) {
-	    return Jsoup.parse(html).text();
-	}
 
 	public COMMAND onEnter(String input) {
 		onKeyReleased(input);
@@ -135,12 +102,8 @@ public class CommandBar {
 		_mainPane.requestFocus();
 		_textField.requestFocus();
 	}
-/*
+
 	public TextField getTextField() {
-		return _textField;
-	}
-*/
-	public HTMLEditor getTextField() {
 		return _textField;
 	}
 	
