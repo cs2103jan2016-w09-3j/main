@@ -60,6 +60,7 @@ public class InputParser {
 		assert (input!=null) : "Input is null";
 
 		input = XMLParser.removeAllTags(input);
+		System.out.println(input);
 		addXMLDate();
 		addXMLID();
 		addXMLCmd();

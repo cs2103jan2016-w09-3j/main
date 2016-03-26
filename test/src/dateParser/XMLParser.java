@@ -82,7 +82,7 @@ public class XMLParser {
 		input = input.replace("</"+tag+">", "");
 		NodeList titles = tempXMLDoc.getElementsByTagName(tag);
 		for (int i = 0; i < titles.getLength(); i++) {
-			input = input.replace(titles.item(i).getTextContent(), "");
+			input = input.replace(titles.item(i).getTextContent(), " ");
 		}
 		return input;
 	}

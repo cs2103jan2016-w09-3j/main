@@ -16,7 +16,8 @@ public class InformationParser {
 	 * @return String in xml form
 	 */
 	public String xmlTitleAndDesc(String input) {
-		boolean success = setInformation(input);
+		String working = XMLParser.removeAllAttributes(input);
+		boolean success = setInformation(working);
 		if (success){
 			if ((title != null)&&(title.length()!=1)){
 				input = input.replace(title, "<title>" + title + "</title>");
