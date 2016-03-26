@@ -91,10 +91,10 @@ public class CommandBar {
 		try {
 			COMMAND type = parser.getCommand();
 			parser.addXML();
+			System.out.println(fullInput);
+			System.out.println(parser.getInput());
 			ArrayList<Pair<String, ArrayList<String>>> items = XMLParser.xmlToArrayList(parser.getInput());
 			for (int i = 0; i < items.size(); i++) {
-				System.out.println("item = " + i);
-				System.out.println(items.get(i).getFirst() + " " + items.get(i).getSecond().get(0));
 				Label label = buildItem(items.get(i));
 				if (label != null) {
 					itemsToAdd.add(label);
@@ -120,7 +120,11 @@ public class CommandBar {
 		if (type.equals(XMLParser.CMD_TAG)) {
 			return buildCommandDisplay(item.getSecond());
 		} else if (type.equals(XMLParser.TITLE_TAG)) {
-			return buildLabel(item.getSecond());
+			return buildTitleLabel(item.getSecond());
+		} else if (type.equals(XMLParser.DESC_TAG)) {
+			return buildDescLabel(item.getSecond());
+		} else if (type.equals(XMLParser.ID_TAG)) {
+			return buildIDLabel(item.getSecond());
 		}
 		return null;
 	}
@@ -132,11 +136,24 @@ public class CommandBar {
 		return label;
 	}
 
-	public Label buildLabel(ArrayList<String> text) {
+	public Label buildIDLabel(ArrayList<String> text) {
 		Label label = buildLabelSkeleton();
 		label.setText(text.get(0));
 		label.setStyle("-fx-background-color:orange");
-		System.out.println("title size+" + text.size());
+		return label;
+	}
+
+	public Label buildDescLabel(ArrayList<String> text) {
+		Label label = buildLabelSkeleton();
+		label.setText(text.get(0));
+		label.setStyle("-fx-background-color:cyan");
+		return label;
+	}
+
+	public Label buildTitleLabel(ArrayList<String> text) {
+		Label label = buildLabelSkeleton();
+		label.setText(text.get(0));
+		label.setStyle("-fx-background-color:blue");
 		return label;
 	}
 
