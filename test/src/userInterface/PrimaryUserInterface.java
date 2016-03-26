@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.scene.web.HTMLEditor;
 import mainLogic.Utils;
 
 public class PrimaryUserInterface extends Application {
@@ -166,7 +167,7 @@ public class PrimaryUserInterface extends Application {
 		if (task != null) {
 			uiController.addTask(task);
 			_commandBar.getTextField().setText("");
-			_commandBar.addSessionCmds(_commandBar.get_textInField());
+			//_commandBar.getTextField().setText("");
 			focus();
 			return true;
 		}
@@ -190,8 +191,8 @@ public class PrimaryUserInterface extends Application {
 		if (indexToDelete > -1) {
 			boolean temp = uiController.deleteTask(indexToDelete);
 			if (temp) {
-				_commandBar.addSessionCmds(_commandBar.get_textInField());
 				_commandBar.getTextField().setText("");
+				//_commandBar.getTextField().setText("");
 				return true;
 			}
 		}
@@ -218,7 +219,6 @@ public class PrimaryUserInterface extends Application {
 		if (indexToModify > -1) {
 			boolean temp = uiController.modifyTask(indexToModify, taskToCheck);
 			if (temp) {
-				_commandBar.addSessionCmds(_commandBar.get_textInField());
 				_commandBar.getTextField().setText("");
 				return true;
 			}
@@ -248,8 +248,8 @@ public class PrimaryUserInterface extends Application {
 	private void processKeyInputs(TextField textField, KeyEvent event) {
 		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
 			COMMAND cmd = _commandBar.onEnter(textField.getText());
-			String t = XMLParser.removeAllTags(textField.getText());
 			// Ten add to mod to cater for theses commands
+			String t = _commandBar.getTextField().getText();
 			if (t.equals("float")) {
 				uiController.showFloatingView();
 				textField.setText("");
@@ -286,7 +286,7 @@ public class PrimaryUserInterface extends Application {
 					executeModify(tasks.get(i));
 				}
 			} else if (cmd.equals(COMMAND.DELETE)) {
-				String id = _commandBar.HasId(textField.getText());
+				String id = _commandBar.getId(textField.getText());
 				if (id != null) {
 					executeDelete(id);
 				} else {
@@ -341,6 +341,7 @@ public class PrimaryUserInterface extends Application {
 		}
 
 		_primaryStage.requestFocus();
+		textField.requestFocus();
 	}
 
 	public void focus() {

@@ -40,6 +40,7 @@ public class InputParser {
 		logger.log(Level.INFO,"InputParser init");
 		
 		**/
+		input = XMLParser.removeAllTags(input);
 		setInput(input);
 		dateParser = new DateParser();
 		cmdParser = new CommandParser();
@@ -55,6 +56,8 @@ public class InputParser {
 		//DO NOT CHANGE ORDER!!
 		//logger.log(Level.INFO,"Add xml to input");
 		assert (input!=null) : "Input is null";
+
+		input = XMLParser.removeAllTags(input);
 		addXMLDate();
 		addXMLID();
 		addXMLCmd();

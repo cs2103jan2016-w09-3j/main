@@ -41,7 +41,10 @@ public class InformationParser {
 		{
 			String[] inputs = input.split(":");
 			if (inputs.length == 2) {
-				setTitle(inputs[0].trim());
+				if(!inputs[0].trim().isEmpty())
+				{
+					setTitle(inputs[0].trim());
+				}
 				//System.out.println(inputs[1]);
 				if(!inputs[1].trim().isEmpty())
 				{
