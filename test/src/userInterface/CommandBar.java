@@ -161,29 +161,30 @@ public class CommandBar {
 		}
 	}
 
-	public COMMAND onEnter(String input) {
+	public COMMAND onEnter() {
 		onKeyReleased();
 		InputParser parser = new InputParser(fullInput);
 		COMMAND cmd = parser.getCommand();
 		return cmd;
 	}
 
-	public ArrayList<TaskEntity> getTasks(String input) {
-		InputParser parser = new InputParser(XMLParser.removeAllTags(input));
+	public ArrayList<TaskEntity> getTasks() {
+		InputParser parser = new InputParser(fullInput);
 		return parser.getTask();
 	}
 
-	public String getId(String input) {
+	public String getId() {
 		String returnVal = null;
-		InputParser parser = new InputParser(XMLParser.removeAllTags(input));
+		InputParser parser = new InputParser(fullInput);
 		returnVal = parser.getID();
 		return returnVal;
 	}
 
 	public void setTextFieldHandler(EventHandler<KeyEvent> mainEventHandler,
 			EventHandler<KeyEvent> secondaryEventHandler) {
-		_textField.setOnKeyReleased(mainEventHandler);
-		_textField.setOnKeyPressed(secondaryEventHandler);
+		//_textField.setOnKeyReleased(mainEventHandler);
+		_textField.setOnKeyPressed(mainEventHandler);
+		//_textField.setOnKeyTyped(mainEventHandler);
 	}
 
 	public TaskEntity executeLine(String userInput) {

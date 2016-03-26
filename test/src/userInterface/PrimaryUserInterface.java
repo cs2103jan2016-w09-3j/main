@@ -124,13 +124,13 @@ public class PrimaryUserInterface extends Application {
 	public void initializeControls() {
 		EventHandler<KeyEvent> mainEventHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
-				processKeyInputs(_commandBar.getTextField(), event);
+				processKeyOnRelease(_commandBar.getTextField(), event);
 			}
 		};
 
 		EventHandler<KeyEvent> secondaryEventHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
-				processBackSpace(_commandBar.getTextField(), event);
+				processKeyOnPress(_commandBar.getTextField(), event);
 			}
 		};
 		_commandBar.setTextFieldHandler(mainEventHandler, secondaryEventHandler);
@@ -238,15 +238,23 @@ public class PrimaryUserInterface extends Application {
 		return true;
 	}
 
-	private void processBackSpace(TextField textField, KeyEvent event) {
+	private void processKeyOnPress(TextField textField, KeyEvent event) {
+		processControls(event);
 		if (event.getCode().compareTo(KeyCode.BACK_SPACE) == 0) {
 			_commandBar.deleteKey();
 		}
+		focus();
 	}
 
-	private void processKeyInputs(TextField textField, KeyEvent event) {
+	private void processKeyOnRelease(TextField textField, KeyEvent event) {
+		
+		if (event.getCode().compareTo(KeyCode.BACK_SPACE) == 0) {
+			_commandBar.deleteKey();
+		}
+		
 		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
-			COMMAND cmd = _commandBar.onEnter(textField.getText());
+
+			COMMAND cmd = _commandBar.onEnter();
 			// Ten add to mod to cater for theses commands
 			String t = _commandBar.getTextField().getText();
 			if (t.equals("float")) {
@@ -272,7 +280,7 @@ public class PrimaryUserInterface extends Application {
 				uiController.saveStuff();
 				System.exit(0);
 			} else if (cmd.equals(COMMAND.ADD)) {
-				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
+				ArrayList<TaskEntity> tasks = _commandBar.getTasks();
 				// System.out.println(tasks.get(0).getName());
 				if (tasks.size() == 1) {
 					executeAdd(tasks.get(0));
@@ -280,16 +288,16 @@ public class PrimaryUserInterface extends Application {
 					executeBatchAdd(tasks);
 				}
 			} else if (cmd.equals(COMMAND.EDIT)) {
-				ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
+				ArrayList<TaskEntity> tasks = _commandBar.getTasks();
 				for (int i = 0; i < tasks.size(); i++) {
 					executeModify(tasks.get(i));
 				}
 			} else if (cmd.equals(COMMAND.DELETE)) {
-				String id = _commandBar.getId(textField.getText());
+				String id = _commandBar.getId();
 				if (id != null) {
 					executeDelete(id);
 				} else {
-					ArrayList<TaskEntity> tasks = _commandBar.getTasks(t);
+					ArrayList<TaskEntity> tasks = _commandBar.getTasks();
 					for (int i = 0; i < tasks.size(); i++) {
 						executeDelete(tasks.get(i));
 					}
@@ -317,7 +325,11 @@ public class PrimaryUserInterface extends Application {
 		} else {
 			_commandBar.onKeyReleased();
 		}
+		processControls(event);
+		focus();
+	}
 
+	private void processControls(KeyEvent event) {
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
 			uiController.move(-1);
 		}
@@ -340,9 +352,6 @@ public class PrimaryUserInterface extends Application {
 		if (event.getCode().compareTo(KeyCode.LEFT) == 0 && event.isControlDown() && !event.isShiftDown()) {
 			uiController.changeView(-1);
 		}
-
-		_primaryStage.requestFocus();
-		textField.requestFocus();
 	}
 
 	public void focus() {
