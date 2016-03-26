@@ -108,11 +108,13 @@ public class XMLParser {
 		Map<String,ArrayList<String>> mapOfInput = XMLParser.loadMapFromXML(input);
 		while(!input.trim().isEmpty()){
 			String tag = findNextTag(input);
-			if(tag!=""){
-				
+			if(tag!=""){	
 				ArrayList<String> values =  mapOfInput.get(tag);
 				tagStringPair.add(new Pair(tag, values));
 				input = removeOneAttribute(input,tag);
+			}
+			if(tag.trim().equals("")){
+				break;
 			}
 		}
 		return tagStringPair;
