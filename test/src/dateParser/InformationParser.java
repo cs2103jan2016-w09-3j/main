@@ -18,10 +18,10 @@ public class InformationParser {
 	public String xmlTitleAndDesc(String input) {
 		boolean success = setInformation(input);
 		if (success){
-			if (title != null){
+			if ((title != null)&&(title.length()!=1)){
 				input = input.replace(title, "<title>" + title + "</title>");
 			}
-			if (description != null) {
+			if ((description != null)&&(description.length()!=1)) {
 				input = input.replace(description, "<desc>" + description + "</desc>");
 			}
 		}
@@ -53,7 +53,9 @@ public class InformationParser {
 				}
 			} else {
 				if (!inputs[0].trim().isEmpty()){
-					setTitle(inputs[0].trim());
+					for(int i=0; i<inputs.length; i++){
+						setTitle(inputs[i].trim());
+					}
 				}
 			}
 			success = true;
