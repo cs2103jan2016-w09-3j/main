@@ -65,6 +65,16 @@ public class XMLParser {
 		return input;
 	}
 
+	private static String removeOneAttribute(String input, String tag) throws Exception {
+		Document tempXMLDoc = XMLParser.loadXMLFromString("<XML>" + input + "</XML>");
+		input = input.replace("<"+tag+">", "");
+		input = input.replace("</"+tag+">", "");
+		NodeList titles = tempXMLDoc.getElementsByTagName(tag);
+		for (int i = 0; i < titles.getLength(); i++) {
+			input = input.replace(titles.item(i).getTextContent(), "");
+		}
+		return input;
+	} 
 	private static String removeAttribute(String input, Document tempXMLDoc, String tag) {
 		input = input.replace("<"+tag+">", "");
 		input = input.replace("</"+tag+">", "");
@@ -90,13 +100,56 @@ public class XMLParser {
 		return input;
 	}
 	
+	public static ArrayList<Pair<String, ArrayList<String>>> xmlToArrayList(String input) throws Exception{
+		ArrayList<Pair<String, ArrayList<String>>> tagStringPair = new ArrayList<Pair<String, ArrayList<String>>>();
+		Map<String,ArrayList<String>> mapOfInput = XMLParser.loadMapFromXML(input);
+		while(!input.trim().isEmpty()){
+			String tag = findNextTag(input);
+			if(tag!=""){
+				ArrayList<String> values =  mapOfInput.get(tag);
+				tagStringPair.add(new Pair(tag, values));
+				input = removeOneAttribute(input,tag);
+			}
+		}
+		return tagStringPair;
+	}
+	
+	private static String findNextTag(String input){
+		String tag = "";
+		boolean isInTag = false;
+		for(int i=0; i<input.length(); i++){
+			char c = input.charAt(i);
+			if(!isInTag){
+				if(c=='<'){
+					isInTag = true;
+				}
+			}else{
+				if(c=='>'){
+					isInTag = false;
+					break;
+				}
+				tag += c;
+			}
+		}
+		return tag;
+	}
+	
 	public static void main(String args[]){
-		String temp = "<cmd>add</cmd> <dates>nigra</dates> <title>basketball with friends</title> <dates>[Fri Mar 04 22:25:13 SGT 2016]</dates> ";
+		String temp = "<cmd>add</cmd> <dates>23/1</dates> <title>basketball with friends</title> <dates>[Fri Mar 04 22:25:13 SGT 2016]</dates> ";
 		try {
 			//Document tempDoc = loadXMLFromString(temp);
 			//System.out.println(tempDoc.getElementsByTagName("a").item(0).getTextContent());
-			Map<String,ArrayList<String>> m = loadMapFromXML(temp);
-			System.out.println(m.get("dates"));
+			ArrayList<Pair<String, ArrayList<String>>> tagStringPair = xmlToArrayList(temp);
+			for(int i=0; i<tagStringPair.size(); i++){
+				String tag = tagStringPair.get(i).getFirst();
+				System.out.println(tag);
+				ArrayList<String> values =  tagStringPair.get(i).getSecond();
+				for(int j=0; j<values.size(); j++){
+					System.out.print(values.get(j)+" ,");
+				}
+				System.out.println();
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
