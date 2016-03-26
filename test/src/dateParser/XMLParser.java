@@ -106,9 +106,14 @@ public class XMLParser {
 		while(!input.trim().isEmpty()){
 			String tag = findNextTag(input);
 			if(tag!=""){
-				ArrayList<String> values =  mapOfInput.get(tag);
-				tagStringPair.add(new Pair(tag, values));
-				input = removeOneAttribute(input,tag);
+				if(tag.equals(":")){
+					tagStringPair.add(new Pair("unknown", tag));
+					input = input.replace(":", "");
+				}else{
+					ArrayList<String> values =  mapOfInput.get(tag);
+					tagStringPair.add(new Pair(tag, values));
+					input = removeOneAttribute(input,tag);
+				}
 			}
 		}
 		return tagStringPair;
@@ -123,6 +128,11 @@ public class XMLParser {
 				if(c=='<'){
 					isInTag = true;
 				}
+				if(c==':'){
+					tag = ":";
+					break;
+				}
+				
 			}else{
 				if(c=='>'){
 					isInTag = false;
