@@ -24,7 +24,7 @@ import org.jsoup.Jsoup;;
 
 public class CommandBar {
 
-	private static final int GAP_SIZE = 3;
+	private static final int GAP_SIZE = 2;
 	private double _prefWidth;
 	private double _prefHeight = 30;
 
@@ -52,7 +52,6 @@ public class CommandBar {
 	public void initializeMainPane() {
 		_mainPane = new GridPane();
 		_mainPane.setMaxHeight(_prefHeight);
-		_mainPane.setPadding(new Insets(4, 2, 0, 2));
 		_mainPane.setStyle("-fx-background-color: #FFFFFF;");
 		_mainPane.setAlignment(Pos.CENTER_LEFT);
 		_mainPane.setHgap(GAP_SIZE);
@@ -84,15 +83,19 @@ public class CommandBar {
 		onKeyReleased();
 	}
 
+	public void release() {
+		String input = _textField.getText();
+		if (!input.equals("")) {
+			onKeyReleased();
+		}
+	}
+
 	public void onKeyReleased() {
 		concatToFullString();
 		ArrayList<Node> itemsToAdd = new ArrayList<Node>();
 		InputParser parser = new InputParser(fullInput);
 		try {
-			COMMAND type = parser.getCommand();
 			parser.addXML();
-			System.out.println(fullInput);
-			System.out.println(parser.getInput());
 			ArrayList<Pair<String, ArrayList<String>>> items = XMLParser.xmlToArrayList(parser.getInput());
 			for (int i = 0; i < items.size(); i++) {
 				Label label = buildItem(items.get(i));
@@ -100,7 +103,6 @@ public class CommandBar {
 					itemsToAdd.add(label);
 				}
 			}
-
 		} catch (Exception e) {
 		}
 		itemsToAdd.add(_textField);
@@ -125,6 +127,8 @@ public class CommandBar {
 			return buildDescLabel(item.getSecond());
 		} else if (type.equals(XMLParser.ID_TAG)) {
 			return buildIDLabel(item.getSecond());
+		} else if (type.equals(XMLParser.DATE_TAG)) {
+			return buildDateLabel(item.getSecond());
 		}
 		return null;
 	}
@@ -136,24 +140,38 @@ public class CommandBar {
 		return label;
 	}
 
+	private Label buildDateLabel(ArrayList<String> dates) {
+		Label label = buildLabelSkeleton();
+		String text = "";
+		for (int i = 0; i < dates.size(); i++) {
+			text = text.concat(dates.get(i));
+			if (i < dates.size() - 1) {
+				text.concat(" ");
+			}
+		}
+		label.setText(text);
+		label.setId("cssCommandDate");
+		return label;
+	}
+
 	public Label buildIDLabel(ArrayList<String> text) {
 		Label label = buildLabelSkeleton();
 		label.setText(text.get(0));
-		label.setStyle("-fx-background-color:orange");
+		label.setId("cssCommandID");
 		return label;
 	}
 
 	public Label buildDescLabel(ArrayList<String> text) {
 		Label label = buildLabelSkeleton();
 		label.setText(text.get(0));
-		label.setStyle("-fx-background-color:cyan");
+		label.setId("cssCommandDescription");
 		return label;
 	}
 
 	public Label buildTitleLabel(ArrayList<String> text) {
 		Label label = buildLabelSkeleton();
 		label.setText(text.get(0));
-		label.setStyle("-fx-background-color:blue");
+		label.setId("cssCommandTitle");
 		return label;
 	}
 
@@ -164,8 +182,13 @@ public class CommandBar {
 			Label label = buildLabelSkeleton();
 			label.setText(commandString);
 			if (cp.getCommand(commandString).equals(COMMAND.ADD)) {
-				label.setStyle("-fx-background-color:green");
-				return label;
+				label.setId("cssCommandBarAdd");
+			} else if (cp.getCommand(commandString).equals(COMMAND.DELETE)) {
+				label.setId("cssCommandBarDelete");
+			} else if (cp.getCommand(commandString).equals(COMMAND.EDIT)) {
+				label.setId("cssCommandBarEdit");
+			} else if (cp.getCommand(commandString).equals(COMMAND.INVALID)) {
+				label.setId("cssCommandBarInvalid");
 			}
 			return label;
 		}
@@ -199,9 +222,8 @@ public class CommandBar {
 
 	public void setTextFieldHandler(EventHandler<KeyEvent> mainEventHandler,
 			EventHandler<KeyEvent> secondaryEventHandler) {
-		//_textField.setOnKeyReleased(mainEventHandler);
 		_textField.setOnKeyPressed(mainEventHandler);
-		//_textField.setOnKeyTyped(mainEventHandler);
+		_textField.setOnKeyReleased(secondaryEventHandler);
 	}
 
 	public TaskEntity executeLine(String userInput) {

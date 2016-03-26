@@ -122,18 +122,18 @@ public class PrimaryUserInterface extends Application {
 	 * 
 	 */
 	public void initializeControls() {
+
 		EventHandler<KeyEvent> mainEventHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
-				processKeyOnRelease(_commandBar.getTextField(), event);
+				processKeyPress(_commandBar.getTextField(), event);
 			}
 		};
-
-		EventHandler<KeyEvent> secondaryEventHandler = new EventHandler<KeyEvent>() {
+		EventHandler<KeyEvent> releaseEventHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
-				processKeyOnPress(_commandBar.getTextField(), event);
+				processKeyRelease(_commandBar.getTextField(), event);
 			}
 		};
-		_commandBar.setTextFieldHandler(mainEventHandler, secondaryEventHandler);
+		_commandBar.setTextFieldHandler(mainEventHandler,releaseEventHandler);
 	}
 
 	/*
@@ -238,15 +238,12 @@ public class PrimaryUserInterface extends Application {
 		return true;
 	}
 
-	private void processKeyOnPress(TextField textField, KeyEvent event) {
-		processControls(event);
-		if (event.getCode().compareTo(KeyCode.BACK_SPACE) == 0) {
-			_commandBar.deleteKey();
-		}
-		focus();
-	}
 
-	private void processKeyOnRelease(TextField textField, KeyEvent event) {
+	private void processKeyRelease(TextField textField, KeyEvent event) {
+		_commandBar.release();
+	}
+	
+	private void processKeyPress(TextField textField, KeyEvent event) {
 		
 		if (event.getCode().compareTo(KeyCode.BACK_SPACE) == 0) {
 			_commandBar.deleteKey();
