@@ -14,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -140,9 +141,20 @@ public class SearchUserInterface implements ViewInterface {
 
 	private void buildSearchList(ArrayList<TaskEntity> searchList) {
 		_secondaryVbox.getChildren().clear();
-		for (int i = 0; i < searchList.size(); i++) {
-			_secondaryVbox.getChildren().add(buildIndividualSearchItem(searchList.get(i),i));
+		_selectedIndex = 0;
+		_startIndex = 0;
+		if (searchList.size() < THRESHOLD * 2) {
+			_endIndex = searchList.size() - 1;
+		} else {
+			_endIndex = THRESHOLD * 2;
 		}
+
+		for (int i = _startIndex; i <= _endIndex; i++) {
+			HBox item = buildIndividualSearchItem(searchList.get(i), i);
+			_secondaryVbox.getChildren().add(item);
+			_searchBoxes.add(item);
+		}
+		setSelected(0);
 	}
 
 	private void buildHelpWithSearch() {
@@ -156,45 +168,51 @@ public class SearchUserInterface implements ViewInterface {
 
 	private HBox buildIndividualSearchItem(TaskEntity task, int index) {
 		HBox parentBox = new HBox();
-		
+
 		VBox parentBoxChild = new VBox();
 		parentBoxChild.setMinWidth(_stageWidth);
 		parentBoxChild.setMaxWidth(_stageWidth);
-	
+
 		HBox top = new HBox();
 		top.setMinWidth(_stageWidth);
 		top.setMaxWidth(_stageWidth);
-		
-		
+
 		Label indexLabel = new Label(Utils.convertDecToBase36(index));
-		//Label indexLabel = new Label(Integer.toString(index));
+		// Label indexLabel = new Label(Integer.toString(index));
 		indexLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		indexLabel.setMinWidth(50);
 		indexLabel.setAlignment(Pos.CENTER);
-		indexLabel.setFont(FONT_INDEX);
-
+		indexLabel.setFont(Font.font(PrimaryUserInterface.DEFAULT_FONT, FontWeight.BOLD, FONT_SIZE_TASK));
 		top.getChildren().add(indexLabel);
-		
+
 		Label timeLabel = new Label();
 		timeLabel.setText(task.getTime());
 		timeLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		timeLabel.setAlignment(Pos.CENTER);
 		timeLabel.setFont(FONT_TASK);
 		top.getChildren().add(timeLabel);
-		
+
 		Label nameLabel = new Label();
 		nameLabel.setText(task.getName());
 		nameLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		nameLabel.setAlignment(Pos.CENTER);
 		nameLabel.setFont(FONT_TASK);
-		HBox.setMargin(nameLabel, new Insets(0,10,0,10));
+		HBox.setMargin(nameLabel, new Insets(0, 10, 0, 10));
 		top.getChildren().add(nameLabel);
-		
+
+		HBox mid = new HBox();
+
+		Label indexPlaceHolder = new Label();
+		indexPlaceHolder.setMinWidth(50);
+		mid.getChildren().add(indexPlaceHolder);
+
 		Text description = new Text();
 		description.setText(task.getDescription());
 		description.setWrappingWidth(_stageWidth - 50);
-		
+		mid.getChildren().add(description);
+
 		parentBoxChild.getChildren().add(top);
+		parentBoxChild.getChildren().add(mid);
 		parentBox.getChildren().add(parentBoxChild);
 		return parentBox;
 	}
@@ -262,7 +280,6 @@ public class SearchUserInterface implements ViewInterface {
 		_secondaryVbox.getChildren().remove(item);
 	}
 
-
 	public void setSelected(int value) {
 		int temp = _selectedIndex + value;
 		if (isBetweenRange(temp)) {
@@ -276,17 +293,20 @@ public class SearchUserInterface implements ViewInterface {
 	}
 
 	public double getTopHeight(int index) {
-		double sizeTop = index * LABEL_TASK_HEIGHT;
-		return sizeTop;
+		double posY = 0;
+		for (int i = 0; i <= index; i++) {
+			posY += _searchBoxes.get(i).getHeight();
+		}
+		return posY;
 	}
 
-	public void translateY(double itemTopHeight) {
-		double posY = -LABEL_TITLE_HEIGHT;
+	public void translateY(double itemHeight) {
 		int entireAreaHeight = _stageHeight - LABEL_TITLE_HEIGHT;
-		if (itemTopHeight + LABEL_TASK_HEIGHT > entireAreaHeight) {
-			posY += itemTopHeight + LABEL_TASK_HEIGHT - entireAreaHeight;
-		} else if (itemTopHeight < entireAreaHeight) {
-			
+		double posY = -LABEL_TITLE_HEIGHT;
+		if (itemHeight < entireAreaHeight) {
+
+		} else {
+			posY += (itemHeight - entireAreaHeight);
 		}
 		_secondaryVbox.setTranslateY(-posY);
 	}
@@ -308,7 +328,7 @@ public class SearchUserInterface implements ViewInterface {
 
 	public void updateTranslateY(double posY) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

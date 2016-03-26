@@ -68,11 +68,11 @@ public class PrimaryUserInterface extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		_primaryStage = primaryStage;
-		_commandBar = new CommandBar();
+		_commandBar = new CommandBar(_commandBarWidth);
 		initializeControls();
 		initializePrimaryStage(primaryStage);
 		initializeUiController(primaryStage);
-		InputParser p = new InputParser("");
+		InputParser parser = new InputParser("");
 		focus();
 	}
 
@@ -122,20 +122,18 @@ public class PrimaryUserInterface extends Application {
 	 * 
 	 */
 	public void initializeControls() {
-
 		EventHandler<KeyEvent> mainEventHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				processKeyInputs(_commandBar.getTextField(), event);
-
 			}
-
 		};
-		EventHandler<KeyEvent> keyReleasedEventHandler = new EventHandler<KeyEvent>() {
+
+		EventHandler<KeyEvent> secondaryEventHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
-				processKeyReleased(_commandBar.getTextField(), event);
+				processBackSpace(_commandBar.getTextField(), event);
 			}
 		};
-		_commandBar.setTextFieldHandler(mainEventHandler, keyReleasedEventHandler);
+		_commandBar.setTextFieldHandler(mainEventHandler, secondaryEventHandler);
 	}
 
 	/*
@@ -167,7 +165,7 @@ public class PrimaryUserInterface extends Application {
 		if (task != null) {
 			uiController.addTask(task);
 			_commandBar.getTextField().setText("");
-			//_commandBar.getTextField().setText("");
+			// _commandBar.getTextField().setText("");
 			focus();
 			return true;
 		}
@@ -192,7 +190,7 @@ public class PrimaryUserInterface extends Application {
 			boolean temp = uiController.deleteTask(indexToDelete);
 			if (temp) {
 				_commandBar.getTextField().setText("");
-				//_commandBar.getTextField().setText("");
+				// _commandBar.getTextField().setText("");
 				return true;
 			}
 		}
@@ -240,9 +238,10 @@ public class PrimaryUserInterface extends Application {
 		return true;
 	}
 
-	private void processKeyReleased(TextField textField, KeyEvent event) {
-		String input = textField.getText();
-		_commandBar.onKeyReleased(input);
+	private void processBackSpace(TextField textField, KeyEvent event) {
+		if (event.getCode().compareTo(KeyCode.BACK_SPACE) == 0) {
+			_commandBar.deleteKey();
+		}
 	}
 
 	private void processKeyInputs(TextField textField, KeyEvent event) {
@@ -254,7 +253,7 @@ public class PrimaryUserInterface extends Application {
 				uiController.showFloatingView();
 				textField.setText("");
 				focus();
-			}   else if (t.indexOf(" ") != -1) {
+			} else if (t.indexOf(" ") != -1) {
 				if (t.substring(0, t.indexOf(" ")).equals("jump")) {
 					String indexToJump = t.substring(t.indexOf(" ") + 1);
 					executeJump(indexToJump);
@@ -300,7 +299,7 @@ public class PrimaryUserInterface extends Application {
 				uiController.showMainView(-1);
 				textField.setText("");
 				focus();
-			}else if (cmd.equals(COMMAND.HIDE)) {
+			} else if (cmd.equals(COMMAND.HIDE)) {
 				uiController.hide();
 				textField.setText("");
 				focus();
@@ -314,7 +313,9 @@ public class PrimaryUserInterface extends Application {
 				uiController.showFloatingView();
 				textField.setText("");
 				focus();
-			}  
+			}
+		} else {
+			_commandBar.onKeyReleased();
 		}
 
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
