@@ -17,6 +17,7 @@ public class XMLParser {
 	public static final String CMD_TAG = "cmd";
 	public static final String TITLE_TAG = "title";
 	public static final String DESC_TAG = "desc";
+	public static final String OTHERS_TAG = "others";
 	public static final String ID_TAG = "ID";
 	
 	public static Document loadXMLFromString(String xml) throws Exception{
@@ -106,14 +107,10 @@ public class XMLParser {
 		while(!input.trim().isEmpty()){
 			String tag = findNextTag(input);
 			if(tag!=""){
-				if(tag.equals(":")){
-					tagStringPair.add(new Pair("unknown", tag));
-					input = input.replace(":", "");
-				}else{
-					ArrayList<String> values =  mapOfInput.get(tag);
-					tagStringPair.add(new Pair(tag, values));
-					input = removeOneAttribute(input,tag);
-				}
+				
+				ArrayList<String> values =  mapOfInput.get(tag);
+				tagStringPair.add(new Pair(tag, values));
+				input = removeOneAttribute(input,tag);
 			}
 		}
 		return tagStringPair;
@@ -128,11 +125,6 @@ public class XMLParser {
 				if(c=='<'){
 					isInTag = true;
 				}
-				if(c==':'){
-					tag = ":";
-					break;
-				}
-				
 			}else{
 				if(c=='>'){
 					isInTag = false;

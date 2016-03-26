@@ -25,6 +25,7 @@ public class InformationParser {
 				input = input.replace(description, "<desc>" + description + "</desc>");
 			}
 		}
+		input = input.replace(":", "<others>:</others>");
 		return input;
 	}
 
