@@ -5,6 +5,8 @@ import userInterface.UserInterfaceController;
 
 import java.awt.Event;
 import java.util.ArrayList;
+import java.util.Calendar;
+
 import dateParser.CommandParser.COMMAND;
 import dateParser.InputParser;
 import dateParser.XMLParser;
@@ -212,16 +214,43 @@ public class PrimaryUserInterface extends Application {
 	 * @param taskToCheck
 	 * @return boolean, true for successful and false for unsuccessful.
 	 */
-	public boolean executeModify(TaskEntity taskToCheck) {
-		int indexToModify = uiController.getTaskID(taskToCheck);
-		if (indexToModify > -1) {
-			boolean temp = uiController.modifyTask(indexToModify, taskToCheck);
-			if (temp) {
+	public boolean executeModify(String indexZZ,String input) {
+		int indexToModify = Utils.convertBase36ToDec(indexZZ);
+		ArrayList<TaskEntity> tasks = _commandBar.getTasksPartialInput();
+		if (indexToModify != -1) {
+			if(tasks.size()==1){
+				uiController.modifyTask(indexToModify, tasks.get(0));
 				_commandBar.getTextField().setText("");
 				return true;
+			}else if(tasks.size()==0){
+				TaskEntity toPopulate = uiController.getTaskByID(indexToModify);
+				if(toPopulate!=null){
+					String toSet = " "+toPopulate.getName();
+					if(toPopulate.getDescription()!=null){
+						toSet+= " : "+toPopulate.getDescription();
+					}
+					if(toPopulate.getDueDate() != null){
+						Calendar c = toPopulate.getDueDate();
+						int day = c.get(Calendar.DATE);
+						int month = c.get(Calendar.MONTH)+1;
+						int year = c.get(Calendar.YEAR);
+						int hour = c.get(Calendar.HOUR_OF_DAY);
+						int min = c.get(Calendar.MINUTE);
+						toSet+= " "+day+"-"+month+"-"+year+ " "+hour+min;
+					}
+					if(toPopulate.getProjectHead() != null){
+						toSet+= " @"+toPopulate.getProjectHead().getName();
+					}
+					//populate hashTag here
+					System.out.println("test");
+					_commandBar.getTextField().setText(toSet);
+					_commandBar.onKeyReleased();
+				}
+				return false;
 			}
+		} else {
+			return false;
 		}
-
 		return false;
 	}
 
@@ -285,9 +314,14 @@ public class PrimaryUserInterface extends Application {
 					executeBatchAdd(tasks);
 				}
 			} else if (cmd.equals(COMMAND.EDIT)) {
-				ArrayList<TaskEntity> tasks = _commandBar.getTasks();
-				for (int i = 0; i < tasks.size(); i++) {
-					executeModify(tasks.get(i));
+				String id = _commandBar.getId();
+				if (id != null) {
+					executeModify(id,_commandBar.getTextField().getText());
+				} else {
+					ArrayList<TaskEntity> tasks = _commandBar.getTasks();
+					for (int i = 0; i < tasks.size(); i++) {
+						//executeModify(tasks.get(i));
+					}
 				}
 			} else if (cmd.equals(COMMAND.DELETE)) {
 				String id = _commandBar.getId();

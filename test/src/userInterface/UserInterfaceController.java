@@ -424,6 +424,17 @@ public class UserInterfaceController {
 		return false;
 	}
 
+	public TaskEntity getTaskByID(int ID){
+		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
+		if(ID<tasks.size()){
+			return tasks.get(ID);
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
 	public int getTaskID(TaskEntity taskToCheck) {
 		int index = -1;
 		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();

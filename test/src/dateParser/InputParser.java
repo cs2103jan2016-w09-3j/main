@@ -68,6 +68,13 @@ public class InputParser {
 		addXMLGarbage();
 	}
 	
+	public void removeId(){
+		input = XMLParser.removeAllTags(input);
+		addXMLID();
+		input = XMLParser.removeAllAttributes(input);
+		
+	}
+	
 	private void addXMLGarbage(){
 		input = gcParser.xmlAllOthers(input);
 	}
@@ -128,29 +135,31 @@ public class InputParser {
 	 */
 	public ArrayList<TaskEntity> getTask(){
 		input = XMLParser.removeAllTags(input);
+		input = input.replace("edit", "");
+		ArrayList<TaskEntity> tasks  = new ArrayList<TaskEntity>();
 		if(input.trim().equals("")){
 			//logger.log(Level.WARNING, "Input is empty", new IllegalArgumentException("input is empty"));
-		}
-		ArrayList<TaskEntity> tasks  = new ArrayList<TaskEntity>();
-		List<Date> dates = dateParser.parseToList(input);
-		addXMLDate();
-		addXMLCmd();
-		infoParser.setInformation(this.input);
-		String name = infoParser.getTitle();
-		String desc = infoParser.getDescription();
-		if(dates.size() == 0){
-			TaskEntity toAdd = new TaskEntity(name, null, false, desc);
-			toAdd.setFloating(true);
-			tasks.add(toAdd);
-		}
-		else{
-			for(int i=0; i<dates.size(); i++){
-				Calendar c = Calendar.getInstance();
-				c.setTime(dates.get(i));
-				c.clear(Calendar.SECOND);
-				c.clear(Calendar.MILLISECOND);
-				TaskEntity toAdd = new TaskEntity(name, c, false, desc);
+		}else{
+			List<Date> dates = dateParser.parseToList(input);
+			addXMLDate();
+			addXMLCmd();
+			infoParser.setInformation(this.input);
+			String name = infoParser.getTitle();
+			String desc = infoParser.getDescription();
+			if(dates.size() == 0){
+				TaskEntity toAdd = new TaskEntity(name, null, false, desc);
+				toAdd.setFloating(true);
 				tasks.add(toAdd);
+			}
+			else{
+				for(int i=0; i<dates.size(); i++){
+					Calendar c = Calendar.getInstance();
+					c.setTime(dates.get(i));
+					c.clear(Calendar.SECOND);
+					c.clear(Calendar.MILLISECOND);
+					TaskEntity toAdd = new TaskEntity(name, c, false, desc);
+					tasks.add(toAdd);
+				}
 			}
 		}
 		return tasks;

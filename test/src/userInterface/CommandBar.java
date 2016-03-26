@@ -17,7 +17,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.web.HTMLEditor;
 import javafx.scene.Node;
 import javafx.application.Platform;
 import org.jsoup.Jsoup;;
@@ -40,13 +39,6 @@ public class CommandBar {
 		initializeMainPane();
 		initializeTextBox();
 		_mainPane.add(_textField, _numberOfItems++, 0);
-	}
-
-	public void initializeHTMLEditor() {
-		_textField = new TextField();
-		_textField.setId("testUserInput");
-		_textField.setPrefWidth(10);
-		_textField.setBorder(null);
 	}
 
 	public void initializeMainPane() {
@@ -210,6 +202,11 @@ public class CommandBar {
 
 	public ArrayList<TaskEntity> getTasks() {
 		InputParser parser = new InputParser(fullInput);
+		return parser.getTask();
+	}
+	public ArrayList<TaskEntity> getTasksPartialInput() {
+		InputParser parser = new InputParser(fullInput);
+		parser.removeId();
 		return parser.getTask();
 	}
 
