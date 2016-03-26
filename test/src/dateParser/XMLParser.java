@@ -60,6 +60,7 @@ public class XMLParser {
 			input = removeAttribute(input, tempXMLDoc,DESC_TAG);
 			input = removeAttribute(input, tempXMLDoc,DATE_TAG);
 			input = removeAttribute(input, tempXMLDoc,ID_TAG);
+			input = removeAttribute(input, tempXMLDoc,OTHERS_TAG);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -92,6 +93,7 @@ public class XMLParser {
 		input = removeTags(input, DESC_TAG);
 		input = removeTags(input, DATE_TAG);
 		input = removeTags(input, ID_TAG);
+		input = removeTags(input, OTHERS_TAG);
 		return input;
 	}
 	
