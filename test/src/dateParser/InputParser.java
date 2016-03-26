@@ -21,6 +21,7 @@ public class InputParser {
 	private CommandParser cmdParser;
 	private InformationParser infoParser;
 	private IdParser idParser;
+	private GarbageCollectorParser gcParser;
 	
 	//private static Logger logger = Logger.getLogger("InputParser");
 
@@ -46,6 +47,7 @@ public class InputParser {
 		cmdParser = new CommandParser();
 		infoParser = new InformationParser();
 		idParser = new IdParser();
+		gcParser = new GarbageCollectorParser();
 	}
 
 
@@ -62,6 +64,11 @@ public class InputParser {
 		addXMLID();
 		addXMLCmd();
 		addXMLTitleDesc();
+		addXMLGarbage();
+	}
+	
+	private void addXMLGarbage(){
+		input = gcParser.xmlAllOthers(input);
 	}
 	
 	private void addXMLID() {
