@@ -28,6 +28,7 @@ public class CommandBar {
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
 	private static final int MAIN_PANE_LEFT_RIGHT_MARGIN = 4;
+	private static final int TEXT_FIELD_WIDTH = 10;
 
 	// font
 	static final int FONT_SIZE_FEEDBACK = 12;
@@ -98,6 +99,7 @@ public class CommandBar {
 	public void initializeTextBox() {
 		_textField = new TextField();
 		_textField.setId("cssCommandMainUserInput");
+		_textField.setMaxWidth(TEXT_FIELD_WIDTH);
 		_textField.setAlignment(Pos.CENTER_LEFT);
 		_textField.setPrefHeight(_commandLabelHeight);
 		_textField.setPadding(new Insets(0, 0, 0, 0));
@@ -106,8 +108,18 @@ public class CommandBar {
 
 	public void concatToFullString() {
 		String input = _textField.getText();
-		fullInput = fullInput.concat(input);
-		_textField.setText("");
+		if (!input.equals("")) {
+			if (_selected == -1) {
+				fullInput = fullInput.concat(input);
+			} else {
+				String front = getFrontString();
+				String current = currentString();
+				String back = getBackString();
+				current = current.concat(input);
+				fullInput = rebuildString(front, current, back);
+			}
+			_textField.setText("");
+		}
 	}
 
 	public void clearFullString() {
@@ -116,7 +128,15 @@ public class CommandBar {
 
 	public void deleteKey() {
 		if (_selected != -1) {
-
+			String front = getFrontString();
+			String current = currentString();
+			String back = getBackString();
+			current = current.substring(0, current.length() - 1);
+			if (current.length() == 0) {
+				_selected--;
+			}
+			fullInput = rebuildString(front, current, back);
+			onKeyReleased();
 		} else {
 			if (fullInput.length() > 0) {
 				fullInput = fullInput.substring(0, fullInput.length() - 1);
@@ -125,11 +145,54 @@ public class CommandBar {
 		}
 	}
 
+	private String rebuildString(String front, String current, String back) {
+		String full = "";
+		if (!front.equals("")) {
+			full = full.concat(front);
+		}
+		if (full.equals("")) {
+			full = full.concat(current);
+		} else {
+			full = full.concat(" ").concat(current);
+		}
+		if (full.equals("")) {
+			full = full.concat(back);
+		} else {
+			full = full.concat(" ").concat(back);
+		}
+		return full;
+	}
+
+	public String getFrontString() {
+		String front = "";
+		for (int i = 0; i < _selected; i++) {
+			front = front.concat(labels.get(i).getText());
+			if (i + 1 < _selected) {
+				front = front.concat(" ");
+			}
+		}
+		return front;
+	}
+
+	public String currentString() {
+		return labels.get(_selected).getText();
+	}
+
+	public String getBackString() {
+		String back = "";
+		for (int i = _selected + 1; i < labels.size(); i++) {
+			back = back.concat(labels.get(i).getText());
+			if (i + 1 < labels.size()) {
+				back = back.concat(" ");
+			}
+		}
+		return back;
+	}
+
 	public void release() {
 		String input = _textField.getText();
 		if (!input.equals("")) {
 			onKeyReleased();
-			_selected = -1;
 		}
 	}
 
@@ -150,8 +213,15 @@ public class CommandBar {
 			}
 		} catch (Exception e) {
 		}
-		itemsToAdd.add(_textField);
 		addItemsToBar(itemsToAdd);
+	}
+
+	private void addItemsToCommandBar(ArrayList<Label> itemsToAdd) {
+		ArrayList<Node> temp = new ArrayList<Node>();
+		for (Label i : itemsToAdd) {
+			temp.add(i);
+		}
+		addItemsToBar(temp);
 	}
 
 	private void addItemsToBar(ArrayList<Node> itemsToAdd) {
@@ -159,10 +229,15 @@ public class CommandBar {
 		labels.clear();
 		_numberOfItems = 0;
 
+		if (_selected == -1) {
+			itemsToAdd.add(_textField);
+		} else {
+			itemsToAdd.add(_selected + 1, _textField);
+		}
+
 		for (int i = 0; i < itemsToAdd.size(); i++) {
 			_mainPane.add(itemsToAdd.get(i), _numberOfItems++, 1);
 			if (itemsToAdd.get(i) instanceof Label) {
-				Label l = (Label) itemsToAdd.get(i);
 				labels.add((Label) itemsToAdd.get(i));
 			}
 		}
@@ -321,20 +396,23 @@ public class CommandBar {
 	}
 
 	public void changeSelector() {
-		if (_numberOfItems - 1 > 0) {
+		if (labels.size() > 0) {
 			int tempSelector = _selected;
-			if (_selected + 1 < _numberOfItems - 1) {
+			if (_selected + 1 < labels.size() - 1) {
 				tempSelector++;
 			} else {
-				tempSelector = 0;
+				tempSelector = -1;
 			}
 			// change in selector detected
 			if (tempSelector != _selected && _selected != -1) {
 				labels.get(_selected).setUnderline(false);
 			}
-			labels.get(tempSelector).setUnderline(true);
+			if (tempSelector != -1) {
+				labels.get(tempSelector).setUnderline(true);
+			}
 			_selected = tempSelector;
 		}
+		addItemsToCommandBar(labels);
 	}
 
 	public void setFeedBackMessage(String feedback) {
