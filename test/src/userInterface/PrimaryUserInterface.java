@@ -248,6 +248,7 @@ public class PrimaryUserInterface extends Application {
 	 */
 	private void executeAdd(ArrayList<TaskEntity> tasks) {
 		boolean success = false;
+		String taskName = null;
 		if (tasks.size() == 1) {
 			if (tasks.get(0) != null) {
 				success = uiController.addTask(tasks.get(0));
@@ -256,10 +257,11 @@ public class PrimaryUserInterface extends Application {
 			success = uiController.addBatchTask(tasks);
 		}
 		if (success) {
-			_commandBar.showFeedBackMessage(COMMAND.ADD, SUCCESS, TYPE_1);
+			taskName = tasks.get(0).getName();
+			_commandBar.showFeedBackMessage(COMMAND.ADD, SUCCESS, TYPE_1, taskName);
 			resetCommandInput();
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.ADD, FAILURE, TYPE_1);
+			_commandBar.showFeedBackMessage(COMMAND.ADD, FAILURE, TYPE_1, taskName);
 		}
 	}
 
@@ -275,10 +277,10 @@ public class PrimaryUserInterface extends Application {
 			success = uiController.deleteTask(id);
 		}
 		if (success) {
-			_commandBar.showFeedBackMessage(COMMAND.DELETE, SUCCESS, TYPE_1);
+			_commandBar.showFeedBackMessage(COMMAND.DELETE, SUCCESS, TYPE_1, id);
 			resetCommandInput();
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.DELETE, FAILURE, TYPE_1);
+			_commandBar.showFeedBackMessage(COMMAND.DELETE, FAILURE, TYPE_1, id);
 		}
 
 	}
@@ -305,10 +307,10 @@ public class PrimaryUserInterface extends Application {
 	private void executeModify(int indexToModify, TaskEntity taskEntity) {
 		boolean success = uiController.modifyTask(indexToModify, taskEntity);
 		if (success) {
-			_commandBar.showFeedBackMessage(COMMAND.EDIT, SUCCESS, TYPE_1);
+			_commandBar.showFeedBackMessage(COMMAND.EDIT, SUCCESS, TYPE_1, Utils.convertDecToBase36(indexToModify));
 			resetCommandInput();
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_1);
+			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_1, Utils.convertDecToBase36(indexToModify));
 		}
 	}
 
@@ -340,7 +342,7 @@ public class PrimaryUserInterface extends Application {
 			_commandBar.addToFullInput(toSet);
 			_commandBar.onKeyReleased();
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_2);
+			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_2, Utils.convertDecToBase36(indexToModify));
 		}
 
 	}

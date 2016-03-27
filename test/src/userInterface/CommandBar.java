@@ -1,5 +1,6 @@
 package userInterface;
 
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
@@ -24,6 +25,9 @@ import javafx.application.Platform;
 import org.jsoup.Jsoup;;
 
 public class CommandBar {
+
+	private static final String MESSAGE_SUCCESS_ADD = "Successfully added %1$s into PCNM";
+	private static final String MESSAGE_FAILURE_ADD = "Fail to add %1$s into PCNM";
 
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
@@ -416,7 +420,16 @@ public class CommandBar {
 		_feedbackLabel.setText(feedback);
 	}
 
-	public void showFeedBackMessage(COMMAND cmdType, boolean condition, int errorType) {
-
+	public void showFeedBackMessage(COMMAND cmdType, boolean condition, int errorType, String msg) {
+		switch (cmdType) {
+		case ADD: {
+			if (condition) {
+				setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD, msg));
+			} else {
+				setFeedBackMessage(String.format(MESSAGE_FAILURE_ADD, msg));
+			}
+			break;
+		}
+		}
 	}
 }
