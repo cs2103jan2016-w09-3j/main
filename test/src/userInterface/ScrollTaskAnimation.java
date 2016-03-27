@@ -57,13 +57,13 @@ public class ScrollTaskAnimation extends Service<Integer> {
 			long startTime = System.currentTimeMillis();
 			while (true) {
 				if (isCompleteAnimate()) {
-					System.out.println("complete");
 					break;
 				}
 				startTime = checkTime(startTime);
 				if (_thread == null) {
 					_thread = new Runnable() {
 						public void run() {
+							checkExceed();
 							ui.updateComponents(direction);
 							currentIndex = currentIndex + direction;
 							_thread = null;
@@ -77,14 +77,25 @@ public class ScrollTaskAnimation extends Service<Integer> {
 		}
 	}
 
-	public boolean isCompleteAnimate() {
-		System.out.println(direction+" "+currentIndex +" "+indexToGo);
+	public void checkExceed() {
 		if (direction > 0) {
-			if (currentIndex > indexToGo) {
+			if (currentIndex + direction > indexToGo) {
+				direction = indexToGo - currentIndex;
+			}
+		} else if (direction < 0) {
+			if (currentIndex + direction < indexToGo) {
+				direction = -(currentIndex - indexToGo);
+			}
+		}
+	}
+
+	public boolean isCompleteAnimate() {
+		if (direction > 0) {
+			if (currentIndex >= indexToGo) {
 				return true;
 			}
 		} else if (direction < 0) {
-			if (currentIndex < indexToGo) {
+			if (currentIndex <= indexToGo) {
 				return true;
 			}
 		}
