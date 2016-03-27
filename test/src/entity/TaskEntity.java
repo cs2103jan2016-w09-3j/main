@@ -191,7 +191,7 @@ public class TaskEntity {
 	public void buildAssociationsId() {
 		_associationIDs = "";
 		
-		assert _associations != null : "Associations is null at build associations!";
+		assert _associations != null : "Associations is null at build associations when saving task: " + getName();
 		
 		for (int i = 0; i < _associations.size(); i++) {
 			_associationIDs += Integer.toString(_associations.get(i).getId()) + ",";
@@ -199,6 +199,10 @@ public class TaskEntity {
 		_associations = null;
 	}
 	
+	//TO BE DELETED
+	public void SetNull () {
+	    _associations = null;
+	}
     public TaskEntity clone() {
         TaskEntity newInstance = new TaskEntity(_isFloating, _isFullDay, _dueDate, _dateCreated, _name,
                 _description, _id, _association_status, _associations, _associationIDs, _isCompleted);

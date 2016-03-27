@@ -1,8 +1,8 @@
 /**
  * @author Qin Ying
  * 
- *         Class to manage the handling of tasks during runtime. Run init()
- *         before using the functions in the API
+ *         Class to manage the handling of tasks during runtime. Singleton
+ *         class, use GetInstance() to use this class
  */
 package mainLogic;
 
@@ -248,7 +248,7 @@ public class TaskManager {
     private void initializeAssociations() {
         for (int i = 0; i < mainTaskEntities.size(); i++) {
             assert mainTaskEntities.get(i)
-                    .getSavedAssociations() != null : "Null associations string loaded from file";
+                    .getSavedAssociations() != null : "Null associations string loaded from file for task: " + mainTaskEntities.get(i).getName();
             
             mainTaskEntities.get(i).initAssociations();
             String[] associationIdList = mainTaskEntities.get(i).getSavedAssociations().split(",");
@@ -641,7 +641,7 @@ public class TaskManager {
 	 * @return false - if fail to delete true - if delete operation succeeded
 	 */
 	public boolean delete(int index) {
-		assert displayedTasks != null : "No list in focus";
+		assert displayedTasks != null : "No list in focus when attempting to delete a task";
 
 		if (displayedTasks == null) {
 			displayedTasks = mainTaskEntities;
