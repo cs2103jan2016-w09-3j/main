@@ -180,6 +180,7 @@ public class UserInterfaceController {
 		_floatingBarComponent.hide();
 		_detailComponent.hide();
 		_floatingViewInterface.hide();
+		_searchViewInterface.hide();
 	}
 
 	/**
