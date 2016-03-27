@@ -107,6 +107,11 @@
 	
 }
 
+#cssCommandBarInvalid{
+	-fx-background-color: rgba(255, 255.0, 255, 1.0);
+	-fx-background-radius: 7.0; 
+}
+
 #cssCommandBarDelete {
 	-fx-background-color: rgba(255.0, 153.0, 153.0, 1.0);
 	-fx-background-radius: 7.0; 

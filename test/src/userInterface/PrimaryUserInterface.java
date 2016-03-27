@@ -30,6 +30,11 @@ public class PrimaryUserInterface extends Application {
 	static final int PREFERED_WINDOW_WIDTH = 600; // change to 1080.
 	static final double PREFERED_WINDOW_SCALE = 0.8;
 
+	private static final boolean SUCCESS = true;
+	private static final boolean FAILURE = false;
+	private static final int TYPE_1 = 0;
+	private static final int TYPE_2 = 1;
+
 	// CommandBar dimensions.
 	static final int COMMAND_BAR_HEIGTH = 70;
 	static final int COMMAND_BAR_TOP_MARGIN = 10;
@@ -118,7 +123,6 @@ public class PrimaryUserInterface extends Application {
 	 * 
 	 */
 	public void initializeControls() {
-
 		EventHandler<KeyEvent> mainEventHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				processKeyPress(_commandBar.getTextField(), event);
@@ -132,133 +136,12 @@ public class PrimaryUserInterface extends Application {
 		_commandBar.setTextFieldHandler(mainEventHandler, releaseEventHandler);
 	}
 
-	/*
-	 * private void initializeData(){ ArrayList<String> cmdArrs =
-	 * uiController.readFromFile(); System.out.println(cmdArrs.size()); for(int
-	 * j=0; j<cmdArrs.size(); j++){ COMMAND cmd =
-	 * _commandBar.onEnter(cmdArrs.get(j)); String t = cmdArrs.get(j); if
-	 * (cmd.equals(COMMAND.EXIT)) {
-	 * uiController.saveToFile(_commandBar.get_allSessionCmds());
-	 * System.exit(0); } else if (cmd.equals(COMMAND.ADD)) {
-	 * ArrayList<TaskEntity> tasks = _commandBar.getTasks(t); for (int i = 0; i
-	 * < tasks.size(); i++) { executeAdd(tasks.get(i)); } } else if
-	 * (cmd.equals(COMMAND.EDIT)) { ArrayList<TaskEntity> tasks =
-	 * _commandBar.getTasks(t); for (int i = 0; i < tasks.size(); i++) {
-	 * executeModify(tasks.get(i)); } } else if (cmd.equals(COMMAND.DELETE)) {
-	 * ArrayList<TaskEntity> tasks = _commandBar.getTasks(t); for (int i = 0; i
-	 * < tasks.size(); i++) { executeDelete(tasks.get(i)); }
-	 * 
-	 * } } }
-	 */
-
-	/**
-	 * add a task into the system and display the changes in the selected view.
-	 * 
-	 * @param task
-	 * @return boolean, true for successful and false for unsuccessful.
-	 */
-	public boolean executeAdd(TaskEntity task) {
-		if (task != null) {
-			uiController.addTask(task);
-			_commandBar.getTextField().setText("");
-			// _commandBar.getTextField().setText("");
-			focus();
-			return true;
-		}
-		return false;
-	}
-
-	public boolean executeBatchAdd(ArrayList<TaskEntity> task) {
-		uiController.addBatchTask(task);
+	public boolean executeMarkComplete(String indexZZ) {
+		_commandBar.setFullInput("");
+		_commandBar.onKeyReleased();
+		uiController.markAsCompleted(indexZZ);
 		focus();
-		return true;
-	}
-
-	/**
-	 * delete task from the system.
-	 * 
-	 * @param taskToCheck.
-	 * @return boolean, true for successful and false for unsuccessful.
-	 */
-	public boolean executeDelete(TaskEntity taskToCheck) {
-		int indexToDelete = uiController.getTaskID(taskToCheck);
-		if (indexToDelete > -1) {
-			boolean temp = uiController.deleteTask(indexToDelete);
-			if (temp) {
-				_commandBar.getTextField().setText("");
-				// _commandBar.getTextField().setText("");
-				return true;
-			}
-		}
 		return false;
-	}
-
-	public boolean executeDelete(String indexZZ) {
-		int indexToDelete = Utils.convertBase36ToDec(indexZZ);
-		if (indexToDelete != -1) {
-			return uiController.deleteTask(indexToDelete);
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * modify a task.
-	 * 
-	 * @param taskToCheck
-	 * @return boolean, true for successful and false for unsuccessful.
-	 */
-	public boolean executeModify(String indexZZ, String input) {
-		int indexToModify = Utils.convertBase36ToDec(indexZZ);
-		ArrayList<TaskEntity> tasks = _commandBar.getTasksPartialInput();
-		if (indexToModify != -1) {
-			if (tasks.size() == 1) {
-				uiController.modifyTask(indexToModify, tasks.get(0));
-				_commandBar.getTextField().setText("");
-				return true;
-			} else if (tasks.size() == 0) {
-				TaskEntity toPopulate = uiController.getTaskByID(indexToModify);
-				if (toPopulate != null) {
-					String toSet = " " + toPopulate.getName();
-					if (toPopulate.getDescription() != null) {
-						toSet += " : " + toPopulate.getDescription();
-					}
-					if (toPopulate.getDueDate() != null) {
-						Calendar c = toPopulate.getDueDate();
-						int day = c.get(Calendar.DATE);
-						int month = c.get(Calendar.MONTH) + 1;
-						int year = c.get(Calendar.YEAR);
-						int hour = c.get(Calendar.HOUR_OF_DAY);
-						int min = c.get(Calendar.MINUTE);
-						toSet += " " + day + "-" + month + "-" + year + " " + hour + min;
-					}
-					if (toPopulate.getProjectHead() != null) {
-						toSet += " @" + toPopulate.getProjectHead().getName();
-					}
-					// populate hashTag here
-					System.out.println("test");
-					_commandBar.addToFullInput(toSet);
-					_commandBar.onKeyReleased();
-				}
-				return false;
-			}
-		} else {
-			return false;
-		}
-		return false;
-	}
-
-	/**
-	 * Jump to index.
-	 * 
-	 * @param indexToJump
-	 *            : base36 format
-	 * @return boolean, true if value found, false it value not found
-	 */
-	public boolean executeJump(String indexToJump) {
-		uiController.jumpToIndex(indexToJump);
-		_commandBar.getTextField().setText("");
-		return true;
 	}
 
 	private void processKeyRelease(TextField textField, KeyEvent event) {
@@ -272,19 +155,18 @@ public class PrimaryUserInterface extends Application {
 
 		if (event.getCode().compareTo(KeyCode.BACK_SPACE) == 0) {
 			_commandBar.deleteKey();
-		}
-
-		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
-
+		} else if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
 			COMMAND cmd = _commandBar.onEnter();
-			// Ten add to mod to cater for theses commands
 			String t = _commandBar.getFullInput();
 			if (t.equals("float")) {
 				uiController.showFloatingView();
 				textField.setText("");
 				focus();
 			} else if (t.indexOf(" ") != -1) {
-				if (t.substring(0, t.indexOf(" ")).equals("jump")) {
+				if (t.substring(0, t.indexOf(" ")).equals("mark")) {
+					String indexToMarkComplete = t.substring(t.indexOf(" ") + 1);
+					executeMarkComplete(indexToMarkComplete);
+				} else if (t.substring(0, t.indexOf(" ")).equals("jump")) {
 					String indexToJump = t.substring(t.indexOf(" ") + 1);
 					executeJump(indexToJump);
 					return;
@@ -298,57 +180,28 @@ public class PrimaryUserInterface extends Application {
 			}
 
 			if (cmd.equals(COMMAND.EXIT)) {
-				// uiController.saveToFile(_commandBar.get_allSessionCmds());
 				uiController.saveStuff();
 				System.exit(0);
 			} else if (cmd.equals(COMMAND.ADD)) {
-				ArrayList<TaskEntity> tasks = _commandBar.getTasks();
-				// System.out.println(tasks.get(0).getName());
-				if (tasks.size() == 1) {
-					executeAdd(tasks.get(0));
-				} else {
-					executeBatchAdd(tasks);
-				}
-			} else if (cmd.equals(COMMAND.EDIT)) {
-				System.out.println();
-				String id = _commandBar.getId();
-				if (id != null) {
-					executeModify(id, _commandBar.getTextField().getText());
-				} else {
-					ArrayList<TaskEntity> tasks = _commandBar.getTasks();
-					for (int i = 0; i < tasks.size(); i++) {
-						// executeModify(tasks.get(i));
-					}
-				}
+				executeAdd(_commandBar.getTasks());
 			} else if (cmd.equals(COMMAND.DELETE)) {
-				String id = _commandBar.getId();
-				if (id != null) {
-					executeDelete(id);
-				} else {
-					ArrayList<TaskEntity> tasks = _commandBar.getTasks();
-					for (int i = 0; i < tasks.size(); i++) {
-						executeDelete(tasks.get(i));
-					}
-				}
-				textField.setText("");
+				executeDelete(_commandBar.getId());
+			} else if (cmd.equals(COMMAND.EDIT)) {
+				executeModify(_commandBar.getId());
 			} else if (cmd.equals(COMMAND.MAIN)) {
 				uiController.showMainView(-1);
-				textField.setText("");
-				focus();
+				resetCommandInput();
 			} else if (cmd.equals(COMMAND.HIDE)) {
 				uiController.hide();
-				textField.setText("");
-				focus();
+				resetCommandInput();
 				return;
 			} else if (cmd.equals(COMMAND.SHOW)) {
 				uiController.show();
-				textField.setText("");
-				focus();
+				resetCommandInput();
 				return;
 			} else if (cmd.equals(COMMAND.FLOAT)) {
 				uiController.showFloatingView();
-				textField.setText("");
-				focus();
+				resetCommandInput();
 			}
 		} else {
 			_commandBar.onKeyReleased();
@@ -382,9 +235,144 @@ public class PrimaryUserInterface extends Application {
 		}
 	}
 
-	public void focus() {
+	private void focus() {
 		_primaryStage.requestFocus();
 		_commandBar.focus();
 	}
 
+	/**
+	 * add a task into the system and display the changes in the selected view.
+	 * 
+	 * @param task
+	 * @return boolean, true for successful and false for unsuccessful.
+	 */
+	private void executeAdd(ArrayList<TaskEntity> tasks) {
+		boolean success = false;
+		if (tasks.size() == 1) {
+			if (tasks.get(0) != null) {
+				success = uiController.addTask(tasks.get(0));
+			}
+		} else {
+			success = uiController.addBatchTask(tasks);
+		}
+		if (success) {
+			_commandBar.showFeedBackMessage(COMMAND.ADD, SUCCESS, TYPE_1);
+			resetCommandInput();
+		} else {
+			_commandBar.showFeedBackMessage(COMMAND.ADD, FAILURE, TYPE_1);
+		}
+	}
+
+	/**
+	 * delete task from the system.
+	 * 
+	 * @param taskToCheck.
+	 * @return boolean, true for successful and false for unsuccessful.
+	 */
+	private void executeDelete(String id) {
+		boolean success = false;
+		if (id != null) {
+			int indexToDelete = Utils.convertBase36ToDec(id);
+			if (indexToDelete != -1) {
+				success = uiController.deleteTask(indexToDelete);
+			}
+		}
+		if (success) {
+			_commandBar.showFeedBackMessage(COMMAND.DELETE, SUCCESS, TYPE_1);
+			resetCommandInput();
+		} else {
+			_commandBar.showFeedBackMessage(COMMAND.DELETE, FAILURE, TYPE_1);
+		}
+
+	}
+
+	/**
+	 * Modify a task, if task has not been retrieved, will display task to
+	 * modify.
+	 * 
+	 * @param taskToCheck
+	 * @return boolean, true for successful and false for unsuccessful.
+	 */
+	public void executeModify(String id) {
+		int indexToModify = Utils.convertBase36ToDec(id);
+		ArrayList<TaskEntity> tasks = _commandBar.getTasksPartialInput();
+		if (indexToModify != -1) {
+			if (tasks.size() == 1) {
+				executeModify(indexToModify, tasks.get(0));
+			} else {
+				getItemToModify(indexToModify);
+			}
+		}
+	}
+
+	private void executeModify(int indexToModify, TaskEntity taskEntity) {
+		boolean success = uiController.modifyTask(indexToModify, taskEntity);
+		if (success) {
+			_commandBar.showFeedBackMessage(COMMAND.EDIT, SUCCESS, TYPE_1);
+			resetCommandInput();
+		} else {
+			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_1);
+		}
+	}
+
+	/**
+	 * Retrieve task base on indexToModify and display task in the command bar
+	 * for modification.
+	 * 
+	 * @param indexToModify
+	 */
+	private void getItemToModify(int indexToModify) {
+		TaskEntity toPopulate = uiController.getTaskByID(indexToModify);
+		if (toPopulate != null) {
+			String toSet = " " + toPopulate.getName();
+			if (toPopulate.getDescription() != null) {
+				toSet += " : " + toPopulate.getDescription();
+			}
+			if (toPopulate.getDueDate() != null) {
+				Calendar c = toPopulate.getDueDate();
+				int day = c.get(Calendar.DATE);
+				int month = c.get(Calendar.MONTH) + 1;
+				int year = c.get(Calendar.YEAR);
+				int hour = c.get(Calendar.HOUR_OF_DAY);
+				int min = c.get(Calendar.MINUTE);
+				toSet += " " + day + "-" + month + "-" + year + " " + hour + min;
+			}
+			if (toPopulate.getProjectHead() != null) {
+				toSet += " @" + toPopulate.getProjectHead().getName();
+			}
+			_commandBar.addToFullInput(toSet);
+			_commandBar.onKeyReleased();
+		} else {
+			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_2);
+		}
+
+	}
+
+	/**
+	 * Jump to index.
+	 * 
+	 * @param indexToJump
+	 *            : base36 format
+	 * @return boolean, true if value found, false it value not found
+	 */
+	public void executeJump(String indexToJump) {
+		boolean success = uiController.jumpToIndex(indexToJump);
+		if (success) {
+			resetCommandInput();
+		} else {
+			// change to jump _commandBar.showFeedBackMessage(COMMAND.EDIT,
+			// FAILURE, TYPE_1);
+		}
+	}
+
+	/**
+	 * Reset the layout and style of the commandBar for new input. usually
+	 * called after a success in executing a command.
+	 * 
+	 */
+	public void resetCommandInput() {
+		_commandBar.setFullInput("");
+		_commandBar.onKeyReleased();
+		focus();
+	}
 }

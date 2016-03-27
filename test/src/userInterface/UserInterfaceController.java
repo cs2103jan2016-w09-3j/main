@@ -288,7 +288,7 @@ public class UserInterfaceController {
 			_previousView = _currentView;
 		}
 		_currentView = SEARCH_VIEW;
-		_taskManager.switchView(TaskManager.DISPLAY_MAIN);//change this
+		_taskManager.switchView(TaskManager.DISPLAY_MAIN);// change this
 		ArrayList<TaskEntity> searchList = _taskManager.getWorkingList();
 		_searchViewInterface.buildContent(searchList);
 		show();
@@ -394,19 +394,22 @@ public class UserInterfaceController {
 		}
 	}
 
-	public void addTask(TaskEntity task) {
+	public boolean addTask(TaskEntity task) {
 		int insertedTo = _taskManager.add(task);
 		if (insertedTo != -1) {
 			updateChangesToViews(insertedTo);
+			return true;
 		}
+		return false;
 	}
 
-	public void addBatchTask(ArrayList<TaskEntity> task) {
+	public boolean addBatchTask(ArrayList<TaskEntity> task) {
 		int insertedTo = _taskManager.add(task);
 		if (insertedTo == -1) {
-
+			return false;
 		} else {
 			updateChangesToViews(insertedTo);
+			return true;
 		}
 	}
 
@@ -424,17 +427,15 @@ public class UserInterfaceController {
 		return false;
 	}
 
-	public TaskEntity getTaskByID(int ID){
+	public TaskEntity getTaskByID(int ID) {
 		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
-		if(ID<tasks.size()){
+		if (ID < tasks.size()) {
 			return tasks.get(ID);
-		}
-		else
-		{
+		} else {
 			return null;
 		}
 	}
-	
+
 	public int getTaskID(TaskEntity taskToCheck) {
 		int index = -1;
 		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
@@ -468,10 +469,24 @@ public class UserInterfaceController {
 		return true;
 	}
 
-	public void jumpToIndex(String indexToJump) {
+	public boolean jumpToIndex(String indexToJump) {
 		int selected = _taskViewInterface.getSelectIndex();
-		_scorllAnimation = ScrollTaskAnimation.getInstance(selected, Utils.convertBase36ToDec(indexToJump), this);
-		_scorllAnimation.start();
+		if (selected != -1) {
+			_scorllAnimation = ScrollTaskAnimation.getInstance(selected, Utils.convertBase36ToDec(indexToJump), this);
+			_scorllAnimation.start();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean markAsCompleted(String indexZZ) {
+		boolean success = _taskManager.markAsDone(Utils.convertBase36ToDec(indexZZ));
+		if (success) {
+			updateChangesToViews(0);
+			return true;
+		}
+		return false;
 	}
 
 	public void stopScrollingAnimation() {
@@ -483,15 +498,20 @@ public class UserInterfaceController {
 		_scorllAnimation = null;
 	}
 
-	public void link(String indexZZ1, String indexZZ2) {
+	public boolean link(String indexZZ1, String indexZZ2) {
 		int index1 = Utils.convertBase36ToDec(indexZZ1);
 		int index2 = Utils.convertBase36ToDec(indexZZ2);
 		if (index1 != -1 && index2 != -1) {
 			_taskManager.getWorkingList().get(index1);
 			_taskManager.getWorkingList().get(index2);
-			boolean r = _taskManager.link(_taskManager.getWorkingList().get(index1),
+			boolean success = _taskManager.link(_taskManager.getWorkingList().get(index1),
 					_taskManager.getWorkingList().get(index2));
+			if (success) {
+				updateChangesToViews(0);
+				return true;
+			}
 		}
+		return false;
 	}
 
 	public void updateChangesToViews(int index) {
