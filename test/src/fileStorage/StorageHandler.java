@@ -206,7 +206,9 @@ public class StorageHandler {
         return timeAfterModification > timeBeforeModification;
     }
 
-    // Clear command file every time it commits
+    /**
+     * Clears command file upon committing
+     */
     public void clearCommandFileUponCommit() {
         FileWriter fileWriter;
         try {
