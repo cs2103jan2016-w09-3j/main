@@ -26,6 +26,7 @@ import org.jsoup.Jsoup;;
 
 public class CommandBar {
 
+	private static final String MESSAGE_FAILURE_INVALID = "you have entered an invalid command";
 	private static final String MESSAGE_SUCCESS_ADD_TYPE1 = "Successfully added %1$s to task list.";
 	private static final String MESSAGE_SUCCESS_ADD_TYPE2 = "Successfully added %1$s to floating task list.";
 	private static final String MESSAGE_FAILURE_ADD = "Fail to add.";
@@ -427,7 +428,7 @@ public class CommandBar {
 	}
 
 	public void reset() {
-		_selected=-1;
+		_selected = -1;
 		setFullInput("");
 		ArrayList<Node> temp = new ArrayList<Node>();
 		addItemsToBar(temp);
@@ -435,6 +436,10 @@ public class CommandBar {
 
 	public void showFeedBackMessage(COMMAND cmdType, boolean condition, int type, String msg) {
 		switch (cmdType) {
+		case INVALID: {
+			setFeedBackMessage(MESSAGE_FAILURE_INVALID);
+			break;
+		}
 		case ADD: {
 			if (condition) {
 				if (type == PrimaryUserInterface.TYPE_1) {

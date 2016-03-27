@@ -182,6 +182,8 @@ public class PrimaryUserInterface extends Application {
 			if (cmd.equals(COMMAND.EXIT)) {
 				uiController.saveStuff();
 				System.exit(0);
+			} else if (cmd.equals(COMMAND.INVALID)) {
+				executeInvalidCommand();
 			} else if (cmd.equals(COMMAND.ADD)) {
 				executeAdd(_commandBar.getTasks());
 			} else if (cmd.equals(COMMAND.DELETE)) {
@@ -238,6 +240,13 @@ public class PrimaryUserInterface extends Application {
 	private void focus() {
 		_primaryStage.requestFocus();
 		_commandBar.focus();
+	}
+
+	/**
+	 * Get feedBack message and show user.
+	 */
+	private void executeInvalidCommand() {
+		_commandBar.showFeedBackMessage(COMMAND.INVALID, FAILURE, TYPE_1, null);
 	}
 
 	/**
