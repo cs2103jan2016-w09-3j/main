@@ -288,7 +288,7 @@ public class UserInterfaceController {
 			_previousView = _currentView;
 		}
 		_currentView = SEARCH_VIEW;
-		_taskManager.switchView(TaskManager.DISPLAY_MAIN);//change this
+		_taskManager.switchView(TaskManager.DISPLAY_MAIN);// change this
 		ArrayList<TaskEntity> searchList = _taskManager.getWorkingList();
 		_searchViewInterface.buildContent(searchList);
 		show();
@@ -394,19 +394,22 @@ public class UserInterfaceController {
 		}
 	}
 
-	public void addTask(TaskEntity task) {
+	public boolean addTask(TaskEntity task) {
 		int insertedTo = _taskManager.add(task);
 		if (insertedTo != -1) {
 			updateChangesToViews(insertedTo);
+			return true;
 		}
+		return false;
 	}
 
-	public void addBatchTask(ArrayList<TaskEntity> task) {
+	public boolean addBatchTask(ArrayList<TaskEntity> task) {
 		int insertedTo = _taskManager.add(task);
 		if (insertedTo == -1) {
-
+			return false;
 		} else {
 			updateChangesToViews(insertedTo);
+			return true;
 		}
 	}
 
@@ -424,17 +427,15 @@ public class UserInterfaceController {
 		return false;
 	}
 
-	public TaskEntity getTaskByID(int ID){
+	public TaskEntity getTaskByID(int ID) {
 		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
-		if(ID<tasks.size()){
+		if (ID < tasks.size()) {
 			return tasks.get(ID);
-		}
-		else
-		{
+		} else {
 			return null;
 		}
 	}
-	
+
 	public int getTaskID(TaskEntity taskToCheck) {
 		int index = -1;
 		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
@@ -474,6 +475,13 @@ public class UserInterfaceController {
 		_scorllAnimation.start();
 	}
 
+	public void markAsCompleted(String indexZZ) {
+		boolean success = _taskManager.markAsDone(Utils.convertBase36ToDec(indexZZ));
+		if (success) {
+			updateChangesToViews(0);
+		}
+	}
+
 	public void stopScrollingAnimation() {
 		if (_scorllAnimation != null) {
 			if (_scorllAnimation.isRunning()) {
@@ -489,8 +497,11 @@ public class UserInterfaceController {
 		if (index1 != -1 && index2 != -1) {
 			_taskManager.getWorkingList().get(index1);
 			_taskManager.getWorkingList().get(index2);
-			boolean r = _taskManager.link(_taskManager.getWorkingList().get(index1),
+			boolean success = _taskManager.link(_taskManager.getWorkingList().get(index1),
 					_taskManager.getWorkingList().get(index2));
+			if (success) {
+				updateChangesToViews(0);
+			}
 		}
 	}
 

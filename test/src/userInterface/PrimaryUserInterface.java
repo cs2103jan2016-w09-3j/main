@@ -30,6 +30,9 @@ public class PrimaryUserInterface extends Application {
 	static final int PREFERED_WINDOW_WIDTH = 600; // change to 1080.
 	static final double PREFERED_WINDOW_SCALE = 0.8;
 
+	private static final boolean SUCCESS = true;
+	private static final boolean FAILURE = false;
+
 	// CommandBar dimensions.
 	static final int COMMAND_BAR_HEIGTH = 70;
 	static final int COMMAND_BAR_TOP_MARGIN = 10;
@@ -152,29 +155,6 @@ public class PrimaryUserInterface extends Application {
 	 */
 
 	/**
-	 * add a task into the system and display the changes in the selected view.
-	 * 
-	 * @param task
-	 * @return boolean, true for successful and false for unsuccessful.
-	 */
-	public boolean executeAdd(TaskEntity task) {
-		if (task != null) {
-			uiController.addTask(task);
-			_commandBar.getTextField().setText("");
-			// _commandBar.getTextField().setText("");
-			focus();
-			return true;
-		}
-		return false;
-	}
-
-	public boolean executeBatchAdd(ArrayList<TaskEntity> task) {
-		uiController.addBatchTask(task);
-		focus();
-		return true;
-	}
-
-	/**
 	 * delete task from the system.
 	 * 
 	 * @param taskToCheck.
@@ -183,12 +163,7 @@ public class PrimaryUserInterface extends Application {
 	public boolean executeDelete(TaskEntity taskToCheck) {
 		int indexToDelete = uiController.getTaskID(taskToCheck);
 		if (indexToDelete > -1) {
-			boolean temp = uiController.deleteTask(indexToDelete);
-			if (temp) {
-				_commandBar.getTextField().setText("");
-				// _commandBar.getTextField().setText("");
-				return true;
-			}
+			return uiController.deleteTask(indexToDelete);
 		}
 		return false;
 	}
@@ -248,6 +223,14 @@ public class PrimaryUserInterface extends Application {
 		return false;
 	}
 
+	public boolean executeMarkComplete(String indexZZ) {
+		_commandBar.setFullInput("");
+		_commandBar.onKeyReleased();
+		uiController.markAsCompleted(indexZZ);
+		focus();
+		return false;
+	}
+
 	/**
 	 * Jump to index.
 	 * 
@@ -284,7 +267,10 @@ public class PrimaryUserInterface extends Application {
 				textField.setText("");
 				focus();
 			} else if (t.indexOf(" ") != -1) {
-				if (t.substring(0, t.indexOf(" ")).equals("jump")) {
+				if (t.substring(0, t.indexOf(" ")).equals("mark")) {
+					String indexToMarkComplete = t.substring(t.indexOf(" ") + 1);
+					executeMarkComplete(indexToMarkComplete);
+				} else if (t.substring(0, t.indexOf(" ")).equals("jump")) {
 					String indexToJump = t.substring(t.indexOf(" ") + 1);
 					executeJump(indexToJump);
 					return;
@@ -302,13 +288,7 @@ public class PrimaryUserInterface extends Application {
 				uiController.saveStuff();
 				System.exit(0);
 			} else if (cmd.equals(COMMAND.ADD)) {
-				ArrayList<TaskEntity> tasks = _commandBar.getTasks();
-				// System.out.println(tasks.get(0).getName());
-				if (tasks.size() == 1) {
-					executeAdd(tasks.get(0));
-				} else {
-					executeBatchAdd(tasks);
-				}
+				executeAdd(_commandBar.getTasks());
 			} else if (cmd.equals(COMMAND.EDIT)) {
 				System.out.println();
 				String id = _commandBar.getId();
@@ -333,22 +313,18 @@ public class PrimaryUserInterface extends Application {
 				textField.setText("");
 			} else if (cmd.equals(COMMAND.MAIN)) {
 				uiController.showMainView(-1);
-				textField.setText("");
-				focus();
+				resetCommandInput();
 			} else if (cmd.equals(COMMAND.HIDE)) {
 				uiController.hide();
-				textField.setText("");
-				focus();
+				resetCommandInput();
 				return;
 			} else if (cmd.equals(COMMAND.SHOW)) {
 				uiController.show();
-				textField.setText("");
-				focus();
+				resetCommandInput();
 				return;
 			} else if (cmd.equals(COMMAND.FLOAT)) {
 				uiController.showFloatingView();
-				textField.setText("");
-				focus();
+				resetCommandInput();
 			}
 		} else {
 			_commandBar.onKeyReleased();
@@ -387,4 +363,37 @@ public class PrimaryUserInterface extends Application {
 		_commandBar.focus();
 	}
 
+	/**
+	 * add a task into the system and display the changes in the selected view.
+	 * 
+	 * @param task
+	 * @return boolean, true for successful and false for unsuccessful.
+	 */
+	public void executeAdd(ArrayList<TaskEntity> tasks) {
+		boolean success = false;
+		if (tasks.size() == 1) {
+			if (tasks.get(0) != null) {
+				success = uiController.addTask(tasks.get(0));
+			}
+		} else {
+			success = uiController.addBatchTask(tasks);
+		}
+		if (success) {
+			_commandBar.showFeedBackMessage(COMMAND.ADD, SUCCESS);
+			resetCommandInput();
+		} else {
+			_commandBar.showFeedBackMessage(COMMAND.ADD, FAILURE);
+		}
+	}
+
+	/**
+	 * Reset the layout and style of the commandBar for new input.
+	 * usually called after a success in executing a command.
+	 * 
+	 */
+	public void resetCommandInput() {
+		_commandBar.setFullInput("");
+		_commandBar.onKeyReleased();
+		focus();
+	}
 }
