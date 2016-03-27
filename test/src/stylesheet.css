@@ -1,6 +1,6 @@
-#mainUserInput {
+#cssCommandMainUserInput {
     -fx-background-color: -fx-control-inner-background;
-    -fx-font: 12.0px "Serif";
+    -fx-font: 12.0px "Arial";
 }
 
 #commandText {
@@ -88,49 +88,58 @@
 	-fx-background-insets: 1.0 5.0 1.0 5.0;
 }
 
+#cssCommandBarMainStructure{
+	-fx-background-color: rgba(255,255,255,1.0);
+}
+
 #cssSearchTitle{
-	-fx-background-color: rgba(128,0,128,1.0);
+	-fx-background-color: rgba(128.0,0.0,128.0,1.0);
+}
+
+#cssCommandBarfeedback
+{
+	-fx-background-color: rgba(179.0, 255.0, 153.0, 1.0);
 }
 
 #cssCommandBarAdd {
-	-fx-background-color: rgba(179, 255, 153, 1.0);
+	-fx-background-color: rgba(179.0, 255.0, 153.0, 1.0);
 	-fx-background-radius: 7.0; 
 	
 }
 
 #cssCommandBarDelete {
-	-fx-background-color: rgba(255, 153, 153, 1.0);
+	-fx-background-color: rgba(255.0, 153.0, 153.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarEdit {
-	-fx-background-color: rgba(153, 130, 255, 1.0);
+	-fx-background-color: rgba(153.0, 130.0, 255.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarLink {
-	-fx-background-color: rgba(255, 255, 153, 1.0);
+	-fx-background-color: rgba(255.0, 255.0, 153.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarDone {
-	-fx-background-color: rgba(153, 153, 255, 1.0);
+	-fx-background-color: rgba(153.0, 153.0, 255.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandTitle {
-	-fx-background-color: rgba(153, 153, 255, 1.0);
+	-fx-background-color: rgba(153.0, 153.0, 255.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 #cssCommandDate {
-	-fx-background-color: rgba(153, 153, 255, 1.0);
+	-fx-background-color: rgba(255.0, 153.0, 255.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 #cssCommandID {
-	-fx-background-color: rgba(153, 153, 255, 1.0);
+	-fx-background-color: rgba(153.0, 153.0, 255.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 #cssCommandDescription {
-	-fx-background-color: rgba(153, 153, 255, 1.0);
+	-fx-background-color: rgba(153.0, 153.0, 255.0, 1.0);
 	-fx-background-radius: 7.0; 
 }

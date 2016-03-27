@@ -9,7 +9,6 @@ import java.util.Calendar;
 
 import dateParser.CommandParser.COMMAND;
 import dateParser.InputParser;
-import dateParser.XMLParser;
 import entity.TaskEntity;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -20,10 +19,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.scene.web.HTMLEditor;
 import mainLogic.Utils;
 
 public class PrimaryUserInterface extends Application {
@@ -32,8 +31,7 @@ public class PrimaryUserInterface extends Application {
 	static final double PREFERED_WINDOW_SCALE = 0.8;
 
 	// CommandBar dimensions.
-	static final int COMMAND_BAR_WIDTH = 600;
-	static final int COMMAND_BAR_HEIGTH = 50;
+	static final int COMMAND_BAR_HEIGTH = 70;
 	static final int COMMAND_BAR_TOP_MARGIN = 10;
 	static final int COMMAND_BAR_BOTTOM_MARGIN = 40;
 	static final int TWO = 2;
@@ -70,7 +68,7 @@ public class PrimaryUserInterface extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		_primaryStage = primaryStage;
-		_commandBar = new CommandBar(_commandBarWidth);
+		_commandBar = new CommandBar(COMMAND_BAR_HEIGTH, _commandBarWidth);
 		initializeControls();
 		initializePrimaryStage(primaryStage);
 		initializeUiController(primaryStage);
@@ -98,15 +96,11 @@ public class PrimaryUserInterface extends Application {
 	 * initialize the content inside the primary stage, BorderPane used as
 	 * rootLayout
 	 * 
-	 * @return rootLayout.
+	 * @return mainLayout.
 	 */
-	private BorderPane initializeRootLayout() {
-		GridPane commandBarPane = _commandBar.getCommandBar();
-		BorderPane rootLayout = new BorderPane();
-		rootLayout.setId("rootPane");
-		rootLayout.getStylesheets().add(STYLE_SHEET);
-		rootLayout.setCenter(commandBarPane);
-		return rootLayout;
+	private VBox initializeRootLayout() {
+		VBox commandBarPane = _commandBar.getCommandBar();
+		return commandBarPane;
 	}
 
 	/**
@@ -135,7 +129,7 @@ public class PrimaryUserInterface extends Application {
 				processKeyRelease(_commandBar.getTextField(), event);
 			}
 		};
-		_commandBar.setTextFieldHandler(mainEventHandler,releaseEventHandler);
+		_commandBar.setTextFieldHandler(mainEventHandler, releaseEventHandler);
 	}
 
 	/*
@@ -214,36 +208,36 @@ public class PrimaryUserInterface extends Application {
 	 * @param taskToCheck
 	 * @return boolean, true for successful and false for unsuccessful.
 	 */
-	public boolean executeModify(String indexZZ,String input) {
+	public boolean executeModify(String indexZZ, String input) {
 		int indexToModify = Utils.convertBase36ToDec(indexZZ);
 		ArrayList<TaskEntity> tasks = _commandBar.getTasksPartialInput();
 		if (indexToModify != -1) {
-			if(tasks.size()==1){
+			if (tasks.size() == 1) {
 				uiController.modifyTask(indexToModify, tasks.get(0));
 				_commandBar.getTextField().setText("");
 				return true;
-			}else if(tasks.size()==0){
+			} else if (tasks.size() == 0) {
 				TaskEntity toPopulate = uiController.getTaskByID(indexToModify);
-				if(toPopulate!=null){
-					String toSet = " "+toPopulate.getName();
-					if(toPopulate.getDescription()!=null){
-						toSet+= " : "+toPopulate.getDescription();
+				if (toPopulate != null) {
+					String toSet = " " + toPopulate.getName();
+					if (toPopulate.getDescription() != null) {
+						toSet += " : " + toPopulate.getDescription();
 					}
-					if(toPopulate.getDueDate() != null){
+					if (toPopulate.getDueDate() != null) {
 						Calendar c = toPopulate.getDueDate();
 						int day = c.get(Calendar.DATE);
-						int month = c.get(Calendar.MONTH)+1;
+						int month = c.get(Calendar.MONTH) + 1;
 						int year = c.get(Calendar.YEAR);
 						int hour = c.get(Calendar.HOUR_OF_DAY);
 						int min = c.get(Calendar.MINUTE);
-						toSet+= " "+day+"-"+month+"-"+year+ " "+hour+min;
+						toSet += " " + day + "-" + month + "-" + year + " " + hour + min;
 					}
-					if(toPopulate.getProjectHead() != null){
-						toSet+= " @"+toPopulate.getProjectHead().getName();
+					if (toPopulate.getProjectHead() != null) {
+						toSet += " @" + toPopulate.getProjectHead().getName();
 					}
-					//populate hashTag here
+					// populate hashTag here
 					System.out.println("test");
-					_commandBar.getTextField().setText(toSet);
+					_commandBar.addToFullInput(toSet);
 					_commandBar.onKeyReleased();
 				}
 				return false;
@@ -267,22 +261,24 @@ public class PrimaryUserInterface extends Application {
 		return true;
 	}
 
-
 	private void processKeyRelease(TextField textField, KeyEvent event) {
 		_commandBar.release();
+		if (event.getCode().compareTo(KeyCode.TAB) == 0) {
+			_commandBar.changeSelector();
+		}
 	}
-	
+
 	private void processKeyPress(TextField textField, KeyEvent event) {
-		
+
 		if (event.getCode().compareTo(KeyCode.BACK_SPACE) == 0) {
 			_commandBar.deleteKey();
 		}
-		
+
 		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
 
 			COMMAND cmd = _commandBar.onEnter();
 			// Ten add to mod to cater for theses commands
-			String t = _commandBar.getTextField().getText();
+			String t = _commandBar.getFullInput();
 			if (t.equals("float")) {
 				uiController.showFloatingView();
 				textField.setText("");
@@ -314,13 +310,14 @@ public class PrimaryUserInterface extends Application {
 					executeBatchAdd(tasks);
 				}
 			} else if (cmd.equals(COMMAND.EDIT)) {
+				System.out.println();
 				String id = _commandBar.getId();
 				if (id != null) {
-					executeModify(id,_commandBar.getTextField().getText());
+					executeModify(id, _commandBar.getTextField().getText());
 				} else {
 					ArrayList<TaskEntity> tasks = _commandBar.getTasks();
 					for (int i = 0; i < tasks.size(); i++) {
-						//executeModify(tasks.get(i));
+						// executeModify(tasks.get(i));
 					}
 				}
 			} else if (cmd.equals(COMMAND.DELETE)) {

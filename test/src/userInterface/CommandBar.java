@@ -17,44 +17,90 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.Node;
 import javafx.application.Platform;
 import org.jsoup.Jsoup;;
 
 public class CommandBar {
 
-	private static final int GAP_SIZE = 2;
+	private static final int GAP_SIZE = 0;
+	private static final double FEEDBACK_HEIGHT = 20;
+	private static final int MAIN_PANE_LEFT_RIGHT_MARGIN = 4;
+
+	// font
+	static final int FONT_SIZE_FEEDBACK = 12;
+	private static final Font FONT_FEEDBACK = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_FEEDBACK);
+
+	private double _prefHeight;
 	private double _prefWidth;
-	private double _prefHeight = 30;
+	private double _mainPaneHeight;
+	private double _commandLabelHeight;
+
+	private VBox _mainStructure;
+	private Label _feedbackLabel;
 
 	private GridPane _mainPane;
 	private TextField _textField;
 	private int _numberOfItems = 0;
+	private int _selected;
+	private ArrayList<Label> labels = new ArrayList<Label>();
 
 	private ArrayList<String> _allSessionCmds = new ArrayList<String>();
 	private String fullInput = "";
 
-	public CommandBar(double prefWidth) {
-		this._prefWidth = prefWidth;
+	public CommandBar(double preHeight, double preWidth) {
+		this._prefHeight = preHeight;
+		this._prefWidth = preWidth;
+		_mainPaneHeight = _prefHeight - FEEDBACK_HEIGHT;
+		_commandLabelHeight = _mainPaneHeight / 2;
+		_selected = -1;
+		initilizeMainStructure();
+		initilizeFeedbackBar();
 		initializeMainPane();
 		initializeTextBox();
 		_mainPane.add(_textField, _numberOfItems++, 0);
 	}
 
+	public void initilizeMainStructure() {
+		_mainStructure = new VBox();
+		_mainStructure.setMaxHeight(_prefHeight);
+		_mainStructure.setMaxWidth(_prefWidth);
+		_mainStructure.setMinHeight(_prefHeight);
+		_mainStructure.setMinWidth(_prefWidth);
+		_mainStructure.setAlignment(Pos.BOTTOM_LEFT);
+		_mainStructure.setId("cssCommandBarMainStructure");
+	}
+
+	private void initilizeFeedbackBar() {
+		_feedbackLabel = new Label("feedback");
+		_feedbackLabel.setMinWidth(_prefWidth);
+		_feedbackLabel.setMaxHeight(FEEDBACK_HEIGHT);
+		_feedbackLabel.setMinHeight(FEEDBACK_HEIGHT);
+		_feedbackLabel.setFont(FONT_FEEDBACK);
+		_feedbackLabel.setAlignment(Pos.CENTER_RIGHT);
+		_feedbackLabel.setId("cssCommandBarfeedback");
+		_mainStructure.getChildren().add(_feedbackLabel);
+	}
+
 	public void initializeMainPane() {
 		_mainPane = new GridPane();
-		_mainPane.setMaxHeight(_prefHeight);
+		_mainPane.setMinHeight(_mainPaneHeight);
+		_mainPane.setMaxHeight(_mainPaneHeight);
 		_mainPane.setStyle("-fx-background-color: #FFFFFF;");
 		_mainPane.setAlignment(Pos.CENTER_LEFT);
 		_mainPane.setHgap(GAP_SIZE);
+		VBox.setMargin(_mainPane, new Insets(0, MAIN_PANE_LEFT_RIGHT_MARGIN, 0, MAIN_PANE_LEFT_RIGHT_MARGIN));
+		_mainStructure.getChildren().add(_mainPane);
 	}
 
 	public void initializeTextBox() {
 		_textField = new TextField();
-		_textField.setId("mainUserInput");
+		_textField.setId("cssCommandMainUserInput");
 		_textField.setAlignment(Pos.CENTER_LEFT);
-		_textField.setMinWidth(30);
-		_textField.setPrefHeight(_prefHeight);
+		_textField.setPrefHeight(_commandLabelHeight);
+		_textField.setPadding(new Insets(0, 0, 0, 0));
 		_textField.setBorder(null);
 	}
 
@@ -69,16 +115,21 @@ public class CommandBar {
 	}
 
 	public void deleteKey() {
-		if (fullInput.length() > 0) {
-			fullInput = fullInput.substring(0, fullInput.length() - 1);
+		if (_selected != -1) {
+
+		} else {
+			if (fullInput.length() > 0) {
+				fullInput = fullInput.substring(0, fullInput.length() - 1);
+			}
+			onKeyReleased();
 		}
-		onKeyReleased();
 	}
 
 	public void release() {
 		String input = _textField.getText();
 		if (!input.equals("")) {
 			onKeyReleased();
+			_selected = -1;
 		}
 	}
 
@@ -88,7 +139,9 @@ public class CommandBar {
 		InputParser parser = new InputParser(fullInput);
 		try {
 			parser.addXML();
+			System.out.println(parser.getInput());
 			ArrayList<Pair<String, ArrayList<String>>> items = XMLParser.xmlToArrayList(parser.getInput());
+			System.out.println(items.size());
 			for (int i = 0; i < items.size(); i++) {
 				Label label = buildItem(items.get(i));
 				if (label != null) {
@@ -103,9 +156,15 @@ public class CommandBar {
 
 	private void addItemsToBar(ArrayList<Node> itemsToAdd) {
 		_mainPane.getChildren().clear();
+		labels.clear();
 		_numberOfItems = 0;
+
 		for (int i = 0; i < itemsToAdd.size(); i++) {
-			_mainPane.add(itemsToAdd.get(i), _numberOfItems++, 0);
+			_mainPane.add(itemsToAdd.get(i), _numberOfItems++, 1);
+			if (itemsToAdd.get(i) instanceof Label) {
+				Label l = (Label) itemsToAdd.get(i);
+				labels.add((Label) itemsToAdd.get(i));
+			}
 		}
 	}
 
@@ -121,14 +180,22 @@ public class CommandBar {
 			return buildIDLabel(item.getSecond());
 		} else if (type.equals(XMLParser.DATE_TAG)) {
 			return buildDateLabel(item.getSecond());
+		} else if (type.equals(XMLParser.OTHERS_TAG)) {
+			return buildNormalLabel(item.getSecond());
 		}
 		return null;
 	}
 
 	public Label buildLabelSkeleton() {
 		Label label = new Label();
-		label.setMinHeight(_prefHeight);
+		label.setMinHeight(_commandLabelHeight);
 		label.setAlignment(Pos.BASELINE_RIGHT);
+		return label;
+	}
+
+	private Label buildNormalLabel(ArrayList<String> other) {
+		Label label = buildLabelSkeleton();
+		label.setText(other.get(0));
 		return label;
 	}
 
@@ -187,12 +254,6 @@ public class CommandBar {
 		return null;
 	}
 
-	public void addLabelToDisplay(Label label) {
-		if (label != null) {
-			_mainPane.add(label, _numberOfItems++, 0);
-		}
-	}
-
 	public COMMAND onEnter() {
 		onKeyReleased();
 		InputParser parser = new InputParser(fullInput);
@@ -204,6 +265,7 @@ public class CommandBar {
 		InputParser parser = new InputParser(fullInput);
 		return parser.getTask();
 	}
+
 	public ArrayList<TaskEntity> getTasksPartialInput() {
 		InputParser parser = new InputParser(fullInput);
 		parser.removeId();
@@ -238,12 +300,44 @@ public class CommandBar {
 		return _textField;
 	}
 
-	public GridPane getCommandBar() {
-		return _mainPane;
+	public VBox getCommandBar() {
+		return _mainStructure;
 	}
 
 	public ArrayList<String> get_allSessionCmds() {
 		return _allSessionCmds;
 	}
 
+	public String getFullInput() {
+		return fullInput;
+	}
+
+	public void setFullInput(String toSet) {
+		fullInput = toSet;
+	}
+
+	public void addToFullInput(String toSet) {
+		fullInput = fullInput.trim().concat(" ").concat(toSet.trim());
+	}
+
+	public void changeSelector() {
+		if (_numberOfItems - 1 > 0) {
+			int tempSelector = _selected;
+			if (_selected + 1 < _numberOfItems - 1) {
+				tempSelector++;
+			} else {
+				tempSelector = 0;
+			}
+			// change in selector detected
+			if (tempSelector != _selected && _selected != -1) {
+				labels.get(_selected).setUnderline(false);
+			}
+			labels.get(tempSelector).setUnderline(true);
+			_selected = tempSelector;
+		}
+	}
+
+	public void setFeedBackMessage(String feedback) {
+		_feedbackLabel.setText(feedback);
+	}
 }
