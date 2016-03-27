@@ -66,6 +66,8 @@ public class InputParser {
 		addXMLCmd();
 		addXMLTitleDesc();
 		addXMLGarbage();
+		System.out.println(input);
+		
 	}
 	
 	public void removeId(){

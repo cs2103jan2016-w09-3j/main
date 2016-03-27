@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -67,22 +68,14 @@ public class XMLParser {
 		return input;
 	}
 
-	private static String removeOneAttribute(String input, String tag) throws Exception {
-		Document tempXMLDoc = XMLParser.loadXMLFromString("<XML>" + input + "</XML>");
-		input = input.replace("<"+tag+">", "");
-		input = input.replace("</"+tag+">", "");
-		NodeList titles = tempXMLDoc.getElementsByTagName(tag);
-		for (int i = 0; i < titles.getLength(); i++) {
-			input = input.replace(titles.item(i).getTextContent(), "");
-		}
+	private static String removeOneAttribute(String input, String tag, String value) throws Exception {
+		input = input.replace("<"+tag+">"+value+"</"+tag+">", "");
 		return input;
 	} 
 	private static String removeAttribute(String input, Document tempXMLDoc, String tag) {
-		input = input.replace("<"+tag+">", "");
-		input = input.replace("</"+tag+">", "");
 		NodeList titles = tempXMLDoc.getElementsByTagName(tag);
 		for (int i = 0; i < titles.getLength(); i++) {
-			input = input.replace(titles.item(i).getTextContent(), " ");
+			input = input.replace("<"+tag+">"+titles.item(i).getTextContent() +"</"+tag+">", "");
 		}
 		return input;
 	}
@@ -105,18 +98,20 @@ public class XMLParser {
 	
 	public static ArrayList<Pair<String, ArrayList<String>>> xmlToArrayList(String input) throws Exception{
 		ArrayList<Pair<String, ArrayList<String>>> tagStringPair = new ArrayList<Pair<String, ArrayList<String>>>();
-		Map<String,ArrayList<String>> mapOfInput = XMLParser.loadMapFromXML(input);
 		while(!input.trim().isEmpty()){
 			String tag = findNextTag(input);
+			String nextIn= findNextInput(tag, input);
 			if(tag!=""){	
-				ArrayList<String> values =  mapOfInput.get(tag);
+				ArrayList<String> values =  new ArrayList<String>();
+				values.add(nextIn);
 				tagStringPair.add(new Pair(tag, values));
-				input = removeOneAttribute(input,tag);
+				input = removeOneAttribute(input,tag,nextIn);
 			}
 			if(tag.trim().equals("")){
 				break;
 			}
 		}
+		
 		return tagStringPair;
 	}
 	
@@ -138,6 +133,41 @@ public class XMLParser {
 			}
 		}
 		return tag;
+	}
+	
+	private static String findNextInput(String tag, String input){
+		input = input.trim();
+		//System.out.println(tag+","+ input);
+		boolean isInTag = false;
+		boolean isClosingTag = false;
+		String temp = "";
+		String closingTag = "";
+		for(int i=0; i<input.length(); i++){
+			char c = input.charAt(i);
+			if(isClosingTag){
+				closingTag+=c;
+			}else{
+				temp+=c;
+			}
+			if(isInTag){
+				if(c =='<')
+				{
+					isClosingTag = true;
+					closingTag+=c;
+				}else if(closingTag.equals("</"+tag+">")){
+					isInTag = false;
+					isClosingTag = false;
+					temp = temp.substring(0, temp.length()-1);
+					break;
+				}
+			}else{
+				if(temp.equals("<"+tag+">")){
+					isInTag = true;
+					temp = "";
+				}
+			}
+		}
+		return temp;
 	}
 	
 	public static void main(String args[]){

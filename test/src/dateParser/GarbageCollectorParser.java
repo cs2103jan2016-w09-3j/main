@@ -21,7 +21,9 @@ public class GarbageCollectorParser {
 			//System.out.println("test2");
 		}
 		String lastWord = ParserCommons.getLastWord(input);
-		if(lastWord.length()==1){
+		String firstWord = ParserCommons.getFirstWord(XMLParser.removeAllTags(input));
+		//System.out.println(firstWord+" , "+lastWord);
+		if((lastWord.length()==1)&&(!firstWord.equals(lastWord))){
 			//System.out.println("test");
 			input = input.substring(0, input.length()-2)+"<others>"+lastWord+"</others>";
 		}
