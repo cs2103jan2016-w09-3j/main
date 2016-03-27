@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import entity.TaskEntity;
 import mainLogic.TaskManager;
+import mainLogic.TaskManagerInterface;
 import mainLogic.Utils;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Stage;
@@ -45,7 +46,7 @@ public class UserInterfaceController {
 	private FloatingBarAnimationThread _floatingThread;
 
 	// main logic class to interact
-	private TaskManager _taskManager;
+	private TaskManagerInterface _taskManager;
 
 	// Debug purpose
 	private static Logger logger = Logger.getLogger("UserInterfaceController");
@@ -70,7 +71,7 @@ public class UserInterfaceController {
 		logger.log(Level.INFO, "UserInterfaceController Init");
 
 		_parentStage = primaryStage;
-		_taskManager = TaskManager.getInstance();
+		_taskManager = new TaskManagerInterface();
 	}
 
 	public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize) {
@@ -209,6 +210,9 @@ public class UserInterfaceController {
 		} else if (_currentView == FLOATING_VIEW) {
 			_floatingViewInterface.update(value);
 			_floatingViewInterface.setSelected(value);
+		} else if (_currentView == SEARCH_VIEW) {
+			_searchViewInterface.update(value);
+			_searchViewInterface.setSelected(value);
 		}
 	}
 
@@ -413,10 +417,10 @@ public class UserInterfaceController {
 		}
 	}
 
-	public boolean deleteTask(int idToDelete) {
-		boolean isDeleted = _taskManager.delete(idToDelete);
+	public boolean deleteTask(String id) {
+		boolean isDeleted = _taskManager.delete(id);
 		if (isDeleted) {
-			int index = idToDelete;
+			int index = Utils.convertBase36ToDec(id);
 			index--;
 			if (index < 0) {
 				index = 0;
@@ -481,9 +485,9 @@ public class UserInterfaceController {
 	}
 
 	public boolean markAsCompleted(String indexZZ) {
-		boolean success = _taskManager.markAsDone(Utils.convertBase36ToDec(indexZZ));
-		if (success) {
-			updateChangesToViews(0);
+		int index = _taskManager.markAsDone(Utils.convertBase36ToDec(indexZZ));
+		if (index != -1) {
+			updateChangesToViews(index);
 			return true;
 		}
 		return false;

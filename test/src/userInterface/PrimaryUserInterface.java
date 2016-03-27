@@ -272,10 +272,7 @@ public class PrimaryUserInterface extends Application {
 	private void executeDelete(String id) {
 		boolean success = false;
 		if (id != null) {
-			int indexToDelete = Utils.convertBase36ToDec(id);
-			if (indexToDelete != -1) {
-				success = uiController.deleteTask(indexToDelete);
-			}
+			success = uiController.deleteTask(id);
 		}
 		if (success) {
 			_commandBar.showFeedBackMessage(COMMAND.DELETE, SUCCESS, TYPE_1);

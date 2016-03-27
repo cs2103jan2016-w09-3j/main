@@ -201,7 +201,6 @@ public class SearchUserInterface implements ViewInterface {
 		top.getChildren().add(nameLabel);
 
 		HBox mid = new HBox();
-
 		Label indexPlaceHolder = new Label();
 		indexPlaceHolder.setMinWidth(50);
 		mid.getChildren().add(indexPlaceHolder);
@@ -210,6 +209,7 @@ public class SearchUserInterface implements ViewInterface {
 		description.setText(task.getDescription());
 		description.setWrappingWidth(_stageWidth - 50);
 		mid.getChildren().add(description);
+		mid.setMaxHeight(description.getBoundsInLocal().getHeight()+10);
 
 		parentBoxChild.getChildren().add(top);
 		parentBoxChild.getChildren().add(mid);
@@ -302,7 +302,7 @@ public class SearchUserInterface implements ViewInterface {
 
 	public void translateY(double itemHeight) {
 		int entireAreaHeight = _stageHeight - LABEL_TITLE_HEIGHT;
-		double posY = -LABEL_TITLE_HEIGHT;
+		double posY = LABEL_TITLE_HEIGHT;
 		if (itemHeight < entireAreaHeight) {
 
 		} else {

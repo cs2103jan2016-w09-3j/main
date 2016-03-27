@@ -96,6 +96,12 @@
 	-fx-background-color: rgba(128.0,0.0,128.0,1.0);
 }
 
+#cssSearchSelected{
+	-fx-background-color: rgba(128.0,0.0,128.0,1.0);
+	-fx-background-radius: 20.0; 
+	-fx-background-insets: 1.0 5.0 1.0 5.0;
+}
+
 #cssCommandBarfeedback
 {
 	-fx-background-color: rgba(179.0, 255.0, 153.0, 1.0);
