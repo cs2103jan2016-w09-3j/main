@@ -42,6 +42,8 @@ public class DetailComponent implements ViewInterface {
 	private Scene[] _scenes;
 	private int _currentSelectView;
 	private int _selectedIndex;
+	
+	private boolean _haveAssociation;
 
 	public DetailComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize) {
 		_currentSelectView = TASK_VIEW;
@@ -139,10 +141,16 @@ public class DetailComponent implements ViewInterface {
 		ArrayList<TaskEntity> association = task.getDisplayAssociations();
 
 		if (association != null) {
-			for (int i = 0; i < association.size(); i++) {
-				box.getChildren().add(buildTask(association.get(i)));
+			if (association.size() == 0) {
+				box.getChildren().add(buildEmptyLabel());
+				_haveAssociation=false;
+			} else {
+				for (int i = 0; i < association.size(); i++) {
+					box.getChildren().add(buildTask(association.get(i)));
+				}
+				_haveAssociation=true;
+				_selectedIndex = task.getAssociationPosition();
 			}
-			_selectedIndex =task.getAssociationPosition();
 		}
 		return box;
 	}
@@ -177,7 +185,7 @@ public class DetailComponent implements ViewInterface {
 	}
 
 	public boolean isValidIndex(int index) {
-		if (_mainVbox[EXPANDED_VIEW].getChildren().size() == 0) {
+		if (!_haveAssociation) {
 			return false;
 		}
 		if (index < 0) {
@@ -188,6 +196,14 @@ public class DetailComponent implements ViewInterface {
 			return true;
 		}
 		return false;
+	}
+
+	public Label buildEmptyLabel() {
+		Label label = new Label("This task has no associations.");
+		label.setMinWidth(_stageWidth);
+		label.setId("cssExpandedViewLabelTitle");
+		label.setAlignment(Pos.CENTER);
+		return label;
 	}
 
 	public VBox buildTask(TaskEntity task) {
