@@ -291,8 +291,6 @@ public class SearchUserInterface implements ViewInterface {
 			_selectedIndex = temp;
 			HBox item = _searchBoxes.get(_selectedIndex - _startIndex);
 			item.setId("cssSearchSelected");
-			System.out.println("s : " + _selectedIndex + " st: " + _startIndex + " " + (_selectedIndex - _startIndex)
-					+ " " + getTopHeight(_selectedIndex - _startIndex)+" "+ _searchBoxes.size());
 			translateY(getTopHeight(_selectedIndex - _startIndex));
 		}
 	}
