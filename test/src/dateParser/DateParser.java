@@ -143,7 +143,7 @@ public class DateParser {
 			// String dateSG = convertFormalDates(dateUS);
 			//System.out.println("test" + dateGroups.get(i).getText());
 			returnVal = returnVal.replace(dateGroups.get(i).getText(),
-					"<dates>" + dateGroups.get(i).getText() + "</dates>");
+					"<dates>" + convertFormalDates(dateGroups.get(i).getText()) + "</dates>");
 		}
 		showErr();
 		return returnVal;
