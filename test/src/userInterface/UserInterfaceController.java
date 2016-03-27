@@ -417,7 +417,6 @@ public class UserInterfaceController {
 
 	public int deleteTask(String id) {
 		int result = _taskManager.delete(id);
-		System.out.println("result " + result);
 		if (result == -2) {
 			return result;
 		}
