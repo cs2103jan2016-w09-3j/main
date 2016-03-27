@@ -116,7 +116,6 @@ public class UserInterfaceController {
 
 	private void initializeSearchView() {
 		_searchViewInterface = SearchUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize);
-
 	}
 
 	public void startFloatingThread() {
@@ -234,11 +233,6 @@ public class UserInterfaceController {
 	public void changeView(int value) {
 		int view = _currentView + value;
 		switch (view) {
-		case CALENDAR_VIEW: {
-			setPreviousView();
-			_currentView = view;
-			break;
-		}
 		case TASK_VIEW: {
 			setPreviousView();
 			_currentView = view;
@@ -293,8 +287,9 @@ public class UserInterfaceController {
 			_previousView = _currentView;
 		}
 		_currentView = SEARCH_VIEW;
-		_taskManager.switchView(TaskManager.DISPLAY_MAIN);// change this
-		ArrayList<TaskEntity> searchList = _taskManager.getWorkingList();
+		_taskManager.switchView(TaskManager.DISPLAY_MAIN);
+		// change this
+		ArrayList<TaskEntity> searchList = null;
 		_searchViewInterface.buildContent(searchList);
 		show();
 	}
