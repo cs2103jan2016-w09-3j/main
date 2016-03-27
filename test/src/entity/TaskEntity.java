@@ -199,10 +199,6 @@ public class TaskEntity {
 		_associations = null;
 	}
 	
-	//TO BE DELETED
-	public void SetNull () {
-	    _associations = null;
-	}
     public TaskEntity clone() {
         TaskEntity newInstance = new TaskEntity(_isFloating, _isFullDay, _dueDate, _dateCreated, _name,
                 _description, _id, _association_status, _associations, _associationIDs, _isCompleted);

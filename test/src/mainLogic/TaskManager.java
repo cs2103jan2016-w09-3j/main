@@ -310,6 +310,22 @@ public class TaskManager {
 	}
 
 	/**
+	 * Checks if an Id has shifted out of the end of the display list
+	 * 
+	 * @param currentId - Id to be checked
+	 * @return currentId if it is not out of range
+	 *         last ID in the display list if the checked ID is out of range
+	 *         -1 if the display list is empty 
+	 */
+    public int checkCurrentId(int currentId) {
+        if (currentId >= displayedTasks.size()) {
+            return displayedTasks.size() - 1;
+        } else {
+            return currentId;
+        }
+    }
+
+	/**
 	 * Function to call for TaskManager before closing the program
 	 */
 	public void closeTaskManager() {
@@ -541,7 +557,6 @@ public class TaskManager {
 
             displayedTasks.get(index).markAsDone();
             int positionToInsert = findCompletionPositionToInsert(displayedTasks.get(index));
-            System.out.println(displayedTasks.get(index).getCompletionDate() + "Insert " + displayedTasks.get(index).getName() + " at " + positionToInsert);
             completedTaskEntities.add(positionToInsert, displayedTasks.get(index));
 
             markAssociationsUnderComplete(index);
@@ -561,7 +576,6 @@ public class TaskManager {
                 deleteFromMainList(associationsToMarkComplete.get(i));
                 associationsToMarkComplete.get(i).markAsDone();
                 int positionToInsert = findCompletionPositionToInsert(associationsToMarkComplete.get(i));
-                System.out.println(associationsToMarkComplete.get(i).getCompletionDate() + "Insert " +  associationsToMarkComplete.get(i).getName() + " at " + positionToInsert);
                 completedTaskEntities.add(positionToInsert, associationsToMarkComplete.get(i));
                 displayedTasks.remove(associationsToMarkComplete.get(i));
             }
@@ -731,6 +745,18 @@ public class TaskManager {
 		return true;
 	}
 
+    public boolean link(String projectHeadId, String taskUnderId) {
+        return link(Utils.convertBase36ToDec(projectHeadId), Utils.convertBase36ToDec(taskUnderId));
+    }
+
+    public boolean link(int projectHeadId, int taskUnderId) {
+        if (projectHeadId >= displayedTasks.size() || taskUnderId >= displayedTasks.size()) {
+            return false;
+        } else {
+            return link(displayedTasks.get(projectHeadId), displayedTasks.get(taskUnderId));
+        }
+    }
+	
     /**
      * Associates a task to a project head task. Project heads are not allowed
      * to be under other tasks (Checked in the first line to prevent the first

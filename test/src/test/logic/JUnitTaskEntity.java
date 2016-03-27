@@ -10,7 +10,7 @@ import org.junit.Test;
 import entity.TaskEntity;
 import mainLogic.TaskManager;
 
-public class TaskEntityTest {
+public class JUnitTaskEntity {
     TaskManager manager = TaskManager.getInstance();
     
     @Test
