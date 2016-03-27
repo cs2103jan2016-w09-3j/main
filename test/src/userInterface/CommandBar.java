@@ -85,7 +85,7 @@ public class CommandBar {
 	}
 
 	private void initilizeFeedbackBar() {
-		_feedbackLabel = new Label("feedback");
+		_feedbackLabel = new Label();
 		_feedbackLabel.setMinWidth(_prefWidth);
 		_feedbackLabel.setMaxHeight(FEEDBACK_HEIGHT);
 		_feedbackLabel.setMinHeight(FEEDBACK_HEIGHT);
@@ -438,7 +438,7 @@ public class CommandBar {
 		case ADD: {
 			if (condition) {
 				if (type == PrimaryUserInterface.TYPE_1) {
-					setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE2, msg));
+					setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE1, msg));
 				} else if (type == PrimaryUserInterface.TYPE_2) {
 					setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE2, msg));
 				}

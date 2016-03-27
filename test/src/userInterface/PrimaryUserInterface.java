@@ -286,7 +286,6 @@ public class PrimaryUserInterface extends Application {
 		} else {
 			_commandBar.showFeedBackMessage(COMMAND.DELETE, FAILURE, TYPE_1, id);
 		}
-
 	}
 
 	/**
