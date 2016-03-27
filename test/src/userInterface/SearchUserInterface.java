@@ -191,7 +191,7 @@ public class SearchUserInterface implements ViewInterface {
 		timeLabel.setAlignment(Pos.CENTER);
 		timeLabel.setFont(FONT_TASK);
 		top.getChildren().add(timeLabel);
-
+		
 		Label nameLabel = new Label();
 		nameLabel.setText(task.getName());
 		nameLabel.setMinHeight(LABEL_TASK_HEIGHT);
@@ -199,7 +199,8 @@ public class SearchUserInterface implements ViewInterface {
 		nameLabel.setFont(FONT_TASK);
 		HBox.setMargin(nameLabel, new Insets(0, 10, 0, 10));
 		top.getChildren().add(nameLabel);
-
+		top.setMinHeight(LABEL_TASK_HEIGHT);
+		
 		HBox mid = new HBox();
 		Label indexPlaceHolder = new Label();
 		indexPlaceHolder.setMinWidth(50);
@@ -209,11 +210,13 @@ public class SearchUserInterface implements ViewInterface {
 		description.setText(task.getDescription());
 		description.setWrappingWidth(_stageWidth - 50);
 		mid.getChildren().add(description);
-		mid.setMaxHeight(description.getBoundsInLocal().getHeight()+10);
+		mid.setMinHeight(description.getBoundsInLocal().getHeight() + 10);
 
 		parentBoxChild.getChildren().add(top);
 		parentBoxChild.getChildren().add(mid);
+		parentBoxChild.setMinHeight(top.getMinHeight()+mid.getMinHeight());
 		parentBox.getChildren().add(parentBoxChild);
+		parentBox.setMinHeight(parentBoxChild.getMinHeight());
 		return parentBox;
 	}
 
@@ -288,6 +291,8 @@ public class SearchUserInterface implements ViewInterface {
 			_selectedIndex = temp;
 			HBox item = _searchBoxes.get(_selectedIndex - _startIndex);
 			item.setId("cssSearchSelected");
+			System.out.println("s : " + _selectedIndex + " st: " + _startIndex + " " + (_selectedIndex - _startIndex)
+					+ " " + getTopHeight(_selectedIndex - _startIndex)+" "+ _searchBoxes.size());
 			translateY(getTopHeight(_selectedIndex - _startIndex));
 		}
 	}
@@ -295,7 +300,7 @@ public class SearchUserInterface implements ViewInterface {
 	public double getTopHeight(int index) {
 		double posY = 0;
 		for (int i = 0; i <= index; i++) {
-			posY += _searchBoxes.get(i).getHeight();
+			posY += _searchBoxes.get(i).getMinHeight();
 		}
 		return posY;
 	}
@@ -306,9 +311,9 @@ public class SearchUserInterface implements ViewInterface {
 		if (itemHeight < entireAreaHeight) {
 
 		} else {
-			posY += (itemHeight - entireAreaHeight);
+			posY -= (itemHeight - entireAreaHeight);
 		}
-		_secondaryVbox.setTranslateY(-posY);
+		_secondaryVbox.setTranslateY(posY);
 	}
 
 	public boolean isBetweenRange(int index) {
