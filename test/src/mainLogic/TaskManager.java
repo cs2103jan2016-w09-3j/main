@@ -206,7 +206,8 @@ public class TaskManager {
 	    
 	    for(int i = 0; i < mainTaskEntities.size(); i++) {
             if ( mainTaskEntities.get(i).isCompleted() ) {
-                completedTaskEntities.add(mainTaskEntities.get(i));
+                int positionToAdd = findCompletionPositionToInsert(mainTaskEntities.get(i));
+                completedTaskEntities.add(positionToAdd, mainTaskEntities.get(i));
                 mainTaskEntities.remove(i);
                 i--;
             }
@@ -214,8 +215,8 @@ public class TaskManager {
 	    
 	    for(int i = 0; i < floatingTaskEntities.size(); i++) {
             if ( floatingTaskEntities.get(i).isCompleted() ) {
-                completedTaskEntities.add(floatingTaskEntities.get(i));
-                floatingTaskEntities.remove(i);
+                int positionToAdd = findCompletionPositionToInsert(floatingTaskEntities.get(i));
+                completedTaskEntities.add(positionToAdd, floatingTaskEntities.get(i));
                 i--;
             }
         }
@@ -370,7 +371,7 @@ public class TaskManager {
 	 * 
 	 * @param view
 	 *            TaskManager.DISPLAY_MAIN, taskManager.DISPLAY_FLOATING,
-	 *            taskManager.DISPLAY_SEARCH
+	 *            taskManager.DISPLAY_SEARCH taskMAnager.DISPLAY_COMPLETED
 	 */
 	public void switchView(int view) {
 		switch (view) {
@@ -382,6 +383,10 @@ public class TaskManager {
 			currentDisplayedList = DISPLAY_FLOATING;
 			displayedTasks = (ArrayList<TaskEntity>) floatingTaskEntities.clone();
 			break;
+		case DISPLAY_COMPLETED:
+	            currentDisplayedList = DISPLAY_COMPLETED;
+	            displayedTasks = (ArrayList<TaskEntity>) completedTaskEntities.clone();
+	            break;	
 		}
 	}
 
@@ -520,8 +525,10 @@ public class TaskManager {
 	
 	/**
 	 * Marks a task as done
-	 * @param index
-	 * @return
+	 * 
+	 * @param index - Arrayslot in displayedTasks to be marked as done
+	 * @return true - if the task was successfully marked as done
+	 *         false - if failed
 	 */
     public boolean markAsDone(int index) {
         if ( (index > displayedTasks.size() - 1) || (currentDisplayedList == DISPLAY_COMPLETED) ) {
@@ -532,8 +539,10 @@ public class TaskManager {
                 return false;
             }
 
-            completedTaskEntities.add(displayedTasks.get(index));
             displayedTasks.get(index).markAsDone();
+            int positionToInsert = findCompletionPositionToInsert(displayedTasks.get(index));
+            System.out.println(displayedTasks.get(index).getCompletionDate() + "Insert " + displayedTasks.get(index).getName() + " at " + positionToInsert);
+            completedTaskEntities.add(positionToInsert, displayedTasks.get(index));
 
             markAssociationsUnderComplete(index);
             
@@ -551,7 +560,9 @@ public class TaskManager {
             for(int i = 0; i < associationsToMarkComplete.size(); i++) {
                 deleteFromMainList(associationsToMarkComplete.get(i));
                 associationsToMarkComplete.get(i).markAsDone();
-                completedTaskEntities.add(associationsToMarkComplete.get(i));
+                int positionToInsert = findCompletionPositionToInsert(associationsToMarkComplete.get(i));
+                System.out.println(associationsToMarkComplete.get(i).getCompletionDate() + "Insert " +  associationsToMarkComplete.get(i).getName() + " at " + positionToInsert);
+                completedTaskEntities.add(positionToInsert, associationsToMarkComplete.get(i));
                 displayedTasks.remove(associationsToMarkComplete.get(i));
             }
             
@@ -597,6 +608,28 @@ public class TaskManager {
 		}
 		return idToInsert;
 	}
+	
+	/**
+     * UI Interface function Searches for the position to insert a newTask into
+     * a sorted list of completed tasks by their completion date
+     * 
+     * @param newTask
+     *            - The task object to be sorted
+     * @return ID of the position where the task should be placed in the sorted
+     *         list
+     */
+    private int findCompletionPositionToInsert(TaskEntity newTask) {
+        int idToInsert = Collections.binarySearch(completedTaskEntities, newTask, new TaskCompletionTimeComparator());
+
+        // Due to Collections.binarySearch's implementation, all objects
+        // that can't be found will return a negative value, which indicates
+        // the position where the object that is being searched is supposed
+        // to be minus 1. This if case figures out the position to slot it in
+        if (idToInsert < 0) {
+            idToInsert = -(idToInsert + 1);
+        }
+        return idToInsert;
+    }
 
 	/**
 	 * UI Interface function Deletion from the displayed list, will delete the

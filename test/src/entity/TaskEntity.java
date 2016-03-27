@@ -16,6 +16,7 @@ public class TaskEntity {
 	private boolean _isFullDay;
 	private Calendar _dueDate;
 	private Calendar _dateCreated;
+	private Calendar _completionDate;
 	private String _name;
 	private String _description;
 	private int _id;
@@ -57,6 +58,9 @@ public class TaskEntity {
 		_dateCreated = Calendar.getInstance();
 		_association_status = NOT_ASSOCIATED;
 		_associations = new ArrayList<TaskEntity>();
+		_completionDate = Calendar.getInstance();
+		//Tasks to have a default same value of completion date at the start
+		_completionDate.set(0, 0, 0);
 	}
 
 	public TaskEntity() {
@@ -127,13 +131,34 @@ public class TaskEntity {
 		return _associations;
 	}
 	
+	/**
+	 * Default Mark as done has no offset
+	 */
 	public void markAsDone () {
+	    markAsDone(0);
+	}
+	
+    /**
+     * Mark a task as done and move the completed task into the
+     * completedTaskEntities array. Offset there to keep completion order the
+     * same as the association order when marking entire projects done
+     * 
+     * @param offset - number of milliseconds of offset to mark the task as done 
+     */
+	public void markAsDone (int offset) {
+	    //Skip the whole process if it was already done in the first place
+	    if(_isCompleted) {
+	        return;
+	    }
 	    _isCompleted = true;
+	    
+	    _completionDate = Calendar.getInstance();
+	    _completionDate.setTimeInMillis(_completionDate.getTimeInMillis() + offset);
 
 	    //Mark all tasks associated under the project head once its done
         if (_association_status == PROJECT_HEAD) {
             for(int i = 0; i < _associations.size(); i++) {
-                _associations.get(i).markAsDone();
+                _associations.get(i).markAsDone(i+1);
             }
         }
 	}
@@ -141,7 +166,11 @@ public class TaskEntity {
 	public boolean isCompleted () {
 	    return _isCompleted;
 	}
-	
+
+    public Calendar getCompletionDate() {
+        return _completionDate;
+    }
+    
     /**
      * Function to initialize associations array if it is null (Used for
      * overwriting it being set to null by the file loader)
