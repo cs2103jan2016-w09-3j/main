@@ -394,22 +394,24 @@ public class UserInterfaceController {
 		}
 	}
 
-	public boolean addTask(TaskEntity task) {
+	public int addTask(TaskEntity task) {
 		int insertedTo = _taskManager.add(task);
-		if (insertedTo != -1) {
+		if (insertedTo > -1) {
 			updateChangesToViews(insertedTo);
-			return true;
+			return 1;
+		} else if (insertedTo == -1) {
+			return -1;
 		}
-		return false;
+		return -2;
 	}
 
-	public boolean addBatchTask(ArrayList<TaskEntity> task) {
+	public int addBatchTask(ArrayList<TaskEntity> task) {
 		int insertedTo = _taskManager.add(task);
 		if (insertedTo == -1) {
-			return false;
+			return -2;
 		} else {
 			updateChangesToViews(insertedTo);
-			return true;
+			return 1;
 		}
 	}
 

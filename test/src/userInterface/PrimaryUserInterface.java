@@ -32,8 +32,8 @@ public class PrimaryUserInterface extends Application {
 
 	private static final boolean SUCCESS = true;
 	private static final boolean FAILURE = false;
-	private static final int TYPE_1 = 0;
-	private static final int TYPE_2 = 1;
+	static final int TYPE_1 = 0;
+	static final int TYPE_2 = 1;
 
 	// CommandBar dimensions.
 	static final int COMMAND_BAR_HEIGTH = 70;
@@ -247,20 +247,24 @@ public class PrimaryUserInterface extends Application {
 	 * @return boolean, true for successful and false for unsuccessful.
 	 */
 	private void executeAdd(ArrayList<TaskEntity> tasks) {
-		boolean success = false;
+		int status = -2;
 		String taskName = null;
 		if (tasks.size() == 1) {
 			if (tasks.get(0) != null) {
-				success = uiController.addTask(tasks.get(0));
+				status = uiController.addTask(tasks.get(0));
 			}
 		} else {
-			success = uiController.addBatchTask(tasks);
+			status = uiController.addBatchTask(tasks);
 		}
-		if (success) {
+		if (status == 1) {
 			taskName = tasks.get(0).getName();
 			_commandBar.showFeedBackMessage(COMMAND.ADD, SUCCESS, TYPE_1, taskName);
 			resetCommandInput();
-		} else {
+		} else if (status == -1) {
+			taskName = tasks.get(0).getName();
+			_commandBar.showFeedBackMessage(COMMAND.ADD, SUCCESS, TYPE_2, taskName);
+			resetCommandInput();
+		} else if (status == -2) {
 			_commandBar.showFeedBackMessage(COMMAND.ADD, FAILURE, TYPE_1, taskName);
 		}
 	}
@@ -370,8 +374,7 @@ public class PrimaryUserInterface extends Application {
 	 * 
 	 */
 	public void resetCommandInput() {
-		_commandBar.setFullInput("");
-		_commandBar.onKeyReleased();
+		_commandBar.reset();
 		focus();
 	}
 }

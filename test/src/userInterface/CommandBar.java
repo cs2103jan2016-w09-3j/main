@@ -26,8 +26,14 @@ import org.jsoup.Jsoup;;
 
 public class CommandBar {
 
-	private static final String MESSAGE_SUCCESS_ADD = "Successfully added %1$s into PCNM";
-	private static final String MESSAGE_FAILURE_ADD = "Fail to add %1$s into PCNM";
+	private static final String MESSAGE_SUCCESS_ADD_TYPE1 = "Successfully added %1$s to task list.";
+	private static final String MESSAGE_SUCCESS_ADD_TYPE2 = "Successfully added %1$s to floating task list.";
+	private static final String MESSAGE_FAILURE_ADD = "Fail to add.";
+	private static final String MESSAGE_SUCCESS_DELETE = "Successfully deleted %1$s.";
+	private static final String MESSAGE_FAILURE_DELETE = "Fail to delete %1$s.";
+	private static final String MESSAGE_SUCCESS_EDIT = "Successfully edited %1$s.";
+	private static final String MESSAGE_FAILURE_EDIT_TYPE1 = "Fail to edit %1$s.";
+	private static final String MESSAGE_FAILURE_EDIT_TYPE2 = "Fail to retrieve task with %1$s.";
 
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
@@ -420,16 +426,49 @@ public class CommandBar {
 		_feedbackLabel.setText(feedback);
 	}
 
-	public void showFeedBackMessage(COMMAND cmdType, boolean condition, int errorType, String msg) {
+	public void reset() {
+		_selected=-1;
+		setFullInput("");
+		ArrayList<Node> temp = new ArrayList<Node>();
+		addItemsToBar(temp);
+	}
+
+	public void showFeedBackMessage(COMMAND cmdType, boolean condition, int type, String msg) {
 		switch (cmdType) {
 		case ADD: {
 			if (condition) {
-				setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD, msg));
+				if (type == PrimaryUserInterface.TYPE_1) {
+					setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE2, msg));
+				} else if (type == PrimaryUserInterface.TYPE_2) {
+					setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE2, msg));
+				}
 			} else {
-				setFeedBackMessage(String.format(MESSAGE_FAILURE_ADD, msg));
+				setFeedBackMessage(MESSAGE_FAILURE_ADD);
 			}
 			break;
 		}
+		case DELETE: {
+			if (condition) {
+				setFeedBackMessage(String.format(MESSAGE_SUCCESS_DELETE, msg));
+			} else {
+				setFeedBackMessage(String.format(MESSAGE_FAILURE_DELETE, msg));
+			}
+			break;
+		}
+		case EDIT: {
+			if (condition) {
+				setFeedBackMessage(String.format(MESSAGE_SUCCESS_EDIT, msg));
+			} else {
+				if (type == 0) {
+					setFeedBackMessage(String.format(MESSAGE_FAILURE_EDIT_TYPE1, msg));
+				} else if (type == 1) {
+					setFeedBackMessage(String.format(MESSAGE_FAILURE_EDIT_TYPE2, msg));
+				}
+			}
+			break;
+		}
+		default:
+			break;
 		}
 	}
 }
