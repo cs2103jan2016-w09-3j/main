@@ -1,5 +1,7 @@
 package dateParser;
 
+import java.util.Scanner;
+
 import javax.swing.plaf.synth.SynthSeparatorUI;
 
 public class IdParser {
@@ -11,13 +13,11 @@ public class IdParser {
 	
 	public String getID(String input){
 		if(hasIDKey(input)){
-			String[] words = input.split(" ");
-			for(int i=0;i<words.length; i++){
-				String toCheck = words[i].substring(0,2);
-				if(toCheck.equals("ID")){
-					//System.out.println("TEST");
-					id = words[i].substring(2,words[i].length());
-					//System.out.println(id);
+			Scanner sc = new Scanner(input);
+			while (sc.hasNext()){
+				String test = sc.next();
+				if(hasIDKey(test)){
+					id = test.substring(2,test.length());
 				}
 			}
 		}

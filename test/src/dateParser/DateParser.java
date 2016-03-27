@@ -73,6 +73,14 @@ public class DateParser {
 		}
 		return returnDateList;
 	}
+	
+	public boolean hasDate(String input){
+		List<Date> dates = parseToList(input);
+		if (dates.size()>0){
+			return false;
+		}
+		return true;
+	}
 
 	public List<Date> checkMultiple(List<Date> dateList, String input){
 		List<Date> returnList = new ArrayList<Date>();

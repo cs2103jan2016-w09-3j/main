@@ -98,6 +98,7 @@ public class XMLParser {
 	
 	public static ArrayList<Pair<String, ArrayList<String>>> xmlToArrayList(String input) throws Exception{
 		ArrayList<Pair<String, ArrayList<String>>> tagStringPair = new ArrayList<Pair<String, ArrayList<String>>>();
+		String prev = "";
 		while(!input.trim().isEmpty()){
 			String tag = findNextTag(input);
 			String nextIn= findNextInput(tag, input);
@@ -106,10 +107,17 @@ public class XMLParser {
 				values.add(nextIn);
 				tagStringPair.add(new Pair(tag, values));
 				input = removeOneAttribute(input,tag,nextIn);
+				System.out.println("test@"+tag+values.get(0));
+			
+			}
+			
+			if(prev == input){
+				break;
 			}
 			if(tag.trim().equals("")){
 				break;
 			}
+			prev = input;
 		}
 		
 		return tagStringPair;
@@ -173,8 +181,6 @@ public class XMLParser {
 	public static void main(String args[]){
 		String temp = "<cmd>add</cmd> <dates>23/1</dates> <title>basketball with friends</title> <dates>[Fri Mar 04 22:25:13 SGT 2016]</dates> ";
 		try {
-			//Document tempDoc = loadXMLFromString(temp);
-			//System.out.println(tempDoc.getElementsByTagName("a").item(0).getTextContent());
 			ArrayList<Pair<String, ArrayList<String>>> tagStringPair = xmlToArrayList(temp);
 			for(int i=0; i<tagStringPair.size(); i++){
 				String tag = tagStringPair.get(i).getFirst();

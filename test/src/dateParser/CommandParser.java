@@ -48,7 +48,7 @@ public class CommandParser {
 		String returnStrVal = input;
 		if(!inputFirstWord.trim().equals("")){
 			returnStrVal = input.substring(inputFirstWord.length());
-			returnStrVal = "<cmd>" + inputFirstWord + "</cmd> "+returnStrVal;
+			returnStrVal = "<cmd>" + inputFirstWord + "</cmd>"+returnStrVal;
 		}
 		return returnStrVal;
 	}

@@ -16,6 +16,8 @@ import entity.TaskEntity;
 import junit.framework.Assert;
 
 public class InputParser {
+	private final int EXPECT_CMD = 0;
+	private final int EXPECT_INFO = 1;
 	private String input;
 	private DateParser dateParser;
 	private CommandParser cmdParser;
@@ -60,6 +62,29 @@ public class InputParser {
 		assert (input!=null) : "Input is null";
 
 		input = XMLParser.removeAllTags(input);
+		/*
+		Scanner sc = new Scanner(input);
+		String temp = "";
+		String returnStr = "";
+		int type = 0;
+		while(sc.hasNext()){
+			temp+=sc.next();
+			if (type == EXPECT_CMD){
+				returnStr += cmdParser.xmlFirstWord(temp);
+				temp = "";
+				type++;
+			}else if (type == EXPECT_INFO){
+				// handle ID
+				if(!dateParser.hasDate(temp))
+				{
+					returnStr += infoParser.xmlTitleAndDesc(temp);
+				}else{
+					
+				}
+			}
+		}
+	*/
+		
 		System.out.println(input);
 		addXMLDate();
 		addXMLID();
