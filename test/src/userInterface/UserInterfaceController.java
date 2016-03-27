@@ -415,18 +415,16 @@ public class UserInterfaceController {
 		}
 	}
 
-	public boolean deleteTask(String id) {
-		boolean isDeleted = _taskManager.delete(id);
-		if (isDeleted) {
-			int index = Utils.convertBase36ToDec(id);
-			index--;
-			if (index < 0) {
-				index = 0;
-			}
-			updateChangesToViews(index);
-			return true;
+	public int deleteTask(String id) {
+		int result = _taskManager.delete(id);
+		System.out.println("result " + result);
+		if (result == -2) {
+			return result;
 		}
-		return false;
+		if (result > -2) {
+			updateChangesToViews(result);
+		}
+		return result;
 	}
 
 	public TaskEntity getTaskByID(int ID) {

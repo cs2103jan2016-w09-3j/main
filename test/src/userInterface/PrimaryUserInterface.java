@@ -285,14 +285,14 @@ public class PrimaryUserInterface extends Application {
 	 * @return boolean, true for successful and false for unsuccessful.
 	 */
 	private void executeDelete(String id) {
-		boolean success = false;
+		int status = -2;
 		if (id != null) {
-			success = uiController.deleteTask(id);
+			status = uiController.deleteTask(id);
 		}
-		if (success) {
+		if (status > -2) {
 			_commandBar.showFeedBackMessage(COMMAND.DELETE, SUCCESS, TYPE_1, id);
 			resetCommandInput();
-		} else {
+		} else if (status == -2) {
 			_commandBar.showFeedBackMessage(COMMAND.DELETE, FAILURE, TYPE_1, id);
 		}
 	}
