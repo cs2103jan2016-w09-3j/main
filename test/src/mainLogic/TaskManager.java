@@ -509,7 +509,9 @@ public class TaskManager {
 		}
 
 		for (int i = 1; i < tasks.size(); i++) {
-			add(tasks.get(i));
+			if( add(tasks.get(i)) == -2 ) {
+			    return -2;
+			}
 		}
 
 		return firstIndex;
@@ -523,16 +525,28 @@ public class TaskManager {
 	 * @param newTask
 	 *            - Task to be inserted
 	 * @return ID of the task that has been inserted if it is inserted into
-	 *         displayedTask -1 if it is inserted into a list that is not in
-	 *         view
+	 *         displayedTask 
+	 *         -1 if it is inserted into a list that is not in view
+	 *         -2 if a any of the main arrays are not initialised.
 	 */
 	public int add(TaskEntity newTask) {
 		assert displayedTasks != null : "no view set in displayedTasks, probably not initialised!";
-
+		
+		if(displayedTasks == null) {
+		    return -2;
+		}
+		
 		if (newTask.isFloating()) {
+		    if(floatingTaskEntities == null) {
+		        return -2;
+		    }
 			floatingTaskEntities.add(newTask);
 			return updateFloatingDisplay(newTask);
 		} else {
+		    if(mainTaskEntities == null) {
+                return -2;
+            }
+		    
 			int idToInsert = findPositionToInsert(newTask);
 			mainTaskEntities.add(idToInsert, newTask);
 			return updateMainDisplay(newTask, idToInsert);

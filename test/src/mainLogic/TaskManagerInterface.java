@@ -55,8 +55,24 @@ public class TaskManagerInterface {
         return manager.modify(taskId, modifiedTask);
     }
     
-    public boolean delete (String taskId) {
-        return manager.delete(taskId);
+    /**
+     * Deletes a task and remove it from the lists
+     * 
+     * @param taskToMark - Id of the task to be delete in the displayed list
+     * 
+     * @return -2 if the deletion failed
+     *         -1 if after deletion, the list is empty
+     *         Id of the position to be in the display list after deleting
+     *         otherwise
+     */
+    public int delete (String taskId) {
+        boolean deletionResult = manager.delete(taskId);
+        
+        if(!deletionResult) {
+            return -2;
+        } else {
+            return manager.checkCurrentId(Utils.convertBase36ToDec(taskId));
+        }
     }
     
     public boolean delete (String taskIdStart, String taskIdEnd) {
