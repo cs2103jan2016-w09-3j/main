@@ -359,12 +359,6 @@ public class CommandBar {
 		_textField.setOnKeyReleased(secondaryEventHandler);
 	}
 
-	public TaskEntity executeLine(String userInput) {
-		Calendar c = Calendar.getInstance();
-		TaskEntity t = new TaskEntity("name of task", c, false, userInput);
-		return t; // return null if not valid command.
-	}
-
 	public void focus() {
 		_mainPane.requestFocus();
 		_textField.requestFocus();
@@ -394,6 +388,10 @@ public class CommandBar {
 		fullInput = fullInput.trim().concat(" ").concat(toSet.trim());
 	}
 
+	/**
+	 * method is called when "TAB" is executed, increase the selector index by
+	 * 1, if index is over total no of labels, jumps to -1.
+	 */
 	public void changeSelector() {
 		if (labels.size() > 0) {
 			int tempSelector = _selected;

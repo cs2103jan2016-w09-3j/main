@@ -123,7 +123,6 @@ public class PrimaryUserInterface extends Application {
 	 * 
 	 */
 	public void initializeControls() {
-
 		EventHandler<KeyEvent> mainEventHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				processKeyPress(_commandBar.getTextField(), event);
@@ -137,44 +136,12 @@ public class PrimaryUserInterface extends Application {
 		_commandBar.setTextFieldHandler(mainEventHandler, releaseEventHandler);
 	}
 
-	/*
-	 * private void initializeData(){ ArrayList<String> cmdArrs =
-	 * uiController.readFromFile(); System.out.println(cmdArrs.size()); for(int
-	 * j=0; j<cmdArrs.size(); j++){ COMMAND cmd =
-	 * _commandBar.onEnter(cmdArrs.get(j)); String t = cmdArrs.get(j); if
-	 * (cmd.equals(COMMAND.EXIT)) {
-	 * uiController.saveToFile(_commandBar.get_allSessionCmds());
-	 * System.exit(0); } else if (cmd.equals(COMMAND.ADD)) {
-	 * ArrayList<TaskEntity> tasks = _commandBar.getTasks(t); for (int i = 0; i
-	 * < tasks.size(); i++) { executeAdd(tasks.get(i)); } } else if
-	 * (cmd.equals(COMMAND.EDIT)) { ArrayList<TaskEntity> tasks =
-	 * _commandBar.getTasks(t); for (int i = 0; i < tasks.size(); i++) {
-	 * executeModify(tasks.get(i)); } } else if (cmd.equals(COMMAND.DELETE)) {
-	 * ArrayList<TaskEntity> tasks = _commandBar.getTasks(t); for (int i = 0; i
-	 * < tasks.size(); i++) { executeDelete(tasks.get(i)); }
-	 * 
-	 * } } }
-	 */
-
 	public boolean executeMarkComplete(String indexZZ) {
 		_commandBar.setFullInput("");
 		_commandBar.onKeyReleased();
 		uiController.markAsCompleted(indexZZ);
 		focus();
 		return false;
-	}
-
-	/**
-	 * Jump to index.
-	 * 
-	 * @param indexToJump
-	 *            : base36 format
-	 * @return boolean, true if value found, false it value not found
-	 */
-	public boolean executeJump(String indexToJump) {
-		uiController.jumpToIndex(indexToJump);
-		_commandBar.getTextField().setText("");
-		return true;
 	}
 
 	private void processKeyRelease(TextField textField, KeyEvent event) {
@@ -379,6 +346,23 @@ public class PrimaryUserInterface extends Application {
 			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_2);
 		}
 
+	}
+
+	/**
+	 * Jump to index.
+	 * 
+	 * @param indexToJump
+	 *            : base36 format
+	 * @return boolean, true if value found, false it value not found
+	 */
+	public void executeJump(String indexToJump) {
+		boolean success = uiController.jumpToIndex(indexToJump);
+		if (success) {
+			resetCommandInput();
+		} else {
+			// change to jump _commandBar.showFeedBackMessage(COMMAND.EDIT,
+			// FAILURE, TYPE_1);
+		}
 	}
 
 	/**

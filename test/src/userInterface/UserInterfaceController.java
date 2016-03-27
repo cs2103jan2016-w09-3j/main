@@ -469,17 +469,24 @@ public class UserInterfaceController {
 		return true;
 	}
 
-	public void jumpToIndex(String indexToJump) {
+	public boolean jumpToIndex(String indexToJump) {
 		int selected = _taskViewInterface.getSelectIndex();
-		_scorllAnimation = ScrollTaskAnimation.getInstance(selected, Utils.convertBase36ToDec(indexToJump), this);
-		_scorllAnimation.start();
+		if (selected != -1) {
+			_scorllAnimation = ScrollTaskAnimation.getInstance(selected, Utils.convertBase36ToDec(indexToJump), this);
+			_scorllAnimation.start();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	public void markAsCompleted(String indexZZ) {
+	public boolean markAsCompleted(String indexZZ) {
 		boolean success = _taskManager.markAsDone(Utils.convertBase36ToDec(indexZZ));
 		if (success) {
 			updateChangesToViews(0);
+			return true;
 		}
+		return false;
 	}
 
 	public void stopScrollingAnimation() {
@@ -491,7 +498,7 @@ public class UserInterfaceController {
 		_scorllAnimation = null;
 	}
 
-	public void link(String indexZZ1, String indexZZ2) {
+	public boolean link(String indexZZ1, String indexZZ2) {
 		int index1 = Utils.convertBase36ToDec(indexZZ1);
 		int index2 = Utils.convertBase36ToDec(indexZZ2);
 		if (index1 != -1 && index2 != -1) {
@@ -501,8 +508,10 @@ public class UserInterfaceController {
 					_taskManager.getWorkingList().get(index2));
 			if (success) {
 				updateChangesToViews(0);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public void updateChangesToViews(int index) {
