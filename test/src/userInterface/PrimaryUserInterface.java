@@ -320,7 +320,8 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	/**
-	 * Modify a task, if task has not been retrieved, will display task to modify.
+	 * Modify a task, if task has not been retrieved, will display task to
+	 * modify.
 	 * 
 	 * @param taskToCheck
 	 * @return boolean, true for successful and false for unsuccessful.
@@ -347,6 +348,12 @@ public class PrimaryUserInterface extends Application {
 		}
 	}
 
+	/**
+	 * Retrieve task base on indexToModify and display task in the command bar
+	 * for modification.
+	 * 
+	 * @param indexToModify
+	 */
 	private void getItemToModify(int indexToModify) {
 		TaskEntity toPopulate = uiController.getTaskByID(indexToModify);
 		if (toPopulate != null) {

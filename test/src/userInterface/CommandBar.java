@@ -211,9 +211,9 @@ public class CommandBar {
 					itemsToAdd.add(label);
 				}
 			}
+			addItemsToBar(itemsToAdd);
 		} catch (Exception e) {
 		}
-		addItemsToBar(itemsToAdd);
 	}
 
 	private void addItemsToCommandBar(ArrayList<Label> itemsToAdd) {
@@ -228,7 +228,6 @@ public class CommandBar {
 		_mainPane.getChildren().clear();
 		labels.clear();
 		_numberOfItems = 0;
-
 		if (_selected == -1) {
 			itemsToAdd.add(_textField);
 		} else {
