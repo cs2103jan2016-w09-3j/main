@@ -158,7 +158,7 @@ public class JUnitTaskManager {
         manager.switchView(manager.DISPLAY_FLOATING);
         manager.link(manager.getWorkingList().get(0), manager.getWorkingList().get(1) );
         manager.link(manager.getWorkingList().get(0), manager.getWorkingList().get(2) ); 
-        manager.markAsDone(0);
+        assertEquals(true, manager.markAsDone(0));
 
         manager.link(manager.getWorkingList().get(4), manager.getWorkingList().get(5) );
         
