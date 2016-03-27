@@ -419,7 +419,7 @@ public class CommandBar {
 		_feedbackLabel.setText(feedback);
 	}
 
-	public void showFeedBackMessage(COMMAND type, boolean condition) {
+	public void showFeedBackMessage(COMMAND cmdType, boolean condition, int errorType) {
 
 	}
 }
