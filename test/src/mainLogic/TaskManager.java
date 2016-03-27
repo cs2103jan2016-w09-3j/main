@@ -190,14 +190,14 @@ public class TaskManager {
 		mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
 		floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
 
-		buildCompletedTasks();
+		initializeAssociations();
 		
 		updateTaskEntityCurrentId();
+		buildCompletedTasks();
 
 		logger.log(Level.FINEST, "TaskManager Initialized");
 		displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
 
-		initializeAssociations();
 		currentDisplayedList = DISPLAY_MAIN;
 	}
 
@@ -587,11 +587,13 @@ public class TaskManager {
             ArrayList<TaskEntity> associationsToMarkComplete = displayedTasks.get(index).getAssociations();
             
             for(int i = 0; i < associationsToMarkComplete.size(); i++) {
-                deleteFromMainList(associationsToMarkComplete.get(i));
-                associationsToMarkComplete.get(i).markAsDone();
-                int positionToInsert = findCompletionPositionToInsert(associationsToMarkComplete.get(i));
-                completedTaskEntities.add(positionToInsert, associationsToMarkComplete.get(i));
-                displayedTasks.remove(associationsToMarkComplete.get(i));
+                if(!associationsToMarkComplete.get(i).isCompleted() ) {
+                    deleteFromMainList(associationsToMarkComplete.get(i));
+                    associationsToMarkComplete.get(i).markAsDone();
+                    int positionToInsert = findCompletionPositionToInsert(associationsToMarkComplete.get(i));
+                    completedTaskEntities.add(positionToInsert, associationsToMarkComplete.get(i));
+                    displayedTasks.remove(associationsToMarkComplete.get(i));
+                }
             }
             
         }
