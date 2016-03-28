@@ -109,7 +109,7 @@ public class TaskEntity {
 
     public TaskEntity(boolean isFloating, boolean isFullDay, Calendar dueDate, Calendar dateCreated,
             String name, String description, int id, int association_status,
-            ArrayList<TaskEntity> associations, String associationIDs, boolean isCompleted) {
+            ArrayList<TaskEntity> associations, String associationIDs, boolean isCompleted, Calendar completionDate) {
         _isFloating = isFloating;
         _isFullDay = isFullDay;
         _dueDate = dueDate;
@@ -121,6 +121,7 @@ public class TaskEntity {
         _associations = associations;
         _associationIDs = associationIDs;
         _isCompleted = isCompleted;
+        _completionDate = completionDate;
     }
     
 	public int getAssociationState() {
@@ -201,7 +202,7 @@ public class TaskEntity {
 	
     public TaskEntity clone() {
         TaskEntity newInstance = new TaskEntity(_isFloating, _isFullDay, _dueDate, _dateCreated, _name,
-                _description, _id, _association_status, _associations, _associationIDs, _isCompleted);
+                _description, _id, _association_status, _associations, _associationIDs, _isCompleted, _completionDate);
         return newInstance;
 	}
 

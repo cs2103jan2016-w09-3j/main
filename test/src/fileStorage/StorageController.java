@@ -14,7 +14,6 @@ public class StorageController implements StorageInterface {
         StorageController sc = new StorageController();
         StorageHandler sh = new StorageHandler();
         JsonConverter jc = new JsonConverter();
-        CommandHandler ch = new CommandHandler();
         
         AllTaskLists dummyTL = sc.createDummy();
         sh.writeToMainFile(jc.javaToJson(dummyTL));
@@ -66,8 +65,10 @@ public class StorageController implements StorageInterface {
      */
     public boolean storeTaskLists(ArrayList<TaskEntity> main, ArrayList<TaskEntity> floating){
         AllTaskLists newList = new AllTaskLists();
+        
         newList.setFloatingTaskList(floating);
         newList.setMainTaskList(main);
+        
         return storeTaskLists(newList);
     }
     
