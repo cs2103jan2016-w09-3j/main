@@ -3,7 +3,7 @@ package dateParser;
 public class CommandParser {
 
 	public enum COMMAND {
-		ADD, EDIT, DELETE, EXIT, MAIN, HIDE, SHOW, FLOAT,SEARCH, JUMP, LINK, MARK, INVALID;
+		ADD, EDIT, DELETE, EXIT, MAIN, HIDE, SHOW, FLOAT,SEARCH, JUMP, LINK, DONE, INVALID;
 	};
 
 	public CommandParser() {
@@ -40,8 +40,8 @@ public class CommandParser {
 			returnVal = COMMAND.JUMP;
 		}else if (inputCmd.equalsIgnoreCase("link")) {
 			returnVal = COMMAND.LINK;
-		}else if (inputCmd.equalsIgnoreCase("mark")) {
-			returnVal = COMMAND.MARK;
+		}else if (inputCmd.equalsIgnoreCase("done")) {
+			returnVal = COMMAND.DONE;
 		}
 		return returnVal;
 	}

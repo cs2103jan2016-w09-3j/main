@@ -139,10 +139,10 @@ public class PrimaryUserInterface extends Application {
 	public void executeMarkComplete(String indexZZ) {
 		boolean isSuccess = uiController.markAsCompleted(indexZZ);
 		if (isSuccess) {
-			_commandBar.showFeedBackMessage(COMMAND.MARK, SUCCESS, TYPE_1, indexZZ);
+			_commandBar.showFeedBackMessage(COMMAND.DONE, SUCCESS, TYPE_1, indexZZ);
 			resetCommandInput();
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.MARK, FAILURE, TYPE_1, indexZZ);
+			_commandBar.showFeedBackMessage(COMMAND.DONE, FAILURE, TYPE_1, indexZZ);
 		}
 	}
 
@@ -207,7 +207,7 @@ public class PrimaryUserInterface extends Application {
 				executeJump();
 				resetCommandInput();
 				return;
-			} else if (cmd.equals(COMMAND.MARK)) {
+			} else if (cmd.equals(COMMAND.DONE)) {
 				String indexToMarkComplete = _commandBar.getId();
 				executeMarkComplete(indexToMarkComplete);
 			}

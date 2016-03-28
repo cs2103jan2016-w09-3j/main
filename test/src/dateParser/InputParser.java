@@ -88,10 +88,10 @@ public class InputParser {
 		System.out.println("before"+input);
 		addXMLDate();//problem with quotes lie here!
 		System.out.println("after date"+input);
-		addXMLID();
-		System.out.println("after ID"+input);
 		addXMLCmd();
 		System.out.println("after cmd"+input);
+		addXMLID();
+		System.out.println("after ID"+input);
 		addXMLTitleDesc();
 		System.out.println("after title"+input);
 		addXMLGarbage();

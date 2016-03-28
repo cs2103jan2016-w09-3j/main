@@ -31,7 +31,9 @@ public class IdParser {
 	}
 	
 	private boolean hasIDKey(String input){
-		if(input.contains("ID")){
+		String temp = XMLParser.removeAllAttributes(input);
+		System.out.println(temp+"TESTING");
+		if(temp.contains("ID")){
 			return true;
 		}else{
 			return false;
