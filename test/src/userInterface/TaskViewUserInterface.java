@@ -398,6 +398,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		String hashtags = "#hashtags";
 		Label hashTagLabel = new Label(hashtags);
 		hashTagLabel.setMinHeight(0);
+		hashTagLabel.setMaxWidth(_individualItemWidth - 60);
 		hashTagLabel.setFont(FONT_TASK);
 		hashTagLabel.setWrapText(true);
 		grid.add(hashTagLabel, 1, 2);
