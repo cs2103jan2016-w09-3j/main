@@ -45,17 +45,23 @@ public class InformationParser {
 			if (inputs.length == 2) {
 				if(!inputs[0].trim().isEmpty())
 				{
-					setTitle(inputs[0].trim());
+					if(!inputs[0].contains("ID")){
+						setTitle(inputs[0].trim());
+					}
 				}
 				//System.out.println(inputs[1]);
 				if(!inputs[1].trim().isEmpty())
 				{
-					setDescription(inputs[1].trim());
+					if(!inputs[1].contains("ID")){
+						setDescription(inputs[1].trim());
+					}
 				}
 			} else {
 				if (!inputs[0].trim().isEmpty()){
 					for(int i=0; i<inputs.length; i++){
-						setTitle(inputs[i].trim());
+						if(!inputs[i].contains("ID")){
+							setTitle(inputs[i].trim());
+						}
 					}
 				}
 			}

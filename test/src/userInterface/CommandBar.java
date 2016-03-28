@@ -422,6 +422,13 @@ public class CommandBar {
 		return returnVal;
 	}
 
+	public Pair<String, String> getLinkId() {
+		Pair<String,String> returnVal = null;
+		InputParser parser = new InputParser(fullInput);
+		returnVal = parser.getLinkID();
+		return returnVal;
+	}
+	
 	public void setTextFieldHandler(EventHandler<KeyEvent> mainEventHandler,
 			EventHandler<KeyEvent> secondaryEventHandler) {
 		_textField.setOnKeyPressed(mainEventHandler);
@@ -581,4 +588,6 @@ public class CommandBar {
 		}
 
 	}
+
+	
 }
