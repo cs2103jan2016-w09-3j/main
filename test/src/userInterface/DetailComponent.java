@@ -276,10 +276,11 @@ public class DetailComponent implements ViewInterface {
 		itemMain.getChildren().add(dateBox);
 
 		Text description = new Text(task.getDescription());
-		description.setWrappingWidth(_stageWidth);
+		description.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
 		description.setTextAlignment(TextAlignment.JUSTIFY);
 		itemMain.getChildren().add(description);
-		VBox.setMargin(description, new Insets(0, 20, 20, 20));
+		VBox.setMargin(description, new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS, BOTTOM_MARGIN_INDIVIDUAL_ITEMS,
+				LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS));
 		return itemMain;
 	}
 
