@@ -35,6 +35,12 @@ public class CommandBar {
 	private static final String MESSAGE_SUCCESS_EDIT = "Successfully edited %1$s.";
 	private static final String MESSAGE_FAILURE_EDIT_TYPE1 = "Fail to edit %1$s.";
 	private static final String MESSAGE_FAILURE_EDIT_TYPE2 = "Fail to retrieve task with %1$s.";
+	private static final String MESSAGE_SUCCESS_MARK = "Successfully mark %1$s as completed.";
+	private static final String MESSAGE_FAILURE_MARK = "Fail to mark %1$s as completed.";
+
+	private static final String MESSAGE_SUCCESS_SEARCH = "Search compelete.";
+	private static final String MESSAGE_FAILURE_SEARCH_TYPE1 = "No results found.";
+	private static final String MESSAGE_FAILURE_SEARCH_TYPE2 = "Search failed.";
 
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
@@ -335,6 +341,14 @@ public class CommandBar {
 				label.setId("cssCommandBarEdit");
 			} else if (cp.getCommand(commandString).equals(COMMAND.INVALID)) {
 				label.setId("cssCommandBarInvalid");
+			} else if (cp.getCommand(commandString).equals(COMMAND.JUMP)) {
+				label.setId("cssCommandJump");
+			} else if (cp.getCommand(commandString).equals(COMMAND.MARK)) {
+				label.setId("cssCommandMark");
+			} else if (cp.getCommand(commandString).equals(COMMAND.SEARCH)) {
+				label.setId("cssCommandSearch");
+			} else if (cp.getCommand(commandString).equals(COMMAND.LINK)) {
+				label.setId("cssCommandLink");
 			}
 			return label;
 		}
@@ -476,13 +490,21 @@ public class CommandBar {
 			}
 			break;
 		}
+		case MARK: {
+			if (condition) {
+				setFeedBackMessage(String.format(MESSAGE_SUCCESS_MARK, msg));
+			} else {
+				setFeedBackMessage(String.format(MESSAGE_FAILURE_MARK, msg));
+			}
+			break;
+		}
 		default:
 			break;
 		}
 	}
 
 	public void getPrevCommand() {
-		int index = _commandSelector-1;
+		int index = _commandSelector - 1;
 		if (index < preCommands.size() && index > -1) {
 			String preCommand = preCommands.get(index);
 			setFullInput(preCommand);

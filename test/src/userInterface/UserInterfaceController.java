@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 public class UserInterfaceController {
 
-	// Singeleton
+	// Singleton
 	private static int numberOfInstance = 0;
 
 	// view indicators
@@ -28,6 +28,11 @@ public class UserInterfaceController {
 	final static int FLOATING_VIEW = 4;
 	final static int SEARCH_VIEW = 5;
 	private int _previousView = -1;
+
+	// Return values
+	private static final int FAIL_TO_EXECUTE = -2;
+	private static final int SUCCESSFULLY_ADDED_DIFF = -1;
+	private static final int SUCCESSFULLY_ADDED = 1;
 
 	private Stage _parentStage;
 	private TaskViewUserInterface _taskViewInterface;
@@ -109,25 +114,12 @@ public class UserInterfaceController {
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
 		TaskEntity floatingTask = _taskManager.getRandomFloating();
 		if (floatingTask != null) {
-			_floatingBarComponent.addTask(_taskManager.getRandomFloating().getName());
 			startFloatingThread();
 		}
 	}
 
 	private void initializeSearchView() {
 		_searchViewInterface = SearchUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize);
-	}
-
-	public void startFloatingThread() {
-		_floatingThread = new FloatingBarAnimationThread(this);
-		_floatingThread.start();
-	}
-
-	public void killFloatingThread() {
-		if (_floatingThread != null) {
-			_floatingThread.cancel();
-			_floatingThread = null;
-		}
 	}
 
 	/**
@@ -287,9 +279,9 @@ public class UserInterfaceController {
 			_previousView = _currentView;
 		}
 		_currentView = SEARCH_VIEW;
-		_taskManager.switchView(TaskManager.DISPLAY_MAIN);
+		_taskManager.switchView(TaskManager.DISPLAY_SEARCH);
 		// change this
-		ArrayList<TaskEntity> searchList = null;
+		ArrayList<TaskEntity> searchList = _taskManager.getWorkingList();
 		_searchViewInterface.buildContent(searchList);
 		show();
 	}
@@ -345,6 +337,21 @@ public class UserInterfaceController {
 		return isDoneTranslating;
 	}
 
+	private void startFloatingThread() {
+		if (_floatingThread == null) {
+			_floatingBarComponent.addTask(_taskManager.getRandomFloating().getName());
+			_floatingThread = new FloatingBarAnimationThread(this);
+			_floatingThread.start();
+		}
+	}
+
+	public void killFloatingThread() {
+		if (_floatingThread != null) {
+			_floatingThread.cancel();
+			_floatingThread = null;
+		}
+	}
+
 	/**
 	 * This method is called to add a random task into the floating bar. It
 	 * starts the floating bar thread if it is not started.
@@ -396,13 +403,25 @@ public class UserInterfaceController {
 
 	public int addTask(TaskEntity task) {
 		int insertedTo = _taskManager.add(task);
-		if (insertedTo > -1) {
+		if (insertedTo > -2) {
 			updateChangesToViews(insertedTo);
-			return 1;
-		} else if (insertedTo == -1) {
-			return -1;
 		}
-		return -2;
+
+		if (insertedTo == SUCCESSFULLY_ADDED_DIFF) {
+			if (_currentView == FLOATING_VIEW) {
+				return SUCCESSFULLY_ADDED;
+			} else if (_currentView == TASK_VIEW) {
+				return SUCCESSFULLY_ADDED_DIFF;
+			}
+		} else if (insertedTo > SUCCESSFULLY_ADDED_DIFF) {
+
+			if (_currentView == FLOATING_VIEW) {
+				return SUCCESSFULLY_ADDED_DIFF;
+			} else if (_currentView == TASK_VIEW) {
+				return SUCCESSFULLY_ADDED;
+			}
+		}
+		return FAIL_TO_EXECUTE;
 	}
 
 	public int addBatchTask(ArrayList<TaskEntity> task) {
@@ -478,15 +497,21 @@ public class UserInterfaceController {
 			return false;
 		}
 	}
-	
+
 	public boolean search(String stringToSearch) {
-		//call qy side
+		// call qy side
+		_taskManager.searchString(stringToSearch);
+		showSearchView();
 		return false;
 	}
 
 	public boolean markAsCompleted(String indexZZ) {
-		int index = _taskManager.markAsDone(Utils.convertBase36ToDec(indexZZ));
-		if (index != -1) {
+		int indexInt = Utils.convertBase36ToDec(indexZZ);
+		if (indexInt == -1) {
+			return false;
+		}
+		int index = _taskManager.markAsDone(indexInt);
+		if (index > -1) {
 			updateChangesToViews(index);
 			return true;
 		}
@@ -520,15 +545,19 @@ public class UserInterfaceController {
 
 	public void updateChangesToViews(int index) {
 		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
-			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
-			updateComponents(0);
+			if (index == SUCCESSFULLY_ADDED_DIFF) {
+				startFloatingThread();
+			} else {
+				_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
+				updateComponents(0);
+			}
 		} else if (_currentView == FLOATING_VIEW) {
 			ArrayList<TaskEntity> floatingList = _taskManager.getWorkingList();
 			if (floatingList == null || floatingList.size() == 0) {
 				killFloatingThread();
 				_floatingBarComponent.clearFloatingBar();
 			} else {
-				addRandomTaskToDisplay();
+				startFloatingThread();
 			}
 			_floatingViewInterface.buildContent(floatingList);
 		}
