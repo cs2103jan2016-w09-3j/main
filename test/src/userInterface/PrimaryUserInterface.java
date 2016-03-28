@@ -195,6 +195,10 @@ public class PrimaryUserInterface extends Application {
 			} else if (cmd.equals(COMMAND.LINK)) {
 				Pair<String,String> ids = _commandBar.getLinkId();
 				executeLink(ids.getFirst(), ids.getSecond());
+			}else if (cmd.equals(COMMAND.SEARCH)) {
+				String stringToSearch = _commandBar.getSearchStr();
+				executeSearch(stringToSearch);
+				resetCommandInput();
 			}
 		} else {
 			_commandBar.onKeyReleased();
