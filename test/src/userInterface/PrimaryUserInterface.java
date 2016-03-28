@@ -3,7 +3,6 @@ package userInterface;
 import userInterface.CommandBar;
 import userInterface.UserInterfaceController;
 
-import java.awt.Event;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -18,8 +17,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -162,11 +159,7 @@ public class PrimaryUserInterface extends Application {
 		} else if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
 			COMMAND cmd = _commandBar.onEnter();
 			String t = _commandBar.getFullInput();
-			if (t.equals("float")) {
-				uiController.showFloatingView();
-				focus();
-				return;
-			} else if (t.indexOf(" ") != -1) {
+			if (t.indexOf(" ") != -1) {
 				if (t.substring(0, t.indexOf(" ")).equals("search")) {
 					String stringToSearch = t.substring(t.indexOf(" ") + 1);
 					executeSearch(stringToSearch);

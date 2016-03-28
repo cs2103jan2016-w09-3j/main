@@ -80,6 +80,18 @@
 	-fx-background-insets: 0.0 0.0 0.0 0.0;
 }
 
+#cssDetailComponentAssociateViewUnFocus
+{
+	-fx-background-color: rgba(193.0,230.0,255.0,0.95);
+	-fx-background-insets: 0.0;
+}
+
+#cssDetailComponentAssociateViewFocus
+{
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0),rgba(193.0,230.0,255.0,0.95);
+	-fx-background-insets: 0.0,2.0 2.0 2.0 2.0 ;
+}
+
 /* Floating Bar CSS */
 #cssRootFloatingBar{
 	-fx-background-color: rgba(255.0,255.0,255.0,0.7);
@@ -114,31 +126,28 @@
 	-fx-background-insets: 1.0 5.0 1.0 5.0;
 }
 
-#cssDetailComponentAssociateViewUnFocus
+/* Search View CSS */
+#cssRootSearchView
 {
-	-fx-background-color: rgba(193.0,230.0,255.0,0.95);
-	-fx-background-insets: 0.0;
+	-fx-background-color: rgba(128.0,0.0,128.0,1.0),rgba(255.0,255.0,255.0,1.0);
+	-fx-background-insets: 0.0,5.0;
 }
-
-#cssDetailComponentAssociateViewFocus
-{
-	-fx-background-color: rgba(255.0,178.5,127.5,1.0),rgba(193.0,230.0,255.0,0.95);
-	-fx-background-insets: 0.0,2.0 2.0 2.0 2.0 ;
-}
-
-#cssCommandBarMainStructure{
-	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
-}
-
 #cssSearchTitle{
 	-fx-background-color: rgba(128.0,0.0,128.0,1.0);
 }
 
 #cssSearchSelected{
-	-fx-background-color: rgba(128.0,0.0,128.0,1.0);
+	-fx-background-color: rgba(128.0,0.0,128.0,0.7);
 	-fx-background-radius: 20.0; 
 	-fx-background-insets: 1.0 5.0 1.0 5.0;
 }
+
+/* Commands CSS */
+
+#cssCommandBarMainStructure{
+	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
+}
+
 
 #cssCommandBarfeedback
 {

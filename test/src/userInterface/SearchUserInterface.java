@@ -107,7 +107,7 @@ public class SearchUserInterface implements ViewInterface {
 		_mainVbox = new StackPane();
 		_mainVbox.setPrefSize(stageWidth, stageHeight);
 		_mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
-		_mainVbox.setId("cssRoot");
+		_mainVbox.setId("cssRootSearchView");
 
 		Scene s = new Scene(_mainVbox, stageWidth, stageHeight);
 		s.setFill(Color.TRANSPARENT);
