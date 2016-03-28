@@ -173,8 +173,7 @@ public class PrimaryUserInterface extends Application {
 				} else if (t.substring(0, t.indexOf(" ")).equals("link")) {
 					String[] spilt = t.split(" ");
 					if (spilt.length == 3) {
-						uiController.link(spilt[1], spilt[2]);
-						resetCommandInput();
+						executeLink(spilt[1], spilt[2]);
 					}
 				}
 			}
@@ -400,6 +399,11 @@ public class PrimaryUserInterface extends Application {
 		} else {
 			_commandBar.showFeedBackMessage(COMMAND.SEARCH, FAILURE, TYPE_1, null);
 		}
+	}
+
+	private void executeLink(String indexZZ1, String indexZZ2) {
+		uiController.link(indexZZ1, indexZZ2);
+		resetCommandInput();
 	}
 
 	/**
