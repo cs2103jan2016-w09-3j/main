@@ -258,7 +258,7 @@ public class DetailComponent implements ViewInterface {
 		VBox itemMain = new VBox();
 		itemMain.setSpacing(10);
 		itemMain.setMinWidth(_stageWidth);
-		itemMain.setId("cssDetailComponentProjectHeadBox");
+		itemMain.setId("cssExpandedViewVBox");
 
 		Label titleLabel = new Label(task.getName());
 		titleLabel.setId("cssDetailComponentEmptyTitle");
@@ -288,7 +288,7 @@ public class DetailComponent implements ViewInterface {
 		VBox itemMain = new VBox();
 		itemMain.setSpacing(10);
 		itemMain.setMinWidth(_stageWidth);
-		itemMain.setId("cssDetailComponentProjectHeadBox");
+		itemMain.setId("cssExpandedViewVBox");
 
 		Label titleLabel = new Label(task.getName());
 		titleLabel.setId("cssDetailComponentEmptyTitle");
