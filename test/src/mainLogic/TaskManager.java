@@ -875,6 +875,43 @@ public class TaskManager {
 			return floatingTaskEntities.get(randomNum);
 		}
 	}
+	
+	public void searchForCompleted () {
+	    searchedTasks = (ArrayList<TaskEntity>) completedTaskEntities.clone();
+	}
+	
+	/**
+	 * Default function for search to not narrow the search
+	 * 
+	 * @param searchTerm - String to search for
+	 */
+	public void searchString (String searchTerm) {
+	    searchString(searchTerm, false);
+	}
+	
+    /**
+     * Searches the description, name and hashtag fields of taskentity for the
+     * string given. Non-case sensitive, populates the search view with the
+     * search results
+     * 
+     * @param searchTerm - String to search for
+     * @param narrowSearch - Set to true if you want to trim the current search
+     *            instead of searching for a new term
+     */
+	public void searchString (String searchTerm, boolean narrowSearch) {
+	    //Ensure that search is properly initialized
+	    if(searchedTasks == null) {
+	        searchedTasks = new ArrayList<TaskEntity>();
+	    }
+	    
+	    if(!narrowSearch) {
+	        searchedTasks = new ArrayList<TaskEntity>();
+	    }
+
+        SearchModule.searchStringAddToResults(searchTerm, mainTaskEntities, searchedTasks);
+        SearchModule.searchStringAddToResults(searchTerm, floatingTaskEntities, searchedTasks);
+        SearchModule.searchStringAddToResults(searchTerm, completedTaskEntities, searchedTasks);
+	}
 
 	/**
 	 * UI Interface function Undoes the last command performed by the user

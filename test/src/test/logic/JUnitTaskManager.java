@@ -166,6 +166,18 @@ public class JUnitTaskManager {
         
 
         assertEquals("Task 1, Task 9, Floating Task 1, Floating Task 2, Floating Task 3, Floating Task 9, ", manager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
+	}
+	
+	@Test
+	public void testSearchString () {
+	    manager.unloadFile();
 
+	    manager.add(new TaskEntity("Groom Cat", "Remember to bring cat to grooming salon"));
+	    manager.add(new TaskEntity("Groom Dog", "Remember to bring dog to grooming salon"));
+	    manager.add(new TaskEntity("Groom Bird", "Remember bring bird grooming salon"));
+	    manager.add(new TaskEntity("Groom Rabbit", "Remember to bring rabbit to grooming salon"));
+	    manager.searchString("to");
+	    manager.switchView(manager.DISPLAY_SEARCH);
+	    System.out.println(manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
 	}
 }

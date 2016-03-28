@@ -123,6 +123,14 @@ public class TaskManagerInterface {
     public ArrayList<TaskEntity> undo () {
         return manager.undo();
     }
+    
+    public void searchForCompleted () {
+        manager.searchForCompleted();
+    }
+    
+    public void searchString (String searchTerm) {
+        manager.searchString(searchTerm);
+    }
     public void closeTaskManager () {
         manager.closeTaskManager();
     }

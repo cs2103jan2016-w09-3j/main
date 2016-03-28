@@ -414,4 +414,8 @@ public class TaskEntity {
 		}
 		return _dueDate.get(Calendar.HOUR_OF_DAY) + ":" + _dueDate.get(Calendar.MINUTE);
 	}
+	
+	public String getHashtags () {
+	    return _hashtags;
+	}
 }
