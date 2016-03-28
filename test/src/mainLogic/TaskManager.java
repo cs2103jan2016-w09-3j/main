@@ -54,72 +54,8 @@ public class TaskManager {
 	public static void main(String[] args) {
 		TaskManager manager = TaskManager.getInstance();
 		 manager.unloadFile();
-	        
-	        ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
-	        for (int i = 0; i < 9; i++) {
-	            Calendar newDate = Calendar.getInstance();
-	            newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
-	            newList.add(new TaskEntity("Task " + Integer.toString(i + 1), newDate, false, "some desc"));
-	        }
-	        for (int i = 0; i < 9; i++) {
-	            newList.add(new TaskEntity("Floating Task " + Integer.toString(i + 1)));
-	        }
-	        
-	        manager.add(newList);
-	        
-	        manager.switchView(manager.DISPLAY_MAIN);
-	        manager.getWorkingList().get(0).markAsDone();
-	        manager.getWorkingList().get(8).markAsDone();
-	        manager.switchView(manager.DISPLAY_FLOATING);
-	        manager.getWorkingList().get(0).markAsDone();
-	        manager.getWorkingList().get(8).markAsDone();
-	        manager.buildCompletedTasks();
-	        
-	        System.out.println(manager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
 	}
-
-	/**
-	 * Testing function to print out the array contents
-	 */
-	private void printList() {
-		String output = "";
-
-		System.out.println("Display");
-		int j = 0;
-		for (int i = 0; i < displayedTasks.size(); i++) {
-			System.out.print(Utils.convertDecToBase36(i) + ". " + displayedTasks.get(i).getName() + "     ");
-			j++;
-			if (j >= 4) {
-				System.out.println();
-				j = 0;
-			}
-		}
-
-		System.out.println();
-		System.out.println("Floating");
-		j = 0;
-		for (int i = 0; i < floatingTaskEntities.size(); i++) {
-			System.out.print(Utils.convertDecToBase36(i) + ". " + floatingTaskEntities.get(i).getName() + "     ");
-			j++;
-			if (j >= 4) {
-				System.out.println();
-				j = 0;
-			}
-		}
-
-		System.out.println();
-		System.out.println("Time based");
-		j = 0;
-		for (int i = 0; i < mainTaskEntities.size(); i++) {
-			System.out.print(Utils.convertDecToBase36(i) + ". " + mainTaskEntities.get(i).getName() + "     ");
-			j++;
-			if (j >= 4) {
-				System.out.println();
-				j = 0;
-			}
-		}
-	}
-
+	
 	/**
 	 * Prints out all the names of the tasks in the main array
 	 * 

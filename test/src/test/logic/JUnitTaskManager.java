@@ -105,7 +105,7 @@ public class JUnitTaskManager {
         manager.getWorkingList().get(5).markAsDone();
         manager.getWorkingList().get(0).markAsDone();
         
-        //Building will clear the completed list first (Building is only for initialization
+        //Building will clear the completed list first (Building is only for initialization)
         manager.buildCompletedTasks();
         
         assertEquals( manager.printArrayContentsToString(manager.DISPLAY_COMPLETED), "Floating Task 1, Floating Task 6, Floating Task 9, ");
@@ -177,7 +177,25 @@ public class JUnitTaskManager {
 	    manager.add(new TaskEntity("Groom Bird", "Remember bring bird grooming salon"));
 	    manager.add(new TaskEntity("Groom Rabbit", "Remember to bring rabbit to grooming salon"));
 	    manager.searchString("to");
-	    manager.switchView(manager.DISPLAY_SEARCH);
-	    System.out.println(manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+	    assertEquals("Groom Cat, Groom Dog, Groom Rabbit, ", manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+	    manager.searchString("groOming");
+        assertEquals("Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ", manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+
+        assertEquals(false, manager.markAsDone(2));
+
+        manager.add(new TaskEntity("Do 2103 V0.4", Utils.createDate(4, 4, 2016), true, "Remember to be in before 9pm"));
+        manager.add(new TaskEntity("Do 2103 V0.3", Utils.createDate(28, 3, 2016), true));
+        manager.add(new TaskEntity("Do 2104 V0.5", Utils.createDate(11, 4, 2016), true));
+        
+        manager.searchString("remember");
+        assertEquals("Do 2103 V0.4, Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ", manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+        
+        manager.switchView(manager.DISPLAY_SEARCH);
+        
+        assertEquals(true, manager.markAsDone(2));
+        manager.searchString("remember");
+        manager.switchView(manager.DISPLAY_SEARCH);
+        assertEquals("Do 2103 V0.4, Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ", manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+        
 	}
 }

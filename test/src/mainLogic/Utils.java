@@ -154,4 +154,37 @@ public class Utils {
         }
         return false;
     }
+    
+    /**
+     * Used to generate a calendar object with the passed in parameters
+     * 
+     * @param day - Used to set DAY_OF_MONTH field in calendar
+     * @param month - Used to set MONTH field in calendar 
+     * @param year - Used to set YEAR field in the calendar
+     * 
+     * @return Calendar object with the passed in fields
+     */
+    public static Calendar createDate (int day, int month, int year) {
+        Calendar newDate = Calendar.getInstance();
+        newDate.clear();
+        newDate.set(year, month, day);
+        return newDate;
+    }
+    
+    /**
+     * Used to generate a calendar object with the passed in parameters
+     * 
+     * @param day - Used to set DAY_OF_MONTH field in calendar
+     * @param month - Used to set MONTH field in calendar 
+     * @param year - Used to set YEAR field in the calendar
+     * @param hour - Used to set HOUR_OF_DAY field in the calendar
+     * @param minutes - Used to set MINUTES field in the calendar
+     * @return
+     */
+    public static Calendar createDate (int day, int month, int year, int hour, int minutes) {
+        Calendar newDate = Calendar.getInstance();
+        newDate.clear();
+        newDate.set(year, month, day, hour, minutes);
+        return newDate;
+    }
 }
