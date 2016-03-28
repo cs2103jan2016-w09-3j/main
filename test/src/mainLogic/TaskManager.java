@@ -40,6 +40,8 @@ public class TaskManager {
     private static ArrayList<TaskEntity> completedTaskEntities = new ArrayList<TaskEntity>();
     
 	private static ArrayList<TaskEntity> searchedTasks = new ArrayList<TaskEntity>();
+	
+	private String _backupCommand;
 
 	public final static int DISPLAY_MAIN = 0;
 	public final static int DISPLAY_FLOATING = 1;
@@ -248,6 +250,16 @@ public class TaskManager {
      */
     public Queue<String> getBackedupCommands () {
         return backupHandler.retrieveCommand();
+    }
+    
+    /**
+     * Function to get command to be stored before backing it up into storage
+     * when the command succeeds
+     * 
+     * @param command - Command to be stored
+     */
+    public void storeCommandForBackup (String command) {
+        _backupCommand = command;
     }
     
     /**
@@ -864,12 +876,15 @@ public class TaskManager {
 		}
 	}
 	
-    public boolean searchForCompleted() {
+    public int searchForCompleted() {
+        if(completedTaskEntities == null) {
+            return -2;
+        }
         searchedTasks = (ArrayList<TaskEntity>) completedTaskEntities.clone();
         if (searchedTasks.size() > 0) {
-            return true;
+            return searchedTasks.size();
         } else {
-            return false;
+            return -1;
         }
     }
 	
@@ -879,7 +894,7 @@ public class TaskManager {
 	 * @param searchTerm - String to search for
 	 * @return True if there are results, false if otherwise
 	 */
-	public boolean searchString (String searchTerm) {
+	public int searchString (String searchTerm) {
 	    if( searchTerm.equalsIgnoreCase("completed") ) {
 	        return searchForCompleted();
 	    } else {
@@ -895,8 +910,11 @@ public class TaskManager {
      * @param searchTerm - String to search for
      * @param narrowSearch - Set to true if you want to trim the current search
      *            instead of searching for a new term
+     * @return -1 for no search results
+     *          -2 for search failed (null arrays being searched)
+     *          number of search results otherwise           
      */
-	public boolean searchString (String searchTerm, boolean narrowSearch) {
+	public int searchString (String searchTerm, boolean narrowSearch) {
 	    //Ensure that search is properly initialized
 	    if(searchedTasks == null) {
 	        searchedTasks = new ArrayList<TaskEntity>();
@@ -906,14 +924,18 @@ public class TaskManager {
 	        searchedTasks = new ArrayList<TaskEntity>();
 	    }
 
+        if (mainTaskEntities == null || floatingTaskEntities == null || completedTaskEntities == null) {
+            return -2;
+        }
+	    
         SearchModule.searchStringAddToResults(searchTerm, mainTaskEntities, searchedTasks);
         SearchModule.searchStringAddToResults(searchTerm, floatingTaskEntities, searchedTasks);
         SearchModule.searchStringAddToResults(searchTerm, completedTaskEntities, searchedTasks);
         
         if(searchedTasks.size() > 0) {
-            return true;
+            return searchedTasks.size();
         } else {
-            return false;
+            return -1;
         }
 	}
 

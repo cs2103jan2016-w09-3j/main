@@ -144,7 +144,7 @@ public class TaskManagerInterface {
         return manager.undo();
     }
     
-    public boolean searchString (String searchTerm) {
+    public int searchString (String searchTerm) {
         return manager.searchString(searchTerm);
     }
     public void closeTaskManager () {
