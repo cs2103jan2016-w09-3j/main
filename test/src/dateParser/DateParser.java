@@ -54,8 +54,11 @@ public class DateParser {
 				locationQuote.add(i);
 			}
 		}
+		System.out.println("test");
 		for(int i=0; i<locationQuote.size(); i=i+2){
-			inputDate = inputDate.substring(0, locationQuote.get(i))+inputDate.substring( locationQuote.get(i+1),inputDate.length()-1);
+			if(i+1<locationQuote.size()){
+				inputDate = inputDate.substring(0, locationQuote.get(i))+inputDate.substring( locationQuote.get(i+1),inputDate.length()-1);
+			}
 		}
 		inputDate = convertFormalDates(inputDate);
 		List<Date> returnDateList = new ArrayList<Date>();

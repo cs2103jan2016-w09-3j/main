@@ -238,6 +238,10 @@ public class TaskManager {
 		}
 	}
 
+    public boolean checkCrash () {
+        return false;
+    }
+    
 	/**
 	 * function to log error messages into TaskManager
 	 * 
@@ -342,6 +346,10 @@ public class TaskManager {
 	            currentDisplayedList = DISPLAY_COMPLETED;
 	            displayedTasks = (ArrayList<TaskEntity>) completedTaskEntities.clone();
 	            break;	
+		case DISPLAY_SEARCH:
+		        currentDisplayedList = DISPLAY_SEARCH;
+		        displayedTasks = (ArrayList<TaskEntity>) searchedTasks.clone();
+		        break;
 		}
 	}
 
@@ -812,17 +820,27 @@ public class TaskManager {
 		}
 	}
 	
-	public void searchForCompleted () {
-	    searchedTasks = (ArrayList<TaskEntity>) completedTaskEntities.clone();
-	}
+    public boolean searchForCompleted() {
+        searchedTasks = (ArrayList<TaskEntity>) completedTaskEntities.clone();
+        if (searchedTasks.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 	
 	/**
 	 * Default function for search to not narrow the search
 	 * 
 	 * @param searchTerm - String to search for
+	 * @return True if there are results, false if otherwise
 	 */
-	public void searchString (String searchTerm) {
-	    searchString(searchTerm, false);
+	public boolean searchString (String searchTerm) {
+	    if( searchTerm.equalsIgnoreCase("completed") ) {
+	        return searchForCompleted();
+	    } else {
+	        return searchString(searchTerm, false);
+	    }
 	}
 	
     /**
@@ -834,7 +852,7 @@ public class TaskManager {
      * @param narrowSearch - Set to true if you want to trim the current search
      *            instead of searching for a new term
      */
-	public void searchString (String searchTerm, boolean narrowSearch) {
+	public boolean searchString (String searchTerm, boolean narrowSearch) {
 	    //Ensure that search is properly initialized
 	    if(searchedTasks == null) {
 	        searchedTasks = new ArrayList<TaskEntity>();
@@ -847,6 +865,12 @@ public class TaskManager {
         SearchModule.searchStringAddToResults(searchTerm, mainTaskEntities, searchedTasks);
         SearchModule.searchStringAddToResults(searchTerm, floatingTaskEntities, searchedTasks);
         SearchModule.searchStringAddToResults(searchTerm, completedTaskEntities, searchedTasks);
+        
+        if(searchedTasks.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
 	}
 
 	/**
