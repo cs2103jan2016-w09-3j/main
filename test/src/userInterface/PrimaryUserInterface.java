@@ -379,6 +379,11 @@ public class PrimaryUserInterface extends Application {
 		}
 	}
 
+	/**
+	 * Search base on the search string input.
+	 * 
+	 * @param stringToSearch
+	 */
 	private void executeSearch(String stringToSearch) {
 		int status = uiController.executeSearch(stringToSearch);
 		if (status > -1) {
@@ -393,6 +398,12 @@ public class PrimaryUserInterface extends Application {
 		}
 	}
 
+	/**
+	 * Link param 1 to param 2 with param 1 as project head.
+	 * 
+	 * @param indexZZ1
+	 * @param indexZZ2
+	 */
 	private void executeLink(String indexZZ1, String indexZZ2) {
 		boolean isSuccess = uiController.link(indexZZ1, indexZZ2);
 		if (isSuccess) {
