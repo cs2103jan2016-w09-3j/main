@@ -138,7 +138,7 @@
 }
 
 #cssCommandBarInvalid{
-	-fx-background-color: rgba(255.0, 120.0, 120.0, 1.0);
+	-fx-text-fill:rgba(255,0,0,1);
 }
 
 #cssCommandBarDelete {
@@ -187,5 +187,9 @@
 }
 #cssCommandSearch{
 	-fx-background-color: rgba(242, 190, 134, 1.0);
+	-fx-background-radius: 7.0; 
+}
+#cssCommandLink{
+	-fx-background-color: rgba(189, 188, 188, 1.0);
 	-fx-background-radius: 7.0; 
 }

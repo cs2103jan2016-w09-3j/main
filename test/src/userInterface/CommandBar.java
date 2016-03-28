@@ -345,8 +345,10 @@ public class CommandBar {
 				label.setId("cssCommandJump");
 			} else if (cp.getCommand(commandString).equals(COMMAND.MARK)) {
 				label.setId("cssCommandMark");
-			}else if (cp.getCommand(commandString).equals(COMMAND.SEARCH)) {
+			} else if (cp.getCommand(commandString).equals(COMMAND.SEARCH)) {
 				label.setId("cssCommandSearch");
+			} else if (cp.getCommand(commandString).equals(COMMAND.LINK)) {
+				label.setId("cssCommandLink");
 			}
 			return label;
 		}
