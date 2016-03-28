@@ -10,6 +10,7 @@ import org.junit.Test;
 import entity.TaskEntity;
 import mainLogic.TaskManager;
 import mainLogic.TaskManagerInterface;
+import mainLogic.Utils;
 
 public class JUnitTaskManagerInterface {
 
@@ -122,7 +123,34 @@ public class JUnitTaskManagerInterface {
         manager.add(new TaskEntity("Groom Bird", "Remember bring bird grooming salon"));
         manager.add(new TaskEntity("Groom Rabbit", "Remember to bring rabbit to grooming salon"));
         manager.searchString("to");
+        assertEquals("Groom Cat, Groom Dog, Groom Rabbit, ", taskmanager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+        manager.searchString("groOming");
+        assertEquals("Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ", taskmanager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+
+        assertEquals(-2, manager.markAsDone(2));
+        
+        System.out.println(taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING));
+        System.out.println(taskmanager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
+
+        manager.add(new TaskEntity("Do 2103 V0.4", Utils.createDate(4, 4, 2016), true, "Remember to be in before 9pm"));
+        manager.add(new TaskEntity("Do 2103 V0.3", Utils.createDate(28, 3, 2016), true));
+        manager.add(new TaskEntity("Do 2104 V0.5", Utils.createDate(11, 4, 2016), true));
+        
+        manager.searchString("remember");
+        assertEquals("Do 2103 V0.4, Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ", taskmanager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+        
+        manager.switchView(manager.DISPLAY_FLOATING);
+        assertEquals(1, manager.markAsDone(1));
+        
         manager.switchView(manager.DISPLAY_SEARCH);
-        System.out.println(taskmanager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+        
+        
+        manager.searchString("remember");
+        manager.switchView(manager.DISPLAY_SEARCH);
+        assertEquals("Do 2103 V0.4, Groom Cat, Groom Bird, Groom Rabbit, Groom Dog, ", taskmanager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+        
+        manager.searchString("completed");
+        manager.switchView(manager.DISPLAY_SEARCH);
+        assertEquals("Groom Dog, ", taskmanager.printArrayContentsToString(manager.DISPLAY_OTHERS));
     }
 }

@@ -210,6 +210,9 @@ public class TaskEntity {
 	}
 
     public void addHashtag (String newTag) {
+        if(_hashtags == null) {
+            _hashtags = "";
+        }
         _hashtags += newTag;
     }
     
@@ -272,8 +275,10 @@ public class TaskEntity {
 			TaskEntity prevProjectHead = getAssociations().get(0);
 			prevProjectHead.getAssociations().remove(this);
 			return true;
-		} else {
+		} else if (getAssociationState() == TaskEntity.PROJECT_HEAD){ 
 			return false;
+		} else {
+		    return false;
 		}
 	}
 
@@ -386,6 +391,9 @@ public class TaskEntity {
 	}
 
 	public String getDescription() {
+	    if(_description == null) {
+	        _description = "";
+	    }
 		return _description;
 	}
 
@@ -416,6 +424,9 @@ public class TaskEntity {
 	}
 	
 	public String getHashtags () {
+	    if(_hashtags == null) {
+	        _hashtags = "";
+	    }
 	    return _hashtags;
 	}
 }

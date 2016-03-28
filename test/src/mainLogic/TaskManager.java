@@ -771,6 +771,8 @@ public class TaskManager {
     public boolean link(int projectHeadId, int taskUnderId) {
         if (projectHeadId >= displayedTasks.size() || taskUnderId >= displayedTasks.size()) {
             return false;
+        } else if (projectHeadId == taskUnderId) {
+            return false;
         } else {
             return link(displayedTasks.get(projectHeadId), displayedTasks.get(taskUnderId));
         }
