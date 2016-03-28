@@ -166,11 +166,6 @@ public class PrimaryUserInterface extends Application {
 				if (t.substring(0, t.indexOf(" ")).equals("mark")) {
 					String indexToMarkComplete = t.substring(t.indexOf(" ") + 1);
 					executeMarkComplete(indexToMarkComplete);
-				} else if (t.substring(0, t.indexOf(" ")).equals("jump")) {
-					String indexToJump = t.substring(t.indexOf(" ") + 1);
-					executeJump(indexToJump);
-					resetCommandInput();
-					return;
 				} else if (t.substring(0, t.indexOf(" ")).equals("search")) {
 					String stringToSearch = t.substring(t.indexOf(" ") + 1);
 					executeSearch(stringToSearch);
@@ -210,7 +205,11 @@ public class PrimaryUserInterface extends Application {
 			} else if (cmd.equals(COMMAND.FLOAT)) {
 				uiController.showFloatingView();
 				resetCommandInput();
-			}
+			}else if (cmd.equals(COMMAND.JUMP)) {
+				executeJump();
+				resetCommandInput();
+				return;
+			} 
 		} else {
 			_commandBar.onKeyReleased();
 		}
@@ -380,7 +379,8 @@ public class PrimaryUserInterface extends Application {
 	 *            : base36 format
 	 * @return boolean, true if value found, false it value not found
 	 */
-	public void executeJump(String indexToJump) {
+	public void executeJump() {
+		String indexToJump = _commandBar.getId();
 		boolean success = uiController.jumpToIndex(indexToJump);
 		if (success) {
 			resetCommandInput();
