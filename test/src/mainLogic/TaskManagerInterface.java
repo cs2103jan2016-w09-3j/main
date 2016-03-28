@@ -124,12 +124,8 @@ public class TaskManagerInterface {
         return manager.undo();
     }
     
-    public void searchForCompleted () {
-        manager.searchForCompleted();
-    }
-    
-    public void searchString (String searchTerm) {
-        manager.searchString(searchTerm);
+    public boolean searchString (String searchTerm) {
+        return manager.searchString(searchTerm);
     }
     public void closeTaskManager () {
         manager.closeTaskManager();
