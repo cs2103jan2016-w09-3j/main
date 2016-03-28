@@ -423,7 +423,6 @@ public class CommandBar {
 	}
 	public String getSearchStr() {
 		InputParser parser = new InputParser(fullInput);
-		System.out.println(parser.getSearchString());
 		return parser.getSearchString();
 	}
 
