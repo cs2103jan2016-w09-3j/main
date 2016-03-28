@@ -357,9 +357,11 @@ public class UserInterfaceController {
 
 	private void startFloatingThread() {
 		if (_floatingThread == null) {
-			_floatingBarComponent.addTask(_taskManager.getRandomFloating().getName());
-			_floatingThread = new FloatingBarAnimationThread(this);
-			_floatingThread.start();
+			if (_taskManager.getRandomFloating() != null) {
+				_floatingBarComponent.addTask(_taskManager.getRandomFloating().getName());
+				_floatingThread = new FloatingBarAnimationThread(this);
+				_floatingThread.start();
+			}
 		}
 	}
 
@@ -572,10 +574,9 @@ public class UserInterfaceController {
 		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
 			if (index == SUCCESSFULLY_ADDED_DIFF) {
 				startFloatingThread();
-			} else {
-				_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
-				updateComponents(0);
 			}
+			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
+			updateComponents(0);
 		} else if (_currentView == FLOATING_VIEW) {
 			ArrayList<TaskEntity> floatingList = _taskManager.getWorkingList();
 			if (floatingList == null || floatingList.size() == 0) {
