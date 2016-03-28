@@ -270,13 +270,26 @@ public class TaskEntity {
 		_association_status = ASSOCIATED;
 	}
 
+	/**
+	 * Called when the project head is deleted
+	 * 
+	 * @return
+	 */
+	public void disassociateFromDeletedProject () {
+	    _association_status = TaskEntity.NOT_ASSOCIATED;
+	    _associations.clear();
+	}
+	
 	public boolean removeSelfFromProject() {
 		if (getAssociationState() == TaskEntity.ASSOCIATED) {
 			TaskEntity prevProjectHead = getAssociations().get(0);
 			prevProjectHead.getAssociations().remove(this);
 			return true;
 		} else if (getAssociationState() == TaskEntity.PROJECT_HEAD){ 
-			return false;
+			for(int i = 0; i < _associations.size(); i++) {
+			    _associations.get(i).disassociateFromDeletedProject();
+			}
+			return true;
 		} else {
 		    return false;
 		}
