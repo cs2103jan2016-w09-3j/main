@@ -200,6 +200,10 @@ public class InputParser {
 		return idParser.getID(XMLParser.removeAllTags(input));
 	}
 	
+	public Pair<String,String> getLinkID(){
+		return idParser.getLinkID(XMLParser.removeAllTags(input));
+	}
+	
 	public static void main(String args[]) {
 		while (true) {
 			Scanner sc = new Scanner(System.in);

@@ -9,6 +9,7 @@ import java.util.Calendar;
 
 import dateParser.CommandParser.COMMAND;
 import dateParser.InputParser;
+import dateParser.Pair;
 import entity.TaskEntity;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -171,11 +172,6 @@ public class PrimaryUserInterface extends Application {
 					executeSearch(stringToSearch);
 					resetCommandInput();
 					return;
-				} else if (t.substring(0, t.indexOf(" ")).equals("link")) {
-					String[] spilt = t.split(" ");
-					if (spilt.length == 3) {
-						executeLink(spilt[1], spilt[2]);
-					}
 				}
 			}
 
@@ -211,6 +207,9 @@ public class PrimaryUserInterface extends Application {
 			} else if (cmd.equals(COMMAND.DONE)) {
 				String indexToMarkComplete = _commandBar.getId();
 				executeMarkComplete(indexToMarkComplete);
+			} else if (cmd.equals(COMMAND.LINK)) {
+				Pair<String,String> ids = _commandBar.getLinkId();
+				executeLink(ids.getFirst(), ids.getSecond());
 			}
 		} else {
 			_commandBar.onKeyReleased();
