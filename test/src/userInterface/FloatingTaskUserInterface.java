@@ -106,7 +106,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		_mainVbox = new StackPane();
 		_mainVbox.setPrefSize(stageWidth, stageHeight);
 		_mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
-		_mainVbox.setId("cssRoot");
+		_mainVbox.setId("cssRootFloatingTaskView");
 
 		Scene s = new Scene(_mainVbox, stageWidth, stageHeight);
 		s.setFill(Color.TRANSPARENT);
@@ -175,7 +175,6 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		_secondaryVbox = new VBox();
 		_secondaryVbox.setMinHeight(_stageHeight - LABEL_TITLE_HEIGHT);
 		_secondaryVbox.setMaxHeight(_stageHeight - LABEL_TITLE_HEIGHT);
-		_secondaryVbox.setId("cssFloatingViewSecondaryBox");
 		
 		_mainVbox.getChildren().add(_secondaryVbox);
 		HBox labelTitle = buildTilteLabel();
@@ -197,7 +196,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 
 	public HBox buildTilteLabel() {
 		HBox titleLableBox = new HBox();
-		titleLableBox.setId("cssFloatingTitle");
+		titleLableBox.setId("cssFloatingTaskViewTitle");
 		titleLableBox.setMinWidth(_stageWidth);
 		titleLableBox.setMinHeight(LABEL_TITLE_HEIGHT);
 		titleLableBox.setMaxHeight(LABEL_TITLE_HEIGHT);
@@ -272,7 +271,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 			prevItem.setId("");
 			_selectedIndex = temp;
 			HBox item = _floatingBoxes.get(_selectedIndex - _startIndex);
-			item.setId("cssFloatingSelected");
+			item.setId("cssFloatingTaskViewSelected");
 			translateY(getTopHeight(_selectedIndex - _startIndex));
 		}
 	}

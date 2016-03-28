@@ -37,10 +37,10 @@ public class CommandBar {
 	private static final String MESSAGE_FAILURE_EDIT_TYPE2 = "Fail to retrieve task with %1$s.";
 	private static final String MESSAGE_SUCCESS_MARK = "Successfully mark %1$s as completed.";
 	private static final String MESSAGE_FAILURE_MARK = "Fail to mark %1$s as completed.";
-
 	private static final String MESSAGE_SUCCESS_SEARCH = "Search compelete.";
 	private static final String MESSAGE_FAILURE_SEARCH_TYPE1 = "No results found.";
 	private static final String MESSAGE_FAILURE_SEARCH_TYPE2 = "Search failed.";
+	private static final String MESSAGE_FAILURE_JUMP = "No index to jump to.";
 
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
@@ -108,7 +108,6 @@ public class CommandBar {
 		_mainPane = new GridPane();
 		_mainPane.setMinHeight(_mainPaneHeight);
 		_mainPane.setMaxHeight(_mainPaneHeight);
-		_mainPane.setStyle("-fx-background-color: #FFFFFF;");
 		_mainPane.setAlignment(Pos.CENTER_LEFT);
 		_mainPane.setHgap(GAP_SIZE);
 		VBox.setMargin(_mainPane, new Insets(0, MAIN_PANE_LEFT_RIGHT_MARGIN, 0, MAIN_PANE_LEFT_RIGHT_MARGIN));
@@ -547,6 +546,12 @@ public class CommandBar {
 				} else {
 					setFeedBackMessage(String.format(MESSAGE_FAILURE_SEARCH_TYPE2, msg));
 				}
+			}
+			break;
+		}
+		case JUMP: {
+			if (!condition) {
+				setFeedBackMessage(MESSAGE_FAILURE_JUMP);
 			}
 			break;
 		}

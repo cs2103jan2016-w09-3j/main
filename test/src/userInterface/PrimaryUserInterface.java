@@ -386,8 +386,7 @@ public class PrimaryUserInterface extends Application {
 		if (success) {
 			resetCommandInput();
 		} else {
-			// change to jump _commandBar.showFeedBackMessage(COMMAND.EDIT,
-			// FAILURE, TYPE_1);
+			_commandBar.showFeedBackMessage(COMMAND.JUMP,FAILURE, TYPE_1, indexToJump);
 		}
 	}
 

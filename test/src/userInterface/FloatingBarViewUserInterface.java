@@ -67,7 +67,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		_mainHBox.setPrefHeight(_stageHeight);
 		_mainHBox.setMaxHeight(_stageHeight);
 		_mainHBox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
-		_mainHBox.setId("cssRoot");
+		_mainHBox.setId("cssRootFloatingBar");
 
 		Scene scene = new Scene(_mainHBox, windowWidth, windowHeight, Color.TRANSPARENT);
 		scene.setFill(Color.TRANSPARENT);
@@ -80,7 +80,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		Label floatTitleLabel = new Label("Floating task of the day");
 		floatTitleLabel.setMinHeight(_stageHeight);
 		floatTitleLabel.setMinWidth(LABEL_TITLE_WIDTH);
-		floatTitleLabel.setId("cssFloatingTitleLabel");
+		floatTitleLabel.setId("cssFloatingBarTitleLabel");
 		floatTitleLabel.setAlignment(Pos.CENTER);
 		floatTitleLabel.setFont(FONT_LABEL_TITLE);
 

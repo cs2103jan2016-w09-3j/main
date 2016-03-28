@@ -52,17 +52,7 @@
 	-fx-background-color: rgba(255.0,255.0,255.0,0.7),rgba(193.0,230.0,255.0,0.95);
 }
 
-#cssFloatingTask
-{
-	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
-	-fx-background-insets: 2.0;
-}
 
-#cssFloatingTitleLabel
-{
-	-fx-background-color: rgba(255.0,255.0,255.0,1.0), rgba(255.0,178.5,127.5,1.0);
-	-fx-background-insets: 2.0, 0.0 10.0 0.0 235.0;
-}
 
 #cssDetailComponentEmptyTitle {
 		-fx-background-color: rgba(255.0,178.5,127.5,1.0);	
@@ -90,13 +80,37 @@
 	-fx-background-insets: 0.0 0.0 0.0 0.0;
 }
 
-#cssFloatingTitle
+/* Floating Bar CSS */
+#cssRootFloatingBar{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.7);
+}
+
+#cssFloatingTask
+{
+	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
+	-fx-background-insets: 2.0;
+}
+
+#cssFloatingBarTitleLabel
+{
+	-fx-background-color: rgba(255.0,255.0,255.0,1.0), rgba(255.0,178.5,127.5,1.0);
+	-fx-background-insets: 2.0, 0.0 10.0 0.0 235.0;
+}
+
+/* Floating Task View CSS */
+
+#cssRootFloatingTaskView{
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0),rgba(255.0,255.0,255.0,1.0);
+	-fx-background-insets: 0.0,5.0;
+}
+
+#cssFloatingTaskViewTitle
 {
 	-fx-background-color: rgba(255.0,178.5,127.5,1.0);
 }
-#cssFloatingSelected{
+#cssFloatingTaskViewSelected{
 	-fx-background-radius: 20.0; 
-	-fx-background-color:  rgba(255.0,178.5,127.5,1.0);
+	-fx-background-color:  rgba(255.0,178.5,127.5,0.8);
 	-fx-background-insets: 1.0 5.0 1.0 5.0;
 }
 
