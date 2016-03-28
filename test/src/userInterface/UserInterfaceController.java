@@ -406,6 +406,7 @@ public class UserInterfaceController {
 			showMainView(-1);
 		}
 		int insertedTo = _taskManager.add(task);
+		System.out.println("insertedTo " + insertedTo);
 		if (insertedTo > -2) {
 			updateChangesToViews(insertedTo);
 		}
@@ -413,7 +414,7 @@ public class UserInterfaceController {
 		if (insertedTo == SUCCESSFULLY_ADDED_DIFF) {
 			if (_currentView == FLOATING_VIEW) {
 				return SUCCESSFULLY_ADDED;
-			} else if (_currentView == TASK_VIEW) {
+			} else if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
 				return SUCCESSFULLY_ADDED_DIFF;
 			} else if (_currentView == SEARCH_VIEW) {
 				return -5;
@@ -422,7 +423,7 @@ public class UserInterfaceController {
 
 			if (_currentView == FLOATING_VIEW) {
 				return SUCCESSFULLY_ADDED_DIFF;
-			} else if (_currentView == TASK_VIEW) {
+			} else if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
 				return SUCCESSFULLY_ADDED;
 			}
 		}
