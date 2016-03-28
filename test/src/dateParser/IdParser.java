@@ -43,7 +43,6 @@ public class IdParser {
 	}
 	public String xmlID(String input) {
 		getID(input);
-		System.out.println(id + " ete "+id2);
 		if (id2 != null) {
 			input = input.replace("ID" + id+"-ID"+id2, "<ID>ID" + id +"-ID"+id2+ "</ID>");
 		} else if (id != null) {

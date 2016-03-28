@@ -421,6 +421,11 @@ public class CommandBar {
 		returnVal = parser.getID();
 		return returnVal;
 	}
+	public String getSearchStr() {
+		InputParser parser = new InputParser(fullInput);
+		System.out.println(parser.getSearchString());
+		return parser.getSearchString();
+	}
 
 	public Pair<String, String> getLinkId() {
 		Pair<String,String> returnVal = null;
@@ -590,6 +595,8 @@ public class CommandBar {
 		}
 
 	}
+
+	
 
 	
 }
