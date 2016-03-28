@@ -393,12 +393,12 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	private void executeSearch(String stringToSearch) {
-		boolean success = uiController.search(stringToSearch);
+		boolean success = uiController.executeSearch(stringToSearch);
 		if (success) {
 			resetCommandInput();
-
+			_commandBar.showFeedBackMessage(COMMAND.SEARCH, SUCCESS, TYPE_1, null);
 		} else {
-
+			_commandBar.showFeedBackMessage(COMMAND.SEARCH, FAILURE, TYPE_1, null);
 		}
 	}
 

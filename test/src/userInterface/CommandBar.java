@@ -333,22 +333,62 @@ public class CommandBar {
 			String commandString = text.get(0);
 			Label label = buildLabelSkeleton();
 			label.setText(commandString);
-			if (cp.getCommand(commandString).equals(COMMAND.ADD)) {
+			COMMAND cmd = cp.getCommand(commandString);
+			switch (cmd) {
+			case ADD: {
 				label.setId("cssCommandBarAdd");
-			} else if (cp.getCommand(commandString).equals(COMMAND.DELETE)) {
+				break;
+			}
+			case DELETE: {
 				label.setId("cssCommandBarDelete");
-			} else if (cp.getCommand(commandString).equals(COMMAND.EDIT)) {
+				break;
+			}
+			case EDIT: {
 				label.setId("cssCommandBarEdit");
-			} else if (cp.getCommand(commandString).equals(COMMAND.INVALID)) {
+				break;
+			}
+			case INVALID: {
 				label.setId("cssCommandBarInvalid");
-			} else if (cp.getCommand(commandString).equals(COMMAND.JUMP)) {
+				break;
+			}
+			case JUMP: {
 				label.setId("cssCommandJump");
-			} else if (cp.getCommand(commandString).equals(COMMAND.MARK)) {
+				break;
+			}
+			case MARK: {
 				label.setId("cssCommandMark");
-			} else if (cp.getCommand(commandString).equals(COMMAND.SEARCH)) {
+				break;
+			}
+			case SEARCH: {
 				label.setId("cssCommandSearch");
-			} else if (cp.getCommand(commandString).equals(COMMAND.LINK)) {
+				break;
+			}
+			case LINK: {
 				label.setId("cssCommandLink");
+				break;
+			}
+			case EXIT: {
+				label.setId("cssCommandExit");
+				break;
+			}
+			case FLOAT: {
+				label.setId("cssCommandFloat");
+				break;
+			}
+			case MAIN: {
+				label.setId("cssCommandMain");
+				break;
+			}
+			case HIDE: {
+				label.setId("cssCommandHide");
+				break;
+			}
+			case SHOW: {
+				label.setId("cssCommandShow");
+				break;
+			}
+			default:
+				break;
 			}
 			return label;
 		}
@@ -495,6 +535,18 @@ public class CommandBar {
 				setFeedBackMessage(String.format(MESSAGE_SUCCESS_MARK, msg));
 			} else {
 				setFeedBackMessage(String.format(MESSAGE_FAILURE_MARK, msg));
+			}
+			break;
+		}
+		case SEARCH: {
+			if (condition) {
+				setFeedBackMessage(String.format(MESSAGE_SUCCESS_SEARCH, msg));
+			} else {
+				if (type == PrimaryUserInterface.TYPE_1) {
+					setFeedBackMessage(String.format(MESSAGE_FAILURE_SEARCH_TYPE1, msg));
+				} else {
+					setFeedBackMessage(String.format(MESSAGE_FAILURE_SEARCH_TYPE2, msg));
+				}
 			}
 			break;
 		}

@@ -498,10 +498,12 @@ public class UserInterfaceController {
 		}
 	}
 
-	public boolean search(String stringToSearch) {
-		// call qy side
-		_taskManager.searchString(stringToSearch);
-		showSearchView();
+	public boolean executeSearch(String stringToSearch) {
+		boolean isSuccess = _taskManager.searchString(stringToSearch);
+		if (isSuccess) {
+			showSearchView();
+			return true;
+		}
 		return false;
 	}
 
