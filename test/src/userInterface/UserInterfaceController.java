@@ -577,10 +577,13 @@ public class UserInterfaceController {
 			}
 			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
 			_taskViewInterface.update(0);
+			_taskViewInterface.setView(_currentView);
+			_detailComponent.setView(_currentView);
 			TaskEntity selectedTask = _taskViewInterface.setItemSelected(0);
 			_detailComponent.buildComponent(selectedTask);
 			translateComponentsY(_taskViewInterface.getTranslationY());
 			updateDescriptionComponent();
+			
 		} else if (_currentView == FLOATING_VIEW) {
 			ArrayList<TaskEntity> floatingList = _taskManager.getWorkingList();
 			if (floatingList == null || floatingList.size() == 0) {

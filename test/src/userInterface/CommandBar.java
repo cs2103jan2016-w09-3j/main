@@ -28,7 +28,7 @@ public class CommandBar {
 	private static final String MESSAGE_SUCCESS_ADD_TYPE1 = "Successfully added %1$s to task list.";
 	private static final String MESSAGE_SUCCESS_ADD_TYPE2 = "Successfully added %1$s to floating task list.";
 	private static final String MESSAGE_SUCCESS_ADD_TYPE3 = "Successfully added %1$s to list.";
-	
+
 	private static final String MESSAGE_FAILURE_ADD = "Fail to add.";
 	private static final String MESSAGE_SUCCESS_DELETE = "Successfully deleted %1$s.";
 	private static final String MESSAGE_FAILURE_DELETE = "Fail to delete %1$s.";
@@ -42,6 +42,8 @@ public class CommandBar {
 	private static final String MESSAGE_FAILURE_SEARCH_TYPE1 = "No results found.";
 	private static final String MESSAGE_FAILURE_SEARCH_TYPE2 = "Search failed.";
 	private static final String MESSAGE_FAILURE_JUMP = "No index to jump to.";
+	private static final String MESSAGE_SUCCESS_LINK = "Linked successfully.";
+	private static final String MESSAGE_FAILURE_LINK = "Failed to link.";
 
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
@@ -421,18 +423,19 @@ public class CommandBar {
 		returnVal = parser.getID();
 		return returnVal;
 	}
+
 	public String getSearchStr() {
 		InputParser parser = new InputParser(fullInput);
 		return parser.getSearchString();
 	}
 
 	public Pair<String, String> getLinkId() {
-		Pair<String,String> returnVal = null;
+		Pair<String, String> returnVal = null;
 		InputParser parser = new InputParser(fullInput);
 		returnVal = parser.getLinkID();
 		return returnVal;
 	}
-	
+
 	public void setTextFieldHandler(EventHandler<KeyEvent> mainEventHandler,
 			EventHandler<KeyEvent> secondaryEventHandler) {
 		_textField.setOnKeyPressed(mainEventHandler);
@@ -569,9 +572,18 @@ public class CommandBar {
 			}
 			break;
 		}
+		case LINK: {
+			if (!condition) {
+				setFeedBackMessage(MESSAGE_FAILURE_LINK);
+			} else {
+				setFeedBackMessage(MESSAGE_SUCCESS_LINK);
+			}
+			break;
+		}
 		default:
 			break;
 		}
+
 	}
 
 	public void getPrevCommand() {
@@ -595,7 +607,4 @@ public class CommandBar {
 
 	}
 
-	
-
-	
 }

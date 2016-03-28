@@ -158,7 +158,6 @@ public class PrimaryUserInterface extends Application {
 			_commandBar.deleteKey();
 		} else if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
 			COMMAND cmd = _commandBar.onEnter();
-			
 
 			if (cmd.equals(COMMAND.EXIT)) {
 				uiController.saveStuff();
@@ -193,9 +192,9 @@ public class PrimaryUserInterface extends Application {
 				String indexToMarkComplete = _commandBar.getId();
 				executeMarkComplete(indexToMarkComplete);
 			} else if (cmd.equals(COMMAND.LINK)) {
-				Pair<String,String> ids = _commandBar.getLinkId();
+				Pair<String, String> ids = _commandBar.getLinkId();
 				executeLink(ids.getFirst(), ids.getSecond());
-			}else if (cmd.equals(COMMAND.SEARCH)) {
+			} else if (cmd.equals(COMMAND.SEARCH)) {
 				String stringToSearch = _commandBar.getSearchStr();
 				executeSearch(stringToSearch);
 			}
@@ -395,8 +394,13 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	private void executeLink(String indexZZ1, String indexZZ2) {
-		uiController.link(indexZZ1, indexZZ2);
-		resetCommandInput();
+		boolean isSuccess = uiController.link(indexZZ1, indexZZ2);
+		if (isSuccess) {
+			_commandBar.showFeedBackMessage(COMMAND.LINK, SUCCESS, TYPE_1, null);
+			resetCommandInput();
+		} else {
+			_commandBar.showFeedBackMessage(COMMAND.LINK, FAILURE, TYPE_1, null);
+		}
 	}
 
 	/**
