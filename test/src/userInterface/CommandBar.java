@@ -58,6 +58,8 @@ public class CommandBar {
 	private int _numberOfItems = 0;
 	private int _selected;
 	private ArrayList<Label> labels = new ArrayList<Label>();
+	private ArrayList<String> preCommands = new ArrayList<String>();
+	private int _commandSelector;
 
 	private ArrayList<String> _allSessionCmds = new ArrayList<String>();
 	private String fullInput = "";
@@ -341,6 +343,8 @@ public class CommandBar {
 
 	public COMMAND onEnter() {
 		onKeyReleased();
+		preCommands.add(fullInput);
+		_commandSelector = preCommands.size();
 		InputParser parser = new InputParser(fullInput);
 		COMMAND cmd = parser.getCommand();
 		return cmd;
@@ -475,5 +479,26 @@ public class CommandBar {
 		default:
 			break;
 		}
+	}
+
+	public void getPrevCommand() {
+		int index = _commandSelector-1;
+		if (index < preCommands.size() && index > -1) {
+			String preCommand = preCommands.get(index);
+			setFullInput(preCommand);
+			onKeyReleased();
+			_commandSelector = index;
+		}
+	}
+
+	public void getNextCommand() {
+		int index = _commandSelector + 1;
+		if (index < preCommands.size() && index > -1) {
+			String preCommand = preCommands.get(index);
+			setFullInput(preCommand);
+			onKeyReleased();
+			_commandSelector = index;
+		}
+
 	}
 }

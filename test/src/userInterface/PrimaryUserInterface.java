@@ -140,7 +140,7 @@ public class PrimaryUserInterface extends Application {
 		_commandBar.setFullInput("");
 		_commandBar.onKeyReleased();
 		uiController.markAsCompleted(indexZZ);
-		focus();
+		resetCommandInput();
 		return false;
 	}
 
@@ -160,8 +160,8 @@ public class PrimaryUserInterface extends Application {
 			String t = _commandBar.getFullInput();
 			if (t.equals("float")) {
 				uiController.showFloatingView();
-				textField.setText("");
 				focus();
+				return;
 			} else if (t.indexOf(" ") != -1) {
 				if (t.substring(0, t.indexOf(" ")).equals("mark")) {
 					String indexToMarkComplete = t.substring(t.indexOf(" ") + 1);
@@ -169,12 +169,18 @@ public class PrimaryUserInterface extends Application {
 				} else if (t.substring(0, t.indexOf(" ")).equals("jump")) {
 					String indexToJump = t.substring(t.indexOf(" ") + 1);
 					executeJump(indexToJump);
+					resetCommandInput();
+					return;
+				} else if (t.substring(0, t.indexOf(" ")).equals("search")) {
+					String stringToSearch = t.substring(t.indexOf(" ") + 1);
+					executeSearch(stringToSearch);
+					resetCommandInput();
 					return;
 				} else if (t.substring(0, t.indexOf(" ")).equals("link")) {
 					String[] spilt = t.split(" ");
 					if (spilt.length == 3) {
-						System.out.println("link " + spilt[1] + " to " + spilt[2]);
 						uiController.link(spilt[1], spilt[2]);
+						resetCommandInput();
 					}
 				}
 			}
@@ -213,6 +219,14 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	private void processControls(KeyEvent event) {
+		if (event.getCode().compareTo(KeyCode.UP) == 0 && !event.isControlDown() && !event.isShiftDown()) {
+			_commandBar.getPrevCommand();
+		}
+		
+		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && !event.isControlDown() && !event.isShiftDown()) {
+			_commandBar.getNextCommand();
+		}
+
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
 			uiController.move(-1);
 		}
@@ -373,6 +387,14 @@ public class PrimaryUserInterface extends Application {
 		} else {
 			// change to jump _commandBar.showFeedBackMessage(COMMAND.EDIT,
 			// FAILURE, TYPE_1);
+		}
+	}
+
+	private void executeSearch(String stringToSearch) {
+		boolean success = uiController.search(stringToSearch);
+		if (success) {
+			resetCommandInput();
+		} else {
 		}
 	}
 

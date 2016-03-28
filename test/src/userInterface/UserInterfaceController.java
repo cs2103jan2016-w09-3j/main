@@ -478,6 +478,11 @@ public class UserInterfaceController {
 			return false;
 		}
 	}
+	
+	public boolean search(String stringToSearch) {
+		//call qy side
+		return false;
+	}
 
 	public boolean markAsCompleted(String indexZZ) {
 		int index = _taskManager.markAsDone(Utils.convertBase36ToDec(indexZZ));
