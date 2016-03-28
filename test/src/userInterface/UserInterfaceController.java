@@ -576,7 +576,11 @@ public class UserInterfaceController {
 				startFloatingThread();
 			}
 			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
-			updateComponents(0);
+			_taskViewInterface.update(0);
+			TaskEntity selectedTask = _taskViewInterface.setItemSelected(0);
+			_detailComponent.buildComponent(selectedTask);
+			translateComponentsY(_taskViewInterface.getTranslationY());
+			updateDescriptionComponent();
 		} else if (_currentView == FLOATING_VIEW) {
 			ArrayList<TaskEntity> floatingList = _taskManager.getWorkingList();
 			if (floatingList == null || floatingList.size() == 0) {
