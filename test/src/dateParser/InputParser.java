@@ -87,18 +87,18 @@ public class InputParser {
 
 		COMMAND given =cmdParser.getCommand(input);
 		System.out.println("before"+input);
-		addXMLDate();//problem with quotes lie here!
+		//addXMLDate();//problem with quotes lie here!
 		System.out.println("after date"+input);
-		addXMLCmd();
+		//addXMLCmd();
 		System.out.println("after cmd"+input);
 		if(given != COMMAND.SEARCH){
 			addXMLID();
-			System.out.println("after ID"+input);
+			//System.out.println("after ID"+input);
 			addXMLTitleDesc();
-			System.out.println("after title"+input);
+			//System.out.println("after title"+input);
 		}
 		addXMLGarbage();
-		System.out.println("after"+input);
+		//System.out.println("after"+input);
 		
 	}
 	
