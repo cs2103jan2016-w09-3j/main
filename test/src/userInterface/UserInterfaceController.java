@@ -280,7 +280,6 @@ public class UserInterfaceController {
 		}
 		_currentView = SEARCH_VIEW;
 		_taskManager.switchView(TaskManager.DISPLAY_SEARCH);
-		// change this
 		ArrayList<TaskEntity> searchList = _taskManager.getWorkingList();
 		_searchViewInterface.buildContent(searchList);
 		show();
@@ -317,7 +316,7 @@ public class UserInterfaceController {
 
 	public void reBuildFrontView(int index) {
 		int selelcted = 0;
-		if (index == -5) {
+		if (index < 0) {
 			selelcted = _taskViewInterface.getSelectIndex();
 			if (!(selelcted < _taskManager.getWorkingList().size() && selelcted > -1)) {
 				selelcted = 0;
@@ -575,13 +574,18 @@ public class UserInterfaceController {
 		return false;
 	}
 
+	/**
+	 * This method is called upon a command execution to update the views.
+	 * 
+	 * @param index
+	 *            - determines if the command executed is in the selected view.
+	 */
 	public void updateChangesToViews(int index) {
 		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
 			if (index == SUCCESSFULLY_ADDED_DIFF) {
 				startFloatingThread();
 			}
 			reBuildFrontView(index);
-
 		} else if (_currentView == FLOATING_VIEW) {
 			ArrayList<TaskEntity> floatingList = _taskManager.getWorkingList();
 			if (floatingList == null || floatingList.size() == 0) {
