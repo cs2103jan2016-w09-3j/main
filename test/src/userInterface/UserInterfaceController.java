@@ -498,13 +498,13 @@ public class UserInterfaceController {
 		}
 	}
 
-	public boolean executeSearch(String stringToSearch) {
-		boolean isSuccess = _taskManager.searchString(stringToSearch);
-		if (isSuccess) {
+	public int executeSearch(String stringToSearch) {
+		int status = _taskManager.searchString(stringToSearch);
+		if (status > -1) {
 			showSearchView();
-			return true;
+			return status;
 		}
-		return false;
+		return status;
 	}
 
 	public boolean markAsCompleted(String indexZZ) {
@@ -562,6 +562,8 @@ public class UserInterfaceController {
 				startFloatingThread();
 			}
 			_floatingViewInterface.buildContent(floatingList);
+		} else if (_currentView == SEARCH_VIEW) {
+			showSearchView();
 		}
 	}
 

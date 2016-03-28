@@ -386,15 +386,19 @@ public class PrimaryUserInterface extends Application {
 		if (success) {
 			resetCommandInput();
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.JUMP,FAILURE, TYPE_1, indexToJump);
+			_commandBar.showFeedBackMessage(COMMAND.JUMP, FAILURE, TYPE_1, indexToJump);
 		}
 	}
 
 	private void executeSearch(String stringToSearch) {
-		boolean success = uiController.executeSearch(stringToSearch);
-		if (success) {
-			resetCommandInput();
-			_commandBar.showFeedBackMessage(COMMAND.SEARCH, SUCCESS, TYPE_1, null);
+		int status = uiController.executeSearch(stringToSearch);
+		if (status > -1) {
+			if (status == 0) {
+				_commandBar.showFeedBackMessage(COMMAND.SEARCH, SUCCESS, TYPE_2, null);
+			} else {
+				resetCommandInput();
+				_commandBar.showFeedBackMessage(COMMAND.SEARCH, SUCCESS, TYPE_1, Integer.toString(status));
+			}
 		} else {
 			_commandBar.showFeedBackMessage(COMMAND.SEARCH, FAILURE, TYPE_1, null);
 		}

@@ -37,7 +37,8 @@ public class CommandBar {
 	private static final String MESSAGE_FAILURE_EDIT_TYPE2 = "Fail to retrieve task with %1$s.";
 	private static final String MESSAGE_SUCCESS_MARK = "Successfully mark %1$s as completed.";
 	private static final String MESSAGE_FAILURE_MARK = "Fail to mark %1$s as completed.";
-	private static final String MESSAGE_SUCCESS_SEARCH = "Search compelete.";
+	private static final String MESSAGE_SUCCESS_SEARCH_TYPE_1 = "Search compelete with %1$s results.";
+	private static final String MESSAGE_SUCCESS_SEARCH_TYPE_2 = "No results found.";
 	private static final String MESSAGE_FAILURE_SEARCH_TYPE1 = "No results found.";
 	private static final String MESSAGE_FAILURE_SEARCH_TYPE2 = "Search failed.";
 	private static final String MESSAGE_FAILURE_JUMP = "No index to jump to.";
@@ -539,13 +540,13 @@ public class CommandBar {
 		}
 		case SEARCH: {
 			if (condition) {
-				setFeedBackMessage(String.format(MESSAGE_SUCCESS_SEARCH, msg));
-			} else {
 				if (type == PrimaryUserInterface.TYPE_1) {
-					setFeedBackMessage(String.format(MESSAGE_FAILURE_SEARCH_TYPE1, msg));
+					setFeedBackMessage(String.format(MESSAGE_SUCCESS_SEARCH_TYPE_1, msg));
 				} else {
-					setFeedBackMessage(String.format(MESSAGE_FAILURE_SEARCH_TYPE2, msg));
+					setFeedBackMessage(MESSAGE_SUCCESS_SEARCH_TYPE_2);
 				}
+			} else {
+				setFeedBackMessage(String.format(MESSAGE_FAILURE_SEARCH_TYPE1, msg));
 			}
 			break;
 		}
