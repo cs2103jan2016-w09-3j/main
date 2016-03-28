@@ -158,15 +158,7 @@ public class PrimaryUserInterface extends Application {
 			_commandBar.deleteKey();
 		} else if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
 			COMMAND cmd = _commandBar.onEnter();
-			String t = _commandBar.getFullInput();
-			if (t.indexOf(" ") != -1) {
-				if (t.substring(0, t.indexOf(" ")).equals("search")) {
-					String stringToSearch = t.substring(t.indexOf(" ") + 1);
-					executeSearch(stringToSearch);
-					resetCommandInput();
-					return;
-				}
-			}
+			
 
 			if (cmd.equals(COMMAND.EXIT)) {
 				uiController.saveStuff();
