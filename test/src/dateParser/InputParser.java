@@ -98,7 +98,7 @@ public class InputParser {
 			//System.out.println("after title"+input);
 		}
 		addXMLGarbage();
-		//System.out.println("after"+input);
+		System.out.println("after"+input);
 		
 	}
 	
@@ -127,6 +127,7 @@ public class InputParser {
 	 * adds xml to title
 	 */
 	private void addXMLTitleDesc() {
+		input = gcParser.xmlHash(input);
 		input = infoParser.xmlTitleAndDesc(input);
 	}
 
@@ -186,9 +187,13 @@ public class InputParser {
 			infoParser.setInformation(this.input);
 			String name = infoParser.getTitle();
 			String desc = infoParser.getDescription();
+			ArrayList<String> hashes = gcParser.getHashes();
 			if(dates.size() == 0){
 				TaskEntity toAdd = new TaskEntity(name, null, false, desc);
 				toAdd.setFloating(true);
+				for(int i=0; i<hashes.size();i++){
+					toAdd.addHashtag(hashes.get(i));
+				}
 				tasks.add(toAdd);
 			}
 			else{
@@ -198,6 +203,9 @@ public class InputParser {
 					c.clear(Calendar.SECOND);
 					c.clear(Calendar.MILLISECOND);
 					TaskEntity toAdd = new TaskEntity(name, c, false, desc);
+					for(int j=0; j<hashes.size();j++){
+						toAdd.addHashtag(hashes.get(j));
+					}
 					tasks.add(toAdd);
 				}
 			}

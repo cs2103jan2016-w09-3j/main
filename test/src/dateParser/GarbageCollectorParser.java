@@ -1,10 +1,35 @@
 package dateParser;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GarbageCollectorParser {
+	private ArrayList<String> hashes= new ArrayList<String>();
 	public GarbageCollectorParser(){
+	}
+	
+	public String xmlHash(String input){
+		String toReplace = XMLParser.removeAllAttributes(input);
+		hashes = new ArrayList<String>();
+		//System.out.println("GC"+toReplace);
+		Scanner sc = new Scanner(toReplace);
+		while(sc.hasNext()){
+			String temp = sc.next();
+			//System.out.println("GC2"+input);
+			if((temp.length()!=1)&&(!temp.contains("ID"))){
+				if(temp.charAt(0)=='#'){
+					hashes.add(temp);
+					input = input.replace(temp, "<hashtags>"+temp+"</hashtags>");
+				}	
+			}
+			//System.out.println("test2");
+		}
 		
+		return input;
+	}
+	
+	public ArrayList<String> getHashes(){
+		return hashes;
 	}
 	
 	public String xmlAllOthers(String input){
@@ -16,7 +41,8 @@ public class GarbageCollectorParser {
 			String temp = sc.next();
 			//System.out.println("GC2"+input);
 			if((temp.length()!=1)&&(!temp.contains("ID"))){
-				input = input.replace(temp, "<others>"+temp+"</others>");
+					input = input.replace(temp, "<others>"+temp+"</others>");
+					
 			}
 			//System.out.println("test2");
 		}

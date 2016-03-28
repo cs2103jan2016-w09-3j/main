@@ -20,6 +20,7 @@ public class XMLParser {
 	public static final String DESC_TAG = "desc";
 	public static final String OTHERS_TAG = "others";
 	public static final String ID_TAG = "ID";
+	public static final String HASH_TAG = "hashtags";
 	
 	public static Document loadXMLFromString(String xml) throws Exception{
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -62,6 +63,7 @@ public class XMLParser {
 			input = removeAttribute(input, tempXMLDoc,DATE_TAG);
 			input = removeAttribute(input, tempXMLDoc,ID_TAG);
 			input = removeAttribute(input, tempXMLDoc,OTHERS_TAG);
+			input = removeAttribute(input, tempXMLDoc,HASH_TAG);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -87,6 +89,7 @@ public class XMLParser {
 		input = removeTags(input, DATE_TAG);
 		input = removeTags(input, ID_TAG);
 		input = removeTags(input, OTHERS_TAG);
+		input = removeTags(input, HASH_TAG);
 		return input;
 	}
 	
@@ -107,7 +110,7 @@ public class XMLParser {
 				values.add(nextIn);
 				tagStringPair.add(new Pair(tag, values));
 				input = removeOneAttribute(input,tag,nextIn);
-				System.out.println("test@"+tag+values.get(0));
+				//System.out.println("test@"+tag+values.get(0));
 			
 			}
 			
