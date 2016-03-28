@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Queue;
 import java.util.Random;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -27,6 +28,7 @@ import fileStorage.StorageHandler;
 public class TaskManager {
 	private StorageController dataLoader = new StorageController();
 	private StorageHandler dataHandler = new StorageHandler();
+	private CommandHandler backupHandler = new CommandHandler();
 
 	private static TaskManager singleton;
 	private Logger logger = Logger.getLogger("TaskManager.log");
@@ -238,8 +240,23 @@ public class TaskManager {
 		}
 	}
 
-    public boolean checkCrash () {
-        return false;
+    /**
+     * Returns a list of raw command strings to run in the event of a crash. If
+     * there was no crash, this queue is expected to be empty
+     * 
+     * @return all commands to be re-run before start of program
+     */
+    public Queue<String> getBackedupCommands () {
+        return backupHandler.retrieveCommand();
+    }
+    
+    /**
+     * Calls storage to save each command ran. Auto commits when list is full
+     * 
+     * @param command - Raw command (the one that the user types) to be passed down
+     */
+    public void backupCommand (String command) {
+        backupHandler.saveUponFullQueue(command);
     }
     
 	/**
@@ -512,7 +529,7 @@ public class TaskManager {
             return false;
         } else {
             //Checks for deletion failure
-            if ( !deleteFromMainList(displayedTasks.get(index)) ) {
+            if ( !deleteFromCorrespondingDisplayList(displayedTasks.get(index)) ) {
                 return false;
             }
 
@@ -535,7 +552,7 @@ public class TaskManager {
             
             for(int i = 0; i < associationsToMarkComplete.size(); i++) {
                 if(!associationsToMarkComplete.get(i).isCompleted() ) {
-                    deleteFromMainList(associationsToMarkComplete.get(i));
+                    deleteFromCorrespondingDisplayList(associationsToMarkComplete.get(i));
                     associationsToMarkComplete.get(i).markAsDone();
                     int positionToInsert = findCompletionPositionToInsert(associationsToMarkComplete.get(i));
                     completedTaskEntities.add(positionToInsert, associationsToMarkComplete.get(i));
@@ -629,7 +646,7 @@ public class TaskManager {
 		}
 
 		TaskEntity itemToBeDeleted = displayedTasks.get(index);
-		boolean deletionSuccess = deleteFromMainList(itemToBeDeleted);
+		boolean deletionSuccess = deleteFromCorrespondingDisplayList(itemToBeDeleted);
 		if (!deletionSuccess) {
 			return false;
 		}
@@ -645,28 +662,55 @@ public class TaskManager {
 	}
 
 	/**
-	 * Removes an object from the list containing all tasks, from its respective
-	 * list (floatingTaskEntities if it is a floating task, mainTaskEntities if
-	 * its not)
+	 * Removes an object from the corresponding list that is being displayed
 	 * 
 	 * @param itemToBeDeleted
 	 *            - The task to be deleted from the main list
 	 * @return true - if removal operation succeeded false - if removal
 	 *         operation failed
 	 */
-	private boolean deleteFromMainList(TaskEntity itemToBeDeleted) {
-		if (currentDisplayedList == DISPLAY_FLOATING) {
-			return floatingTaskEntities.remove(itemToBeDeleted);
-		} else if(currentDisplayedList == DISPLAY_MAIN) {
-        	return mainTaskEntities.remove(itemToBeDeleted);
-		} else if(currentDisplayedList == DISPLAY_SEARCH) {
-		    return searchedTasks.remove(itemToBeDeleted);
-		} else if(currentDisplayedList == DISPLAY_COMPLETED) {
+    private boolean deleteFromCorrespondingDisplayList(TaskEntity itemToBeDeleted) {
+        if (currentDisplayedList == DISPLAY_FLOATING) {
+            return floatingTaskEntities.remove(itemToBeDeleted);
+        } else if (currentDisplayedList == DISPLAY_MAIN) {
             return mainTaskEntities.remove(itemToBeDeleted);
-		} else {
-		    return false;
-		}
-	}
+        } else if (currentDisplayedList == DISPLAY_SEARCH) {
+            //Removes the object from its main list too
+            if (!deleteFromMainList(itemToBeDeleted)) {
+                return false;
+            }
+            return searchedTasks.remove(itemToBeDeleted);
+        } else if (currentDisplayedList == DISPLAY_COMPLETED) {
+            return mainTaskEntities.remove(itemToBeDeleted);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Removes an object from the main 3 list of floating/main/completed
+     * 
+     * @param itemToBeDeleted - Item that is being searched for to be removed
+     * @return success of the deletion. True if succeeded in deleting
+     */
+    private boolean deleteFromMainList(TaskEntity itemToBeDeleted) {
+        if (itemToBeDeleted.isCompleted()) {
+            if (!completedTaskEntities.remove(itemToBeDeleted)) {
+                return false;
+            }
+        } else {
+            if (itemToBeDeleted.isFloating()) {
+                if (!floatingTaskEntities.remove(itemToBeDeleted)) {
+                    return false;
+                }
+            } else {
+                if (!mainTaskEntities.remove(itemToBeDeleted)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
 	/**
 	 * UI Interface function Deletes a list of tasks from the arrayList

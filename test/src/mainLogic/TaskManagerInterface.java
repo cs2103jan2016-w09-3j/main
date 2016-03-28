@@ -8,6 +8,7 @@
 package mainLogic;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 import entity.TaskEntity;
 
@@ -29,6 +30,25 @@ public class TaskManagerInterface {
         DISPLAY_SEARCH = manager.DISPLAY_SEARCH;
         DISPLAY_COMPLETED = manager.DISPLAY_COMPLETED;
         DISPLAY_OTHERS = manager.DISPLAY_OTHERS;
+    }
+    
+    /**
+     * Returns a list of raw command strings to run in the event of a crash. If
+     * there was no crash, this queue is expected to be empty
+     * 
+     * @return all commands to be re-run before start of program
+     */
+    public Queue<String> getBackedupCommands () {
+        return manager.getBackedupCommands();
+    }
+    
+    /**
+     * Calls storage to save each command ran. Auto commits when list is full
+     * 
+     * @param command - Raw command to be passed down
+     */
+    public void backupCommand (String command) {
+        manager.backupCommand(command);
     }
     
     public int add (TaskEntity newTask) {

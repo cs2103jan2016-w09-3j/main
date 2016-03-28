@@ -91,6 +91,7 @@ public class JUnitTaskManager {
         
         manager.switchView(manager.DISPLAY_MAIN);
         manager.getWorkingList().get(0).markAsDone();
+        
         manager.getWorkingList().get(8).markAsDone();
 
         assertEquals( manager.printArrayContentsToString(manager.DISPLAY_COMPLETED), "");
@@ -157,7 +158,7 @@ public class JUnitTaskManager {
         //Testing for linked tasks
         manager.switchView(manager.DISPLAY_FLOATING);
         manager.link(manager.getWorkingList().get(0), manager.getWorkingList().get(1) );
-        manager.link(manager.getWorkingList().get(0), manager.getWorkingList().get(2) ); 
+        manager.link(manager.getWorkingList().get(0), manager.getWorkingList().get(2) );
         assertEquals(true, manager.markAsDone(0));
 
         manager.link(manager.getWorkingList().get(4), manager.getWorkingList().get(5) );
@@ -182,6 +183,9 @@ public class JUnitTaskManager {
         assertEquals("Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ", manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
 
         assertEquals(false, manager.markAsDone(2));
+        
+        System.out.println(manager.printArrayContentsToString(manager.DISPLAY_FLOATING));
+        System.out.println(manager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
 
         manager.add(new TaskEntity("Do 2103 V0.4", Utils.createDate(4, 4, 2016), true, "Remember to be in before 9pm"));
         manager.add(new TaskEntity("Do 2103 V0.3", Utils.createDate(28, 3, 2016), true));
@@ -190,12 +194,19 @@ public class JUnitTaskManager {
         manager.searchString("remember");
         assertEquals("Do 2103 V0.4, Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ", manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
         
+        manager.switchView(manager.DISPLAY_FLOATING);
+        assertEquals(true, manager.markAsDone(1));
+        
         manager.switchView(manager.DISPLAY_SEARCH);
         
-        assertEquals(true, manager.markAsDone(2));
+        
         manager.searchString("remember");
         manager.switchView(manager.DISPLAY_SEARCH);
-        assertEquals("Do 2103 V0.4, Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ", manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+        assertEquals("Do 2103 V0.4, Groom Cat, Groom Bird, Groom Rabbit, Groom Dog, ", manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+        
+        manager.searchString("completed");
+        manager.switchView(manager.DISPLAY_SEARCH);
+        assertEquals("Groom Dog, ", manager.printArrayContentsToString(manager.DISPLAY_OTHERS));
         
 	}
 }
