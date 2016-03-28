@@ -506,8 +506,12 @@ public class UserInterfaceController {
 	}
 
 	public boolean markAsCompleted(String indexZZ) {
-		int index = _taskManager.markAsDone(Utils.convertBase36ToDec(indexZZ));
-		if (index != -1) {
+		int indexInt = Utils.convertBase36ToDec(indexZZ);
+		if (indexInt == -1) {
+			return false;
+		}
+		int index = _taskManager.markAsDone(indexInt);
+		if (index > -1) {
 			updateChangesToViews(index);
 			return true;
 		}

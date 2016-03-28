@@ -136,12 +136,14 @@ public class PrimaryUserInterface extends Application {
 		_commandBar.setTextFieldHandler(mainEventHandler, releaseEventHandler);
 	}
 
-	public boolean executeMarkComplete(String indexZZ) {
-		_commandBar.setFullInput("");
-		_commandBar.onKeyReleased();
-		uiController.markAsCompleted(indexZZ);
-		resetCommandInput();
-		return false;
+	public void executeMarkComplete(String indexZZ) {
+		boolean isSuccess = uiController.markAsCompleted(indexZZ);
+		if (isSuccess) {
+			_commandBar.showFeedBackMessage(COMMAND.MARK, SUCCESS, TYPE_1, indexZZ);
+			resetCommandInput();
+		} else {
+			_commandBar.showFeedBackMessage(COMMAND.MARK, FAILURE, TYPE_1, indexZZ);
+		}
 	}
 
 	private void processKeyRelease(TextField textField, KeyEvent event) {
@@ -202,14 +204,14 @@ public class PrimaryUserInterface extends Application {
 			} else if (cmd.equals(COMMAND.FLOAT)) {
 				uiController.showFloatingView();
 				resetCommandInput();
-			}else if (cmd.equals(COMMAND.JUMP)) {
+			} else if (cmd.equals(COMMAND.JUMP)) {
 				executeJump();
 				resetCommandInput();
 				return;
-			} else if(cmd.equals(COMMAND.MARK)) {
+			} else if (cmd.equals(COMMAND.MARK)) {
 				String indexToMarkComplete = _commandBar.getId();
 				executeMarkComplete(indexToMarkComplete);
-			} 
+			}
 		} else {
 			_commandBar.onKeyReleased();
 		}
@@ -221,7 +223,7 @@ public class PrimaryUserInterface extends Application {
 		if (event.getCode().compareTo(KeyCode.UP) == 0 && !event.isControlDown() && !event.isShiftDown()) {
 			_commandBar.getPrevCommand();
 		}
-		
+
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && !event.isControlDown() && !event.isShiftDown()) {
 			_commandBar.getNextCommand();
 		}
@@ -394,7 +396,9 @@ public class PrimaryUserInterface extends Application {
 		boolean success = uiController.search(stringToSearch);
 		if (success) {
 			resetCommandInput();
+
 		} else {
+
 		}
 	}
 

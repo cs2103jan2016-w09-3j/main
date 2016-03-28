@@ -35,6 +35,8 @@ public class CommandBar {
 	private static final String MESSAGE_SUCCESS_EDIT = "Successfully edited %1$s.";
 	private static final String MESSAGE_FAILURE_EDIT_TYPE1 = "Fail to edit %1$s.";
 	private static final String MESSAGE_FAILURE_EDIT_TYPE2 = "Fail to retrieve task with %1$s.";
+	private static final String MESSAGE_SUCCESS_MARK = "Successfully mark %1$s as completed.";
+	private static final String MESSAGE_FAILURE_MARK = "Fail to mark %1$s as completed.";
 
 	private static final String MESSAGE_SUCCESS_SEARCH = "Search compelete.";
 	private static final String MESSAGE_FAILURE_SEARCH_TYPE1 = "No results found.";
@@ -483,6 +485,14 @@ public class CommandBar {
 				} else if (type == 1) {
 					setFeedBackMessage(String.format(MESSAGE_FAILURE_EDIT_TYPE2, msg));
 				}
+			}
+			break;
+		}
+		case MARK: {
+			if (condition) {
+				setFeedBackMessage(String.format(MESSAGE_SUCCESS_MARK, msg));
+			} else {
+				setFeedBackMessage(String.format(MESSAGE_FAILURE_MARK, msg));
 			}
 			break;
 		}
