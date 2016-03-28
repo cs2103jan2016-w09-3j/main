@@ -22,9 +22,11 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import entity.AllTaskLists;
 import entity.TaskEntity;
 import fileStorage.StorageController;
+import fileStorage.StorageHandler;
 
 public class TaskManager {
 	private StorageController dataLoader = new StorageController();
+	private StorageHandler dataHandler = new StorageHandler();
 
 	private static TaskManager singleton;
 	private Logger logger = Logger.getLogger("TaskManager.log");
@@ -195,7 +197,7 @@ public class TaskManager {
 		updateTaskEntityCurrentId();
 		buildCompletedTasks();
 
-		logger.log(Level.FINEST, "TaskManager Initialized");
+		//logger.log(Level.FINEST, "TaskManager Initialized");
 		displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
 
 		currentDisplayedList = DISPLAY_MAIN;
@@ -355,6 +357,7 @@ public class TaskManager {
             }
 		}
 		dataLoader.storeTaskLists(savedMainTaskEntities, savedFloatingTaskEntities);
+		dataHandler.clearCommandFileUponCommit();
 	}
 
 	/**
