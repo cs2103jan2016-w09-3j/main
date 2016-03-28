@@ -6,7 +6,6 @@
 #commandText {
 	-fx-font: 12.0px "Serif";
 }
-
 #rootPane{
 	-fx-border-color: #d3d3d3;
     -fx-border-width: 2.0px;
@@ -49,6 +48,10 @@
 	-fx-background-color: rgba(255.0,255.0,255.0,0.7);
 }
 
+#cssDetailComponentRoot{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.7),rgba(193.0,230.0,255.0,0.95);
+}
+
 #cssFloatingTask
 {
 	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
@@ -60,16 +63,23 @@
 	-fx-background-color: rgba(255.0,255.0,255.0,1.0), rgba(255.0,178.5,127.5,1.0);
 	-fx-background-insets: 2.0, 0.0 10.0 0.0 235.0;
 }
-#cssExpandedViewLabelTitle{
+
+#cssDetailComponentEmptyTitle {
 		-fx-background-color: rgba(255.0,178.5,127.5,1.0);	
 }
 
+#cssDetailComponentProjectHeadBox{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.95);
+}
+
 #cssExpandedViewVBox{
-	-fx-background-color: rgba(193.0,230.0,255.0,0.95);
+	-fx-background-color: rgba(255.0,255.0,255.0,0.7);
+	-fx-background-radius: 7.0;
 }
 
 #cssExpandedViewVBoxSelected{
-	-fx-background-color: rgba(255.0,230.0,255.0,0.95);
+	-fx-background-color: rgba(255.0,230.0,255.0,1);
+	-fx-background-radius: 7.0;
 }
 
 #cssDetailAssociationListBox
@@ -88,8 +98,20 @@
 	-fx-background-insets: 1.0 5.0 1.0 5.0;
 }
 
+#cssDetailComponentAssociateViewUnFocus
+{
+	-fx-background-color: rgba(193.0,230.0,255.0,0.95);
+	-fx-background-insets: 0.0;
+}
+
+#cssDetailComponentAssociateViewFocus
+{
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0),rgba(193.0,230.0,255.0,0.95);
+	-fx-background-insets: 0.0,2.0 2.0 2.0 2.0 ;
+}
+
 #cssCommandBarMainStructure{
-	-fx-background-color: rgba(255,255,255,1.0);
+	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
 }
 
 #cssSearchTitle{
