@@ -163,10 +163,7 @@ public class PrimaryUserInterface extends Application {
 				focus();
 				return;
 			} else if (t.indexOf(" ") != -1) {
-				if (t.substring(0, t.indexOf(" ")).equals("mark")) {
-					String indexToMarkComplete = t.substring(t.indexOf(" ") + 1);
-					executeMarkComplete(indexToMarkComplete);
-				} else if (t.substring(0, t.indexOf(" ")).equals("search")) {
+				if (t.substring(0, t.indexOf(" ")).equals("search")) {
 					String stringToSearch = t.substring(t.indexOf(" ") + 1);
 					executeSearch(stringToSearch);
 					resetCommandInput();
@@ -209,6 +206,9 @@ public class PrimaryUserInterface extends Application {
 				executeJump();
 				resetCommandInput();
 				return;
+			} else if(cmd.equals(COMMAND.MARK)) {
+				String indexToMarkComplete = _commandBar.getId();
+				executeMarkComplete(indexToMarkComplete);
 			} 
 		} else {
 			_commandBar.onKeyReleased();
