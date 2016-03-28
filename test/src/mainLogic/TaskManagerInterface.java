@@ -48,7 +48,7 @@ public class TaskManagerInterface {
      * @param command - Raw command to be passed down
      */
     public void backupCommand (String command) {
-        manager.backupCommand(command);
+        manager.storeCommandForBackup(command);
     }
     
     public int add (TaskEntity newTask) {

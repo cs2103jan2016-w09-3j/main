@@ -61,8 +61,13 @@ public class Utils {
         //digitValue increases by 36x per character in the string
         int digitWeight = 1;
         
-        //Additional variable to check if string passed in is just spaces
+        //Additionalo check if string passed in is just spaces
         boolean hasValue = false;
+        
+        assert base36 != null : "Null string passed into convertBase36ToDec!";
+        if(base36 == null) {
+            return -1;
+        }
         
         while (base36.length() > 0) {
             //Get the current last character of the base36 string
