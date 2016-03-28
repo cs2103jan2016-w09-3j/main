@@ -355,7 +355,7 @@ public class CommandBar {
 				label.setId("cssCommandJump");
 				break;
 			}
-			case MARK: {
+			case DONE: {
 				label.setId("cssCommandMark");
 				break;
 			}
@@ -530,7 +530,7 @@ public class CommandBar {
 			}
 			break;
 		}
-		case MARK: {
+		case DONE: {
 			if (condition) {
 				setFeedBackMessage(String.format(MESSAGE_SUCCESS_MARK, msg));
 			} else {
