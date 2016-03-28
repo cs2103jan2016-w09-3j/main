@@ -304,33 +304,36 @@ public class UserInterfaceController {
 				_currentView = _previousView;
 				_taskViewInterface.setView(_currentView);
 				_detailComponent.setView(_currentView);
-				int selelcted = _taskViewInterface.getSelectIndex();
-				if (!(selelcted < _taskManager.getWorkingList().size() && selelcted > -1)) {
-					selelcted = 0;
-				}
-				_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selelcted);
-				_taskViewInterface.update(0);
-				TaskEntity selectedTask = _taskViewInterface.setItemSelected(0);
-				_detailComponent.buildComponent(selectedTask);
-				translateComponentsY(_taskViewInterface.getTranslationY());
-				updateDescriptionComponent();
+				reBuildFrontView(-5);
 			}
 		} else {
 			_currentView = ASSOCIATE_VIEW;
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
-			int selelcted = _taskViewInterface.getSelectIndex();
+			reBuildFrontView(-5);
+		}
+		show();
+	}
+
+	public void reBuildFrontView(int index) {
+		int selelcted = 0;
+		if (index == -5) {
+			selelcted = _taskViewInterface.getSelectIndex();
 			if (!(selelcted < _taskManager.getWorkingList().size() && selelcted > -1)) {
 				selelcted = 0;
 			}
-			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selelcted);
-			_taskViewInterface.update(0);
-			TaskEntity selectedTask = _taskViewInterface.setItemSelected(0);
-			_detailComponent.buildComponent(selectedTask);
-			translateComponentsY(_taskViewInterface.getTranslationY());
-			updateDescriptionComponent();
+		} else {
+			selelcted = index;
 		}
-		show();
+		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selelcted);
+		_taskViewInterface.update(0);
+		TaskEntity selectedTask = _taskViewInterface.setItemSelected(0);
+		_detailComponent.buildComponent(selectedTask);
+		if (_currentView == ASSOCIATE_VIEW) {
+			_detailComponent.update(0);
+		}
+		translateComponentsY(_taskViewInterface.getTranslationY());
+		updateDescriptionComponent();
 	}
 
 	/**
@@ -558,13 +561,15 @@ public class UserInterfaceController {
 		int index1 = Utils.convertBase36ToDec(indexZZ1);
 		int index2 = Utils.convertBase36ToDec(indexZZ2);
 		if (index1 != -1 && index2 != -1) {
-			_taskManager.getWorkingList().get(index1);
-			_taskManager.getWorkingList().get(index2);
-			boolean success = _taskManager.link(_taskManager.getWorkingList().get(index1),
-					_taskManager.getWorkingList().get(index2));
-			if (success) {
-				updateChangesToViews(0);
-				return true;
+			if (index1 < _taskManager.getWorkingList().size() && index2 < _taskManager.getWorkingList().size()) {
+				_taskManager.getWorkingList().get(index1);
+				_taskManager.getWorkingList().get(index2);
+				boolean success = _taskManager.link(_taskManager.getWorkingList().get(index1),
+						_taskManager.getWorkingList().get(index2));
+				if (success) {
+					updateChangesToViews(0);
+					return true;
+				}
 			}
 		}
 		return false;
@@ -575,15 +580,8 @@ public class UserInterfaceController {
 			if (index == SUCCESSFULLY_ADDED_DIFF) {
 				startFloatingThread();
 			}
-			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), index);
-			_taskViewInterface.update(0);
-			_taskViewInterface.setView(_currentView);
-			_detailComponent.setView(_currentView);
-			TaskEntity selectedTask = _taskViewInterface.setItemSelected(0);
-			_detailComponent.buildComponent(selectedTask);
-			translateComponentsY(_taskViewInterface.getTranslationY());
-			updateDescriptionComponent();
-			
+			reBuildFrontView(index);
+
 		} else if (_currentView == FLOATING_VIEW) {
 			ArrayList<TaskEntity> floatingList = _taskManager.getWorkingList();
 			if (floatingList == null || floatingList.size() == 0) {

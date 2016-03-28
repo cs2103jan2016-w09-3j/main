@@ -112,7 +112,7 @@ public class DetailComponent implements ViewInterface {
 	public void buildComponent(TaskEntity task) {
 		if (_currentSelectView == TASK_VIEW) {
 			buildUIForTaskView(task);
-		} else if (_currentSelectView == EXPANDED_VIEW) {
+		} else if (_currentSelectView == EXPANDED_VIEW || _currentSelectView == ASSOCIATE_VIEW) {
 			_selectedIndex = 0;
 			buildUIForExpandedView(task);
 		}
@@ -121,10 +121,8 @@ public class DetailComponent implements ViewInterface {
 	public void setView(int view) {
 		_currentSelectView = view;
 		if (_currentSelectView == ASSOCIATE_VIEW) {
-			// _mainVbox[EXPANDED_VIEW].setId("cssDetailComponentAssociateViewFocus");
 			_stage.setScene(_scenes[EXPANDED_VIEW]);
 		} else {
-			// _mainVbox[EXPANDED_VIEW].setId("cssDetailComponentAssociateViewUnFocus");
 			_stage.setScene(_scenes[_currentSelectView]);
 		}
 	}
@@ -169,6 +167,7 @@ public class DetailComponent implements ViewInterface {
 				}
 				_haveAssociation = true;
 				_selectedIndex = task.getAssociationPosition();
+				System.out.println("selected " + _selectedIndex);
 			}
 		}
 		return box;
@@ -219,6 +218,9 @@ public class DetailComponent implements ViewInterface {
 			return false;
 		}
 		if (index < 0) {
+			return false;
+		}
+		if (_mainVbox[EXPANDED_VIEW].getChildren().size() < 0) {
 			return false;
 		}
 		VBox child = (VBox) _mainVbox[EXPANDED_VIEW].getChildren().get(0);
