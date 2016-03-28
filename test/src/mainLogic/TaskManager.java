@@ -238,6 +238,10 @@ public class TaskManager {
 		}
 	}
 
+    public boolean checkCrash () {
+        return false;
+    }
+    
 	/**
 	 * function to log error messages into TaskManager
 	 * 
@@ -342,6 +346,10 @@ public class TaskManager {
 	            currentDisplayedList = DISPLAY_COMPLETED;
 	            displayedTasks = (ArrayList<TaskEntity>) completedTaskEntities.clone();
 	            break;	
+		case DISPLAY_SEARCH:
+		        currentDisplayedList = DISPLAY_SEARCH;
+		        displayedTasks = (ArrayList<TaskEntity>) searchedTasks.clone();
+		        break;
 		}
 	}
 
@@ -814,7 +822,6 @@ public class TaskManager {
 	
     public boolean searchForCompleted() {
         searchedTasks = (ArrayList<TaskEntity>) completedTaskEntities.clone();
-        switchView(DISPLAY_SEARCH);
         if (searchedTasks.size() > 0) {
             return true;
         } else {
@@ -858,15 +865,12 @@ public class TaskManager {
         SearchModule.searchStringAddToResults(searchTerm, mainTaskEntities, searchedTasks);
         SearchModule.searchStringAddToResults(searchTerm, floatingTaskEntities, searchedTasks);
         SearchModule.searchStringAddToResults(searchTerm, completedTaskEntities, searchedTasks);
-
-        switchView(DISPLAY_SEARCH);
         
         if(searchedTasks.size() > 0) {
             return true;
         } else {
             return false;
         }
-        
 	}
 
 	/**
