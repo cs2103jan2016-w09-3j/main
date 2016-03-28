@@ -212,7 +212,7 @@ public class UserInterfaceController {
 		if (_currentView == TASK_VIEW) {
 			_taskViewInterface.rebuildDescriptionLabelsForWeek();
 			_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
-		} else if (_currentView == EXPANDED_VIEW) {
+		} else if (_currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
 			_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(), EXPANDED_VIEW);
 		}
 	}
@@ -304,13 +304,31 @@ public class UserInterfaceController {
 				_currentView = _previousView;
 				_taskViewInterface.setView(_currentView);
 				_detailComponent.setView(_currentView);
-				updateComponents(0);
+				int selelcted = _taskViewInterface.getSelectIndex();
+				if (!(selelcted < _taskManager.getWorkingList().size() && selelcted > -1)) {
+					selelcted = 0;
+				}
+				_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selelcted);
+				_taskViewInterface.update(0);
+				TaskEntity selectedTask = _taskViewInterface.setItemSelected(0);
+				_detailComponent.buildComponent(selectedTask);
+				translateComponentsY(_taskViewInterface.getTranslationY());
+				updateDescriptionComponent();
 			}
 		} else {
 			_currentView = ASSOCIATE_VIEW;
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
-			updateComponents(0);
+			int selelcted = _taskViewInterface.getSelectIndex();
+			if (!(selelcted < _taskManager.getWorkingList().size() && selelcted > -1)) {
+				selelcted = 0;
+			}
+			_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selelcted);
+			_taskViewInterface.update(0);
+			TaskEntity selectedTask = _taskViewInterface.setItemSelected(0);
+			_detailComponent.buildComponent(selectedTask);
+			translateComponentsY(_taskViewInterface.getTranslationY());
+			updateDescriptionComponent();
 		}
 		show();
 	}
@@ -406,7 +424,6 @@ public class UserInterfaceController {
 			showMainView(-1);
 		}
 		int insertedTo = _taskManager.add(task);
-		System.out.println("insertedTo " + insertedTo);
 		if (insertedTo > -2) {
 			updateChangesToViews(insertedTo);
 		}
