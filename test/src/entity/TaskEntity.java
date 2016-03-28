@@ -23,6 +23,7 @@ public class TaskEntity {
 	private int _association_status;
 	private boolean _isCompleted;
 
+	private String _hashtags;
 	private ArrayList<TaskEntity> _associations;
 	private String _associationIDs;
 
@@ -61,6 +62,7 @@ public class TaskEntity {
 		_completionDate = Calendar.getInstance();
 		//Tasks to have a default same value of completion date at the start
 		_completionDate.set(0, 0, 0);
+		_hashtags = "";
 	}
 
 	public TaskEntity() {
@@ -109,7 +111,7 @@ public class TaskEntity {
 
     public TaskEntity(boolean isFloating, boolean isFullDay, Calendar dueDate, Calendar dateCreated,
             String name, String description, int id, int association_status,
-            ArrayList<TaskEntity> associations, String associationIDs, boolean isCompleted, Calendar completionDate) {
+            ArrayList<TaskEntity> associations, String associationIDs, boolean isCompleted, Calendar completionDate, String hashtags) {
         _isFloating = isFloating;
         _isFullDay = isFullDay;
         _dueDate = dueDate;
@@ -122,6 +124,7 @@ public class TaskEntity {
         _associationIDs = associationIDs;
         _isCompleted = isCompleted;
         _completionDate = completionDate;
+        _hashtags = hashtags;
     }
     
 	public int getAssociationState() {
@@ -202,10 +205,14 @@ public class TaskEntity {
 	
     public TaskEntity clone() {
         TaskEntity newInstance = new TaskEntity(_isFloating, _isFullDay, _dueDate, _dateCreated, _name,
-                _description, _id, _association_status, _associations, _associationIDs, _isCompleted, _completionDate);
+                _description, _id, _association_status, _associations, _associationIDs, _isCompleted, _completionDate, _hashtags);
         return newInstance;
 	}
 
+    public void addHashtag (String newTag) {
+        _hashtags += newTag;
+    }
+    
 	/**
 	 * Gets the saved string of IDs for the association list
 	 * 
@@ -333,7 +340,7 @@ public class TaskEntity {
 	        return displayedAssociations;
 	    } else if ( _association_status == ASSOCIATED ) {
 	        ArrayList<TaskEntity> displayedAssociations =  (ArrayList<TaskEntity>) getProjectHead().getAssociations().clone();
-	        displayedAssociations.add(0, this);
+	        displayedAssociations.add(0, getProjectHead());
             return displayedAssociations;
 	    } else {
 	        return new ArrayList<TaskEntity>();
