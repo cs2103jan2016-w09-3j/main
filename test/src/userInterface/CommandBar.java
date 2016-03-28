@@ -21,14 +21,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.Node;
-import javafx.application.Platform;
-import org.jsoup.Jsoup;;
 
 public class CommandBar {
 
 	private static final String MESSAGE_FAILURE_INVALID = "you have entered an invalid command";
 	private static final String MESSAGE_SUCCESS_ADD_TYPE1 = "Successfully added %1$s to task list.";
 	private static final String MESSAGE_SUCCESS_ADD_TYPE2 = "Successfully added %1$s to floating task list.";
+	private static final String MESSAGE_SUCCESS_ADD_TYPE3 = "Successfully added %1$s to list.";
+	
 	private static final String MESSAGE_FAILURE_ADD = "Fail to add.";
 	private static final String MESSAGE_SUCCESS_DELETE = "Successfully deleted %1$s.";
 	private static final String MESSAGE_FAILURE_DELETE = "Fail to delete %1$s.";
@@ -504,6 +504,8 @@ public class CommandBar {
 					setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE1, msg));
 				} else if (type == PrimaryUserInterface.TYPE_2) {
 					setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE2, msg));
+				} else if (type == PrimaryUserInterface.TYPE_3) {
+					setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE3, msg));
 				}
 			} else {
 				setFeedBackMessage(MESSAGE_FAILURE_ADD);

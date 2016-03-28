@@ -34,6 +34,7 @@ public class PrimaryUserInterface extends Application {
 	private static final boolean FAILURE = false;
 	static final int TYPE_1 = 0;
 	static final int TYPE_2 = 1;
+	static final int TYPE_3 = 2;
 
 	// CommandBar dimensions.
 	static final int COMMAND_BAR_HEIGTH = 70;
@@ -287,6 +288,8 @@ public class PrimaryUserInterface extends Application {
 			taskName = tasks.get(0).getName();
 			_commandBar.showFeedBackMessage(COMMAND.ADD, SUCCESS, TYPE_2, taskName);
 			resetCommandInput();
+		} else if (status == -5) {
+			_commandBar.showFeedBackMessage(COMMAND.ADD, SUCCESS, TYPE_3, taskName);
 		} else if (status == -2) {
 			_commandBar.showFeedBackMessage(COMMAND.ADD, FAILURE, TYPE_1, taskName);
 		}

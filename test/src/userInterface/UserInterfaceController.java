@@ -402,6 +402,9 @@ public class UserInterfaceController {
 	}
 
 	public int addTask(TaskEntity task) {
+		if (_currentView == SEARCH_VIEW || _currentView == FLOATING_VIEW) {
+			showMainView(-1);
+		}
 		int insertedTo = _taskManager.add(task);
 		if (insertedTo > -2) {
 			updateChangesToViews(insertedTo);
@@ -412,6 +415,8 @@ public class UserInterfaceController {
 				return SUCCESSFULLY_ADDED;
 			} else if (_currentView == TASK_VIEW) {
 				return SUCCESSFULLY_ADDED_DIFF;
+			} else if (_currentView == SEARCH_VIEW) {
+				return -5;
 			}
 		} else if (insertedTo > SUCCESSFULLY_ADDED_DIFF) {
 
