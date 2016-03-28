@@ -198,7 +198,6 @@ public class PrimaryUserInterface extends Application {
 			}else if (cmd.equals(COMMAND.SEARCH)) {
 				String stringToSearch = _commandBar.getSearchStr();
 				executeSearch(stringToSearch);
-				resetCommandInput();
 			}
 		} else {
 			_commandBar.onKeyReleased();
