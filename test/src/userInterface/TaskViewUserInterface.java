@@ -35,7 +35,7 @@ public class TaskViewUserInterface implements ViewInterface {
 
 	static final int TASK_VIEW_LABEL_HEIGHT = 35;
 	static final int TASK_VIEW_ITEM_HEIGHT = 30;
-	static final int DETAILED_VIEW_ITEM_HEIGHT = 70;
+	static final int DETAILED_VIEW_ITEM_HEIGHT = 40;
 	static final int SELECTOR_POSITION_Y = TASK_VIEW_LABEL_HEIGHT + TASK_VIEW_ITEM_HEIGHT * 2;
 
 	// font
@@ -395,17 +395,24 @@ public class TaskViewUserInterface implements ViewInterface {
 		midBox.getChildren().add(descriptionLabel2);
 		grid.add(midBox, 1, 1);
 
-		Label hashTagLabel = new Label("#hashtags");
+		String hashtags = "#hashtags";
+		Label hashTagLabel = new Label(hashtags);
 		hashTagLabel.setMinHeight(0);
 		hashTagLabel.setFont(FONT_TASK);
+		hashTagLabel.setWrapText(true);
 		grid.add(hashTagLabel, 1, 2);
+
+		Text t2 = new Text(hashtags);
+		t2.setWrappingWidth(_individualItemWidth - 60);
 
 		if (_view == UserInterfaceController.TASK_VIEW) {
 			grid.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		} else {
-			grid.setMinHeight(DETAILED_VIEW_ITEM_HEIGHT + t.getBoundsInLocal().getHeight());
+			grid.setMinHeight(
+					DETAILED_VIEW_ITEM_HEIGHT + t.getBoundsInLocal().getHeight() + t2.getBoundsInLocal().getHeight());
 		}
-		grid.setMaxHeight(DETAILED_VIEW_ITEM_HEIGHT + t.getBoundsInLocal().getHeight());
+		grid.setMaxHeight(
+				DETAILED_VIEW_ITEM_HEIGHT + t.getBoundsInLocal().getHeight() + t2.getBoundsInLocal().getHeight());
 
 		return grid;
 	}
