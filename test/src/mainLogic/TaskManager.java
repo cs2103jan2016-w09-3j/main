@@ -26,7 +26,7 @@ import fileStorage.StorageInterface;
 import fileStorage.StorageHandler;
 
 public class TaskManager {
-	private StorageInterface dataLoader = new StorageInterface();
+	private StorageInterface dataLoader;
 
 	private static TaskManager singleton;
 	private Logger logger = Logger.getLogger("TaskManager.log");
@@ -124,6 +124,7 @@ public class TaskManager {
 	private TaskManager() {
 		initLogger();
 
+		dataLoader = new StorageInterface();
 		AllTaskLists taskdata = dataLoader.getTaskLists();
 		mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
 		floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
@@ -286,6 +287,13 @@ public class TaskManager {
 	 * Function to call for TaskManager before closing the program
 	 */
 	public void closeTaskManager() {
+        AllTaskLists newList = generateSavedTaskArray();
+        
+		dataLoader.storeTaskLists(newList);
+		dataLoader.clearCommandFile();
+	}
+
+    public AllTaskLists generateSavedTaskArray() {
         ArrayList<TaskEntity> savedMainTaskEntities = new ArrayList<TaskEntity>();
         ArrayList<TaskEntity> savedFloatingTaskEntities = new ArrayList<TaskEntity>();
         
@@ -311,9 +319,12 @@ public class TaskManager {
                 savedMainTaskEntities.add(clonedTask);
             }
 		}
-		dataLoader.storeTaskLists(savedMainTaskEntities, savedFloatingTaskEntities);
-		dataLoader.clearCommandFile();
-	}
+		AllTaskLists newList = new AllTaskLists();
+        
+        newList.setFloatingTaskList(savedFloatingTaskEntities);
+        newList.setMainTaskList(savedMainTaskEntities);
+        return newList;
+    }
 
 	/**
 	 * Gets the singleton instance of TaskManager
