@@ -22,11 +22,11 @@ import java.util.logging.Logger;
 import edu.emory.mathcs.backport.java.util.Collections;
 import entity.AllTaskLists;
 import entity.TaskEntity;
-import fileStorage.StorageController;
+import fileStorage.StorageInterface;
 import fileStorage.StorageHandler;
 
 public class TaskManager {
-	private StorageController dataLoader = new StorageController();
+	private StorageInterface dataLoader = new StorageInterface();
 
 	private static TaskManager singleton;
 	private Logger logger = Logger.getLogger("TaskManager.log");
