@@ -26,7 +26,7 @@ import fileStorage.StorageInterface;
 import fileStorage.StorageHandler;
 
 public class TaskManager {
-	private StorageInterface dataLoader = new StorageInterface();
+	private StorageInterface dataLoader;
 
 	private static TaskManager singleton;
 	private Logger logger = Logger.getLogger("TaskManager.log");
@@ -124,6 +124,7 @@ public class TaskManager {
 	private TaskManager() {
 		initLogger();
 
+		dataLoader = new StorageInterface();
 		AllTaskLists taskdata = dataLoader.getTaskLists();
 		mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
 		floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
