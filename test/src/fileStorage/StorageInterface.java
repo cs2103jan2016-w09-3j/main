@@ -17,6 +17,11 @@ public class StorageInterface {
         storageHandler = new StorageHandler();
     }
     
+    public AllTaskLists getWorkingTaskLists () {
+        TaskManager arrayDataLoader = TaskManager.getInstance();
+        return arrayDataLoader.generateSavedTaskArray();
+    }
+    
     // Test function
     public static void main (String args[]) {
         StorageInterface sc = new StorageInterface();
@@ -100,8 +105,12 @@ public class StorageInterface {
         return isSaved;
     }
     
-    public void clearCommandFile() {
+    public void clearCommandFileOnCommit() {
         storageHandler.clearCommandFileUponCommit();
+    }
+    
+    public void clearCommandFile() {
+        storageHandler.clearCommandFile();
     }
     
     private AllTaskLists createDummy() {

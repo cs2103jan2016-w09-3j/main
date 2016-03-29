@@ -191,6 +191,8 @@ public class TaskManager {
             
             mainTaskEntities.get(i).initAssociations();
             String[] associationIdList = mainTaskEntities.get(i).getSavedAssociations().split(",");
+            assert mainTaskEntities.get(i)
+            .getSavedAssociations() != null : "Task Associations for main not built before saving!";
 
             for (int j = 0; j < associationIdList.length; j++) {
                 if (!associationIdList[0].equals("")) {
@@ -214,7 +216,9 @@ public class TaskManager {
 		}
 
 		for (int i = 0; i < floatingTaskEntities.size(); i++) {
-		    floatingTaskEntities.get(i).initAssociations();
+            floatingTaskEntities.get(i).initAssociations();
+            assert floatingTaskEntities.get(i)
+                    .getSavedAssociations() != null : "Task Associations for floating not built before saving!";
 			String[] associationIdList = floatingTaskEntities.get(i).getSavedAssociations().split(",");
 
 			for (int j = 0; j < associationIdList.length; j++) {
@@ -246,7 +250,9 @@ public class TaskManager {
      * @return all commands to be re-run before start of program
      */
     public Queue<String> getBackedupCommands () {
-        return dataLoader.getCommandsUponInit();
+        Queue<String> reloadedCommands = dataLoader.getCommandsUponInit();
+        dataLoader.clearCommandFile();
+        return reloadedCommands;
     }
     
     /**
@@ -290,7 +296,7 @@ public class TaskManager {
         AllTaskLists newList = generateSavedTaskArray();
         
 		dataLoader.storeTaskLists(newList);
-		dataLoader.clearCommandFile();
+		dataLoader.clearCommandFileOnCommit();
 	}
 
     public AllTaskLists generateSavedTaskArray() {

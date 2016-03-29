@@ -210,6 +210,14 @@ public class StorageHandler {
      * Clears command file upon committing
      */
     public void clearCommandFileUponCommit() {
+        clearCommandFile();
+        allCommandsQueue.clear();
+    }
+    
+    /**
+     * Clears command file upon committing
+     */
+    public void clearCommandFile() {
         FileWriter fileWriter;
         try {
             fileWriter = new FileWriter(commandsFilePath);
@@ -219,6 +227,5 @@ public class StorageHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        allCommandsQueue.clear();
     }
 }

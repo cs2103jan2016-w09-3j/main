@@ -37,8 +37,8 @@ public class CommandHandler extends TimerTask {
         newCommandsQueue.offer(command);
         storageController.setCommandsQueue(newCommandsQueue);
         if (storageController.getCommandsQueue().size() >= QUEUE_SIZE) {
-            //isSavedMain = storageController.storeTaskLists(storageController.getWorkingTaskLists());
-            storageController.clearCommandFile();
+            isSavedMain = storageController.storeTaskLists(storageController.getWorkingTaskLists());
+            storageController.clearCommandFileOnCommit();
         }
         return isSavedMain;
     }
@@ -48,10 +48,10 @@ public class CommandHandler extends TimerTask {
     }
     
     public void run() {
-       // boolean isSavedMain = storageController.storeTaskLists(storageController.getWorkingTaskLists());
-        storageController.clearCommandFile();
-        //assert isSavedMain == true;
-        //System.out.println(isSavedMain);
+        boolean isSavedMain = storageController.storeTaskLists(storageController.getWorkingTaskLists());
+        storageController.clearCommandFileOnCommit();
+        assert isSavedMain == true;
+        System.out.println(isSavedMain);
     }
     
     /**
