@@ -717,15 +717,15 @@ public class UserInterfaceController {
 				case ADD: {
 					ArrayList<TaskEntity> tasks = parser.getTask();
 					if (tasks.size() == 1) {
-						addTask(tasks.get(0), rawCommandWithView, false);
+						addTask(tasks.get(0), rawCommand, false);
 					} else {
-						addBatchTask(tasks, rawCommandWithView, false);
+						addBatchTask(tasks, rawCommand, false);
 					}
 					break;
 				}
 				case DELETE: {
 					String id = parser.getID();
-					deleteTask(id, rawCommandWithView, false);
+					deleteTask(id, rawCommand, false);
 					break;
 				}
 				case EDIT: {
@@ -733,24 +733,24 @@ public class UserInterfaceController {
 					parser.removeId();
 					ArrayList<TaskEntity> tasks = parser.getTask();
 					if (tasks.size() == 1) {
-						modifyTask(id, tasks.get(0), rawCommandWithView, false);
+						modifyTask(id, tasks.get(0), rawCommand, false);
 					}
 					break;
 				}
 				case DONE: {
 					String id = parser.getID();
-					markAsCompleted(id, rawCommandWithView, false);
+					markAsCompleted(id, rawCommand, false);
 					break;
 				}
 				case SEARCH: {
 					String searchStirng = parser.getSearchString();
-					executeSearch(searchStirng, rawCommandWithView, false);
+					executeSearch(searchStirng, rawCommand, false);
 					_logicFace.switchView(TaskManager.DISPLAY_SEARCH);
 					break;
 				}
 				case LINK: {
 					Pair<String, String> ids = parser.getLinkID();
-					link(ids.getFirst(), ids.getSecond(), rawCommandWithView,false);
+					link(ids.getFirst(), ids.getSecond(), rawCommand,false);
 					break;
 				}
 				default:
