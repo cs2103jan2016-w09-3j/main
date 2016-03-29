@@ -434,8 +434,7 @@ public class UserInterfaceController {
 				showMainView(-1);
 			}
 		}
-		_taskManager.backupCommand(rawInput);
-		int insertedTo = _taskManager.add(task);
+		int insertedTo = _taskManager.add(task, rawInput);
 
 		if (toUpdateView) {
 			if (insertedTo > -2) {
@@ -463,8 +462,7 @@ public class UserInterfaceController {
 	}
 
 	public int addBatchTask(ArrayList<TaskEntity> task, String rawInput, boolean toUpdateView) {
-		_taskManager.backupCommand(rawInput);
-		int insertedTo = _taskManager.add(task);
+		int insertedTo = _taskManager.add(task, rawInput);
 		if (insertedTo == -1) {
 			return -2;
 		} else {
@@ -476,8 +474,7 @@ public class UserInterfaceController {
 	}
 
 	public int deleteTask(String id, String rawInput, boolean toUpdateView) {
-		_taskManager.backupCommand(rawInput);
-		int result = _taskManager.delete(id);
+		int result = _taskManager.delete(id, rawInput);
 		if (result == -2) {
 			return result;
 		}
@@ -523,8 +520,7 @@ public class UserInterfaceController {
 	}
 
 	public boolean modifyTask(int idToModify, TaskEntity task, String rawInput, boolean toUpdateView) {
-		_taskManager.backupCommand(rawInput);
-		int index = _taskManager.modify(idToModify, task);
+		int index = _taskManager.modify(idToModify, task, rawInput);
 		if (index < 0) {
 			return false;
 		}
@@ -545,8 +541,8 @@ public class UserInterfaceController {
 		}
 	}
 
-	public int executeSearch(String stringToSearch) {
-		int status = _taskManager.searchString(stringToSearch);
+	public int executeSearch(String stringToSearch, String rawString) {
+		int status = _taskManager.searchString(stringToSearch, rawString);
 		if (status > -1) {
 			showSearchView();
 			return status;
@@ -554,12 +550,12 @@ public class UserInterfaceController {
 		return status;
 	}
 
-	public boolean markAsCompleted(String indexZZ) {
+	public boolean markAsCompleted(String indexZZ, String rawString) {
 		int indexInt = Utils.convertBase36ToDec(indexZZ);
 		if (indexInt == -1) {
 			return false;
 		}
-		int index = _taskManager.markAsDone(indexInt);
+		int index = _taskManager.markAsDone(indexInt, rawString);
 		if (index > -1) {
 			updateChangesToViews(index);
 			return true;
@@ -576,7 +572,7 @@ public class UserInterfaceController {
 		_scorllAnimation = null;
 	}
 
-	public boolean link(String indexZZ1, String indexZZ2) {
+	public boolean link(String indexZZ1, String indexZZ2, String rawString) {
 		int index1 = Utils.convertBase36ToDec(indexZZ1);
 		int index2 = Utils.convertBase36ToDec(indexZZ2);
 		if (index1 != -1 && index2 != -1) {
@@ -584,7 +580,7 @@ public class UserInterfaceController {
 				_taskManager.getWorkingList().get(index1);
 				_taskManager.getWorkingList().get(index2);
 				boolean success = _taskManager.link(_taskManager.getWorkingList().get(index1),
-						_taskManager.getWorkingList().get(index2));
+						_taskManager.getWorkingList().get(index2), rawString);
 				if (success) {
 					updateChangesToViews(0);
 					return true;

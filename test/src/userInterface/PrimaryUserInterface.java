@@ -179,13 +179,13 @@ public class PrimaryUserInterface extends Application {
 				return;
 			} else if (cmd.equals(COMMAND.DONE)) {
 				String indexToMarkComplete = _commandBar.getId();
-				executeMarkComplete(indexToMarkComplete);
+				executeMarkComplete(indexToMarkComplete, _commandBar.getFullInput());
 			} else if (cmd.equals(COMMAND.LINK)) {
 				Pair<String, String> ids = _commandBar.getLinkId();
-				executeLink(ids.getFirst(), ids.getSecond());
+				executeLink(ids.getFirst(), ids.getSecond(), _commandBar.getFullInput());
 			} else if (cmd.equals(COMMAND.SEARCH)) {
 				String stringToSearch = _commandBar.getSearchStr();
-				executeSearch(stringToSearch);
+				executeSearch(stringToSearch, _commandBar.getFullInput());
 			}
 		} else {
 			_commandBar.onKeyReleased();
@@ -360,8 +360,8 @@ public class PrimaryUserInterface extends Application {
 	 * 
 	 * @param stringToSearch
 	 */
-	private void executeSearch(String stringToSearch) {
-		int status = uiController.executeSearch(stringToSearch);
+	private void executeSearch(String stringToSearch, String rawString) {
+		int status = uiController.executeSearch(stringToSearch, rawString);
 		if (status > -1) {
 			if (status == 0) {
 				_commandBar.showFeedBackMessage(COMMAND.SEARCH, SUCCESS, TYPE_2, null);
@@ -380,9 +380,9 @@ public class PrimaryUserInterface extends Application {
 	 * @param indexZZ1
 	 * @param indexZZ2
 	 */
-	private void executeLink(String indexZZ1, String indexZZ2) {
+	private void executeLink(String indexZZ1, String indexZZ2, String rawString) {
 		if (indexZZ1 != null && indexZZ2 != null) {
-			boolean isSuccess = uiController.link(indexZZ1, indexZZ2);
+			boolean isSuccess = uiController.link(indexZZ1, indexZZ2, rawString);
 			if (isSuccess) {
 				_commandBar.showFeedBackMessage(COMMAND.LINK, SUCCESS, TYPE_1, null);
 				resetCommandInput();
@@ -399,9 +399,9 @@ public class PrimaryUserInterface extends Application {
 	 * 
 	 * @param indexZZ
 	 */
-	public void executeMarkComplete(String indexZZ) {
+	public void executeMarkComplete(String indexZZ, String rawString) {
 		if (indexZZ != null) {
-			boolean isSuccess = uiController.markAsCompleted(indexZZ);
+			boolean isSuccess = uiController.markAsCompleted(indexZZ, rawString);
 			if (isSuccess) {
 				_commandBar.showFeedBackMessage(COMMAND.DONE, SUCCESS, TYPE_1, indexZZ);
 				resetCommandInput();
