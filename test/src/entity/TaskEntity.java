@@ -437,6 +437,7 @@ public class TaskEntity {
 	}
 	
 	public String getHashtags () {
+	    assert _hashtags != null : "Hash tag was set to null";
 	    if(_hashtags == null) {
 	        _hashtags = "";
 	    }

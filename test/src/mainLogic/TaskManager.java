@@ -27,8 +27,6 @@ import fileStorage.StorageHandler;
 
 public class TaskManager {
 	private StorageController dataLoader = new StorageController();
-	private StorageHandler dataHandler = new StorageHandler();
-	private CommandHandler backupHandler = new CommandHandler();
 
 	private static TaskManager singleton;
 	private Logger logger = Logger.getLogger("TaskManager.log");
@@ -42,6 +40,7 @@ public class TaskManager {
 	private static ArrayList<TaskEntity> searchedTasks = new ArrayList<TaskEntity>();
 	
 	private String _backupCommand;
+	private boolean _isBackupCommandLoaded;
 
 	public final static int DISPLAY_MAIN = 0;
 	public final static int DISPLAY_FLOATING = 1;
@@ -136,6 +135,9 @@ public class TaskManager {
 		
 		updateTaskEntityCurrentId();
 		buildCompletedTasks();
+		
+		_backupCommand = "";
+		_isBackupCommandLoaded = false;
 
 		//logger.log(Level.FINEST, "TaskManager Initialized");
 		displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
@@ -249,7 +251,7 @@ public class TaskManager {
      * @return all commands to be re-run before start of program
      */
     public Queue<String> getBackedupCommands () {
-        return backupHandler.retrieveCommand();
+        return dataLoader.getCommandsUponInit();
     }
     
     /**
@@ -260,6 +262,16 @@ public class TaskManager {
      */
     public void storeCommandForBackup (String command) {
         _backupCommand = command;
+        _isBackupCommandLoaded = true;
+    }
+    
+    public boolean toggleBackupCommandStatus () {
+        if ( _isBackupCommandLoaded ) {
+            _isBackupCommandLoaded = false;
+            return true;
+        } else {
+            return false;
+        }
     }
     
     /**
@@ -267,8 +279,12 @@ public class TaskManager {
      * 
      * @param command - Raw command (the one that the user types) to be passed down
      */
-    public void backupCommand (String command) {
-        backupHandler.saveUponFullQueue(command);
+    public void saveBackupCommand (String command) {
+        dataLoader.storeCommandLine(command);
+    }
+    
+    public void backupCommand () {
+        saveBackupCommand(_backupCommand);
     }
     
 	/**
@@ -326,7 +342,7 @@ public class TaskManager {
             }
 		}
 		dataLoader.storeTaskLists(savedMainTaskEntities, savedFloatingTaskEntities);
-		dataHandler.clearCommandFileUponCommit();
+		dataLoader.clearCommandFile();
 	}
 
 	/**
