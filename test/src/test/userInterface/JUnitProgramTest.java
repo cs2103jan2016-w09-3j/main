@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import dateParser.InputParser;
+import dateParser.Pair;
 import entity.TaskEntity;
 import mainLogic.TaskManager;
 import mainLogic.Utils;
@@ -39,11 +40,11 @@ public class JUnitProgramTest {
 		assertTrue(r3 >= 0 && r3 <= ex.getWorkingList().size());
 		int r4 = runCommand("add basktball");
 		assertTrue(r4 >= 0 && r4 <= ex.getWorkingList().size());
-		
+
 		assertEquals(runCommand("add basktball tmr"), -1);
 		assertEquals(runCommand("add basktball 3/3"), -1);
 		ex.switchView(TaskManager.DISPLAY_MAIN);
-		
+
 		int r5 = runCommand("add basktball tmr");
 		assertTrue(r5 >= 0 && r5 <= ex.getWorkingList().size());
 	}
@@ -51,11 +52,11 @@ public class JUnitProgramTest {
 	@Test
 	public void tesDeleteCommands() {
 		ex = new UserInterfaceExecuter();
-		assertEquals(runCommand("delete asda"),-1);
-		assertEquals(runCommand("delete"),-1);
-		assertEquals(runCommand("delete 1231"),-1);
-		assertEquals(runCommand("delete 00--"),-1);
-		
+		assertEquals(runCommand("delete asda"), -1);
+		assertEquals(runCommand("delete"), -1);
+		assertEquals(runCommand("delete 1231"), -1);
+		assertEquals(runCommand("delete 00--"), -1);
+
 	}
 
 	public int runCommand(String rawString) {
@@ -87,6 +88,36 @@ public class JUnitProgramTest {
 		case DONE: {
 			String id = parser.getID();
 			return ex.markAsDone(Utils.convertBase36ToDec(id), rawString);
+		}
+		case FLOAT: {
+			ex.switchView(TaskManager.DISPLAY_FLOATING);
+			return 1;
+		}
+		case MAIN: {
+			ex.switchView(TaskManager.DISPLAY_MAIN);
+			return 1;
+		}
+		case SEARCH: {
+			String searchStirng = parser.getSearchString();
+			int r = ex.searchString(searchStirng, rawString);
+			ex.switchView(TaskManager.DISPLAY_SEARCH);
+			return r;
+		}
+		case LINK: {
+			Pair<String, String> ids = parser.getLinkID();
+			int index1 = Utils.convertBase36ToDec(ids.getFirst());
+			int index2 = Utils.convertBase36ToDec(ids.getSecond());
+			if (index1 < ex.getWorkingList().size() && index2 < ex.getWorkingList().size()) {
+				TaskEntity t1 = ex.getWorkingList().get(index1);
+				TaskEntity t2 = ex.getWorkingList().get(index2);
+				boolean result = ex.link(t1, t2, rawString);
+				if (result) {
+					return 1;
+				}
+			} else {
+				return -1;
+			}
+			return 0;
 		}
 		default:
 			return -9;
