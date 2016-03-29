@@ -84,6 +84,13 @@ public class StorageInterface {
         
         return storeTaskLists(newList);
     }
+        
+    public boolean storeCommandLine(String command) {
+        boolean isSaved = storageHandler.writeToCommandFile(command);
+        assert isSaved == true : "Command not stored.";
+        
+        return isSaved;
+    }
     
     /**
      * Store input command into command file 
@@ -94,11 +101,13 @@ public class StorageInterface {
      */
     public boolean saveUponFullQueue(String command) {
         boolean isFullQueue = false;
+        
+        storeCommandLine(command);
        
         Queue<String> newCommandsQueue = storageHandler.getAllCommandsQueue();
         newCommandsQueue.offer(command);
         storageHandler.setAllCommandsQueue(newCommandsQueue);
-        storeCommandLine(command);
+        
         if (storageHandler.getAllCommandsQueue().size() >= QUEUE_SIZE) {
             isFullQueue = true;
         }
@@ -119,12 +128,7 @@ public class StorageInterface {
         storageHandler.setAllCommandsQueue(newCommandsQueue);
     }
     
-    public boolean storeCommandLine(String command) {
-        boolean isSaved = storageHandler.writeToCommandFile(command);
-        assert isSaved == true : "Command not stored.";
-        
-        return isSaved;
-    }
+
     
     public void clearCommandFileOnCommit() {
         storageHandler.clearCommandFileUponCommit();
