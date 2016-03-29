@@ -45,14 +45,17 @@ public class TaskManagerInterface {
     public int add (TaskEntity newTask, String command) {
         int executionResult = manager.add(newTask);
         if(executionResult != -2) {
-            System.out.println("Backing up");
             manager.saveBackupCommand(command);
         }
         return executionResult;
     }
     
-    public int add (ArrayList<TaskEntity> newTasks) {
-        return manager.add(newTasks);
+    public int add (ArrayList<TaskEntity> newTasks, String command) {
+        int executionResult = manager.add(newTasks);
+        if(executionResult != -2) {
+            manager.saveBackupCommand(command);
+        }
+        return executionResult;
     }
     
     public ArrayList<TaskEntity> getWorkingList () {
