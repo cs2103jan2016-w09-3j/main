@@ -41,20 +41,12 @@ public class TaskManagerInterface {
     public Queue<String> getBackedupCommands () {
         return manager.getBackedupCommands();
     }
-    
-    /**
-     * Calls storage to save each command ran. Auto commits when list is full
-     * 
-     * @param command - Raw command to be passed down
-     */
-    public void backupCommand (String command) {
-        manager.storeCommandForBackup(command);
-    }
    
-    public int add (TaskEntity newTask) {
+    public int add (TaskEntity newTask, String command) {
         int executionResult = manager.add(newTask);
-        if(executionResult != -2 && manager.toggleBackupCommandStatus()) {
-            manager.backupCommand();
+        if(executionResult != -2) {
+            System.out.println("Backing up");
+            manager.saveBackupCommand(command);
         }
         return executionResult;
     }
@@ -71,18 +63,18 @@ public class TaskManagerInterface {
         manager.switchView(newView);
     }
     
-    public int modify (String taskId, TaskEntity modifiedTask) {
+    public int modify (String taskId, TaskEntity modifiedTask, String command) {
         int executionResult = manager.modify(taskId, modifiedTask);
-        if(executionResult != -2 && manager.toggleBackupCommandStatus()) {
-            manager.backupCommand();
+        if(executionResult != -2) {
+            manager.saveBackupCommand(command);
         }
         return executionResult;
     }
     
-    public int modify (int taskId, TaskEntity modifiedTask) {
+    public int modify (int taskId, TaskEntity modifiedTask, String command) {
         int executionResult = manager.modify(taskId, modifiedTask);
-        if(executionResult != -2 && manager.toggleBackupCommandStatus()) {
-            manager.backupCommand();
+        if(executionResult != -2) {
+            manager.saveBackupCommand(command);
         }
         return executionResult;
     }
@@ -97,36 +89,34 @@ public class TaskManagerInterface {
      *         Id of the position to be in the display list after deleting
      *         otherwise
      */
-    public int delete (String taskId) {
+    public int delete (String taskId, String command) {
         boolean deletionResult = manager.delete(taskId);
         
         if (!deletionResult) {
-            manager.toggleBackupCommandStatus();
             return -2;
         } else {
-            if (manager.toggleBackupCommandStatus()) {
-                manager.backupCommand();
-            }
+            manager.saveBackupCommand(command);
             return manager.checkCurrentId(Utils.convertBase36ToDec(taskId));
         }
     }
     
-    public boolean delete (String taskIdStart, String taskIdEnd) {
+    //TODO : Save this to command list for crash. String command now only there for show
+    public boolean delete (String taskIdStart, String taskIdEnd, String command) {
         return manager.delete(taskIdStart, taskIdEnd);
     }
     
-    public boolean link (TaskEntity projectHeadId, TaskEntity taskUnderId) {
+    public boolean link (TaskEntity projectHeadId, TaskEntity taskUnderId, String command) {
         boolean executionSucceeded = manager.link(projectHeadId, taskUnderId);
-        if(executionSucceeded && manager.toggleBackupCommandStatus()) {
-            manager.backupCommand();
+        if(executionSucceeded) {
+            manager.saveBackupCommand(command);
         }
         return executionSucceeded;
     }
     
-    public boolean link (String projectHeadId, String taskUnderId) {
+    public boolean link (String projectHeadId, String taskUnderId, String command) {
         boolean executionSucceeded = manager.link(projectHeadId, taskUnderId);
-        if(executionSucceeded && manager.toggleBackupCommandStatus()) {
-            manager.backupCommand();
+        if(executionSucceeded) {
+            manager.saveBackupCommand(command);
         }
         return executionSucceeded;
     }
@@ -142,20 +132,17 @@ public class TaskManagerInterface {
      *         Id of the position to be in the display list after marking done
      *         otherwise
      */
-    public int markAsDone (String taskToMark) {
-        return markAsDone(Utils.convertBase36ToDec(taskToMark));
+    public int markAsDone (String taskToMark, String command) {
+        return markAsDone(Utils.convertBase36ToDec(taskToMark), command);
     }
     
-    public int markAsDone (int taskToMark) {
+    public int markAsDone (int taskToMark, String command) {
         boolean markingResults = manager.markAsDone(taskToMark);
         
         if(!markingResults) {
-            manager.toggleBackupCommandStatus();
             return -2;
         } else {
-            if( manager.toggleBackupCommandStatus() ) {
-                manager.backupCommand();
-            }
+            manager.saveBackupCommand(command);
             return manager.checkCurrentId(taskToMark);
         }
     }
@@ -172,10 +159,10 @@ public class TaskManagerInterface {
         return manager.undo();
     }
     
-    public int searchString (String searchTerm) {
+    public int searchString (String searchTerm, String command) {
         int executionResult = manager.searchString(searchTerm);
-        if(executionResult != -2 && manager.toggleBackupCommandStatus()) {
-            manager.backupCommand();
+        if(executionResult != -2 ) {
+            manager.saveBackupCommand(command);
         }
         return executionResult;
     }

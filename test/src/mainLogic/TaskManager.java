@@ -38,9 +38,6 @@ public class TaskManager {
     private static ArrayList<TaskEntity> completedTaskEntities = new ArrayList<TaskEntity>();
     
 	private static ArrayList<TaskEntity> searchedTasks = new ArrayList<TaskEntity>();
-	
-	private String _backupCommand;
-	private boolean _isBackupCommandLoaded;
 
 	public final static int DISPLAY_MAIN = 0;
 	public final static int DISPLAY_FLOATING = 1;
@@ -135,9 +132,6 @@ public class TaskManager {
 		
 		updateTaskEntityCurrentId();
 		buildCompletedTasks();
-		
-		_backupCommand = "";
-		_isBackupCommandLoaded = false;
 
 		//logger.log(Level.FINEST, "TaskManager Initialized");
 		displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
@@ -255,36 +249,12 @@ public class TaskManager {
     }
     
     /**
-     * Function to get command to be stored before backing it up into storage
-     * when the command succeeds
-     * 
-     * @param command - Command to be stored
-     */
-    public void storeCommandForBackup (String command) {
-        _backupCommand = command;
-        _isBackupCommandLoaded = true;
-    }
-    
-    public boolean toggleBackupCommandStatus () {
-        if ( _isBackupCommandLoaded ) {
-            _isBackupCommandLoaded = false;
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
      * Calls storage to save each command ran. Auto commits when list is full
      * 
      * @param command - Raw command (the one that the user types) to be passed down
      */
     public void saveBackupCommand (String command) {
         dataLoader.storeCommandLine(command);
-    }
-    
-    public void backupCommand () {
-        saveBackupCommand(_backupCommand);
     }
     
 	/**
