@@ -38,6 +38,9 @@ public class UserInterfaceExecuter {
 	}
 
 	public int delete(String id, String rawCommandWithView) {
+		if (id == null) {
+			return -1;
+		}
 		return _taskManager.delete(id, rawCommandWithView);
 	}
 
