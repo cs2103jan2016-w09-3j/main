@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import java.util.zip.Inflater;
 
 import dateParser.InputParser;
+import dateParser.Pair;
 import dateParser.CommandParser.COMMAND;
 import entity.TaskEntity;
 import mainLogic.TaskManager;
@@ -577,7 +578,7 @@ public class UserInterfaceController {
 		_scorllAnimation = null;
 	}
 
-	public boolean link(String indexZZ1, String indexZZ2, String rawString) {
+	public boolean link(String indexZZ1, String indexZZ2, String rawString, boolean toUpdateView) {
 		int index1 = Utils.convertBase36ToDec(indexZZ1);
 		int index2 = Utils.convertBase36ToDec(indexZZ2);
 		if (index1 != -1 && index2 != -1) {
@@ -585,9 +586,11 @@ public class UserInterfaceController {
 				_logicFace.getWorkingList().get(index1);
 				_logicFace.getWorkingList().get(index2);
 				boolean success = _logicFace.link(_logicFace.getWorkingList().get(index1),
-						_logicFace.getWorkingList().get(index2), rawString);
+						_logicFace.getWorkingList().get(index2), buildRawCommand(rawString));
 				if (success) {
-					updateChangesToViews(0);
+					if (toUpdateView) {
+						updateChangesToViews(0);
+					}
 					return true;
 				}
 			}
@@ -743,6 +746,11 @@ public class UserInterfaceController {
 					String searchStirng = parser.getSearchString();
 					executeSearch(searchStirng, rawCommandWithView, false);
 					_logicFace.switchView(TaskManager.DISPLAY_SEARCH);
+					break;
+				}
+				case LINK: {
+					Pair<String, String> ids = parser.getLinkID();
+					link(ids.getFirst(), ids.getSecond(), rawCommandWithView,false);
 					break;
 				}
 				default:
