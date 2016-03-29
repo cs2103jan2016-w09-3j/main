@@ -20,13 +20,13 @@ public class InformationParser {
 		boolean success = setInformation(working);
 		if (success){
 			if ((title != null)&&(title.length()!=1)){
-				input = input.replace(title, "<title>" + title + "</title>");
+				input = input.replace(title, "<"+XMLParser.TITLE_TAG+">" + title + "</"+XMLParser.TITLE_TAG+">");
 			}
 			if ((description != null)&&(description.length()!=1)) {
-				input = input.replace(description, "<desc>" + description + "</desc>");
+				input = input.replace(description, "<"+XMLParser.DESC_TAG+">" + description + "</"+XMLParser.DESC_TAG+">");
 			}
 		}
-		input = input.replace(":", "<others>:</others>");
+		input = input.replace(":", "<"+XMLParser.OTHERS_TAG+">:</"+XMLParser.OTHERS_TAG+">");
 		return input;
 	}
 

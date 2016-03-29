@@ -146,7 +146,7 @@ public class DateParser {
 			// String dateSG = convertFormalDates(dateUS);
 			//System.out.println("test" + dateGroups.get(i).getText());
 			returnVal = returnVal.replace(dateGroups.get(i).getText(),
-					"<dates>" + convertFormalDates(dateGroups.get(i).getText()) + "</dates>");
+					"<"+XMLParser.DATE_TAG+">" + convertFormalDates(dateGroups.get(i).getText()) + "</"+XMLParser.DATE_TAG+">");
 		}
 		showErr();
 		return returnVal;

@@ -50,9 +50,13 @@ public class TaskManagerInterface {
     public void backupCommand (String command) {
         manager.storeCommandForBackup(command);
     }
-    
+   
     public int add (TaskEntity newTask) {
-        return manager.add(newTask);
+        int executionResult = manager.add(newTask);
+        if(executionResult != -2 && manager.toggleBackupCommandStatus()) {
+            manager.backupCommand();
+        }
+        return executionResult;
     }
     
     public int add (ArrayList<TaskEntity> newTasks) {
@@ -68,11 +72,19 @@ public class TaskManagerInterface {
     }
     
     public int modify (String taskId, TaskEntity modifiedTask) {
-        return manager.modify(taskId, modifiedTask);
+        int executionResult = manager.modify(taskId, modifiedTask);
+        if(executionResult != -2 && manager.toggleBackupCommandStatus()) {
+            manager.backupCommand();
+        }
+        return executionResult;
     }
     
     public int modify (int taskId, TaskEntity modifiedTask) {
-        return manager.modify(taskId, modifiedTask);
+        int executionResult = manager.modify(taskId, modifiedTask);
+        if(executionResult != -2 && manager.toggleBackupCommandStatus()) {
+            manager.backupCommand();
+        }
+        return executionResult;
     }
     
     /**
@@ -88,9 +100,13 @@ public class TaskManagerInterface {
     public int delete (String taskId) {
         boolean deletionResult = manager.delete(taskId);
         
-        if(!deletionResult) {
+        if (!deletionResult) {
+            manager.toggleBackupCommandStatus();
             return -2;
         } else {
+            if (manager.toggleBackupCommandStatus()) {
+                manager.backupCommand();
+            }
             return manager.checkCurrentId(Utils.convertBase36ToDec(taskId));
         }
     }
@@ -100,11 +116,19 @@ public class TaskManagerInterface {
     }
     
     public boolean link (TaskEntity projectHeadId, TaskEntity taskUnderId) {
-        return manager.link(projectHeadId, taskUnderId);
+        boolean executionSucceeded = manager.link(projectHeadId, taskUnderId);
+        if(executionSucceeded && manager.toggleBackupCommandStatus()) {
+            manager.backupCommand();
+        }
+        return executionSucceeded;
     }
     
     public boolean link (String projectHeadId, String taskUnderId) {
-        return manager.link(projectHeadId, taskUnderId);
+        boolean executionSucceeded = manager.link(projectHeadId, taskUnderId);
+        if(executionSucceeded && manager.toggleBackupCommandStatus()) {
+            manager.backupCommand();
+        }
+        return executionSucceeded;
     }
     
     /**
@@ -126,8 +150,12 @@ public class TaskManagerInterface {
         boolean markingResults = manager.markAsDone(taskToMark);
         
         if(!markingResults) {
+            manager.toggleBackupCommandStatus();
             return -2;
         } else {
+            if( manager.toggleBackupCommandStatus() ) {
+                manager.backupCommand();
+            }
             return manager.checkCurrentId(taskToMark);
         }
     }
@@ -145,7 +173,11 @@ public class TaskManagerInterface {
     }
     
     public int searchString (String searchTerm) {
-        return manager.searchString(searchTerm);
+        int executionResult = manager.searchString(searchTerm);
+        if(executionResult != -2 && manager.toggleBackupCommandStatus()) {
+            manager.backupCommand();
+        }
+        return executionResult;
     }
     public void closeTaskManager () {
         manager.closeTaskManager();

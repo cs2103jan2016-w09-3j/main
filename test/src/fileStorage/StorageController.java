@@ -78,8 +78,6 @@ public class StorageController implements StorageInterface {
     }
     
     public Queue<String> getCommandsUponInit() {
-        storageHandler.processFile();
-        
         Queue<String> retrievedCommands = storageHandler.getAllCommandsQueue();
         
         return retrievedCommands;
