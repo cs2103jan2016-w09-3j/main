@@ -98,6 +98,7 @@ public class StorageInterface {
         Queue<String> newCommandsQueue = storageHandler.getAllCommandsQueue();
         newCommandsQueue.offer(command);
         storageHandler.setAllCommandsQueue(newCommandsQueue);
+        storeCommandLine(command);
         if (storageHandler.getAllCommandsQueue().size() >= QUEUE_SIZE) {
             isFullQueue = true;
         }

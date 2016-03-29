@@ -261,7 +261,10 @@ public class TaskManager {
      * @param command - Raw command (the one that the user types) to be passed down
      */
     public void saveBackupCommand (String command) {
-        dataLoader.storeCommandLine(command);
+        boolean requiresFullSave = dataLoader.saveUponFullQueue(command);
+        if( requiresFullSave ) {
+            commitFullSave();
+        }
     }
     
 	/**
@@ -289,10 +292,11 @@ public class TaskManager {
         }
     }
 
-	/**
-	 * Function to call for TaskManager before closing the program
-	 */
-	public void closeTaskManager() {
+    /**
+     * Function to call for TaskManager before closing the program and whenever
+     * its doing a full save
+     */
+	public void commitFullSave() {
         AllTaskLists newList = generateSavedTaskArray();
         
 		dataLoader.storeTaskLists(newList);

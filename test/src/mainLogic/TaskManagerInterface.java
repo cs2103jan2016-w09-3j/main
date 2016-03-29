@@ -182,6 +182,6 @@ public class TaskManagerInterface {
     }
     
     public void closeTaskManager () {
-        manager.closeTaskManager();
+        manager.commitFullSave();
     }
 }
