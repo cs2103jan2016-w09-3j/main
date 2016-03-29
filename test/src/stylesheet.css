@@ -155,7 +155,8 @@
 }
 
 #cssCommandBarAdd {
-	-fx-background-color: rgba(179.0, 255.0, 153.0, 1.0);
+	-fx-background-color: rgba(72.0, 238.0, 56.0, 1.0);
+	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 	
 }
@@ -165,81 +166,86 @@
 }
 
 #cssCommandBarDelete {
-	-fx-background-color: rgba(255.0, 153.0, 153.0, 1.0);
+	-fx-background-color: rgba(56.0, 238.0, 223.0, 1.0);
+	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarEdit {
-	-fx-background-color: rgba(153.0, 130.0, 255.0, 1.0);
+	-fx-background-color: rgba(56, 163, 238, 0.5);
+	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarLink {
-	-fx-background-color: rgba(255.0, 255.0, 153.0, 1.0);
+	-fx-background-color: rgba(163, 238, 56, 1.0);
+	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarDone {
-	-fx-background-color: rgba(153.0, 153.0, 255.0, 1.0);
+	-fx-background-color: rgba(238, 132, 56, 1.0);
+	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandTitle {
-	-fx-background-color: rgba(153.0, 153.0, 255.0, 1.0);
+	-fx-background-color: rgba(202.0, 247.0, 140.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 #cssCommandDate {
-	-fx-background-color: rgba(255.0, 153.0, 255.0, 1.0);
+	-fx-background-color: rgba(247.0, 140.0, 149.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
+#cssCommandHashTag{
+	-fx-background-color: rgba(247.0, 238.0, 140.0, 1.0);
+	-fx-background-radius: 7.0; 
+}
+
 #cssCommandID {
-	-fx-background-color: rgba(153.0, 153.0, 255.0, 1.0);
+	-fx-background-color: rgba(247.0, 184.0, 140.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 #cssCommandDescription {
-	-fx-background-color: rgba(153.0, 153.0, 255.0, 1.0);
+	-fx-background-color: rgba(140.0, 202.0, 247.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
-#cssCommandMark {
-	-fx-background-color: rgba(61.0, 234.0, 64.0, 1.0);
-	-fx-background-radius: 7.0; 
-}
+
 #cssCommandJump {
-	-fx-background-color: rgba(61.0, 231.0, 234.0, 1.0);
+	-fx-background-color: rgba(238, 56, 163, 1.0);
+	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 #cssCommandSearch{
-	-fx-background-color: rgba(242.0, 190.0, 134.0, 1.0);
-	-fx-background-radius: 7.0; 
-}
-#cssCommandLink{
-	-fx-background-color: rgba(189.0, 188.0, 188.0, 1.0);
+	-fx-background-color: rgba(132, 56, 238, 1.0);
+	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandExit{
-	-fx-background-color: rgba(189.0, 188.0, 188.0, 1.0);
-	-fx-background-radius: 7.0; 
+	-fx-text-fill:white;
+	-fx-background-color: rgba(238, 56, 72, 1.0);
+	-fx-font-weight:bold;
 	 -fx-font: 20.0px "Arial";
 }
 
 #cssCommandFloat{
-	-fx-background-color: rgba(189.0, 188.0, 188.0, 1.0);
+	-fx-background-color: rgba(238.0, 132.0, 56.0, 1.0);
+	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
-	 -fx-font: 20.0px "Arial";
 }
 #cssCommandShow{
-	-fx-background-color: rgba(189.0, 188.0, 188.0, 1.0);
+	-fx-background-color: rgba(223, 56, 238, 1.0);
+	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
-	 -fx-font: 20.0px "Arial";
 }
 #cssCommandHide{
-	-fx-background-color: rgba(189.0, 188.0, 188.0, 1.0);
+	-fx-background-color: rgba(223, 56, 238, 1.0);
+	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
-	 -fx-font: 20.0px "Arial";
 }
 #cssCommandMain{
-	-fx-background-color: rgba(189.0, 188.0, 188.0, 1.0);
+	-fx-background-color: rgba(238, 56, 163, 1.0);
+	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
-	 -fx-font: 20.0px "Arial";
 }

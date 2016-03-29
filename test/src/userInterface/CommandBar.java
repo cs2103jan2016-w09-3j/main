@@ -31,19 +31,24 @@ public class CommandBar {
 
 	private static final String MESSAGE_FAILURE_ADD = "Fail to add.";
 	private static final String MESSAGE_SUCCESS_DELETE = "Successfully deleted %1$s.";
-	private static final String MESSAGE_FAILURE_DELETE = "Fail to delete %1$s.";
+	private static final String MESSAGE_FAILURE_DELETE_TYPE_1 = "Fail to delete %1$s.";
+	private static final String MESSAGE_FAILURE_DELETE_TYPE_2 = "Task id required to delete.";
 	private static final String MESSAGE_SUCCESS_EDIT = "Successfully edited %1$s.";
 	private static final String MESSAGE_FAILURE_EDIT_TYPE1 = "Fail to edit %1$s.";
 	private static final String MESSAGE_FAILURE_EDIT_TYPE2 = "Fail to retrieve task with %1$s.";
+	private static final String MESSAGE_FAILURE_EDIT_TYPE3 = "Task id required to edit.";
 	private static final String MESSAGE_SUCCESS_MARK = "Successfully mark %1$s as completed.";
-	private static final String MESSAGE_FAILURE_MARK = "Fail to mark %1$s as completed.";
+	private static final String MESSAGE_FAILURE_MARK_TYPE_1 = "Fail to mark %1$s as completed.";
+	private static final String MESSAGE_FAILURE_MARK_TYPE_2 = "Task id required to mark a task done.";
 	private static final String MESSAGE_SUCCESS_SEARCH_TYPE_1 = "Search compelete with %1$s results.";
 	private static final String MESSAGE_SUCCESS_SEARCH_TYPE_2 = "No results found.";
 	private static final String MESSAGE_FAILURE_SEARCH_TYPE1 = "No results found.";
 	private static final String MESSAGE_FAILURE_SEARCH_TYPE2 = "Search failed.";
-	private static final String MESSAGE_FAILURE_JUMP = "No index to jump to.";
+	private static final String MESSAGE_FAILURE_JUMP_TYPE_1 = "No index to jump to.";
+	private static final String MESSAGE_FAILURE_JUMP_TYPE_2 = "Task id required to jump to.";
 	private static final String MESSAGE_SUCCESS_LINK = "Linked successfully.";
-	private static final String MESSAGE_FAILURE_LINK = "Failed to link.";
+	private static final String MESSAGE_FAILURE_LINK_TYPE_1 = "Failed to link.";
+	private static final String MESSAGE_FAILURE_LINK_TYPE_2 = "Failed to link.";
 
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
@@ -277,6 +282,8 @@ public class CommandBar {
 			return buildDateLabel(item.getSecond());
 		} else if (type.equals(XMLParser.OTHERS_TAG)) {
 			return buildNormalLabel(item.getSecond());
+		} else if (type.equals(XMLParser.HASH_TAG)) {
+			return buildHashTagLabel(item.getSecond());
 		}
 		return null;
 	}
@@ -315,6 +322,13 @@ public class CommandBar {
 		return label;
 	}
 
+	public Label buildHashTagLabel(ArrayList<String> text) {
+		Label label = buildLabelSkeleton();
+		label.setText(text.get(0));
+		label.setId("cssCommandHashTag");
+		return label;
+	}
+
 	public Label buildDescLabel(ArrayList<String> text) {
 		Label label = buildLabelSkeleton();
 		label.setText(text.get(0));
@@ -334,7 +348,7 @@ public class CommandBar {
 		if (text.size() == 1) {
 			String commandString = text.get(0);
 			Label label = buildLabelSkeleton();
-			label.setText(commandString);
+			label.setText(commandString.toUpperCase());
 			COMMAND cmd = cp.getCommand(commandString);
 			switch (cmd) {
 			case ADD: {
@@ -358,7 +372,7 @@ public class CommandBar {
 				break;
 			}
 			case DONE: {
-				label.setId("cssCommandMark");
+				label.setId("cssCommandBarDone");
 				break;
 			}
 			case SEARCH: {
@@ -366,7 +380,7 @@ public class CommandBar {
 				break;
 			}
 			case LINK: {
-				label.setId("cssCommandLink");
+				label.setId("cssCommandBarLink");
 				break;
 			}
 			case EXIT: {
@@ -530,7 +544,11 @@ public class CommandBar {
 			if (condition) {
 				setFeedBackMessage(String.format(MESSAGE_SUCCESS_DELETE, msg));
 			} else {
-				setFeedBackMessage(String.format(MESSAGE_FAILURE_DELETE, msg));
+				if (type == PrimaryUserInterface.TYPE_1) {
+					setFeedBackMessage(String.format(MESSAGE_FAILURE_DELETE_TYPE_1, msg));
+				} else if (type == PrimaryUserInterface.TYPE_2) {
+					setFeedBackMessage(MESSAGE_FAILURE_DELETE_TYPE_2);
+				}
 			}
 			break;
 		}
@@ -538,10 +556,12 @@ public class CommandBar {
 			if (condition) {
 				setFeedBackMessage(String.format(MESSAGE_SUCCESS_EDIT, msg));
 			} else {
-				if (type == 0) {
+				if (type == PrimaryUserInterface.TYPE_1) {
 					setFeedBackMessage(String.format(MESSAGE_FAILURE_EDIT_TYPE1, msg));
-				} else if (type == 1) {
+				} else if (type == PrimaryUserInterface.TYPE_2) {
 					setFeedBackMessage(String.format(MESSAGE_FAILURE_EDIT_TYPE2, msg));
+				} else if (type == PrimaryUserInterface.TYPE_3) {
+					setFeedBackMessage(MESSAGE_FAILURE_EDIT_TYPE3);
 				}
 			}
 			break;
@@ -550,7 +570,11 @@ public class CommandBar {
 			if (condition) {
 				setFeedBackMessage(String.format(MESSAGE_SUCCESS_MARK, msg));
 			} else {
-				setFeedBackMessage(String.format(MESSAGE_FAILURE_MARK, msg));
+				if (type == PrimaryUserInterface.TYPE_1) {
+					setFeedBackMessage(String.format(MESSAGE_FAILURE_MARK_TYPE_1, msg));
+				} else {
+					setFeedBackMessage(String.format(MESSAGE_FAILURE_MARK_TYPE_2, msg));
+				}
 			}
 			break;
 		}
@@ -568,13 +592,21 @@ public class CommandBar {
 		}
 		case JUMP: {
 			if (!condition) {
-				setFeedBackMessage(MESSAGE_FAILURE_JUMP);
+				if (type == PrimaryUserInterface.TYPE_1) {
+					setFeedBackMessage(MESSAGE_FAILURE_JUMP_TYPE_1);
+				} else {
+					setFeedBackMessage(MESSAGE_FAILURE_JUMP_TYPE_2);
+				}
 			}
 			break;
 		}
 		case LINK: {
 			if (!condition) {
-				setFeedBackMessage(MESSAGE_FAILURE_LINK);
+				if (type == PrimaryUserInterface.TYPE_1) {
+					setFeedBackMessage(MESSAGE_FAILURE_LINK_TYPE_1);
+				} else {
+					setFeedBackMessage(MESSAGE_FAILURE_LINK_TYPE_2);
+				}
 			} else {
 				setFeedBackMessage(MESSAGE_SUCCESS_LINK);
 			}
