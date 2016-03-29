@@ -437,7 +437,7 @@ public class UserInterfaceController {
 			}
 		}
 
-		int insertedTo = _logicFace.addTask(task, rawInput);
+		int insertedTo = _logicFace.addTask(task, buildRawCommand(rawInput));
 		if (toUpdateView) {
 			if (insertedTo > -2) {
 				updateChangesToViews(insertedTo);
