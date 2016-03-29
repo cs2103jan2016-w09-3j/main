@@ -1,19 +1,19 @@
-package mainLogic;
+package fileStorage;
 
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import fileStorage.StorageController;
+import fileStorage.StorageInterface;
 
 public class CommandHandler extends TimerTask {
     
     private static final int MILLISECONDS_TO_SECONDS = 1000;
     private static final int QUEUE_SIZE = 5;
-    private StorageController storageController;
+    private StorageInterface storageController;
     
     public CommandHandler() {
-        storageController = new StorageController();
+        storageController = new StorageInterface();
     }
     
     private boolean storeCommand(String command) {
