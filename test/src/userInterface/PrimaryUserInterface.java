@@ -157,7 +157,7 @@ public class PrimaryUserInterface extends Application {
 			} else if (cmd.equals(COMMAND.ADD)) {
 				executeAdd(_commandBar.getTasks(), _commandBar.getFullInput());
 			} else if (cmd.equals(COMMAND.DELETE)) {
-				executeDelete(_commandBar.getId());
+				executeDelete(_commandBar.getId(), _commandBar.getFullInput());
 			} else if (cmd.equals(COMMAND.EDIT)) {
 				executeModify(_commandBar.getId());
 			} else if (cmd.equals(COMMAND.MAIN)) {
@@ -269,10 +269,10 @@ public class PrimaryUserInterface extends Application {
 	 * @param taskToCheck.
 	 * @return boolean, true for successful and false for unsuccessful.
 	 */
-	private void executeDelete(String id) {
+	private void executeDelete(String id, String rawString) {
 		if (id != null) {
 			int status = 2;
-			status = uiController.deleteTask(id);
+			status = uiController.deleteTask(id, rawString, true);
 			if (status > -2) {
 				_commandBar.showFeedBackMessage(COMMAND.DELETE, SUCCESS, TYPE_1, id);
 				resetCommandInput();
@@ -297,7 +297,7 @@ public class PrimaryUserInterface extends Application {
 			ArrayList<TaskEntity> tasks = _commandBar.getTasksPartialInput();
 			if (indexToModify != -1) {
 				if (tasks.size() == 1) {
-					executeModify(indexToModify, tasks.get(0));
+					executeModify(indexToModify, tasks.get(0), _commandBar.getFullInput());
 				} else {
 					getItemToModify(indexToModify);
 				}
@@ -307,8 +307,8 @@ public class PrimaryUserInterface extends Application {
 		}
 	}
 
-	private void executeModify(int indexToModify, TaskEntity taskEntity) {
-		boolean success = uiController.modifyTask(indexToModify, taskEntity);
+	private void executeModify(int indexToModify, TaskEntity taskEntity, String rawString) {
+		boolean success = uiController.modifyTask(indexToModify, taskEntity, rawString, true);
 		if (success) {
 			_commandBar.showFeedBackMessage(COMMAND.EDIT, SUCCESS, TYPE_1, Utils.convertDecToBase36(indexToModify));
 			resetCommandInput();

@@ -436,6 +436,7 @@ public class UserInterfaceController {
 		}
 		_taskManager.backupCommand(rawInput);
 		int insertedTo = _taskManager.add(task);
+
 		if (toUpdateView) {
 			if (insertedTo > -2) {
 				updateChangesToViews(insertedTo);
@@ -474,13 +475,16 @@ public class UserInterfaceController {
 		}
 	}
 
-	public int deleteTask(String id) {
+	public int deleteTask(String id, String rawInput, boolean toUpdateView) {
+		_taskManager.backupCommand(rawInput);
 		int result = _taskManager.delete(id);
 		if (result == -2) {
 			return result;
 		}
 		if (result > -2) {
-			updateChangesToViews(result);
+			if (toUpdateView) {
+				updateChangesToViews(result);
+			}
 		}
 		return result;
 	}
@@ -518,7 +522,7 @@ public class UserInterfaceController {
 		return index;
 	}
 
-	public boolean modifyTask(int idToModify, TaskEntity task) {
+	public boolean modifyTask(int idToModify, TaskEntity task, String rawString, boolean toUpdateView) {
 		int index = _taskManager.modify(idToModify, task);
 		if (index < 0) {
 			return false;
@@ -635,9 +639,12 @@ public class UserInterfaceController {
 					break;
 				}
 				case DELETE: {
-
+					String id = parser.getID();
+					deleteTask(id, rawCommand, false);
 					break;
 				}
+				default:
+					break;
 				}
 			}
 		}
