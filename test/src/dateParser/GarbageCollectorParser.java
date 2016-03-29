@@ -19,7 +19,7 @@ public class GarbageCollectorParser {
 			if((temp.length()!=1)&&(!temp.contains("ID"))){
 				if(temp.charAt(0)=='#'){
 					hashes.add(temp);
-					input = input.replace(temp, "<hashtags>"+temp+"</hashtags>");
+					input = input.replace(temp, "<"+XMLParser.HASH_TAG+">"+temp+"</"+XMLParser.HASH_TAG+">");
 				}	
 			}
 			//System.out.println("test2");
@@ -41,7 +41,7 @@ public class GarbageCollectorParser {
 			String temp = sc.next();
 			//System.out.println("GC2"+input);
 			if((temp.length()!=1)&&(!temp.contains("ID"))){
-					input = input.replace(temp, "<others>"+temp+"</others>");
+					input = input.replace(temp, "<"+XMLParser.OTHERS_TAG+">"+temp+"</"+XMLParser.OTHERS_TAG+">");
 					
 			}
 			//System.out.println("test2");
@@ -51,7 +51,7 @@ public class GarbageCollectorParser {
 		//System.out.println(firstWord+" , "+lastWord);
 		if((lastWord.length()==1)&&(!firstWord.equals(lastWord))&&(!lastWord.contains("ID"))){
 			//System.out.println("test");
-			input = input.substring(0, input.length()-2)+"<others>"+lastWord+"</others>";
+			input = input.substring(0, input.length()-2)+"<"+XMLParser.OTHERS_TAG+">"+lastWord+"</"+XMLParser.OTHERS_TAG+">";
 		}
 		return input;
 	}

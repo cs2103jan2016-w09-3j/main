@@ -56,7 +56,7 @@ public class CommandParser {
 		String returnStrVal = input;
 		if(!inputFirstWord.trim().equals("")){
 			returnStrVal = input.substring(inputFirstWord.length());
-			returnStrVal = "<cmd>" + inputFirstWord + "</cmd>"+returnStrVal;
+			returnStrVal = "<"+XMLParser.CMD_TAG+">" + inputFirstWord + "</"+XMLParser.CMD_TAG+">"+returnStrVal;
 		}
 		return returnStrVal;
 	}
