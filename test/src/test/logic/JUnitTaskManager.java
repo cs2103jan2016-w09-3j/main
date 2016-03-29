@@ -17,7 +17,8 @@ public class JUnitTaskManager {
 	@Test
 	public void testAddDeleteModifyLink() {	    
         manager.unloadFile();
-        
+
+        System.out.println("Started test");
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
         for (int i = 0; i < 5; i++) {
             Calendar newDate = Calendar.getInstance();

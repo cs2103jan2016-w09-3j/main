@@ -145,26 +145,27 @@ public class TaskManager extends TimerTask {
     private TaskManager() {
         initLogger();
 
+
         dataLoader = new StorageInterface();
         AllTaskLists taskdata = dataLoader.getTaskLists();
+
         mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
         floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
 
         initializeAssociations();
 
+
         updateTaskEntityCurrentId();
         buildCompletedTasks();
-
         //logger.log(Level.FINEST, "TaskManager Initialized");
         displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
-
         currentDisplayedList = DISPLAY_MAIN;
-        commitUponTimeOut();
+        //commitUponTimeOut();
     }
 
     public void buildCompletedTasks () {
         completedTaskEntities = new ArrayList<TaskEntity>();
-
+        
         for(int i = 0; i < mainTaskEntities.size(); i++) {
             if ( mainTaskEntities.get(i).isCompleted() ) {
                 int positionToAdd = findCompletionPositionToInsert(mainTaskEntities.get(i));
@@ -173,14 +174,16 @@ public class TaskManager extends TimerTask {
                 i--;
             }
         }
-
         for(int i = 0; i < floatingTaskEntities.size(); i++) {
             if ( floatingTaskEntities.get(i).isCompleted() ) {
                 int positionToAdd = findCompletionPositionToInsert(floatingTaskEntities.get(i));
                 completedTaskEntities.add(positionToAdd, floatingTaskEntities.get(i));
+                floatingTaskEntities.remove(i);
                 i--;
             }
         }
+
+        System.out.println("Here 3");
     }
 
     /**
@@ -592,6 +595,7 @@ public class TaskManager extends TimerTask {
             ArrayList<TaskEntity> associationsToMarkComplete = displayedTasks.get(index).getAssociations();
 
             for(int i = 0; i < associationsToMarkComplete.size(); i++) {
+                System.out.println("Marking associations completed");
                 if(!associationsToMarkComplete.get(i).isCompleted() ) {
                     deleteFromCorrespondingDisplayList(associationsToMarkComplete.get(i));
                     associationsToMarkComplete.get(i).markAsDone();
@@ -793,6 +797,10 @@ public class TaskManager extends TimerTask {
         return true;
     }
 
+    public boolean changeDirectory(String newDirectory) {
+        return false;
+    }
+    
     public boolean link(String projectHeadId, String taskUnderId) {
         return link(Utils.convertBase36ToDec(projectHeadId), Utils.convertBase36ToDec(taskUnderId));
     }

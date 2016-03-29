@@ -109,6 +109,10 @@ public class TaskManagerInterface {
         return manager.delete(taskIdStart, taskIdEnd);
     }
     
+    public boolean changeDirectory (String newDirectory) {
+        return manager.changeDirectory(newDirectory);
+    }
+    
     public boolean link (TaskEntity projectHeadId, TaskEntity taskUnderId, String command) {
         boolean executionSucceeded = manager.link(projectHeadId, taskUnderId);
         if(executionSucceeded) {
