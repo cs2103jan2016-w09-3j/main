@@ -202,14 +202,7 @@ public class PrimaryUserInterface extends Application {
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && !event.isControlDown() && !event.isShiftDown()) {
 			_commandBar.getNextCommand();
 		}
-
-		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
-			uiController.move(-1);
-		}
-		if (event.getCode().compareTo(KeyCode.UP) == 0 && event.isControlDown() && event.isShiftDown()) {
-			uiController.move(1);
-		}
-
+		
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && !event.isShiftDown()) {
 			uiController.stopScrollingAnimation();
 			uiController.updateComponents(1);
