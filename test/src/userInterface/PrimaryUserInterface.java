@@ -155,7 +155,7 @@ public class PrimaryUserInterface extends Application {
 			} else if (cmd.equals(COMMAND.INVALID)) {
 				executeInvalidCommand();
 			} else if (cmd.equals(COMMAND.ADD)) {
-				executeAdd(_commandBar.getTasks());
+				executeAdd(_commandBar.getTasks(), _commandBar.getFullInput());
 			} else if (cmd.equals(COMMAND.DELETE)) {
 				executeDelete(_commandBar.getId());
 			} else if (cmd.equals(COMMAND.EDIT)) {
@@ -202,7 +202,7 @@ public class PrimaryUserInterface extends Application {
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && !event.isControlDown() && !event.isShiftDown()) {
 			_commandBar.getNextCommand();
 		}
-		
+
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && !event.isShiftDown()) {
 			uiController.stopScrollingAnimation();
 			uiController.updateComponents(1);
@@ -238,15 +238,15 @@ public class PrimaryUserInterface extends Application {
 	 * @param task
 	 * @return boolean, true for successful and false for unsuccessful.
 	 */
-	private void executeAdd(ArrayList<TaskEntity> tasks) {
+	private void executeAdd(ArrayList<TaskEntity> tasks, String rawInput) {
 		int status = -2;
 		String taskName = null;
 		if (tasks.size() == 1) {
 			if (tasks.get(0) != null) {
-				status = uiController.addTask(tasks.get(0));
+				status = uiController.addTask(tasks.get(0), rawInput, true);
 			}
 		} else {
-			status = uiController.addBatchTask(tasks);
+			status = uiController.addBatchTask(tasks, rawInput, true);
 		}
 		if (status == 1) {
 			taskName = tasks.get(0).getName();

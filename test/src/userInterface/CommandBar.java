@@ -1,10 +1,6 @@
 package userInterface;
 
-import java.text.Format;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Map;
-
 import dateParser.CommandParser;
 import dateParser.CommandParser.COMMAND;
 import dateParser.InputParser;

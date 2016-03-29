@@ -3,11 +3,14 @@ package userInterface;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Queue;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import dateParser.InputParser;
+import dateParser.CommandParser.COMMAND;
 import entity.TaskEntity;
 import mainLogic.TaskManager;
 import mainLogic.TaskManagerInterface;
@@ -39,7 +42,6 @@ public class UserInterfaceController {
 	private DescriptionComponent _descriptionComponent;
 	private DetailComponent _detailComponent;
 	private FloatingBarViewUserInterface _floatingBarComponent;
-
 	private FloatingTaskUserInterface _floatingViewInterface;
 	private SearchUserInterface _searchViewInterface;
 	private Rectangle2D _screenBounds;
@@ -77,6 +79,7 @@ public class UserInterfaceController {
 
 		_parentStage = primaryStage;
 		_taskManager = new TaskManagerInterface();
+		recoverLostCommands();
 	}
 
 	public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize) {
@@ -223,10 +226,10 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * Change the view to when Ctrl left/right is entered. 
-	 * 	Ctrl + left - increment the _currentView by 1.
-	 * 	Ctrl _right - decrement the _currentView by 1.
-	 *  
+	 * Change the view to when Ctrl left/right is entered. Ctrl + left -
+	 * increment the _currentView by 1. Ctrl _right - decrement the _currentView
+	 * by 1.
+	 * 
 	 * @param value
 	 */
 	public void changeView(int value) {
@@ -322,7 +325,8 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * rebuilds task view, expanded view, associate view and their components after a command is executed.
+	 * rebuilds task view, expanded view, associate view and their components
+	 * after a command is executed.
 	 * 
 	 * @param index
 	 */
@@ -403,9 +407,10 @@ public class UserInterfaceController {
 			}
 		}
 	}
-	
+
 	/**
-	 * This method is used only by FloatingTaskAnimation to update the floating bar view.
+	 * This method is used only by FloatingTaskAnimation to update the floating
+	 * bar view.
 	 * 
 	 * @param percentageDone
 	 * @return
@@ -415,14 +420,26 @@ public class UserInterfaceController {
 		return isDoneAnimating;
 	}
 
-
-	public int addTask(TaskEntity task) {
-		if (_currentView == SEARCH_VIEW || _currentView == FLOATING_VIEW) {
-			showMainView(-1);
+	/**
+	 * Add the task into the list.
+	 * 
+	 * @param task
+	 * @param toUpdateView
+	 *            (false only when recovering lost commands and testing)
+	 * @return
+	 */
+	public int addTask(TaskEntity task, String rawInput, boolean toUpdateView) {
+		if (toUpdateView) {
+			if (_currentView == SEARCH_VIEW || _currentView == FLOATING_VIEW) {
+				showMainView(-1);
+			}
 		}
+		_taskManager.backupCommand(rawInput);
 		int insertedTo = _taskManager.add(task);
-		if (insertedTo > -2) {
-			updateChangesToViews(insertedTo);
+		if (toUpdateView) {
+			if (insertedTo > -2) {
+				updateChangesToViews(insertedTo);
+			}
 		}
 
 		if (insertedTo == SUCCESSFULLY_ADDED_DIFF) {
@@ -444,12 +461,15 @@ public class UserInterfaceController {
 		return FAIL_TO_EXECUTE;
 	}
 
-	public int addBatchTask(ArrayList<TaskEntity> task) {
+	public int addBatchTask(ArrayList<TaskEntity> task, String rawInput, boolean toUpdateView) {
+		_taskManager.backupCommand(rawInput);
 		int insertedTo = _taskManager.add(task);
 		if (insertedTo == -1) {
 			return -2;
 		} else {
-			updateChangesToViews(insertedTo);
+			if (toUpdateView) {
+				updateChangesToViews(insertedTo);
+			}
 			return 1;
 		}
 	}
@@ -595,6 +615,33 @@ public class UserInterfaceController {
 
 	public void saveStuff() {
 		_taskManager.closeTaskManager();
+	}
+
+	public void recoverLostCommands() {
+		Queue<String> qCommands = _taskManager.getBackedupCommands();
+		while (!qCommands.isEmpty()) {
+			String rawCommand = qCommands.poll();
+			if (rawCommand != null) {
+				InputParser parser = new InputParser(rawCommand);
+				COMMAND cmd = parser.getCommand();
+				switch (cmd) {
+				case ADD: {
+					ArrayList<TaskEntity> tasks = parser.getTask();
+					if (tasks.size() == 1) {
+						addTask(tasks.get(0), rawCommand, false);
+					} else {
+						addBatchTask(tasks, rawCommand, false);
+					}
+					break;
+				}
+				case DELETE: {
+
+					break;
+				}
+				}
+			}
+		}
+
 	}
 
 }
