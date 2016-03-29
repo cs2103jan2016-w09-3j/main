@@ -361,7 +361,7 @@ public class PrimaryUserInterface extends Application {
 	 * @param stringToSearch
 	 */
 	private void executeSearch(String stringToSearch, String rawString) {
-		int status = uiController.executeSearch(stringToSearch, rawString);
+		int status = uiController.executeSearch(stringToSearch, rawString,true);
 		if (status > -1) {
 			if (status == 0) {
 				_commandBar.showFeedBackMessage(COMMAND.SEARCH, SUCCESS, TYPE_2, null);
@@ -401,7 +401,7 @@ public class PrimaryUserInterface extends Application {
 	 */
 	public void executeMarkComplete(String indexZZ, String rawString) {
 		if (indexZZ != null) {
-			boolean isSuccess = uiController.markAsCompleted(indexZZ, rawString);
+			boolean isSuccess = uiController.markAsCompleted(indexZZ, rawString, true);
 			if (isSuccess) {
 				_commandBar.showFeedBackMessage(COMMAND.DONE, SUCCESS, TYPE_1, indexZZ);
 				resetCommandInput();

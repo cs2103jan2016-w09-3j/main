@@ -8,6 +8,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.Inflater;
 
 import dateParser.InputParser;
 import dateParser.CommandParser.COMMAND;
@@ -434,8 +435,8 @@ public class UserInterfaceController {
 				showMainView(-1);
 			}
 		}
-		int insertedTo = _taskManager.add(task, rawInput);
 
+		int insertedTo = _taskManager.add(task, buildRawCommand(rawInput));
 		if (toUpdateView) {
 			if (insertedTo > -2) {
 				updateChangesToViews(insertedTo);
@@ -462,7 +463,7 @@ public class UserInterfaceController {
 	}
 
 	public int addBatchTask(ArrayList<TaskEntity> task, String rawInput, boolean toUpdateView) {
-		int insertedTo = _taskManager.add(task, rawInput);
+		int insertedTo = _taskManager.add(task, buildRawCommand(rawInput));
 		if (insertedTo == -1) {
 			return -2;
 		} else {
@@ -474,7 +475,7 @@ public class UserInterfaceController {
 	}
 
 	public int deleteTask(String id, String rawInput, boolean toUpdateView) {
-		int result = _taskManager.delete(id, rawInput);
+		int result = _taskManager.delete(id, buildRawCommand(rawInput));
 		if (result == -2) {
 			return result;
 		}
@@ -520,7 +521,7 @@ public class UserInterfaceController {
 	}
 
 	public boolean modifyTask(int idToModify, TaskEntity task, String rawInput, boolean toUpdateView) {
-		int index = _taskManager.modify(idToModify, task, rawInput);
+		int index = _taskManager.modify(idToModify, task, buildRawCommand(rawInput));
 		if (index < 0) {
 			return false;
 		}
@@ -541,23 +542,27 @@ public class UserInterfaceController {
 		}
 	}
 
-	public int executeSearch(String stringToSearch, String rawString) {
-		int status = _taskManager.searchString(stringToSearch, rawString);
+	public int executeSearch(String stringToSearch, String rawString, boolean toUpdateView) {
+		int status = _taskManager.searchString(stringToSearch, buildRawCommand(rawString));
 		if (status > -1) {
-			showSearchView();
+			if (toUpdateView) {
+				showSearchView();
+			}
 			return status;
 		}
 		return status;
 	}
 
-	public boolean markAsCompleted(String indexZZ, String rawString) {
+	public boolean markAsCompleted(String indexZZ, String rawString, boolean toUpdateview) {
 		int indexInt = Utils.convertBase36ToDec(indexZZ);
 		if (indexInt == -1) {
 			return false;
 		}
-		int index = _taskManager.markAsDone(indexInt, rawString);
+		int index = _taskManager.markAsDone(indexInt, buildRawCommand(rawString));
 		if (index > -1) {
-			updateChangesToViews(index);
+			if (toUpdateview) {
+				updateChangesToViews(index);
+			}
 			return true;
 		}
 		return false;
@@ -644,10 +649,64 @@ public class UserInterfaceController {
 		_taskManager.closeTaskManager();
 	}
 
+	public String buildRawCommand(String raw) {
+		String full = Integer.toString(_currentView).concat(" ").concat(raw);
+		return full;
+	}
+
+	public String deStructToRawCommand(String rawWithView) {
+		if (rawWithView.split(" ").length > 0) {
+			int index = rawWithView.indexOf(" ");
+			if (index != -1) {
+				return rawWithView.substring(index + 1);
+			}
+		}
+		return null;
+	}
+
+	public String deStructToView(String rawWithView) {
+		if (rawWithView.split(" ").length > 1) {
+			String[] spilt = rawWithView.split(" ");
+			return spilt[0];
+		}
+		return null;
+	}
+
+	public int getViewFromString(String view) {
+		try {
+			int viewInt = Integer.parseInt(view);
+			return viewInt;
+		} catch (NumberFormatException e) {
+
+		}
+		return -1;
+	}
+
+	public void setManagerView(int view) {
+		if (view == TASK_VIEW) {
+			_taskManager.switchView(TaskManager.DISPLAY_MAIN);
+		} else if (view == EXPANDED_VIEW) {
+			_taskManager.switchView(TaskManager.DISPLAY_MAIN);
+		} else if (view == ASSOCIATE_VIEW) {
+			_taskManager.switchView(TaskManager.DISPLAY_MAIN);
+		} else if (view == SEARCH_VIEW) {
+			_taskManager.switchView(TaskManager.DISPLAY_SEARCH);
+		} else if (view == FLOATING_VIEW) {
+			System.out.println("set to floating view");
+			_taskManager.switchView(TaskManager.DISPLAY_FLOATING);
+		}
+	}
+
 	public void recoverLostCommands() {
 		Queue<String> qCommands = _taskManager.getBackedupCommands();
 		while (!qCommands.isEmpty()) {
-			String rawCommand = qCommands.poll();
+			String rawCommandWithView = qCommands.poll();
+			String rawCommand = deStructToRawCommand(rawCommandWithView);
+			String view = deStructToView(rawCommandWithView);
+			int viewInt = getViewFromString(view);
+			if (viewInt != -1) {
+				setManagerView(viewInt);
+			}
 			if (rawCommand != null) {
 				InputParser parser = new InputParser(rawCommand);
 				COMMAND cmd = parser.getCommand();
@@ -655,15 +714,15 @@ public class UserInterfaceController {
 				case ADD: {
 					ArrayList<TaskEntity> tasks = parser.getTask();
 					if (tasks.size() == 1) {
-						addTask(tasks.get(0), rawCommand, false);
+						addTask(tasks.get(0), rawCommandWithView, false);
 					} else {
-						addBatchTask(tasks, rawCommand, false);
+						addBatchTask(tasks, rawCommandWithView, false);
 					}
 					break;
 				}
 				case DELETE: {
 					String id = parser.getID();
-					deleteTask(id, rawCommand, false);
+					deleteTask(id, rawCommandWithView, false);
 					break;
 				}
 				case EDIT: {
@@ -671,8 +730,19 @@ public class UserInterfaceController {
 					parser.removeId();
 					ArrayList<TaskEntity> tasks = parser.getTask();
 					if (tasks.size() == 1) {
-						modifyTask(id, tasks.get(0), rawCommand, false);
+						modifyTask(id, tasks.get(0), rawCommandWithView, false);
 					}
+					break;
+				}
+				case DONE: {
+					String id = parser.getID();
+					markAsCompleted(id, rawCommandWithView, false);
+					break;
+				}
+				case SEARCH: {
+					String searchStirng = parser.getSearchString();
+					executeSearch(searchStirng, rawCommandWithView, false);
+					_taskManager.switchView(TaskManager.DISPLAY_SEARCH);
 					break;
 				}
 				default:
@@ -680,7 +750,7 @@ public class UserInterfaceController {
 				}
 			}
 		}
-
+		_taskManager.switchView(TaskManager.DISPLAY_MAIN);
 	}
 
 }
