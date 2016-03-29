@@ -219,5 +219,6 @@ public class StorageHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        allCommandsQueue.clear();
     }
 }

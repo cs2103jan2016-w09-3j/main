@@ -9,6 +9,12 @@ import entity.TaskEntity;
 
 public class StorageController implements StorageInterface {
     
+    public StorageHandler storageHandler;
+    
+    public StorageController() {
+        storageHandler = new StorageHandler();
+    }
+    
     // Test function
     public static void main (String args[]) {
         StorageController sc = new StorageController();
@@ -35,10 +41,9 @@ public class StorageController implements StorageInterface {
      * @return AllTaskLists
      */
     public AllTaskLists getTaskLists() {
-        StorageHandler mainHandler = new StorageHandler();
         JsonConverter jsonConverter = new JsonConverter();
         
-        String retrievedTasks = mainHandler.getAllStoredTasks();
+        String retrievedTasks = storageHandler.getAllStoredTasks();
         AllTaskLists retrievedList = jsonConverter.jsonToJava(retrievedTasks);
         
         return retrievedList;
@@ -49,12 +54,12 @@ public class StorageController implements StorageInterface {
      * @return boolean
      */    
     public boolean storeTaskLists(AllTaskLists allTaskLists) {
-        StorageHandler mainHandler = new StorageHandler();
         JsonConverter jsonConverter = new JsonConverter();
         
         String toStore = jsonConverter.javaToJson(allTaskLists);
         
-        boolean isSaved = mainHandler.writeToMainFile(toStore);
+        boolean isSaved = storageHandler.writeToMainFile(toStore);
+        assert isSaved == true : "Tasks not stored.";
         
         return isSaved;
     }
@@ -72,21 +77,31 @@ public class StorageController implements StorageInterface {
         return storeTaskLists(newList);
     }
     
-    public String arrayListToString(ArrayList<String> arrayList) {
-        String output = "";
-        for (int i = 0; i < arrayList.size(); i++) {
-            output = output + arrayList.get(i) + '\n';
-        }
-        return output;
+    public Queue<String> getCommandsUponInit() {
+        storageHandler.processFile();
+        
+        Queue<String> retrievedCommands = storageHandler.getAllCommandsQueue();
+        
+        return retrievedCommands;
+    }
+        
+    public Queue<String> getCommandsQueue() {
+        return storageHandler.getAllCommandsQueue();
     }
     
-    public ArrayList<String> stringToArrayList(String input) {
-        ArrayList<String> arrayList = new ArrayList<String>();
-        String[] splitString = input.split("\n");
-        for (int i = 0; i < splitString.length; i++) {
-            arrayList.add(splitString[i]);
-        }
-        return arrayList;
+    public void setCommandsQueue(Queue<String> newCommandsQueue) {
+        storageHandler.setAllCommandsQueue(newCommandsQueue);
+    }
+    
+    public boolean storeCommandLine(String command) {
+        boolean isSaved = storageHandler.writeToCommandFile(command);
+        assert isSaved == true : "Command not stored.";
+        
+        return isSaved;
+    }
+    
+    public void clearCommandFile() {
+        storageHandler.clearCommandFileUponCommit();
     }
     
     private AllTaskLists createDummy() {

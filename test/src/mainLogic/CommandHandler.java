@@ -5,21 +5,19 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import fileStorage.StorageController;
-import fileStorage.StorageHandler;
 
 public class CommandHandler extends TimerTask {
     
     private static final int MILLISECONDS_TO_SECONDS = 1000;
     private static final int QUEUE_SIZE = 5;
-    private StorageHandler storageHandler;
     private StorageController storageController;
     
     public CommandHandler() {
-        storageHandler = new StorageHandler();
+        storageController = new StorageController();
     }
     
     private boolean storeCommand(String command) {
-        return storageHandler.writeToCommandFile(command);
+        return storageController.storeCommandLine(command);
     }
     
     /**
@@ -32,24 +30,26 @@ public class CommandHandler extends TimerTask {
     public boolean saveUponFullQueue(String command) {
         boolean isSavedMain = false;
         boolean isSavedCommand = storeCommand(command);
+        
         assert isSavedCommand == true : "Command not saved.";
-        storageHandler.getAllCommandsQueue().offer(command);
-        if (storageHandler.getAllCommandsQueue().size() >= QUEUE_SIZE) {
+        
+        Queue<String> newCommandsQueue = storageController.getCommandsQueue();
+        newCommandsQueue.offer(command);
+        storageController.setCommandsQueue(newCommandsQueue);
+        if (storageController.getCommandsQueue().size() >= QUEUE_SIZE) {
             //isSavedMain = storageController.storeTaskLists();
-            storageHandler.clearCommandFileUponCommit();
-            storageHandler.getAllCommandsQueue().clear();
+            storageController.clearCommandFile();
         }
         return isSavedMain;
     }
     
     public Queue<String> retrieveCommand() {
-        return storageHandler.getAllCommandsQueue();
+        return storageController.getCommandsQueue();
     }
     
     public void run() {
         //boolean isSavedMain = storageController.storeTaskLists();
-        storageHandler.clearCommandFileUponCommit();
-        storageHandler.getAllCommandsQueue().clear();
+        storageController.clearCommandFile();
         //assert isSavedMain == true;
         //System.out.println(isSavedMain);
     }
