@@ -54,7 +54,7 @@ public class UserInterfaceController {
 	private FloatingBarAnimationThread _floatingThread;
 
 	// main logic class to interact
-	private TaskManagerInterface _taskManager;
+	private UserInterfaceExecuter _logicFace;
 
 	// Debug purpose
 	private static Logger logger = Logger.getLogger("UserInterfaceController");
@@ -79,7 +79,7 @@ public class UserInterfaceController {
 		logger.log(Level.INFO, "UserInterfaceController Init");
 
 		_parentStage = primaryStage;
-		_taskManager = new TaskManagerInterface();
+		_logicFace = new UserInterfaceExecuter();
 		recoverLostCommands();
 	}
 
@@ -107,7 +107,7 @@ public class UserInterfaceController {
 
 	private void initializeTaskView() {
 		_taskViewInterface = TaskViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize);
-		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), _taskManager.getNextTimeListId());
+		_taskViewInterface.buildComponent(_logicFace.getWorkingList(), _logicFace.getNextTimeListId());
 	}
 
 	private void initializeFloatingView() {
@@ -116,7 +116,7 @@ public class UserInterfaceController {
 
 	private void initializeFloatingBar() {
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
-		TaskEntity floatingTask = _taskManager.getRandomFloating();
+		TaskEntity floatingTask = _logicFace.getRandomFloating();
 		if (floatingTask != null) {
 			startFloatingThread();
 		}
@@ -290,8 +290,8 @@ public class UserInterfaceController {
 			_previousView = _currentView;
 		}
 		_currentView = SEARCH_VIEW;
-		_taskManager.switchView(TaskManager.DISPLAY_SEARCH);
-		ArrayList<TaskEntity> searchList = _taskManager.getWorkingList();
+		_logicFace.switchView(TaskManager.DISPLAY_SEARCH);
+		ArrayList<TaskEntity> searchList = _logicFace.getWorkingList();
 		_searchViewInterface.buildContent(searchList);
 		show();
 	}
@@ -301,14 +301,14 @@ public class UserInterfaceController {
 			_previousView = _currentView;
 		}
 		_currentView = FLOATING_VIEW;
-		_taskManager.switchView(TaskManager.DISPLAY_FLOATING);
-		ArrayList<TaskEntity> floatingList = _taskManager.getWorkingList();
+		_logicFace.switchView(TaskManager.DISPLAY_FLOATING);
+		ArrayList<TaskEntity> floatingList = _logicFace.getWorkingList();
 		_floatingViewInterface.buildContent(floatingList);
 		show();
 	}
 
 	public void showMainView(int view) {
-		_taskManager.switchView(TaskManager.DISPLAY_MAIN);
+		_logicFace.switchView(TaskManager.DISPLAY_MAIN);
 		if (view == -1) {
 			if (_currentView == FLOATING_VIEW || _currentView == SEARCH_VIEW) {
 				_currentView = _previousView;
@@ -335,13 +335,13 @@ public class UserInterfaceController {
 		int selelcted = 0;
 		if (index < 0) {
 			selelcted = _taskViewInterface.getSelectIndex();
-			if (!(selelcted < _taskManager.getWorkingList().size() && selelcted > -1)) {
+			if (!(selelcted < _logicFace.getWorkingList().size() && selelcted > -1)) {
 				selelcted = 0;
 			}
 		} else {
 			selelcted = index;
 		}
-		_taskViewInterface.buildComponent(_taskManager.getWorkingList(), selelcted);
+		_taskViewInterface.buildComponent(_logicFace.getWorkingList(), selelcted);
 		_taskViewInterface.update(0);
 		TaskEntity selectedTask = _taskViewInterface.setItemSelected(0);
 		_detailComponent.buildComponent(selectedTask);
@@ -376,8 +376,8 @@ public class UserInterfaceController {
 
 	private void startFloatingThread() {
 		if (_floatingThread == null) {
-			if (_taskManager.getRandomFloating() != null) {
-				_floatingBarComponent.addTask(_taskManager.getRandomFloating().getName());
+			if (_logicFace.getRandomFloating() != null) {
+				_floatingBarComponent.addTask(_logicFace.getRandomFloating().getName());
 				_floatingThread = new FloatingBarAnimationThread(this);
 				_floatingThread.start();
 			}
@@ -396,7 +396,7 @@ public class UserInterfaceController {
 	 * starts the floating bar thread if it is not started.
 	 */
 	public void addRandomTaskToDisplay() {
-		TaskEntity task = _taskManager.getRandomFloating();
+		TaskEntity task = _logicFace.getRandomFloating();
 		if (task != null) {
 			_floatingBarComponent.addTask(task.getName());
 			if (_floatingThread == null) {
@@ -436,7 +436,7 @@ public class UserInterfaceController {
 			}
 		}
 
-		int insertedTo = _taskManager.add(task, buildRawCommand(rawInput));
+		int insertedTo = _logicFace.addTask(task, rawInput);
 		if (toUpdateView) {
 			if (insertedTo > -2) {
 				updateChangesToViews(insertedTo);
@@ -463,7 +463,7 @@ public class UserInterfaceController {
 	}
 
 	public int addBatchTask(ArrayList<TaskEntity> task, String rawInput, boolean toUpdateView) {
-		int insertedTo = _taskManager.add(task, buildRawCommand(rawInput));
+		int insertedTo = _logicFace.addBatch(task, buildRawCommand(rawInput));
 		if (insertedTo == -1) {
 			return -2;
 		} else {
@@ -475,7 +475,7 @@ public class UserInterfaceController {
 	}
 
 	public int deleteTask(String id, String rawInput, boolean toUpdateView) {
-		int result = _taskManager.delete(id, buildRawCommand(rawInput));
+		int result = _logicFace.delete(id, buildRawCommand(rawInput));
 		if (result == -2) {
 			return result;
 		}
@@ -488,7 +488,7 @@ public class UserInterfaceController {
 	}
 
 	public TaskEntity getTaskByID(int id) {
-		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
+		ArrayList<TaskEntity> tasks = _logicFace.getWorkingList();
 		if (id < tasks.size()) {
 			return tasks.get(id);
 		} else {
@@ -504,7 +504,7 @@ public class UserInterfaceController {
 	 */
 	public int getTaskID(TaskEntity taskToCheck) {
 		int index = -1;
-		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
+		ArrayList<TaskEntity> tasks = _logicFace.getWorkingList();
 		for (int i = 0; i < tasks.size(); i++) {
 			TaskEntity taskOnList = tasks.get(i);
 			Calendar toCheckDate = taskToCheck.getDueDate();
@@ -521,7 +521,7 @@ public class UserInterfaceController {
 	}
 
 	public boolean modifyTask(int idToModify, TaskEntity task, String rawInput, boolean toUpdateView) {
-		int index = _taskManager.modify(idToModify, task, buildRawCommand(rawInput));
+		int index = _logicFace.modify(idToModify, task, buildRawCommand(rawInput));
 		if (index < 0) {
 			return false;
 		}
@@ -543,7 +543,7 @@ public class UserInterfaceController {
 	}
 
 	public int executeSearch(String stringToSearch, String rawString, boolean toUpdateView) {
-		int status = _taskManager.searchString(stringToSearch, buildRawCommand(rawString));
+		int status = _logicFace.searchString(stringToSearch, buildRawCommand(rawString));
 		if (status > -1) {
 			if (toUpdateView) {
 				showSearchView();
@@ -558,7 +558,7 @@ public class UserInterfaceController {
 		if (indexInt == -1) {
 			return false;
 		}
-		int index = _taskManager.markAsDone(indexInt, buildRawCommand(rawString));
+		int index = _logicFace.markAsDone(indexInt, buildRawCommand(rawString));
 		if (index > -1) {
 			if (toUpdateview) {
 				updateChangesToViews(index);
@@ -581,11 +581,11 @@ public class UserInterfaceController {
 		int index1 = Utils.convertBase36ToDec(indexZZ1);
 		int index2 = Utils.convertBase36ToDec(indexZZ2);
 		if (index1 != -1 && index2 != -1) {
-			if (index1 < _taskManager.getWorkingList().size() && index2 < _taskManager.getWorkingList().size()) {
-				_taskManager.getWorkingList().get(index1);
-				_taskManager.getWorkingList().get(index2);
-				boolean success = _taskManager.link(_taskManager.getWorkingList().get(index1),
-						_taskManager.getWorkingList().get(index2), rawString);
+			if (index1 < _logicFace.getWorkingList().size() && index2 < _logicFace.getWorkingList().size()) {
+				_logicFace.getWorkingList().get(index1);
+				_logicFace.getWorkingList().get(index2);
+				boolean success = _logicFace.link(_logicFace.getWorkingList().get(index1),
+						_logicFace.getWorkingList().get(index2), rawString);
 				if (success) {
 					updateChangesToViews(0);
 					return true;
@@ -608,7 +608,7 @@ public class UserInterfaceController {
 			}
 			reBuildFrontView(index);
 		} else if (_currentView == FLOATING_VIEW) {
-			ArrayList<TaskEntity> floatingList = _taskManager.getWorkingList();
+			ArrayList<TaskEntity> floatingList = _logicFace.getWorkingList();
 			if (floatingList == null || floatingList.size() == 0) {
 				killFloatingThread();
 				_floatingBarComponent.clearFloatingBar();
@@ -646,7 +646,7 @@ public class UserInterfaceController {
 	}
 
 	public void saveStuff() {
-		_taskManager.closeTaskManager();
+		_logicFace.closeTaskManager();
 	}
 
 	public String buildRawCommand(String raw) {
@@ -684,21 +684,21 @@ public class UserInterfaceController {
 
 	public void setManagerView(int view) {
 		if (view == TASK_VIEW) {
-			_taskManager.switchView(TaskManager.DISPLAY_MAIN);
+			_logicFace.switchView(TaskManager.DISPLAY_MAIN);
 		} else if (view == EXPANDED_VIEW) {
-			_taskManager.switchView(TaskManager.DISPLAY_MAIN);
+			_logicFace.switchView(TaskManager.DISPLAY_MAIN);
 		} else if (view == ASSOCIATE_VIEW) {
-			_taskManager.switchView(TaskManager.DISPLAY_MAIN);
+			_logicFace.switchView(TaskManager.DISPLAY_MAIN);
 		} else if (view == SEARCH_VIEW) {
-			_taskManager.switchView(TaskManager.DISPLAY_SEARCH);
+			_logicFace.switchView(TaskManager.DISPLAY_SEARCH);
 		} else if (view == FLOATING_VIEW) {
 			System.out.println("set to floating view");
-			_taskManager.switchView(TaskManager.DISPLAY_FLOATING);
+			_logicFace.switchView(TaskManager.DISPLAY_FLOATING);
 		}
 	}
 
 	public void recoverLostCommands() {
-		Queue<String> qCommands = _taskManager.getBackedupCommands();
+		Queue<String> qCommands = _logicFace.getBackedupCommands();
 		while (!qCommands.isEmpty()) {
 			String rawCommandWithView = qCommands.poll();
 			String rawCommand = deStructToRawCommand(rawCommandWithView);
@@ -742,7 +742,7 @@ public class UserInterfaceController {
 				case SEARCH: {
 					String searchStirng = parser.getSearchString();
 					executeSearch(searchStirng, rawCommandWithView, false);
-					_taskManager.switchView(TaskManager.DISPLAY_SEARCH);
+					_logicFace.switchView(TaskManager.DISPLAY_SEARCH);
 					break;
 				}
 				default:
@@ -750,7 +750,7 @@ public class UserInterfaceController {
 				}
 			}
 		}
-		_taskManager.switchView(TaskManager.DISPLAY_MAIN);
+		_logicFace.switchView(TaskManager.DISPLAY_MAIN);
 	}
 
 }
