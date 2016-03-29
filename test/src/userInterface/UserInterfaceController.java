@@ -560,7 +560,7 @@ public class UserInterfaceController {
 			return false;
 		}
 		int index = _logicFace.markAsDone(indexInt, buildRawCommand(rawString));
-		if (index > -1) {
+		if (index > -2) {
 			if (toUpdateview) {
 				updateChangesToViews(index);
 			}
@@ -695,7 +695,6 @@ public class UserInterfaceController {
 		} else if (view == SEARCH_VIEW) {
 			_logicFace.switchView(TaskManager.DISPLAY_SEARCH);
 		} else if (view == FLOATING_VIEW) {
-			System.out.println("set to floating view");
 			_logicFace.switchView(TaskManager.DISPLAY_FLOATING);
 		}
 	}
@@ -750,7 +749,7 @@ public class UserInterfaceController {
 				}
 				case LINK: {
 					Pair<String, String> ids = parser.getLinkID();
-					link(ids.getFirst(), ids.getSecond(), rawCommand,false);
+					link(ids.getFirst(), ids.getSecond(), rawCommand, false);
 					break;
 				}
 				default:
