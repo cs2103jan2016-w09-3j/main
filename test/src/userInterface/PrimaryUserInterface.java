@@ -324,25 +324,9 @@ public class PrimaryUserInterface extends Application {
 	 * @param indexToModify
 	 */
 	private void getItemToModify(int indexToModify) {
-		TaskEntity toPopulate = uiController.getTaskByID(indexToModify);
-		if (toPopulate != null) {
-			String toSet = " " + toPopulate.getName();
-			if (toPopulate.getDescription() != null) {
-				toSet += " : " + toPopulate.getDescription();
-			}
-			if (toPopulate.getDueDate() != null) {
-				Calendar c = toPopulate.getDueDate();
-				int day = c.get(Calendar.DATE);
-				int month = c.get(Calendar.MONTH) + 1;
-				int year = c.get(Calendar.YEAR);
-				int hour = c.get(Calendar.HOUR_OF_DAY);
-				int min = c.get(Calendar.MINUTE);
-				toSet += " " + day + "-" + month + "-" + year + " " + hour + min;
-			}
-			if (toPopulate.getProjectHead() != null) {
-				toSet += " @" + toPopulate.getProjectHead().getName();
-			}
-			_commandBar.addToFullInput(toSet);
+		String setString = uiController.getTaskToEidtString(indexToModify);
+		if (setString != null) {
+			_commandBar.addToFullInput(setString);
 			_commandBar.onKeyReleased();
 		} else {
 			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_2, Utils.convertDecToBase36(indexToModify));

@@ -489,32 +489,32 @@ public class UserInterfaceController {
 		return result;
 	}
 
-	public TaskEntity getTaskByID(int ID) {
+	public TaskEntity getTaskByID(int id) {
 		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
-		if (ID < tasks.size()) {
-			return tasks.get(ID);
+		if (id < tasks.size()) {
+			return tasks.get(id);
 		} else {
 			return null;
 		}
 	}
 
+	/**
+	 * unused already.
+	 * 
+	 * @param taskToCheck
+	 * @return
+	 */
 	public int getTaskID(TaskEntity taskToCheck) {
 		int index = -1;
 		ArrayList<TaskEntity> tasks = _taskManager.getWorkingList();
 		for (int i = 0; i < tasks.size(); i++) {
 			TaskEntity taskOnList = tasks.get(i);
-			System.out.println("test0");
-			System.out.println(taskOnList.getDueDate().getTime());
 			Calendar toCheckDate = taskToCheck.getDueDate();
 			toCheckDate.clear(Calendar.MILLISECOND);
-
 			Calendar onListDate = taskOnList.getDueDate();
 			onListDate.clear(Calendar.MILLISECOND);
-
 			if (toCheckDate.compareTo(onListDate) == 0) {
-				System.out.println("test1");
 				if (taskToCheck.getName().equals(taskOnList.getName())) {
-					System.out.println("test2");
 					index = i;
 				}
 			}
@@ -522,12 +522,15 @@ public class UserInterfaceController {
 		return index;
 	}
 
-	public boolean modifyTask(int idToModify, TaskEntity task, String rawString, boolean toUpdateView) {
+	public boolean modifyTask(int idToModify, TaskEntity task, String rawInput, boolean toUpdateView) {
+		_taskManager.backupCommand(rawInput);
 		int index = _taskManager.modify(idToModify, task);
 		if (index < 0) {
 			return false;
 		}
-		updateChangesToViews(index);
+		if (toUpdateView) {
+			updateChangesToViews(index);
+		}
 		return true;
 	}
 
@@ -617,6 +620,30 @@ public class UserInterfaceController {
 		}
 	}
 
+	public String getTaskToEidtString(int indexToModify) {
+		TaskEntity toPopulate = getTaskByID(indexToModify);
+		if (toPopulate != null) {
+			String toSet = " " + toPopulate.getName();
+			if (toPopulate.getDescription() != null) {
+				toSet += " : " + toPopulate.getDescription();
+			}
+			if (toPopulate.getDueDate() != null) {
+				Calendar c = toPopulate.getDueDate();
+				int day = c.get(Calendar.DATE);
+				int month = c.get(Calendar.MONTH) + 1;
+				int year = c.get(Calendar.YEAR);
+				int hour = c.get(Calendar.HOUR_OF_DAY);
+				int min = c.get(Calendar.MINUTE);
+				toSet += " " + day + "-" + month + "-" + year + " " + hour + min;
+			}
+			if (toPopulate.getProjectHead() != null) {
+				toSet += " @" + toPopulate.getProjectHead().getName();
+			}
+			return toSet;
+		}
+		return null;
+	}
+
 	public void saveStuff() {
 		_taskManager.closeTaskManager();
 	}
@@ -641,6 +668,15 @@ public class UserInterfaceController {
 				case DELETE: {
 					String id = parser.getID();
 					deleteTask(id, rawCommand, false);
+					break;
+				}
+				case EDIT: {
+					int id = Utils.convertBase36ToDec(parser.getID());
+					parser.removeId();
+					ArrayList<TaskEntity> tasks = parser.getTask();
+					if (tasks.size() == 1) {
+						modifyTask(id, tasks.get(0), rawCommand, false);
+					}
 					break;
 				}
 				default:
