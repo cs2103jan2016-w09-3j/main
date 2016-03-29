@@ -222,6 +222,13 @@ public class UserInterfaceController {
 		_descriptionComponent.updateTranslateY(value);
 	}
 
+	/**
+	 * Change the view to when Ctrl left/right is entered. 
+	 * 	Ctrl + left - increment the _currentView by 1.
+	 * 	Ctrl _right - decrement the _currentView by 1.
+	 *  
+	 * @param value
+	 */
 	public void changeView(int value) {
 		int view = _currentView + value;
 		switch (view) {
@@ -314,6 +321,11 @@ public class UserInterfaceController {
 		show();
 	}
 
+	/**
+	 * rebuilds task view, expanded view, associate view and their components after a command is executed.
+	 * 
+	 * @param index
+	 */
 	public void reBuildFrontView(int index) {
 		int selelcted = 0;
 		if (index < 0) {
@@ -391,37 +403,18 @@ public class UserInterfaceController {
 			}
 		}
 	}
-
+	
+	/**
+	 * This method is used only by FloatingTaskAnimation to update the floating bar view.
+	 * 
+	 * @param percentageDone
+	 * @return
+	 */
 	public boolean updateFloatingBar(double percentageDone) {
 		boolean isDoneAnimating = _floatingBarComponent.animateView(percentageDone);
 		return isDoneAnimating;
 	}
 
-	/**
-	 * method for debugging purposes only.
-	 * 
-	 */
-	public void move(int value) {
-		if (_currentView == FLOATING_VIEW) {
-			if (value > 0) {
-				double t = _floatingViewInterface.getMainLayoutComponent().getTranslateY() + 50;
-				_floatingViewInterface.updateTranslateY(t);
-			} else {
-				double t = _floatingViewInterface.getMainLayoutComponent().getTranslateY() - 50;
-				_floatingViewInterface.updateTranslateY(t);
-			}
-		} else {
-			if (value > 0) {
-				double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() + 50;
-				_taskViewInterface.updateTranslateY(t);
-				_descriptionComponent.updateTranslateY(t);
-			} else {
-				double t = _taskViewInterface.getMainLayoutComponent().getTranslateY() - 50;
-				_taskViewInterface.updateTranslateY(t);
-				_descriptionComponent.updateTranslateY(t);
-			}
-		}
-	}
 
 	public int addTask(TaskEntity task) {
 		if (_currentView == SEARCH_VIEW || _currentView == FLOATING_VIEW) {

@@ -135,16 +135,6 @@ public class PrimaryUserInterface extends Application {
 		_commandBar.setTextFieldHandler(mainEventHandler, releaseEventHandler);
 	}
 
-	public void executeMarkComplete(String indexZZ) {
-		boolean isSuccess = uiController.markAsCompleted(indexZZ);
-		if (isSuccess) {
-			_commandBar.showFeedBackMessage(COMMAND.DONE, SUCCESS, TYPE_1, indexZZ);
-			resetCommandInput();
-		} else {
-			_commandBar.showFeedBackMessage(COMMAND.DONE, FAILURE, TYPE_1, indexZZ);
-		}
-	}
-
 	private void processKeyRelease(TextField textField, KeyEvent event) {
 		_commandBar.release();
 		if (event.getCode().compareTo(KeyCode.TAB) == 0) {
@@ -186,7 +176,6 @@ public class PrimaryUserInterface extends Application {
 				resetCommandInput();
 			} else if (cmd.equals(COMMAND.JUMP)) {
 				executeJump();
-				resetCommandInput();
 				return;
 			} else if (cmd.equals(COMMAND.DONE)) {
 				String indexToMarkComplete = _commandBar.getId();
@@ -213,14 +202,7 @@ public class PrimaryUserInterface extends Application {
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && !event.isControlDown() && !event.isShiftDown()) {
 			_commandBar.getNextCommand();
 		}
-
-		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && event.isShiftDown()) {
-			uiController.move(-1);
-		}
-		if (event.getCode().compareTo(KeyCode.UP) == 0 && event.isControlDown() && event.isShiftDown()) {
-			uiController.move(1);
-		}
-
+		
 		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && !event.isShiftDown()) {
 			uiController.stopScrollingAnimation();
 			uiController.updateComponents(1);
@@ -288,15 +270,17 @@ public class PrimaryUserInterface extends Application {
 	 * @return boolean, true for successful and false for unsuccessful.
 	 */
 	private void executeDelete(String id) {
-		int status = -2;
 		if (id != null) {
+			int status = 2;
 			status = uiController.deleteTask(id);
-		}
-		if (status > -2) {
-			_commandBar.showFeedBackMessage(COMMAND.DELETE, SUCCESS, TYPE_1, id);
-			resetCommandInput();
-		} else if (status == -2) {
-			_commandBar.showFeedBackMessage(COMMAND.DELETE, FAILURE, TYPE_1, id);
+			if (status > -2) {
+				_commandBar.showFeedBackMessage(COMMAND.DELETE, SUCCESS, TYPE_1, id);
+				resetCommandInput();
+			} else if (status == -2) {
+				_commandBar.showFeedBackMessage(COMMAND.DELETE, FAILURE, TYPE_1, id);
+			}
+		} else {
+			_commandBar.showFeedBackMessage(COMMAND.DELETE, FAILURE, TYPE_2, null);
 		}
 	}
 
@@ -308,14 +292,18 @@ public class PrimaryUserInterface extends Application {
 	 * @return boolean, true for successful and false for unsuccessful.
 	 */
 	public void executeModify(String id) {
-		int indexToModify = Utils.convertBase36ToDec(id);
-		ArrayList<TaskEntity> tasks = _commandBar.getTasksPartialInput();
-		if (indexToModify != -1) {
-			if (tasks.size() == 1) {
-				executeModify(indexToModify, tasks.get(0));
-			} else {
-				getItemToModify(indexToModify);
+		if (id != null) {
+			int indexToModify = Utils.convertBase36ToDec(id);
+			ArrayList<TaskEntity> tasks = _commandBar.getTasksPartialInput();
+			if (indexToModify != -1) {
+				if (tasks.size() == 1) {
+					executeModify(indexToModify, tasks.get(0));
+				} else {
+					getItemToModify(indexToModify);
+				}
 			}
+		} else {
+			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_3, null);
 		}
 	}
 
@@ -371,11 +359,15 @@ public class PrimaryUserInterface extends Application {
 	 */
 	public void executeJump() {
 		String indexToJump = _commandBar.getId();
-		boolean success = uiController.jumpToIndex(indexToJump);
-		if (success) {
-			resetCommandInput();
+		if (indexToJump != null) {
+			boolean success = uiController.jumpToIndex(indexToJump);
+			if (success) {
+				resetCommandInput();
+			} else {
+				_commandBar.showFeedBackMessage(COMMAND.JUMP, FAILURE, TYPE_1, indexToJump);
+			}
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.JUMP, FAILURE, TYPE_1, indexToJump);
+			_commandBar.showFeedBackMessage(COMMAND.JUMP, FAILURE, TYPE_2, indexToJump);
 		}
 	}
 
@@ -405,12 +397,35 @@ public class PrimaryUserInterface extends Application {
 	 * @param indexZZ2
 	 */
 	private void executeLink(String indexZZ1, String indexZZ2) {
-		boolean isSuccess = uiController.link(indexZZ1, indexZZ2);
-		if (isSuccess) {
-			_commandBar.showFeedBackMessage(COMMAND.LINK, SUCCESS, TYPE_1, null);
-			resetCommandInput();
+		if (indexZZ1 != null && indexZZ2 != null) {
+			boolean isSuccess = uiController.link(indexZZ1, indexZZ2);
+			if (isSuccess) {
+				_commandBar.showFeedBackMessage(COMMAND.LINK, SUCCESS, TYPE_1, null);
+				resetCommandInput();
+			} else {
+				_commandBar.showFeedBackMessage(COMMAND.LINK, FAILURE, TYPE_1, null);
+			}
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.LINK, FAILURE, TYPE_1, null);
+			_commandBar.showFeedBackMessage(COMMAND.LINK, FAILURE, TYPE_2, null);
+		}
+	}
+
+	/**
+	 * mark the selected task as complete.
+	 * 
+	 * @param indexZZ
+	 */
+	public void executeMarkComplete(String indexZZ) {
+		if (indexZZ != null) {
+			boolean isSuccess = uiController.markAsCompleted(indexZZ);
+			if (isSuccess) {
+				_commandBar.showFeedBackMessage(COMMAND.DONE, SUCCESS, TYPE_1, indexZZ);
+				resetCommandInput();
+			} else {
+				_commandBar.showFeedBackMessage(COMMAND.DONE, FAILURE, TYPE_1, indexZZ);
+			}
+		} else {
+			_commandBar.showFeedBackMessage(COMMAND.DONE, FAILURE, TYPE_2, indexZZ);
 		}
 	}
 
