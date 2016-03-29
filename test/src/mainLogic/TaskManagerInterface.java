@@ -10,6 +10,7 @@ package mainLogic;
 import java.util.ArrayList;
 import java.util.Queue;
 
+import entity.AllTaskLists;
 import entity.TaskEntity;
 
 public class TaskManagerInterface {
@@ -169,6 +170,17 @@ public class TaskManagerInterface {
         }
         return executionResult;
     }
+    
+    /**
+     * Interface for storage to get saved data for interval and command queue
+     * full saving
+     * 
+     * @return processed task arrays fit for saving via JSON
+     */
+    public AllTaskLists getSaveArray () {
+        return manager.generateSavedTaskArray();
+    }
+    
     public void closeTaskManager () {
         manager.closeTaskManager();
     }

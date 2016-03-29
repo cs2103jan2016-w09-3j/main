@@ -286,6 +286,13 @@ public class TaskManager {
 	 * Function to call for TaskManager before closing the program
 	 */
 	public void closeTaskManager() {
+        AllTaskLists newList = generateSavedTaskArray();
+        
+		dataLoader.storeTaskLists(newList);
+		dataLoader.clearCommandFile();
+	}
+
+    public AllTaskLists generateSavedTaskArray() {
         ArrayList<TaskEntity> savedMainTaskEntities = new ArrayList<TaskEntity>();
         ArrayList<TaskEntity> savedFloatingTaskEntities = new ArrayList<TaskEntity>();
         
@@ -311,9 +318,12 @@ public class TaskManager {
                 savedMainTaskEntities.add(clonedTask);
             }
 		}
-		dataLoader.storeTaskLists(savedMainTaskEntities, savedFloatingTaskEntities);
-		dataLoader.clearCommandFile();
-	}
+		AllTaskLists newList = new AllTaskLists();
+        
+        newList.setFloatingTaskList(savedFloatingTaskEntities);
+        newList.setMainTaskList(savedMainTaskEntities);
+        return newList;
+    }
 
 	/**
 	 * Gets the singleton instance of TaskManager

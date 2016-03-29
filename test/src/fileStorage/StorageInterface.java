@@ -6,13 +6,20 @@ import java.util.Queue;
 
 import entity.AllTaskLists;
 import entity.TaskEntity;
+import mainLogic.TaskManagerInterface;
 
 public class StorageInterface {
     
     public StorageHandler storageHandler;
+    public TaskManagerInterface taskdata;
     
     public StorageInterface() {
         storageHandler = new StorageHandler();
+        taskdata = new TaskManagerInterface();
+    }
+    
+    public AllTaskLists getWorkingTaskLists () {
+        return taskdata.getSaveArray();
     }
     
     // Test function
