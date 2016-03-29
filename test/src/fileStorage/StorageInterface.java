@@ -12,6 +12,7 @@ import mainLogic.TaskManagerInterface;
 public class StorageInterface {
     
     public StorageHandler storageHandler;
+    public static final int QUEUE_SIZE = 5;
     
     public StorageInterface() {
         storageHandler = new StorageHandler();
@@ -82,6 +83,25 @@ public class StorageInterface {
         newList.setMainTaskList(main);
         
         return storeTaskLists(newList);
+    }
+    
+    /**
+     * Store input command into command file 
+     * Re-writes main file if command queue is full
+     * Current queue size is 5 for testing
+     * @param command
+     * @return isSavedMain
+     */
+    public boolean saveUponFullQueue(String command) {
+        boolean isFullQueue = false;
+       
+        Queue<String> newCommandsQueue = storageHandler.getAllCommandsQueue();
+        newCommandsQueue.offer(command);
+        storageHandler.setAllCommandsQueue(newCommandsQueue);
+        if (storageHandler.getAllCommandsQueue().size() >= QUEUE_SIZE) {
+            isFullQueue = true;
+        }
+        return isFullQueue;
     }
     
     public Queue<String> getCommandsUponInit() {
