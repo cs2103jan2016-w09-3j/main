@@ -527,6 +527,7 @@ public class CommandBar {
 		switch (cmdType) {
 		case INVALID: {
 			setFeedBackMessage(MESSAGE_FAILURE_INVALID);
+			setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			break;
 		}
 		case ADD: {
