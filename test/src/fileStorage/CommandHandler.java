@@ -51,7 +51,7 @@ public class CommandHandler extends TimerTask {
         boolean isSavedMain = storageController.storeTaskLists(storageController.getWorkingTaskLists());
         storageController.clearCommandFileOnCommit();
         assert isSavedMain == true;
-        System.out.println(isSavedMain);
+        System.out.println("Hi, is this running" + isSavedMain);
     }
     
     /**
