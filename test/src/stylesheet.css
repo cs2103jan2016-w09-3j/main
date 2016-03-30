@@ -37,6 +37,11 @@
 	-fx-background-insets: 1.0 5.0 1.0 5.0;
 }
 
+#cssTaskViewDayLabel
+{
+	-fx-border-width: 0 0 1 0; 
+	-fx-border-color: black;
+}
 
 #cssDescriptionMainBox
 {
@@ -155,11 +160,11 @@
 }
 #cssCommandBarfeedback_conflict
 {
-	-fx-background-color: rgba(249, 186, 122, 1.0);
+	-fx-background-color: rgba(249.0, 186.0, 122.0, 1.0);
 }
 #cssCommandBarfeedback_error
 {
-	-fx-background-color: rgba(249, 122, 122,1.0);
+	-fx-background-color: rgba(249.0, 122.0, 122.0,1.0);
 }
 
 /* Commands CSS */

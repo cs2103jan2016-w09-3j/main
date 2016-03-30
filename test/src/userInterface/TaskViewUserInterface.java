@@ -303,7 +303,8 @@ public class TaskViewUserInterface implements ViewInterface {
 		vbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT);
 		HBox hbox = new HBox();
 		hbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT); // setMax
-
+		hbox.setId("cssTaskViewDayLabel");
+		
 		Label dateNLPLabel = new Label();
 		dateNLPLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
 		dateNLPLabel.setFont(FONT_LABEL);
@@ -328,7 +329,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		}
 
 		vbox.getChildren().add(hbox);
-		VBox.setMargin(hbox, new Insets(0, 0, 0, 20));
+		VBox.setMargin(hbox, new Insets(0, 20, 0, 20));
 		return vbox;
 	}
 
@@ -361,17 +362,19 @@ public class TaskViewUserInterface implements ViewInterface {
 		Label indexLabel = new Label(Integer.toString(index));
 		indexLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		indexLabel.setFont(Font.font(PrimaryUserInterface.DEFAULT_FONT, FontWeight.BOLD, FONT_SIZE_TASK));
-		indexLabel.setMinWidth(50);
-		indexLabel.setAlignment(Pos.CENTER);
+		indexLabel.setMinWidth(40);
+		indexLabel.setAlignment(Pos.CENTER_RIGHT);
 		grid.add(indexLabel, 0, 0);
 
 		HBox topBox = new HBox();
 		Label timeLabel = new Label();
 		timeLabel.setText(taskEntity.getTime());
+		timeLabel.setMinWidth(80);
 		timeLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		timeLabel.setFont(FONT_TASK);
+		timeLabel.setAlignment(Pos.CENTER_LEFT);
 		topBox.getChildren().add(timeLabel);
-
+		
 		Label titleLabel = new Label(taskEntity.getName());
 		titleLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		titleLabel.setFont(FONT_TASK);
@@ -385,26 +388,25 @@ public class TaskViewUserInterface implements ViewInterface {
 		String text = taskEntity.getDescription();
 		Label descriptionLabel2 = new Label(text);
 		descriptionLabel2.setMinHeight(0);
-		descriptionLabel2.setMaxWidth(_individualItemWidth - 60);
+		descriptionLabel2.setMaxWidth(_individualItemWidth - 80);
 		descriptionLabel2.setWrapText(true);
 		descriptionLabel2.setFont(FONT_TASK);
 
 		Text t = new Text(text);
-		t.setWrappingWidth(_individualItemWidth - 60);
+		t.setWrappingWidth(_individualItemWidth - 80);
 
 		midBox.getChildren().add(descriptionLabel2);
 		grid.add(midBox, 1, 1);
 
-		String hashtags = "#hashtags";
-		Label hashTagLabel = new Label(hashtags);
+		Label hashTagLabel = new Label(taskEntity.getHashtags());
 		hashTagLabel.setMinHeight(0);
-		hashTagLabel.setMaxWidth(_individualItemWidth - 60);
+		hashTagLabel.setMaxWidth(_individualItemWidth - 80);
 		hashTagLabel.setFont(FONT_TASK);
 		hashTagLabel.setWrapText(true);
 		grid.add(hashTagLabel, 1, 2);
 
-		Text t2 = new Text(hashtags);
-		t2.setWrappingWidth(_individualItemWidth - 60);
+		Text t2 = new Text(taskEntity.getHashtags());
+		t2.setWrappingWidth(_individualItemWidth - 80);
 
 		if (_view == UserInterfaceController.TASK_VIEW) {
 			grid.setMinHeight(TASK_VIEW_ITEM_HEIGHT);

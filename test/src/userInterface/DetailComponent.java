@@ -167,7 +167,6 @@ public class DetailComponent implements ViewInterface {
 				}
 				_haveAssociation = true;
 				_selectedIndex = task.getAssociationPosition();
-				System.out.println("selected " + _selectedIndex);
 			}
 		}
 		return box;
@@ -283,6 +282,14 @@ public class DetailComponent implements ViewInterface {
 		itemMain.getChildren().add(description);
 		VBox.setMargin(description, new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS, BOTTOM_MARGIN_INDIVIDUAL_ITEMS,
 				LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS));
+		
+		Text hashtag = new Text(task.getHashtags());
+		hashtag.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
+		hashtag.setTextAlignment(TextAlignment.JUSTIFY);
+		itemMain.getChildren().add(hashtag);
+		VBox.setMargin(hashtag, new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS, BOTTOM_MARGIN_INDIVIDUAL_ITEMS,
+				LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS));
+		
 		return itemMain;
 	}
 
