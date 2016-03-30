@@ -470,7 +470,7 @@ public class TaskManager {
 	 *         succeeded in deleting the task, returns -1 otherwise
 	 */
 	public int modify(String index, TaskEntity modifiedTask) {
-		return modify(Utils.convertBase36ToDec(index), modifiedTask);
+		return modify(Utils.convertStringToInteger(index), modifiedTask);
 	}
 
 	/**
@@ -736,7 +736,7 @@ public class TaskManager {
 	 *         failed
 	 */
 	public boolean delete(String index) {
-		return delete(Utils.convertBase36ToDec(index));
+		return delete(Utils.convertStringToInteger(index));
 	}
 
 	/**
@@ -768,7 +768,7 @@ public class TaskManager {
 	}
 
     public boolean link(String projectHeadId, String taskUnderId) {
-        return link(Utils.convertBase36ToDec(projectHeadId), Utils.convertBase36ToDec(taskUnderId));
+        return link(Utils.convertStringToInteger(projectHeadId), Utils.convertStringToInteger(taskUnderId));
     }
 
     public boolean link(int projectHeadId, int taskUnderId) {
@@ -844,7 +844,7 @@ public class TaskManager {
 	 *         failed
 	 */
 	public boolean delete(String startIndex, String endIndex) {
-		return delete(Utils.convertBase36ToDec(startIndex), Utils.convertBase36ToDec(endIndex));
+		return delete(Utils.convertStringToInteger(startIndex), Utils.convertStringToInteger(endIndex));
 	}
 
 	/**

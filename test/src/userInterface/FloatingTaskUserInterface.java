@@ -246,7 +246,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		floatingParent.setMaxHeight(LABEL_TASK_HEIGHT);
 		floatingParent.setMinWidth(_stageWidth);
 
-		Label indexLabel = new Label(Utils.convertDecToBase36(index));
+		Label indexLabel = new Label(Integer.toString(index));
 		//Label indexLabel = new Label(Integer.toString(index));
 		indexLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		indexLabel.setMinWidth(50);

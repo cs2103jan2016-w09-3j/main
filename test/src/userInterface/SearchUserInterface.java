@@ -177,7 +177,7 @@ public class SearchUserInterface implements ViewInterface {
 		top.setMinWidth(_stageWidth);
 		top.setMaxWidth(_stageWidth);
 
-		Label indexLabel = new Label(Utils.convertDecToBase36(index));
+		Label indexLabel = new Label(Integer.toString(index));
 		// Label indexLabel = new Label(Integer.toString(index));
 		indexLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		indexLabel.setMinWidth(50);

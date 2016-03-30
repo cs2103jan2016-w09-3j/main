@@ -100,7 +100,7 @@ public class TaskManagerInterface {
             return -2;
         } else {
             manager.saveBackupCommand(command);
-            return manager.checkCurrentId(Utils.convertBase36ToDec(taskId));
+            return manager.checkCurrentId(Utils.convertStringToInteger(taskId));
         }
     }
     
@@ -137,7 +137,7 @@ public class TaskManagerInterface {
      *         otherwise
      */
     public int markAsDone (String taskToMark, String command) {
-        return markAsDone(Utils.convertBase36ToDec(taskToMark), command);
+        return markAsDone(Utils.convertStringToInteger(taskToMark), command);
     }
     
     public int markAsDone (int taskToMark, String command) {

@@ -25,10 +25,10 @@ public class JUnitUtils {
 
 	@Test
 	public void convertBase36ToDec() {
-		int r1 = Utils.convertBase36ToDec("AF");
-		int r2 = Utils.convertBase36ToDec("asd");
-		int r3 = Utils.convertBase36ToDec("");
-		int r4 = Utils.convertBase36ToDec("-");
+		int r1 = Utils.convertStringToInteger("AF");
+		int r2 = Utils.convertStringToInteger("asd");
+		int r3 = Utils.convertStringToInteger("");
+		int r4 = Utils.convertStringToInteger("-");
 
 		assertEquals(r1, 375);
 		assertEquals(r2, 13981);

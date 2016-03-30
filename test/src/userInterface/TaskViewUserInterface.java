@@ -358,7 +358,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		grid.setHgap(GAP_SIZE);
 		grid.setMinWidth(_individualItemWidth);
 
-		Label indexLabel = new Label(Utils.convertDecToBase36(index));
+		Label indexLabel = new Label(Integer.toString(index));
 		indexLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		indexLabel.setFont(Font.font(PrimaryUserInterface.DEFAULT_FONT, FontWeight.BOLD, FONT_SIZE_TASK));
 		indexLabel.setMinWidth(50);

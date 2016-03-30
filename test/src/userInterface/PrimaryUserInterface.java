@@ -293,7 +293,7 @@ public class PrimaryUserInterface extends Application {
 	 */
 	public void executeModify(String id) {
 		if (id != null) {
-			int indexToModify = Utils.convertBase36ToDec(id);
+			int indexToModify = Utils.convertStringToInteger(id);
 			ArrayList<TaskEntity> tasks = _commandBar.getTasksPartialInput();
 			if (indexToModify != -1) {
 				if (tasks.size() == 1) {
@@ -310,10 +310,10 @@ public class PrimaryUserInterface extends Application {
 	private void executeModify(int indexToModify, TaskEntity taskEntity, String rawString) {
 		boolean success = uiController.modifyTask(indexToModify, taskEntity, rawString, true);
 		if (success) {
-			_commandBar.showFeedBackMessage(COMMAND.EDIT, SUCCESS, TYPE_1, Utils.convertDecToBase36(indexToModify));
+			_commandBar.showFeedBackMessage(COMMAND.EDIT, SUCCESS, TYPE_1, Integer.toString(indexToModify));
 			resetCommandInput();
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_1, Utils.convertDecToBase36(indexToModify));
+			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_1, Integer.toString(indexToModify));
 		}
 	}
 
@@ -329,7 +329,7 @@ public class PrimaryUserInterface extends Application {
 			_commandBar.addToFullInput(setString);
 			_commandBar.onKeyReleased();
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_2, Utils.convertDecToBase36(indexToModify));
+			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_2, Integer.toString(indexToModify));
 		}
 
 	}

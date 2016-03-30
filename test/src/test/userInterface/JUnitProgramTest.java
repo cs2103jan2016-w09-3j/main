@@ -80,14 +80,14 @@ public class JUnitProgramTest {
 			parser.removeId();
 			ArrayList<TaskEntity> tasks = parser.getTask();
 			if (tasks.size() == 1) {
-				return ex.modify(Utils.convertBase36ToDec(id), tasks.get(0), rawString);
+				return ex.modify(Utils.convertStringToInteger(id), tasks.get(0), rawString);
 			} else {
 				return -1;
 			}
 		}
 		case DONE: {
 			String id = parser.getID();
-			return ex.markAsDone(Utils.convertBase36ToDec(id), rawString);
+			return ex.markAsDone(Utils.convertStringToInteger(id), rawString);
 		}
 		case FLOAT: {
 			ex.switchView(TaskManager.DISPLAY_FLOATING);
@@ -105,8 +105,8 @@ public class JUnitProgramTest {
 		}
 		case LINK: {
 			Pair<String, String> ids = parser.getLinkID();
-			int index1 = Utils.convertBase36ToDec(ids.getFirst());
-			int index2 = Utils.convertBase36ToDec(ids.getSecond());
+			int index1 = Utils.convertStringToInteger(ids.getFirst());
+			int index2 = Utils.convertStringToInteger(ids.getSecond());
 			if (index1 < ex.getWorkingList().size() && index2 < ex.getWorkingList().size()) {
 				TaskEntity t1 = ex.getWorkingList().get(index1);
 				TaskEntity t2 = ex.getWorkingList().get(index2);

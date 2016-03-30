@@ -535,7 +535,7 @@ public class UserInterfaceController {
 	public boolean jumpToIndex(String indexToJump) {
 		int selected = _taskViewInterface.getSelectIndex();
 		if (selected != -1) {
-			_scorllAnimation = ScrollTaskAnimation.getInstance(selected, Utils.convertBase36ToDec(indexToJump), this);
+			_scorllAnimation = ScrollTaskAnimation.getInstance(selected, Utils.convertStringToInteger(indexToJump), this);
 			_scorllAnimation.start();
 			return true;
 		} else {
@@ -555,7 +555,7 @@ public class UserInterfaceController {
 	}
 
 	public boolean markAsCompleted(String indexZZ, String rawString, boolean toUpdateview) {
-		int indexInt = Utils.convertBase36ToDec(indexZZ);
+		int indexInt = Utils.convertStringToInteger(indexZZ);
 		if (indexInt == -1) {
 			return false;
 		}
@@ -579,8 +579,8 @@ public class UserInterfaceController {
 	}
 
 	public boolean link(String indexZZ1, String indexZZ2, String rawString, boolean toUpdateView) {
-		int index1 = Utils.convertBase36ToDec(indexZZ1);
-		int index2 = Utils.convertBase36ToDec(indexZZ2);
+		int index1 = Utils.convertStringToInteger(indexZZ1);
+		int index2 = Utils.convertStringToInteger(indexZZ2);
 		if (index1 != -1 && index2 != -1) {
 			if (index1 < _logicFace.getWorkingList().size() && index2 < _logicFace.getWorkingList().size()) {
 				_logicFace.getWorkingList().get(index1);
@@ -728,7 +728,7 @@ public class UserInterfaceController {
 					break;
 				}
 				case EDIT: {
-					int id = Utils.convertBase36ToDec(parser.getID());
+					int id = Utils.convertStringToInteger(parser.getID());
 					parser.removeId();
 					ArrayList<TaskEntity> tasks = parser.getTask();
 					if (tasks.size() == 1) {
