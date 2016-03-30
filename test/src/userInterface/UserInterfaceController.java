@@ -535,7 +535,8 @@ public class UserInterfaceController {
 	public boolean jumpToIndex(String indexToJump) {
 		int selected = _taskViewInterface.getSelectIndex();
 		if (selected != -1) {
-			_scorllAnimation = ScrollTaskAnimation.getInstance(selected, Utils.convertStringToInteger(indexToJump), this);
+			_scorllAnimation = ScrollTaskAnimation.getInstance(selected, Utils.convertStringToInteger(indexToJump),
+					this);
 			_scorllAnimation.start();
 			return true;
 		} else {
@@ -675,17 +676,12 @@ public class UserInterfaceController {
 		return null;
 	}
 
-	public int getViewFromString(String view) {
-		try {
-			int viewInt = Integer.parseInt(view);
-			return viewInt;
-		} catch (NumberFormatException e) {
-
-		}
-		return -1;
-	}
-
-	public void setManagerView(int view) {
+	/**
+	 * Set TaskManger view, serves only for recovering commands.
+	 * 
+	 * @param view
+	 */
+	private void setManagerView(int view) {
 		if (view == TASK_VIEW) {
 			_logicFace.switchView(TaskManager.DISPLAY_MAIN);
 		} else if (view == EXPANDED_VIEW) {
@@ -705,7 +701,7 @@ public class UserInterfaceController {
 			String rawCommandWithView = qCommands.poll();
 			String rawCommand = deStructToRawCommand(rawCommandWithView);
 			String view = deStructToView(rawCommandWithView);
-			int viewInt = getViewFromString(view);
+			int viewInt = Utils.convertStringToInteger(view);
 			if (viewInt != -1) {
 				setManagerView(viewInt);
 			}
@@ -758,6 +754,10 @@ public class UserInterfaceController {
 			}
 		}
 		_logicFace.switchView(TaskManager.DISPLAY_MAIN);
+	}
+
+	public boolean changeSaveDir(String dirPath) {
+		return _logicFace.changeSaveDir(dirPath);
 	}
 
 }

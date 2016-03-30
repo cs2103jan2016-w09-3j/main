@@ -121,7 +121,7 @@ public class PrimaryUserInterface extends Application {
 	 * initialize the main controls for the application.
 	 * 
 	 */
-	public void initializeControls() {
+	private void initializeControls() {
 		EventHandler<KeyEvent> mainEventHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				processKeyPress(_commandBar.getTextField(), event);
@@ -150,8 +150,7 @@ public class PrimaryUserInterface extends Application {
 			COMMAND cmd = _commandBar.onEnter();
 
 			if (cmd.equals(COMMAND.EXIT)) {
-				uiController.saveStuff();
-				System.exit(0);
+				executeExit();
 			} else if (cmd.equals(COMMAND.INVALID)) {
 				executeInvalidCommand();
 			} else if (cmd.equals(COMMAND.ADD)) {
@@ -194,6 +193,7 @@ public class PrimaryUserInterface extends Application {
 		focus();
 	}
 
+
 	private void processControls(KeyEvent event) {
 		if (event.getCode().compareTo(KeyCode.UP) == 0 && !event.isControlDown() && !event.isShiftDown()) {
 			_commandBar.getPrevCommand();
@@ -225,6 +225,11 @@ public class PrimaryUserInterface extends Application {
 		_commandBar.focus();
 	}
 
+	private void executeExit() {
+		uiController.saveStuff();
+		System.exit(0);
+	}
+	
 	/**
 	 * Get feedBack message and show user.
 	 */
@@ -291,7 +296,7 @@ public class PrimaryUserInterface extends Application {
 	 * @param taskToCheck
 	 * @return boolean, true for successful and false for unsuccessful.
 	 */
-	public void executeModify(String id) {
+	private void executeModify(String id) {
 		if (id != null) {
 			int indexToModify = Utils.convertStringToInteger(id);
 			ArrayList<TaskEntity> tasks = _commandBar.getTasksPartialInput();
@@ -341,7 +346,7 @@ public class PrimaryUserInterface extends Application {
 	 *            : base36 format
 	 * @return boolean, true if value found, false it value not found
 	 */
-	public void executeJump() {
+	private void executeJump() {
 		String indexToJump = _commandBar.getId();
 		if (indexToJump != null) {
 			boolean success = uiController.jumpToIndex(indexToJump);
@@ -399,7 +404,7 @@ public class PrimaryUserInterface extends Application {
 	 * 
 	 * @param indexZZ
 	 */
-	public void executeMarkComplete(String indexZZ, String rawString) {
+	private void executeMarkComplete(String indexZZ, String rawString) {
 		if (indexZZ != null) {
 			boolean isSuccess = uiController.markAsCompleted(indexZZ, rawString, true);
 			if (isSuccess) {
@@ -410,6 +415,15 @@ public class PrimaryUserInterface extends Application {
 			}
 		} else {
 			_commandBar.showFeedBackMessage(COMMAND.DONE, FAILURE, TYPE_2, indexZZ);
+		}
+	}
+
+	private void executeChangeSaveDir() {
+		boolean isSuccess = uiController.changeSaveDir("");
+		if (isSuccess) {
+
+		} else {
+
 		}
 	}
 

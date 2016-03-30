@@ -60,6 +60,10 @@ public class UserInterfaceExecuter {
 		return _taskManager.link(taskEntity, taskEntity2, rawCommandWithView);
 	}
 
+	public boolean changeSaveDir(String dirPath) {
+		return _taskManager.changeDirectory(dirPath);
+	}
+
 	public void closeTaskManager() {
 		_taskManager.closeTaskManager();
 	}
