@@ -184,10 +184,11 @@ public class InputParser {
 			List<Date> dates = dateParser.parseToList(input);
 			addXMLDate();
 			addXMLCmd();
+			input = gcParser.xmlHash(input);
+			ArrayList<String> hashes = gcParser.getHashes();
 			infoParser.setInformation(this.input);
 			String name = infoParser.getTitle();
 			String desc = infoParser.getDescription();
-			ArrayList<String> hashes = gcParser.getHashes();
 			if(dates.size() == 0){
 				TaskEntity toAdd = new TaskEntity(name, null, false, desc);
 				toAdd.setFloating(true);
