@@ -142,17 +142,27 @@
 	-fx-background-insets: 1.0 5.0 1.0 5.0;
 }
 
-/* Commands CSS */
+/* CommandsBar CSS */
 
 #cssCommandBarMainStructure{
 	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
 }
 
 
-#cssCommandBarfeedback
+#cssCommandBarfeedback_normal
 {
 	-fx-background-color: rgba(179.0, 255.0, 153.0, 1.0);
 }
+#cssCommandBarfeedback_conflict
+{
+	-fx-background-color: rgba(249, 186, 122, 1.0);
+}
+#cssCommandBarfeedback_error
+{
+	-fx-background-color: rgba(249, 122, 122,1.0);
+}
+
+/* Commands CSS */
 
 #cssCommandBarAdd {
 	-fx-background-color: rgba(72.0, 238.0, 56.0, 1.0);
@@ -172,19 +182,19 @@
 }
 
 #cssCommandBarEdit {
-	-fx-background-color: rgba(56, 163, 238, 0.5);
+	-fx-background-color: rgba(56.0, 163.0, 238.0, 0.5);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarLink {
-	-fx-background-color: rgba(163, 238, 56, 1.0);
+	-fx-background-color: rgba(163.0, 238.0, 56.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarDone {
-	-fx-background-color: rgba(238, 132, 56, 1.0);
+	-fx-background-color: rgba(238.0, 132.0, 56.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
@@ -212,19 +222,19 @@
 }
 
 #cssCommandJump {
-	-fx-background-color: rgba(238, 56, 163, 1.0);
+	-fx-background-color: rgba(238.0, 56.0, 163.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 #cssCommandSearch{
-	-fx-background-color: rgba(132, 56, 238, 1.0);
+	-fx-background-color: rgba(132.0, 56.0, 238.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandExit{
 	-fx-text-fill:white;
-	-fx-background-color: rgba(238, 56, 72, 1.0);
+	-fx-background-color: rgba(238.0, 56.0, 72.0, 1.0);
 	-fx-font-weight:bold;
 	 -fx-font: 20.0px "Arial";
 }
@@ -235,17 +245,17 @@
 	-fx-background-radius: 7.0; 
 }
 #cssCommandShow{
-	-fx-background-color: rgba(223, 56, 238, 1.0);
+	-fx-background-color: rgba(223.0, 56.0, 238.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 #cssCommandHide{
-	-fx-background-color: rgba(223, 56, 238, 1.0);
+	-fx-background-color: rgba(223.0, 56.0, 238.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 #cssCommandMain{
-	-fx-background-color: rgba(238, 56, 163, 1.0);
+	-fx-background-color: rgba(238.0, 56.0, 163.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }

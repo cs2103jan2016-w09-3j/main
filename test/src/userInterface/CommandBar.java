@@ -20,6 +20,10 @@ import javafx.scene.Node;
 
 public class CommandBar {
 
+	private static final int FEEDBACK_STATUS_NORMAL = 0;
+	private static final int FEEDBACK_STATUS_ERROR = 1;
+	private static final int FEEDBACK_STATUS_CONFLICT = 2;
+
 	private static final String MESSAGE_FAILURE_INVALID = "you have entered an invalid command";
 	private static final String MESSAGE_SUCCESS_ADD_TYPE1 = "Successfully added %1$s to task list.";
 	private static final String MESSAGE_SUCCESS_ADD_TYPE2 = "Successfully added %1$s to floating task list.";
@@ -104,7 +108,7 @@ public class CommandBar {
 		_feedbackLabel.setMinHeight(FEEDBACK_HEIGHT);
 		_feedbackLabel.setFont(FONT_FEEDBACK);
 		_feedbackLabel.setAlignment(Pos.CENTER_RIGHT);
-		_feedbackLabel.setId("cssCommandBarfeedback");
+		_feedbackLabel.setId("cssCommandBarfeedback_normal");
 		_mainStructure.getChildren().add(_feedbackLabel);
 	}
 
@@ -526,24 +530,31 @@ public class CommandBar {
 			if (condition) {
 				if (type == PrimaryUserInterface.TYPE_1) {
 					setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE1, msg));
+					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 				} else if (type == PrimaryUserInterface.TYPE_2) {
 					setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE2, msg));
+					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 				} else if (type == PrimaryUserInterface.TYPE_3) {
 					setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE3, msg));
+					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 				}
 			} else {
 				setFeedBackMessage(MESSAGE_FAILURE_ADD);
+				setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			}
 			break;
 		}
 		case DELETE: {
 			if (condition) {
 				setFeedBackMessage(String.format(MESSAGE_SUCCESS_DELETE, msg));
+				setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 			} else {
 				if (type == PrimaryUserInterface.TYPE_1) {
 					setFeedBackMessage(String.format(MESSAGE_FAILURE_DELETE_TYPE_1, msg));
+					setFeedBackColor(FEEDBACK_STATUS_ERROR);
 				} else if (type == PrimaryUserInterface.TYPE_2) {
 					setFeedBackMessage(MESSAGE_FAILURE_DELETE_TYPE_2);
+					setFeedBackColor(FEEDBACK_STATUS_ERROR);
 				}
 			}
 			break;
@@ -551,6 +562,7 @@ public class CommandBar {
 		case EDIT: {
 			if (condition) {
 				setFeedBackMessage(String.format(MESSAGE_SUCCESS_EDIT, msg));
+				setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 			} else {
 				if (type == PrimaryUserInterface.TYPE_1) {
 					setFeedBackMessage(String.format(MESSAGE_FAILURE_EDIT_TYPE1, msg));
@@ -559,18 +571,21 @@ public class CommandBar {
 				} else if (type == PrimaryUserInterface.TYPE_3) {
 					setFeedBackMessage(MESSAGE_FAILURE_EDIT_TYPE3);
 				}
+				setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			}
 			break;
 		}
 		case DONE: {
 			if (condition) {
 				setFeedBackMessage(String.format(MESSAGE_SUCCESS_MARK, msg));
+				setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 			} else {
 				if (type == PrimaryUserInterface.TYPE_1) {
 					setFeedBackMessage(String.format(MESSAGE_FAILURE_MARK_TYPE_1, msg));
 				} else {
 					setFeedBackMessage(String.format(MESSAGE_FAILURE_MARK_TYPE_2, msg));
 				}
+				setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			}
 			break;
 		}
@@ -578,11 +593,14 @@ public class CommandBar {
 			if (condition) {
 				if (type == PrimaryUserInterface.TYPE_1) {
 					setFeedBackMessage(String.format(MESSAGE_SUCCESS_SEARCH_TYPE_1, msg));
+					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 				} else {
 					setFeedBackMessage(MESSAGE_SUCCESS_SEARCH_TYPE_2);
+					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 				}
 			} else {
 				setFeedBackMessage(String.format(MESSAGE_FAILURE_SEARCH_TYPE1, msg));
+				setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			}
 			break;
 		}
@@ -593,6 +611,7 @@ public class CommandBar {
 				} else {
 					setFeedBackMessage(MESSAGE_FAILURE_JUMP_TYPE_2);
 				}
+				setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			}
 			break;
 		}
@@ -600,11 +619,14 @@ public class CommandBar {
 			if (!condition) {
 				if (type == PrimaryUserInterface.TYPE_1) {
 					setFeedBackMessage(MESSAGE_FAILURE_LINK_TYPE_1);
+					setFeedBackColor(FEEDBACK_STATUS_ERROR);
 				} else {
 					setFeedBackMessage(MESSAGE_FAILURE_LINK_TYPE_2);
+					setFeedBackColor(FEEDBACK_STATUS_ERROR);
 				}
 			} else {
 				setFeedBackMessage(MESSAGE_SUCCESS_LINK);
+				setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 			}
 			break;
 		}
@@ -633,6 +655,27 @@ public class CommandBar {
 			_commandSelector = index;
 		}
 
+	}
+
+	public void setFeedBackColor(int feedBackStatus) {
+		switch (feedBackStatus) {
+		case FEEDBACK_STATUS_NORMAL: {
+			_feedbackLabel.setId("cssCommandBarfeedback_normal");
+			break;
+		}
+		case FEEDBACK_STATUS_CONFLICT: {
+			_feedbackLabel.setId("cssCommandBarfeedback_conflict");
+			break;
+		}
+		case FEEDBACK_STATUS_ERROR: {
+			_feedbackLabel.setId("cssCommandBarfeedback_error");
+			break;
+		}
+		default: {
+			_feedbackLabel.setId("cssCommandBarfeedback_normal");
+			break;
+		}
+		}
 	}
 
 }
