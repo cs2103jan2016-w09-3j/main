@@ -28,7 +28,6 @@ public class CommandBar {
 	private static final String MESSAGE_SUCCESS_ADD_TYPE1 = "Successfully added %1$s to task list.";
 	private static final String MESSAGE_SUCCESS_ADD_TYPE2 = "Successfully added %1$s to floating task list.";
 	private static final String MESSAGE_SUCCESS_ADD_TYPE3 = "Successfully added %1$s to list.";
-
 	private static final String MESSAGE_FAILURE_ADD = "Fail to add.";
 	private static final String MESSAGE_SUCCESS_DELETE = "Successfully deleted %1$s.";
 	private static final String MESSAGE_FAILURE_DELETE_TYPE_1 = "Fail to delete %1$s.";
@@ -49,6 +48,10 @@ public class CommandBar {
 	private static final String MESSAGE_SUCCESS_LINK = "Linked successfully.";
 	private static final String MESSAGE_FAILURE_LINK_TYPE_1 = "Failed to link.";
 	private static final String MESSAGE_FAILURE_LINK_TYPE_2 = "Failed to link.";
+	private static final String MESSAGE_SUCCESS_UNDO = "successfully undo.";
+	private static final String MESSAGE_FAILURE_UNDO_TYPE_1 = "Unable to undo.";
+	private static final String MESSAGE_SUCCESS_SAVEDIR ="successfully changed save directory.";
+	private static final String MESSAGE_FAILURE_SAVEDIR ="Fail to change save directory.";
 
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
@@ -635,6 +638,28 @@ public class CommandBar {
 			}
 			break;
 		}
+		/*case UNDO: {
+			if (!condition) {
+					setFeedBackMessage(MESSAGE_FAILURE_UNDO_TYPE_1);
+					setFeedBackColor(FEEDBACK_STATUS_ERROR);
+			} else {
+				setFeedBackMessage(MESSAGE_SUCCESS_UNDO);
+				setFeedBackColor(FEEDBACK_STATUS_NORMAL);
+			}
+			break;
+		}
+		case SAVEDIR :{
+			if(!condition)
+			{
+				setFeedBackMessage(MESSAGE_FAILURE_SAVEDIR);
+				setFeedBackColor(FEEDBACK_STATUS_ERROR);
+			}else
+			{
+			setFeedBackMessage(MESSAGE_SUCCESS_SAVEDIR);
+				setFeedBackColor(FEEDBACK_STATUS_NORMAL);
+			}
+		}
+		*/
 		default:
 			break;
 		}

@@ -781,8 +781,14 @@ public class UserInterfaceController {
 	}
 
 	public boolean undoLastCommand() {
-		Queue<String> commandsTorun = _logicFace.getBackedupCommands();
-		runCommands(commandsTorun);
+		Queue<String> commandsToRun = _logicFace.getBackedupCommands();
+		if (commandsToRun == null) {
+			return false;
+		}
+		if (commandsToRun.size() == 0) {
+			return false;
+		}
+		runCommands(commandsToRun);
 		return true;
 	}
 }

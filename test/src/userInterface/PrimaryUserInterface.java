@@ -428,23 +428,23 @@ public class PrimaryUserInterface extends Application {
 		}
 	}
 
-	private void executeChangeSaveDir() {
+	/*private void executeChangeSaveDir() {
 		boolean isSuccess = uiController.changeSaveDir("");
 		if (isSuccess) {
-
+			_commandBar.showFeedBackMessage(COMMAND.SAVEDIR, SUCCESS, TYPE_1, null);
 		} else {
-
+			_commandBar.showFeedBackMessage(COMMAND.SAVEDIR, FAILURE, TYPE_1, null);
 		}
-	}
+	}*/
 	
-	private void executeUndo() {
+	/*private void executeUndo() {
 		boolean isSuccess = uiController.undoLastCommand();
 		if (isSuccess) {
-
+			_commandBar.showFeedBackMessage(COMMAND.UNDO, SUCCESS, TYPE_1, null);
 		} else {
-
+			_commandBar.showFeedBackMessage(COMMAND.UNDO, FAILURE, TYPE_2, null);
 		}
-	}
+	}*/
 
 	/**
 	 * Reset the layout and style of the commandBar for new input. usually
