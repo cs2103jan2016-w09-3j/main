@@ -183,8 +183,13 @@ public class PrimaryUserInterface extends Application {
 				Pair<String, String> ids = _commandBar.getLinkId();
 				executeLink(ids.getFirst(), ids.getSecond(), _commandBar.getFullInput());
 			} else if (cmd.equals(COMMAND.SEARCH)) {
+				String stringToSave = _commandBar.getSearchStr();
+				executeSearch(stringToSave, _commandBar.getFullInput());
+			}else if (cmd.equals(COMMAND.SAVEDIR)) {
 				String stringToSearch = _commandBar.getSearchStr();
-				executeSearch(stringToSearch, _commandBar.getFullInput());
+				executeChangeSaveDir(stringToSearch);
+			}else if (cmd.equals(COMMAND.UNDO)) {
+				executeUndo();
 			}
 		} else {
 			_commandBar.onKeyReleased();
@@ -428,23 +433,23 @@ public class PrimaryUserInterface extends Application {
 		}
 	}
 
-	/*private void executeChangeSaveDir() {
-		boolean isSuccess = uiController.changeSaveDir("");
+	private void executeChangeSaveDir(String stringToSave) {
+		boolean isSuccess = uiController.changeSaveDir(stringToSave);
 		if (isSuccess) {
 			_commandBar.showFeedBackMessage(COMMAND.SAVEDIR, SUCCESS, TYPE_1, null);
 		} else {
 			_commandBar.showFeedBackMessage(COMMAND.SAVEDIR, FAILURE, TYPE_1, null);
 		}
-	}*/
+	}
 	
-	/*private void executeUndo() {
+	private void executeUndo() {
 		boolean isSuccess = uiController.undoLastCommand();
 		if (isSuccess) {
 			_commandBar.showFeedBackMessage(COMMAND.UNDO, SUCCESS, TYPE_1, null);
 		} else {
 			_commandBar.showFeedBackMessage(COMMAND.UNDO, FAILURE, TYPE_2, null);
 		}
-	}*/
+	}
 
 	/**
 	 * Reset the layout and style of the commandBar for new input. usually

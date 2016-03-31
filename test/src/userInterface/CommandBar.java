@@ -638,7 +638,7 @@ public class CommandBar {
 			}
 			break;
 		}
-		/*case UNDO: {
+		case UNDO: {
 			if (!condition) {
 					setFeedBackMessage(MESSAGE_FAILURE_UNDO_TYPE_1);
 					setFeedBackColor(FEEDBACK_STATUS_ERROR);
@@ -659,7 +659,7 @@ public class CommandBar {
 				setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 			}
 		}
-		*/
+		
 		default:
 			break;
 		}
