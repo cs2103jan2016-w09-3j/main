@@ -26,6 +26,12 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private static final int MARGIN = 10;
 	private static final int MAX_ITEMS = 6;
 
+	private static final int DESCRIPTION_BOX_WIDTH = 300;
+	private static final int DESCRIPTION_BOX_SMALL_WIDTH = 200;
+	private static final int DESCRIPTION_BOX_HEIGHT = 150;
+	private static final int LINE_SIZE = 2;
+	private static final int LINE_LENGTH = 20;
+
 	private Stage _stage;
 	private int _stageWidth;
 	private int _stageHeight;
@@ -142,9 +148,9 @@ public class HelpScreenUserInterface implements ViewInterface {
 		hbox.setId("cssHelpComponentHighLighter");
 
 		HBox link = new HBox();
-		link.setMinHeight(2);
-		link.setMaxHeight(2);
-		link.setMinWidth(20);
+		link.setMinHeight(LINE_SIZE);
+		link.setMaxHeight(LINE_SIZE);
+		link.setMinWidth(LINE_LENGTH);
 		link.setId("cssHelpComponentLinker");
 
 		HBox descriptionBox = new HBox();
@@ -202,8 +208,8 @@ public class HelpScreenUserInterface implements ViewInterface {
 		link.setId("cssHelpComponentLinker");
 
 		HBox descriptionBox = new HBox();
-		descriptionBox.setMaxWidth(200);
-		descriptionBox.setMaxHeight(150);
+		descriptionBox.setMaxWidth(DESCRIPTION_BOX_SMALL_WIDTH);
+		descriptionBox.setMaxHeight(DESCRIPTION_BOX_HEIGHT);
 		descriptionBox.setId("cssHelpComponentDescriptionBox");
 
 		Label descLabel = new Label(HELP_DESCRIPTION_TASK_VIEW);
@@ -243,14 +249,14 @@ public class HelpScreenUserInterface implements ViewInterface {
 		hbox.setId("cssHelpComponentHighLighter");
 
 		HBox link = new HBox();
-		link.setMinHeight(2);
-		link.setMaxHeight(2);
-		link.setMinWidth(20);
+		link.setMinHeight(LINE_SIZE);
+		link.setMaxHeight(LINE_SIZE);
+		link.setMinWidth(LINE_LENGTH);
 		link.setId("cssHelpComponentLinker");
 
 		HBox descriptionBox = new HBox();
-		descriptionBox.setMaxWidth(300);
-		descriptionBox.setMaxHeight(150);
+		descriptionBox.setMaxWidth(DESCRIPTION_BOX_WIDTH);
+		descriptionBox.setMaxHeight(DESCRIPTION_BOX_HEIGHT);
 		descriptionBox.setId("cssHelpComponentDescriptionBox");
 
 		Label descLabel = new Label(HELP_DESCRIPTION_DESCRIPTION_COMPONENT);
@@ -275,12 +281,12 @@ public class HelpScreenUserInterface implements ViewInterface {
 		hbox.setId("cssHelpComponentHighLighter");
 
 		HBox link = new HBox();
-		link.setPrefHeight(30);
-		link.setMaxWidth(2);
+		link.setPrefHeight(LINE_LENGTH);
+		link.setMaxWidth(LINE_SIZE);
 		link.setId("cssHelpComponentLinker");
 
 		HBox descriptionBox = new HBox();
-		descriptionBox.setMaxWidth(300);
+		descriptionBox.setMaxWidth(DESCRIPTION_BOX_WIDTH);
 		descriptionBox.setId("cssHelpComponentDescriptionBox");
 
 		Label descLabel = new Label(HELP_DESCRIPTION_FLOATING_BAR);
@@ -305,14 +311,14 @@ public class HelpScreenUserInterface implements ViewInterface {
 		hbox.setId("cssHelpComponentHighLighter");
 
 		HBox link = new HBox();
-		link.setPrefHeight(30);
-		link.setMaxWidth(2);
+		link.setPrefHeight(LINE_LENGTH);
+		link.setMaxWidth(LINE_SIZE);
 		link.setId("cssHelpComponentLinker");
 
 		HBox descriptionBox = new HBox();
-		descriptionBox.setMaxWidth(300);
-		descriptionBox.setMaxHeight(150);
-		descriptionBox.setMinHeight(150);
+		descriptionBox.setMaxWidth(DESCRIPTION_BOX_WIDTH);
+		descriptionBox.setMaxHeight(DESCRIPTION_BOX_HEIGHT);
+		descriptionBox.setMinHeight(DESCRIPTION_BOX_HEIGHT);
 		descriptionBox.setId("cssHelpComponentDescriptionBox");
 
 		Label descLabel = new Label(HELP_DESCRIPTION_COMMAND_BAR);
@@ -323,7 +329,8 @@ public class HelpScreenUserInterface implements ViewInterface {
 		main.getChildren().add(descriptionBox);
 		main.getChildren().add(link);
 		main.getChildren().add(hbox);
-		main.setTranslateY(_stageHeight - PrimaryUserInterface.COMMAND_BAR_HEIGTH - 180);
+		main.setTranslateY(
+				_stageHeight - PrimaryUserInterface.COMMAND_BAR_HEIGTH - DESCRIPTION_BOX_HEIGHT - LINE_LENGTH);
 
 		_mainPanel.getChildren().add(main);
 	}
