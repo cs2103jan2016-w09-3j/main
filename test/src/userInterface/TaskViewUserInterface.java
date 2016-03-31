@@ -15,16 +15,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import mainLogic.Utils;
 
 public class TaskViewUserInterface implements ViewInterface {
 
@@ -127,12 +126,16 @@ public class TaskViewUserInterface implements ViewInterface {
 		_stage.setX(applicationX);
 		_stage.setY(applicationY);
 
+		StackPane mainPanel = new StackPane();
+		mainPanel.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
+		mainPanel.setPrefSize(stageWidth, stageHeight);
+		mainPanel.setId("cssTaskViewMainBackground");
+		mainPanel.setAlignment(Pos.TOP_LEFT);
+		
 		_mainVbox = new VBox();
-		_mainVbox.setPrefSize(stageWidth, stageHeight);
-		_mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
-		_mainVbox.setId("cssRoot");
-
-		Scene s = new Scene(_mainVbox, stageWidth, stageHeight);
+		mainPanel.getChildren().add(_mainVbox);
+		
+		Scene s = new Scene(mainPanel, stageWidth, stageHeight);
 		s.setFill(Color.TRANSPARENT);
 		_stage.setScene(s);
 	}
@@ -300,7 +303,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	 */
 	private VBox createDayParent(TaskEntity taskEntity) {
 		VBox vbox = new VBox();
-		vbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT);
+		vbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT+2);
 		HBox hbox = new HBox();
 		hbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT); // setMax
 		hbox.setId("cssTaskViewDayLabel");
@@ -345,10 +348,10 @@ public class TaskViewUserInterface implements ViewInterface {
 	private HBox buildIndividualTask(TaskEntity taskEntity, int index) {
 		HBox hbox = new HBox();
 		GridPane gridPane = createGridPaneForTask(taskEntity, index);
-		hbox.setMinHeight(gridPane.getMinHeight());
-		hbox.setMaxHeight(gridPane.getMinHeight());
 		_gridPanes.add(gridPane);
 		hbox.getChildren().add(gridPane);
+		hbox.setMinHeight(gridPane.getMinHeight());
+		hbox.setMaxHeight(gridPane.getMinHeight());
 		return hbox;
 	}
 

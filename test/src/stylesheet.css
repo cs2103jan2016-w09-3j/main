@@ -6,6 +6,7 @@
 #commandText {
 	-fx-font: 12.0px "Arial";
 }
+
 #rootPane{
 	-fx-border-color: #d3d3d3;
     -fx-border-width: 2.0px;
@@ -16,7 +17,12 @@
 	-fx-border-width: 2.0px;
 }
 
-
+#cssTaskViewMainBackground{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.9);
+}
+#cssRootDescriptionViewMainBackground{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.9);
+}
 #cssTaskViewWeek{
 	-fx-background-color: rgba(255.0,255.0,255.0,0.9);
 }
@@ -150,7 +156,12 @@
 /* CommandsBar CSS */
 
 #cssCommandBarMainStructure{
-	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
+	-fx-background-color: rgba(255.0,255.0,255.0,0.8);
+}
+
+#cssCommandBarContentZone{
+	-fx-border-width: 1 0 1 0; 
+	-fx-border-color: black;
 }
 
 

@@ -73,11 +73,18 @@ public class DescriptionComponent implements ViewInterface {
 		_stage.setX(applicationX);
 		_stage.setY(applicationY);
 
+		StackPane mainPanel = new StackPane();
+		mainPanel.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
+		mainPanel.setId("cssRootDescriptionViewMainBackground");;
+		mainPanel.setPrefSize(_stageWidth, _stageHeight);
+		mainPanel.setAlignment(Pos.TOP_RIGHT);
+		
 		_mainVbox = new GridPane();
 		_mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
-		_mainVbox.setId("cssRoot");
 
-		Scene scene = new Scene(_mainVbox, windowWidth, windowHeight, Color.TRANSPARENT);
+		mainPanel.getChildren().add(_mainVbox);
+		
+		Scene scene = new Scene(mainPanel, windowWidth, windowHeight, Color.TRANSPARENT);
 		_stage.setScene(scene);
 	}
 

@@ -276,20 +276,27 @@ public class DetailComponent implements ViewInterface {
 		VBox.setMargin(dateBox, new Insets(0, 20, 0, 20));
 		itemMain.getChildren().add(dateBox);
 
-		Text description = new Text(task.getDescription());
-		description.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
-		description.setTextAlignment(TextAlignment.JUSTIFY);
-		itemMain.getChildren().add(description);
-		VBox.setMargin(description, new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS, BOTTOM_MARGIN_INDIVIDUAL_ITEMS,
-				LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS));
-		
-		Text hashtag = new Text(task.getHashtags());
-		hashtag.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
-		hashtag.setTextAlignment(TextAlignment.JUSTIFY);
-		itemMain.getChildren().add(hashtag);
-		VBox.setMargin(hashtag, new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS, BOTTOM_MARGIN_INDIVIDUAL_ITEMS,
-				LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS));
-		
+		String description = task.getDescription();
+		if (!description.equals("")) {
+			Text descriptionLabel = new Text(task.getDescription());
+			descriptionLabel.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
+			descriptionLabel.setTextAlignment(TextAlignment.JUSTIFY);
+			itemMain.getChildren().add(descriptionLabel);
+			itemMain.setMaxHeight(itemMain.getMaxHeight() + descriptionLabel.getBoundsInLocal().getHeight());
+			VBox.setMargin(descriptionLabel, new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS,
+					BOTTOM_MARGIN_INDIVIDUAL_ITEMS, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS));
+		}
+
+		String hash = task.getHashtags();
+		if (!hash.equals("")) {
+			Text hashtag = new Text(task.getHashtags());
+			hashtag.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
+			hashtag.setTextAlignment(TextAlignment.JUSTIFY);
+			itemMain.getChildren().add(hashtag);
+			VBox.setMargin(hashtag, new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS, BOTTOM_MARGIN_INDIVIDUAL_ITEMS,
+					LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS));
+		}
+
 		return itemMain;
 	}
 
@@ -316,13 +323,26 @@ public class DetailComponent implements ViewInterface {
 		itemMain.getChildren().add(dateBox);
 		itemMain.setMaxHeight(itemMain.getMaxHeight() + LABEL_TASK_HEIGHT);
 
-		Text description = new Text(task.getDescription());
-		description.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
-		description.setTextAlignment(TextAlignment.JUSTIFY);
-		itemMain.getChildren().add(description);
-		itemMain.setMaxHeight(itemMain.getMaxHeight() + description.getBoundsInLocal().getHeight());
-		VBox.setMargin(description, new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS, BOTTOM_MARGIN_INDIVIDUAL_ITEMS,
-				LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS));
+		String description = task.getDescription();
+		if (!description.equals("")) {
+			Text descriptionLabel = new Text(task.getDescription());
+			descriptionLabel.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
+			descriptionLabel.setTextAlignment(TextAlignment.JUSTIFY);
+			itemMain.getChildren().add(descriptionLabel);
+			itemMain.setMaxHeight(itemMain.getMaxHeight() + descriptionLabel.getBoundsInLocal().getHeight());
+			VBox.setMargin(descriptionLabel, new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS,
+					BOTTOM_MARGIN_INDIVIDUAL_ITEMS, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS));
+		}
+
+		String hash = task.getHashtags();
+		if (!hash.equals("")) {
+			Text hashtag = new Text(task.getHashtags());
+			hashtag.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
+			hashtag.setTextAlignment(TextAlignment.JUSTIFY);
+			itemMain.getChildren().add(hashtag);
+			VBox.setMargin(hashtag, new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS, BOTTOM_MARGIN_INDIVIDUAL_ITEMS,
+					LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS));
+		}
 
 		return itemMain;
 	}

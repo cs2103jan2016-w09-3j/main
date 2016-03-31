@@ -52,7 +52,7 @@ public class CommandBar {
 
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
-	private static final int MAIN_PANE_LEFT_RIGHT_MARGIN = 4;
+	private static final int MAIN_PANE_LEFT_RIGHT_MARGIN = 0;
 	private static final int TEXT_FIELD_WIDTH = 10;
 
 	// font
@@ -117,6 +117,7 @@ public class CommandBar {
 
 	public void initializeMainPane() {
 		_mainPane = new GridPane();
+		_mainPane.setId("cssCommandBarContentZone");
 		_mainPane.setMinHeight(_mainPaneHeight);
 		_mainPane.setMaxHeight(_mainPaneHeight);
 		_mainPane.setAlignment(Pos.CENTER_LEFT);
