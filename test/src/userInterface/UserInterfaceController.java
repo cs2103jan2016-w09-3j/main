@@ -223,8 +223,8 @@ public class UserInterfaceController {
 	}
 
 	public void translateComponentsY(double value) {
-		_taskViewInterface.updateTranslateY(value);
 		_descriptionComponent.updateTranslateY(value);
+		_taskViewInterface.updateTranslateY(value);
 	}
 
 	/**
