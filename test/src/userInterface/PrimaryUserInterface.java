@@ -193,7 +193,6 @@ public class PrimaryUserInterface extends Application {
 		focus();
 	}
 
-
 	private void processControls(KeyEvent event) {
 		if (event.getCode().compareTo(KeyCode.UP) == 0 && !event.isControlDown() && !event.isShiftDown()) {
 			_commandBar.getPrevCommand();
@@ -218,6 +217,17 @@ public class PrimaryUserInterface extends Application {
 		if (event.getCode().compareTo(KeyCode.LEFT) == 0 && event.isControlDown() && !event.isShiftDown()) {
 			uiController.changeView(-1);
 		}
+
+		if (event.getCode().isFunctionKey()) {
+			if (event.getCode().compareTo(KeyCode.F1) == 0) {
+				uiController.showHelpView();
+			}
+		}
+		if (event.getCode().compareTo(KeyCode.LEFT) == 0) {
+			uiController.updateHelpView(-1);
+		} else if (event.getCode().compareTo(KeyCode.RIGHT) == 0) {
+			uiController.updateHelpView(1);
+		}
 	}
 
 	private void focus() {
@@ -229,7 +239,7 @@ public class PrimaryUserInterface extends Application {
 		uiController.saveStuff();
 		System.exit(0);
 	}
-	
+
 	/**
 	 * Get feedBack message and show user.
 	 */

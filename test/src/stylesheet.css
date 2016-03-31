@@ -7,6 +7,29 @@
 	-fx-font: 12.0px "Arial";
 }
 
+/* Help Screen */
+
+#cssHelpScreenRoot{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.5);
+}
+
+#cssHelpComponentHighLighter{
+	-fx-background-color: rgba(0.0,0.0,0.0,0.1);
+	-fx-border-width: 1.0; 
+	-fx-border-color: black;
+}
+
+#cssHelpComponentLinker{
+	-fx-background-color: rgba(0.0,0.0,0.0,1);
+}
+
+#cssHelpComponentDescriptionBox{
+	-fx-background-color: rgba(255,255,255,1);
+	-fx-border-width: 1.0; 
+	-fx-border-color: black;
+}
+
+
 #rootPane{
 	-fx-border-color: #d3d3d3;
     -fx-border-width: 2.0px;
@@ -45,7 +68,7 @@
 
 #cssTaskViewDayLabel
 {
-	-fx-border-width: 0 0 1 0; 
+	-fx-border-width: 0.0 0.0 1.0 0.0; 
 	-fx-border-color: black;
 }
 
@@ -160,7 +183,7 @@
 }
 
 #cssCommandBarContentZone{
-	-fx-border-width: 1 0 1 0; 
+	-fx-border-width: 1.0 0.0 1.0 0.0; 
 	-fx-border-color: black;
 }
 

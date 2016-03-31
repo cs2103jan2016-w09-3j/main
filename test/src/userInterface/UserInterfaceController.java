@@ -46,6 +46,9 @@ public class UserInterfaceController {
 	private FloatingBarViewUserInterface _floatingBarComponent;
 	private FloatingTaskUserInterface _floatingViewInterface;
 	private SearchUserInterface _searchViewInterface;
+
+	private HelpScreenUserInterface _helpScreen;
+
 	private Rectangle2D _screenBounds;
 	private boolean _fixedSize;
 
@@ -96,7 +99,7 @@ public class UserInterfaceController {
 	 * DescriptionComponent, DetailsComponent
 	 */
 	public void initializeViews() {
-		// _taskManager.generateFakeData();// replace when integrate with angie
+		initializeHelpScreen();
 		initializeFloatingBar();
 		initializeFloatingView();
 		initializeSearchView();
@@ -104,6 +107,10 @@ public class UserInterfaceController {
 		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
 		updateComponents(0);
+	}
+
+	private void initializeHelpScreen() {
+		_helpScreen = HelpScreenUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize);
 	}
 
 	private void initializeTaskView() {
@@ -235,6 +242,7 @@ public class UserInterfaceController {
 	 * @param value
 	 */
 	public void changeView(int value) {
+		_helpScreen.hide();
 		int view = _currentView + value;
 		switch (view) {
 		case TASK_VIEW: {
@@ -284,6 +292,14 @@ public class UserInterfaceController {
 		if (_currentView != FLOATING_VIEW && _currentView != SEARCH_VIEW) {
 			_previousView = _currentView;
 		}
+	}
+
+	public void showHelpView() {
+		_helpScreen.show();
+	}
+
+	public void updateHelpView(int value) {
+		_helpScreen.update(value);
 	}
 
 	public void showSearchView() {
