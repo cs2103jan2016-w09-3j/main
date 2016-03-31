@@ -410,6 +410,14 @@ public class CommandBar {
 				label.setId("cssCommandShow");
 				break;
 			}
+			case SAVEDIR: {
+				label.setId("cssCommandSaveDir");
+				break;
+			}
+			case UNDO: {
+				label.setId("cssCommandUndo");
+				break;
+			}
 			default:
 				break;
 			}

@@ -298,3 +298,13 @@
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
+#cssCommandSaveDir{
+	-fx-background-color: rgba(183.0, 220, 40, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+#cssCommandUndo{
+	-fx-background-color: rgba(240, 180, 20, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
