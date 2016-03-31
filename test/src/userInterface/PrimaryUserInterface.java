@@ -436,6 +436,15 @@ public class PrimaryUserInterface extends Application {
 
 		}
 	}
+	
+	private void executeUndo() {
+		boolean isSuccess = uiController.undoLastCommand();
+		if (isSuccess) {
+
+		} else {
+
+		}
+	}
 
 	/**
 	 * Reset the layout and style of the commandBar for new input. usually

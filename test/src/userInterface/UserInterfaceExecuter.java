@@ -71,5 +71,9 @@ public class UserInterfaceExecuter {
 	public Queue<String> getBackedupCommands() {
 		return _taskManager.getBackedupCommands();
 	}
+	
+	public Queue<String> getCommandsToRun() {
+		return null;
+	}
 
 }

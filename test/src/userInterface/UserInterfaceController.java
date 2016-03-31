@@ -713,6 +713,11 @@ public class UserInterfaceController {
 
 	public void recoverLostCommands() {
 		Queue<String> qCommands = _logicFace.getBackedupCommands();
+		runCommands(qCommands);
+		_logicFace.switchView(TaskManager.DISPLAY_MAIN);
+	}
+
+	private void runCommands(Queue<String> qCommands) {
 		while (!qCommands.isEmpty()) {
 			String rawCommandWithView = qCommands.poll();
 			String rawCommand = deStructToRawCommand(rawCommandWithView);
@@ -769,11 +774,15 @@ public class UserInterfaceController {
 				}
 			}
 		}
-		_logicFace.switchView(TaskManager.DISPLAY_MAIN);
 	}
 
 	public boolean changeSaveDir(String dirPath) {
 		return _logicFace.changeSaveDir(dirPath);
 	}
 
+	public boolean undoLastCommand() {
+		Queue<String> commandsTorun = _logicFace.getBackedupCommands();
+		runCommands(commandsTorun);
+		return true;
+	}
 }
