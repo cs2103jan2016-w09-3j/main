@@ -20,11 +20,11 @@
 }
 
 #cssHelpComponentLinker{
-	-fx-background-color: rgba(0.0,0.0,0.0,1);
+	-fx-background-color: rgba(0.0,0.0,0.0,1.0);
 }
 
 #cssHelpComponentDescriptionBox{
-	-fx-background-color: rgba(255,255,255,1);
+	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
 	-fx-border-width: 1.0; 
 	-fx-border-color: black;
 }
@@ -163,15 +163,15 @@
 /* Search View CSS */
 #cssRootSearchView
 {
-	-fx-background-color: rgba(191, 80, 191,1.0,1.0),rgba(255.0,255.0,255.0,1.0);
+	-fx-background-color: rgba(191.0, 80.0, 191.0,1.0,1.0),rgba(255.0,255.0,255.0,1.0);
 	-fx-background-insets: 0.0,5.0;
 }
 #cssSearchTitle{
-	-fx-background-color: rgba(191, 80, 191,1.0);
+	-fx-background-color: rgba(191.0, 80.0, 191.0,1.0);
 }
 
 #cssSearchSelected{
-	-fx-background-color: rgba(191, 80, 191,0.3);
+	-fx-background-color: rgba(191.0, 80.0, 191.0,0.3);
 	-fx-background-radius: 20.0; 
 	-fx-background-insets: 1.0 7.0 1.0 7.0;
 }
@@ -299,12 +299,18 @@
 	-fx-background-radius: 7.0; 
 }
 #cssCommandSaveDir{
-	-fx-background-color: rgba(183.0, 220, 40, 1.0);
+	-fx-background-color: rgba(183.0, 220.0, 40.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 #cssCommandUndo{
-	-fx-background-color: rgba(240, 180, 20, 1.0);
+	-fx-background-color: rgba(240.0, 180.0, 20.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
+}
+
+/* css help */
+#cssHelpTitle
+{
+	-fx-text-fill: rgba(240.0,180.0,50.0,1.0);
 }
