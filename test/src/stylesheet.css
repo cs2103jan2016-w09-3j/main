@@ -134,19 +134,16 @@
 
 /* Floating Bar CSS */
 #cssRootFloatingBar{
-	-fx-background-color: rgba(255.0,255.0,255.0,0.7);
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0), rgba(255.0,255.0,255.0,0.7);
+	-fx-background-insets: 0,0 10 0 10;
+}
+#cssFloatingBarContentArea{
+	-fx-border-width:  0 0 0 1; 
+	-fx-border-color: black;
 }
 
-#cssFloatingTask
-{
-	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
-	-fx-background-insets: 2.0;
-}
+#cssFloatingBarTitleLabel{
 
-#cssFloatingBarTitleLabel
-{
-	-fx-background-color: rgba(255.0,255.0,255.0,1.0), rgba(255.0,178.5,127.5,1.0);
-	-fx-background-insets: 2.0, 0.0 10.0 0.0 235.0;
 }
 
 /* Floating Task View CSS */

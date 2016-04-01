@@ -1,13 +1,11 @@
 package userInterface;
 
-import entity.TaskEntity;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -21,6 +19,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	static final int COMPONENT_TOP_MARGIN = 50;
 	static final int COMPONENT_BOTTOM_MARGIN = 2;
 	private static final int POSITION_ZERO = 0;
+	private static final int LEFT_MARGIN =10;
 
 	private static final int LABEL_TITLE_WIDTH = 250;
 	private static final int FONT_SIZE_TITLE_LABEL = 20;
@@ -86,7 +85,8 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 
 		_mainfloatingTaskArea = new VBox();
 		_mainfloatingTaskArea.setMinWidth(_stageWidth - LABEL_TITLE_WIDTH);
-
+		_mainfloatingTaskArea.setId("cssFloatingBarContentArea");
+		
 		_mainHBox.getChildren().add(floatTitleLabel);
 		_mainHBox.getChildren().add(_mainfloatingTaskArea);
 	}
@@ -97,6 +97,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		floatTask.setMaxHeight(_stageHeight);
 		floatTask.setAlignment(Pos.CENTER);
 		floatTask.setFont(FONT_LABEL_TASK);
+		VBox.setMargin(floatTask, new Insets(0,0,0,LEFT_MARGIN));
 		_mainfloatingTaskArea.getChildren().add(floatTask);
 	}
 

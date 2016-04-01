@@ -38,7 +38,6 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private static final String HELP_DESCRIPTION_COMMAND_BAR = "This is where u type your input commands.";
 
 	// font
-	// font
 	private static final int FONT_SIZE_LABEL_TITLE = 18;
 	private static final Font FONT_LABEL_TITLE = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_LABEL_TITLE);
 	private static final int FONT_SIZE_LABEL = 14;
