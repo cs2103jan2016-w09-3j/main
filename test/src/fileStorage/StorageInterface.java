@@ -100,7 +100,15 @@ public class StorageInterface {
         
     public boolean saveUponFullQueue(String command) {
         CommandHandler commandHandler = new CommandHandler();
-        return commandHandler.saveUponFullQueue(command);
+        
+        boolean isSaved = storeCommandLine(command);
+        assert isSaved == true : "Not commited to main file.";
+      
+        Queue<String> newCommandsQueue = getCommandsQueue();
+        newCommandsQueue.offer(command);
+        setCommandsQueue(newCommandsQueue);
+        
+        return commandHandler.saveUponFullQueue(command, newCommandsQueue.size());
     }
     
     public Queue<String> getCommandsUponInit() {

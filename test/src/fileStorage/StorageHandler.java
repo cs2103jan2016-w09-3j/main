@@ -13,11 +13,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class StorageHandler {
-
+    
+    private String configFilePath;
     private String tasksFilePath;
     private String commandsFilePath;
     private String backUpTasksFilePath;
-
+    
+    private File configFile;
     private File tasksFile;
     private File commandsFile;
     private File backUpTasksFile;
@@ -30,12 +32,13 @@ public class StorageHandler {
     private FileHandler fileHandler;
     
     private static final int READ_FROM_MAIN_FILE = 1;
-    private static final int READ_FRON_BACK_UP_FILE = 2;
+    private static final int READ_FROM_BACK_UP_FILE = 2;
 
     public StorageHandler() {
         tasksFilePath = "tasksList.txt";
         commandsFilePath = "commandsList.txt";
         backUpTasksFilePath = "backUpTasksList.txt";
+        configFilePath = "configFile.txt";
         allCommandsQueue = new LinkedList<String>();
         processFile();
     }
@@ -80,25 +83,33 @@ public class StorageHandler {
      * Reads and stores data from existing file if any, creates a new file otherwise
      */
     public void processFile() {
+        configFile = new File(configFilePath);
         tasksFile = new File(tasksFilePath);
         commandsFile = new File(commandsFilePath);
         backUpTasksFile = new File(backUpTasksFilePath);
 
-        if (isExists(tasksFile)) {
+        if (isExists(configFile)) {
             setAllStoredTasks(readFromExistingMainFile(READ_FROM_MAIN_FILE));
             System.out.println("Main file found, begin reading...");
         } else {
             createNewFile(tasksFile);
         }
         
-        // Temp back up file to be deleted after every session
+        if (isExists(tasksFile) || tasksFile.mkdirs()) {
+            setAllStoredTasks(readFromExistingMainFile(READ_FROM_MAIN_FILE));
+            System.out.println("Main file found, begin reading...");
+        } else {
+            createNewFile(tasksFile);
+        }
+        
+        // Temporary back up file to be deleted after every session
         if(isExists(backUpTasksFile) == true) {
             deleteBackUpFile();
         }
         createNewFile(backUpTasksFile);
         copyToBackUp();
 
-        if (isExists(commandsFile)) {
+        if (isExists(commandsFile) || commandsFile.mkdirs()) {
             setAllCommandsQueue(readFromExistingCommandFile());
             System.out.println("Command file found, begin reading...");
             System.out.println("Queue size " + getAllCommandsQueue().size());
@@ -171,6 +182,26 @@ public class StorageHandler {
         return readCommands;
     }
     
+    public void readFromExistingConfigFile() {
+        String readPaths = "";
+        BufferedReader buffer;
+        try {
+            buffer = new BufferedReader(new FileReader(configFilePath));
+            String currentLine = "";
+            while ((currentLine = buffer.readLine()) != null) {
+                readPaths = readPaths + currentLine;
+            }
+            buffer.close();
+            String[] readPathsSplit = readPaths.split("\n");
+            setMainFilePath(readPathsSplit[0]);
+            setCommandFilePath(readPathsSplit[1]);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public boolean copyToBackUp() {
         allBackUpTasks = readFromExistingMainFile(READ_FROM_MAIN_FILE);
         return writeToMainFile(allBackUpTasks, backUpTasksFile, backUpTasksFilePath);
@@ -235,6 +266,22 @@ public class StorageHandler {
             fileWriter.flush();
             fileWriter.close();
             afterModify = commandsFile.lastModified();
+        } catch (IOException e) {
+            e.printStackTrace();  
+        }
+        return isModified(beforeModify, afterModify); 
+    }
+    
+    public boolean writeToConfigFile() {
+        FileWriter fileWriter;
+        long beforeModify = configFile.lastModified();
+        long afterModify = -1;
+        try {
+            fileWriter = new FileWriter(configFilePath); 
+            fileWriter.write(getMainFilePath() + '\n' + getCommandFilePath());
+            fileWriter.flush();
+            fileWriter.close();
+            afterModify = configFile.lastModified();
         } catch (IOException e) {
             e.printStackTrace();  
         }
