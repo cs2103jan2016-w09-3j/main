@@ -98,27 +98,9 @@ public class StorageInterface {
         storageHandler.deleteBackUpFile();;
     }
         
-    /**
-     * Store input command into command file 
-     * Re-writes main file if command queue is full
-     * Current queue size is 5 for testing
-     * @param command
-     * @return isFullQueue
-     */
     public boolean saveUponFullQueue(String command) {
-        boolean isFullQueue = false;
-        
-        boolean isSaved = storageHandler.writeToCommandFile(command);
-        assert isSaved == true : "Not commited to main file.";
-      
-        Queue<String> newCommandsQueue = getCommandsQueue();
-        newCommandsQueue.offer(command);
-        setCommandsQueue(newCommandsQueue);
-        
-        if (newCommandsQueue.size() >= QUEUE_SIZE) {
-            isFullQueue = true;
-        }
-        return isFullQueue;
+        CommandHandler commandHandler = new CommandHandler();
+        return commandHandler.saveUponFullQueue(command);
     }
     
     public Queue<String> getCommandsUponInit() {
