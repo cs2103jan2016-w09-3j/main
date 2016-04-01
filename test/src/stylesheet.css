@@ -1,3 +1,16 @@
+.cssLabels{
+	-fx-text-fill:rgba(0,0,0,1.0);
+}
+
+.cssLabelsDescription{
+	-fx-text-fill:rgba(0,0,0,1.0);
+}
+
+.cssLabelsDetails{
+	-fx-text-fill:rgba(0,0,0,1.0);
+}
+
+
 #cssCommandMainUserInput {
     -fx-background-color: -fx-control-inner-background;
     -fx-font: 12.0px "Arial";
@@ -46,13 +59,8 @@
 	-fx-border-width: 2.0px;
 }
 
+/* css Task view  */
 #cssTaskViewMainBackground{
-	-fx-background-color: rgba(255.0,255.0,255.0,0.9);
-}
-#cssRootDescriptionViewMainBackground{
-	-fx-background-color: rgba(255.0,255.0,255.0,0.9);
-}
-#cssTaskViewWeek{
 	-fx-background-color: rgba(255.0,255.0,255.0,0.9);
 }
 
@@ -60,28 +68,38 @@
 	-fx-background-color: rgba(193.0,230.0,255.0,0.95);
 }
 
-#cssTaskViewDayBox2
-{
-	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
+#cssTaskViewWeekUnSelected{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.9);
 }
 
-#cssTaskViewSelectedTask
-{
+#cssTaskViewDayBoxSelected{
+}
+
+#cssTaskViewDayBoxUnSelected{	
+}
+
+#cssTaskViewSelectedTask{
 	-fx-background-radius: 20.0; 
 	-fx-background-color:  rgba(255.0, 255.0, 255.0, 0.8);
 	-fx-background-insets: 1.0 5.0 1.0 5.0;
 }
 
-#cssTaskViewDayLabel
-{
+#cssTaskViewUnSelectedTask{
+}
+
+#cssTaskViewDayLabel{
 	-fx-border-width: 0.0 0.0 1.0 0.0; 
 	-fx-border-color: black;
 }
 
+/* css description panel */
 #cssDescriptionMainBox
 {
 	-fx-background-color: black,rgba(255.0,165.0,0.0,1.0), rgba(0.0, 120.0, 255.0, 1.0), rgba(255.0, 255.0, 255.0, 0.9);
     -fx-background-insets: 0.0, 1.0 1.0 1.0 1.0, 2.0 10.0 2.0 0.0, 2.0 10.0 2.0 0.0;
+}
+#cssRootDescriptionViewMainBackground{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.9);
 }
 
 #cssRoot{
@@ -135,10 +153,10 @@
 /* Floating Bar CSS */
 #cssRootFloatingBar{
 	-fx-background-color: rgba(255.0,178.5,127.5,1.0), rgba(255.0,255.0,255.0,0.7);
-	-fx-background-insets: 0,0 10 0 10;
+	-fx-background-insets: 0.0,0.0 10.0 0.0 10.0;
 }
 #cssFloatingBarContentArea{
-	-fx-border-width:  0 0 0 1; 
+	-fx-border-width:  0.0 0.0 0.0 1.0; 
 	-fx-border-color: black;
 }
 

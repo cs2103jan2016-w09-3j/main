@@ -44,6 +44,8 @@ public class TaskViewUserInterface implements ViewInterface {
 	private static final Font FONT_LABEL = new Font(PrimaryUserInterface.FONT_TITLE_LABLES, FONT_SIZE_LABEL_DATE);
 	private static final Font FONT_TASK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TASK);
 
+	private static final String CSS_LABEL = "cssLabels";
+	
 	private Stage _stage;
 	private int _stageWidth;
 	private int _stageHeight;
@@ -287,7 +289,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	 */
 	private VBox createWeekParent() {
 		VBox vbox = new VBox();
-		vbox.setId("cssTaskViewWeek");
+		vbox.setId("cssTaskViewWeekUnSelected");
 		vbox.setMinWidth(_stageWidth);
 		vbox.setMinHeight(0);
 		return vbox;
@@ -306,6 +308,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		hbox.setId("cssTaskViewDayLabel");
 
 		Label dateNLPLabel = new Label();
+		dateNLPLabel.getStyleClass().add(CSS_LABEL); 
 		dateNLPLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
 		dateNLPLabel.setFont(FONT_LABEL);
 		dateNLPLabel.setAlignment(Pos.BOTTOM_CENTER);
@@ -348,12 +351,12 @@ public class TaskViewUserInterface implements ViewInterface {
 
 	private GridPane createGridPaneForTask(TaskEntity taskEntity, int index) {
 		GridPane grid = new GridPane();
-		grid.setStyle(null);
-		grid.setId("");
+		grid.setId("cssTaskViewUnSelectedTask");
 		grid.setHgap(GAP_SIZE);
 		grid.setMinWidth(_individualItemWidth);
 
 		Label indexLabel = new Label("ID" + Integer.toString(index));
+		indexLabel.getStyleClass().add(CSS_LABEL); 
 		indexLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		indexLabel.setFont(Font.font(PrimaryUserInterface.FONT_DEFAULT, FontWeight.BOLD, FONT_SIZE_TASK));
 		indexLabel.setMinWidth(40);
@@ -362,6 +365,7 @@ public class TaskViewUserInterface implements ViewInterface {
 
 		HBox topBox = new HBox();
 		Label timeLabel = new Label();
+		timeLabel.getStyleClass().add(CSS_LABEL); 
 		timeLabel.setText(taskEntity.getTime());
 		timeLabel.setMinWidth(80);
 		timeLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
@@ -370,6 +374,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		topBox.getChildren().add(timeLabel);
 
 		Label titleLabel = new Label(taskEntity.getName());
+		titleLabel.getStyleClass().add(CSS_LABEL); 
 		titleLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		titleLabel.setFont(FONT_TASK);
 		HBox.setMargin(titleLabel, new Insets(0, 10, 0, 10));
@@ -381,6 +386,7 @@ public class TaskViewUserInterface implements ViewInterface {
 
 		String text = taskEntity.getDescription();
 		Label descriptionLabel2 = new Label(text);
+		descriptionLabel2.getStyleClass().add(CSS_LABEL); 
 		descriptionLabel2.setMinHeight(0);
 		descriptionLabel2.setMaxWidth(_individualItemWidth - 80);
 		descriptionLabel2.setWrapText(true);
@@ -393,6 +399,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		grid.add(midBox, 1, 1);
 
 		Label hashTagLabel = new Label(taskEntity.getHashtags());
+		hashTagLabel.getStyleClass().add(CSS_LABEL); 
 		hashTagLabel.setMinHeight(0);
 		hashTagLabel.setMaxWidth(_individualItemWidth - 80);
 		hashTagLabel.setFont(FONT_TASK);
@@ -601,17 +608,17 @@ public class TaskViewUserInterface implements ViewInterface {
 	public void setItemAsSelected(GridPane selectedGp) {
 		selectedGp.setId("cssTaskViewSelectedTask");
 		VBox selectedParent = (VBox) selectedGp.getParent().getParent();
-		selectedParent.setId("cssTaskViewDayBox");
+		selectedParent.setId("cssTaskViewDayBoxSelected");
 		VBox weekParentSelected = (VBox) selectedParent.getParent();
 		weekParentSelected.setId("cssTaskViewWeekSelected");
 	}
 
 	public void setItemAsDeSelected(GridPane gpPrevious) {
-		gpPrevious.setId(null);
+		gpPrevious.setId("cssTaskViewUnSelectedTask");
 		VBox previousParent = (VBox) gpPrevious.getParent().getParent();
-		previousParent.setId(null);
+		previousParent.setId("cssTaskViewDayBoxUnSelected");
 		VBox weekParent = (VBox) previousParent.getParent();
-		weekParent.setId("cssTaskViewWeek");
+		weekParent.setId("cssTaskViewWeekUnSelected");
 	}
 
 	// set transLationY to be desired tranlationY, which is current selected

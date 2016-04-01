@@ -39,6 +39,8 @@ public class DetailComponent implements ViewInterface {
 	private static final int LABEL_TASK_HEIGHT = 25;
 	private static final int LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS = 20;
 	private static final int BOTTOM_MARGIN_INDIVIDUAL_ITEMS = 10;
+	
+	private static final String CSS_LABEL = "cssLabelsDetails";
 
 	private Stage _stage;
 	private int _stageWidth;
@@ -262,6 +264,7 @@ public class DetailComponent implements ViewInterface {
 		itemMain.setId("cssExpandedViewVBox");
 
 		Label titleLabel = new Label(task.getName());
+		titleLabel.getStyleClass().add(CSS_LABEL);
 		titleLabel.setId("cssDetailComponentEmptyTitle");
 		titleLabel.setMinWidth(_stageWidth);
 		titleLabel.setMinHeight(LABEL_PROJECTHEAD_HEIGHT);
@@ -270,8 +273,10 @@ public class DetailComponent implements ViewInterface {
 
 		HBox dateBox = new HBox();
 		Label dateTitleLabel = new Label("Due date : ");
+		dateTitleLabel.getStyleClass().add(CSS_LABEL);
 		dateBox.getChildren().add(dateTitleLabel);
 		Label dateLabel = new Label(getDate(task.getDueDate()));
+		dateLabel.getStyleClass().add(CSS_LABEL);
 		dateBox.getChildren().add(dateLabel);
 		VBox.setMargin(dateBox, new Insets(0, 20, 0, 20));
 		itemMain.getChildren().add(dateBox);
@@ -279,6 +284,7 @@ public class DetailComponent implements ViewInterface {
 		String description = task.getDescription();
 		if (!description.equals("")) {
 			Text descriptionLabel = new Text(task.getDescription());
+			descriptionLabel.getStyleClass().add(CSS_LABEL);
 			descriptionLabel.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
 			descriptionLabel.setTextAlignment(TextAlignment.JUSTIFY);
 			itemMain.getChildren().add(descriptionLabel);
@@ -290,6 +296,7 @@ public class DetailComponent implements ViewInterface {
 		String hash = task.getHashtags();
 		if (!hash.equals("")) {
 			Text hashtag = new Text(task.getHashtags());
+			hashtag.getStyleClass().add(CSS_LABEL);
 			hashtag.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
 			hashtag.setTextAlignment(TextAlignment.JUSTIFY);
 			itemMain.getChildren().add(hashtag);
@@ -307,6 +314,7 @@ public class DetailComponent implements ViewInterface {
 		itemMain.setId("cssExpandedViewVBox");
 
 		Label titleLabel = new Label(task.getName());
+		titleLabel.getStyleClass().add(CSS_LABEL);
 		titleLabel.setId("cssDetailComponentEmptyTitle");
 		titleLabel.setMinWidth(_stageWidth);
 		titleLabel.setMinHeight(LABEL_PROJECTHEAD_HEIGHT);
@@ -316,8 +324,10 @@ public class DetailComponent implements ViewInterface {
 
 		HBox dateBox = new HBox();
 		Label dateTitleLabel = new Label("Due date : ");
+		dateTitleLabel.getStyleClass().add(CSS_LABEL);
 		dateBox.getChildren().add(dateTitleLabel);
 		Label dateLabel = new Label(getDate(task.getDueDate()));
+		dateLabel.getStyleClass().add(CSS_LABEL);
 		dateBox.getChildren().add(dateLabel);
 		VBox.setMargin(dateBox, new Insets(0, 20, 0, 20));
 		itemMain.getChildren().add(dateBox);
@@ -326,6 +336,7 @@ public class DetailComponent implements ViewInterface {
 		String description = task.getDescription();
 		if (!description.equals("")) {
 			Text descriptionLabel = new Text(task.getDescription());
+			descriptionLabel.getStyleClass().add(CSS_LABEL);
 			descriptionLabel.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
 			descriptionLabel.setTextAlignment(TextAlignment.JUSTIFY);
 			itemMain.getChildren().add(descriptionLabel);
@@ -337,6 +348,7 @@ public class DetailComponent implements ViewInterface {
 		String hash = task.getHashtags();
 		if (!hash.equals("")) {
 			Text hashtag = new Text(task.getHashtags());
+			hashtag.getStyleClass().add(CSS_LABEL);
 			hashtag.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
 			hashtag.setTextAlignment(TextAlignment.JUSTIFY);
 			itemMain.getChildren().add(hashtag);
@@ -360,10 +372,12 @@ public class DetailComponent implements ViewInterface {
 		dateBox.setAlignment(Pos.CENTER_LEFT);
 
 		Label dateLabel = new Label(getDate(task.getDueDate()));
+		dateLabel.getStyleClass().add(CSS_LABEL);
 		dateBox.getChildren().add(dateLabel);
 		dateBox.setMinHeight(LABEL_TASK_HEIGHT);
 
 		Label titleLabel = new Label(task.getName());
+		titleLabel.getStyleClass().add(CSS_LABEL);
 		titleLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		HBox.setMargin(titleLabel, new Insets(0, 0, 0, 5));
 		dateBox.getChildren().add(titleLabel);
@@ -373,36 +387,6 @@ public class DetailComponent implements ViewInterface {
 
 		Text description = new Text();
 		itemMain.getChildren().add(description);
-		return itemMain;
-	}
-
-	public VBox buildTask(TaskEntity task) {
-		VBox itemMain = new VBox();
-		itemMain.setSpacing(10);
-		itemMain.setMinWidth(_individualItemWidth);
-		VBox.setMargin(itemMain, new Insets(0, 2, 0, 2));
-		itemMain.setId("cssExpandedViewVBox");
-
-		Label titleLabel = new Label(task.getName());
-		titleLabel.setId("cssDetailComponentEmptyTitle");
-		titleLabel.setMinWidth(_individualItemWidth);
-		titleLabel.setAlignment(Pos.CENTER);
-		itemMain.getChildren().add(titleLabel);
-
-		HBox dateBox = new HBox();
-		Label dateTitleLabel = new Label("Due date : ");
-		dateBox.getChildren().add(dateTitleLabel);
-		Label dateLabel = new Label(getDate(task.getDueDate()));
-		dateBox.getChildren().add(dateLabel);
-		VBox.setMargin(dateBox, new Insets(0, 20, 0, 20));
-		itemMain.getChildren().add(dateBox);
-
-		Text description = new Text(task.getDescription());
-		description.setWrappingWidth(_individualItemWidth);
-		description.setTextAlignment(TextAlignment.JUSTIFY);
-		itemMain.getChildren().add(description);
-		VBox.setMargin(description, new Insets(0, 20, 20, 20));
-
 		return itemMain;
 	}
 
