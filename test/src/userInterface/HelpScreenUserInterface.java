@@ -144,7 +144,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 		Label title = new Label(HELP_DESCRIPTION_MAIN_TITLE);
 		title.setFont(FONT_LABEL_TITLE);
 		title.setId("cssHelpTitle");
-		title.setMinWidth(minWidth);
+		title.setMinWidth(minWidth - MARGIN*2);
 		title.setAlignment(Pos.CENTER);
 		descriptionBox.getChildren().add(title);
 

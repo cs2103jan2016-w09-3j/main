@@ -29,6 +29,12 @@
 	-fx-border-color: black;
 }
 
+#cssHelpTitle{
+	-fx-text-fill: rgba(240.0,180.0,50.0,1.0);
+	-fx-border-width: 0.0 0.0 1.0 0.0; 
+	-fx-border-color: black;
+}
+
 
 #rootPane{
 	-fx-border-color: #d3d3d3;
@@ -89,7 +95,7 @@
 
 
 #cssDetailComponentEmptyTitle {
-		-fx-background-color: rgba(255.0,178.5,127.5,1.0);	
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0);	
 }
 
 #cssDetailComponentProjectHeadBox{
@@ -307,10 +313,4 @@
 	-fx-background-color: rgba(240.0, 180.0, 20.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
-}
-
-/* css help */
-#cssHelpTitle
-{
-	-fx-text-fill: rgba(240.0,180.0,50.0,1.0);
 }
