@@ -899,6 +899,16 @@ public class TaskManager {
         }
     }
 
+    public boolean checkClashing(TaskEntity newlyAddedTask) {
+        for (int i = 0; i < mainTaskEntities.size(); i++) {
+            if ( Utils.isClashing(newlyAddedTask, mainTaskEntities.get(i)) ) {
+                return true;
+            }
+        }
+        //No clash if none of the task is clashing with it
+        return false;
+    }
+
     public int searchForCompleted() {
         if(completedTaskEntities == null) {
             return -2;
