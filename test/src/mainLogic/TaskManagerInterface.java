@@ -188,4 +188,8 @@ public class TaskManagerInterface {
     public void closeTaskManager () {
         manager.commitFullSave();
     }
+    
+    public ArrayList<TaskEntity> generateFakeData() {
+        return manager.generateFakeData();
+    }
 }
