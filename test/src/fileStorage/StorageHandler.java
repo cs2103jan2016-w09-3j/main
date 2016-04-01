@@ -95,7 +95,7 @@ public class StorageHandler {
             createNewFile(tasksFile);
         }
         
-        if (isExists(tasksFile)) {
+        if (isExists(tasksFile) || tasksFile.mkdirs()) {
             setAllStoredTasks(readFromExistingMainFile(READ_FROM_MAIN_FILE));
             System.out.println("Main file found, begin reading...");
         } else {
@@ -109,7 +109,7 @@ public class StorageHandler {
         createNewFile(backUpTasksFile);
         copyToBackUp();
 
-        if (isExists(commandsFile)) {
+        if (isExists(commandsFile) || commandsFile.mkdirs()) {
             setAllCommandsQueue(readFromExistingCommandFile());
             System.out.println("Command file found, begin reading...");
             System.out.println("Queue size " + getAllCommandsQueue().size());
