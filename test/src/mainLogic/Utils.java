@@ -176,6 +176,125 @@ public class Utils {
 		}
 		return false;
 	}
+	
+	/**
+	 * Clears the seconds and milliseconds off a calendar object
+	 * @param timeToTrim
+	 */
+	public static void clearSeconds(Calendar timeToTrim) {
+        timeToTrim.set(Calendar.SECOND, 0);
+        timeToTrim.set(Calendar.MILLISECOND, 0);
+	}
+
+	/**
+	 * Checks if 2 tasks are clashing
+	 * 
+	 * @param task1
+	 * @param task2
+	 * @return True if clashing
+	 *         False if not clashing or one of the variables to be checked is not set
+	 */
+    public static boolean isClashing(TaskEntity task1, TaskEntity task2) {
+        if (task1.getStartDate() == null) {
+            if (task2.getStartDate() == null) {
+                return Utils.compareTwoDueDates(task1, task2);
+            } else {
+                return Utils.checkDueDateInRange(task1, task2);
+            }
+        } else {
+            if (task2.getStartDate() == null) {
+                return Utils.checkDueDateInRange(task2, task1);
+            } else {
+                return Utils.checkOverlappingDuration(task1, task2);
+            }
+        }
+    }
+
+    /**
+     * Checks if the durations of 2 tasks are overlapping
+     * 
+     * @param dueDate - Task with due date to be checked
+     * @param range - Task with the start and end time
+     * @return True if the due date is within the 2 timing
+     *         False if the due date is within the
+     */
+    public static boolean checkOverlappingDuration(TaskEntity task1, TaskEntity task2) {
+        assert task1.getDueDate() != null && task1.getStartDate() != null && task2.getDueDate() != null
+                && task2.getStartDate() != null : "One of the variables being compared is null in checkOverlappingDuration";
+        if (task1.getDueDate() == null || task1.getStartDate() == null || task2.getDueDate() == null
+                || task2.getStartDate() == null) {
+            return false;
+        } else {
+            clearSeconds(task1.getDueDate());
+            clearSeconds(task1.getStartDate());
+            clearSeconds(task2.getDueDate());
+            clearSeconds(task2.getStartDate());
+
+            if (task1.getDueDate().compareTo(task2.getDueDate()) <= 0
+                    && task1.getDueDate().compareTo(task2.getStartDate()) >= 0) {
+                return true;
+            } else if (task2.getDueDate().compareTo(task1.getDueDate()) <= 0
+                    && task2.getDueDate().compareTo(task1.getStartDate()) >= 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    
+	/**
+     * Checks if a due date of the first task is within the range specified by
+     * the startDate and dueDate of the second task
+     * 
+     * @param dueDate - Task with due date to be checked
+     * @param range - Task with the start and end time
+     * @return True if the due date is within the 2 timing
+     *          False if the due date is within the 
+     */
+    public static boolean checkDueDateInRange(TaskEntity dueDate, TaskEntity range) {
+        assert range.getDueDate() != null && range.getDueDate() != null && range
+                .getStartDate() != null : "One of the variables being compared is null in checkDueDateInRange";
+        if (range.getDueDate() == null || range.getDueDate() == null || range.getStartDate() == null) {
+            return false;
+        } else {
+            clearSeconds(dueDate.getDueDate());
+            clearSeconds(range.getDueDate());
+            clearSeconds(range.getStartDate());
+            
+            if (dueDate.getDueDate().compareTo(range.getDueDate()) <= 0
+                    && dueDate.getDueDate().compareTo(range.getStartDate()) >= 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+	
+	/**
+     * Compares if the 2 due dates of the task is the same (Task order dont
+     * matter)
+     * 
+     * @param task1 - First task to be compared
+     * @param task2 - Second task to be compared
+     * @return True if the same
+     *         False if not the same, or fail to check
+     */
+    public static boolean compareTwoDueDates(TaskEntity task1, TaskEntity task2) {
+        assert task1.getDueDate() != null && task2
+                .getDueDate() != null : "Comparing floating task or corrupted non-floating task set to null for clashing";
+
+        if (task1.getDueDate() == null || task2.getDueDate() == null) {
+            return false;
+        } else {
+            clearSeconds(task1.getDueDate());
+            clearSeconds(task2.getDueDate());
+            if (task1.getDueDate().compareTo(task2.getDueDate()) == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 
 	/**
 	 * Used to generate a calendar object with the passed in parameters
