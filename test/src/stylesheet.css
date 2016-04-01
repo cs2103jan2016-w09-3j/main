@@ -1,15 +1,8 @@
-.cssLabels{
-	-fx-text-fill:rgba(0,0,0,1.0);
+.cssLabels,.cssLabelsDescription,.cssLabelsDetails,.cssLabelsFloatingBar,.cssLabelsFloatingTaskInterface,
+.cssLabelsSearchView, .cssLabelsCommandBar{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-fill:rgba(0.0,0.0,0.0,1.0);
 }
-
-.cssLabelsDescription{
-	-fx-text-fill:rgba(0,0,0,1.0);
-}
-
-.cssLabelsDetails{
-	-fx-text-fill:rgba(0,0,0,1.0);
-}
-
 
 #cssCommandMainUserInput {
     -fx-background-color: -fx-control-inner-background;
