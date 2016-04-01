@@ -45,6 +45,7 @@ public class TaskManagerInterface {
    
     public int add (TaskEntity newTask, String command) {
         int executionResult = manager.add(newTask);
+        System.out.println("Adding new task " + newTask.getDueDate());
         if(executionResult != -2) {
             manager.saveBackupCommand(command);
         }

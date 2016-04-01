@@ -31,7 +31,7 @@ public class TaskManager {
     private StorageInterface dataLoader;
 
     private static TaskManager singleton;
-    private Logger logger = Logger.getLogger("TaskManager.log");
+    private Logger logger;
 
     private int currentDisplayedList;
     private static ArrayList<TaskEntity> displayedTasks;
@@ -277,7 +277,10 @@ public class TaskManager {
      * @param errorMessage
      */
     public void logError(String errorMessage) {
-        logger.log(Level.SEVERE, errorMessage);
+        if(logger == null) {
+            initLogger();
+        }
+        logger.log(Level.SEVERE, "ERROR: " + errorMessage);
     }
 
     /**
@@ -356,12 +359,13 @@ public class TaskManager {
      * Initializes the logger
      */
     private void initLogger() {
+        logger = Logger.getLogger("TaskManager.log");
         try {
             Handler fileHandler = new FileHandler("TaskManager.log");
             logger.addHandler(fileHandler);
             logger.setLevel(Level.FINEST);
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -662,6 +666,7 @@ public class TaskManager {
         assert displayedTasks != null : "No list in focus when attempting to delete a task";
 
         if (displayedTasks == null) {
+            logError("Attempted deletion with no list in focus");
             displayedTasks = mainTaskEntities;
         }
 
