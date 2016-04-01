@@ -126,6 +126,10 @@ public class StorageInterface {
         
         return retrievedCommands;
     }
+    
+    public boolean storeCommandLine(String command) {
+        return storageHandler.writeToCommandFile(command);
+    }
         
     public Queue<String> getCommandsQueue() {
         return storageHandler.getAllCommandsQueue();
