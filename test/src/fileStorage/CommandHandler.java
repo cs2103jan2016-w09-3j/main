@@ -6,18 +6,15 @@ import java.util.TimerTask;
 
 import fileStorage.StorageInterface;
 
-public class CommandHandler extends TimerTask {
+public class CommandHandler {
     
     private static final int MILLISECONDS_TO_SECONDS = 1000;
     private static final int QUEUE_SIZE = 5;
-    private StorageInterface storageController;
+    private static final int SEARCH_VIEW = 4;
+    private StorageInterface storageInterface;
     
     public CommandHandler() {
-        storageController = new StorageInterface();
-    }
-    
-    private boolean storeCommand(String command) {
-        return storageController.storeCommandLine(command);
+        storageInterface = new StorageInterface();
     }
     
     /**
@@ -25,43 +22,23 @@ public class CommandHandler extends TimerTask {
      * Re-writes main file if command queue is full
      * Current queue size is 5 for testing
      * @param command
-     * @return isSavedMain
+     * @return isFullQueue
      */
     public boolean saveUponFullQueue(String command) {
-        boolean isSavedMain = false;
-        boolean isSavedCommand = storeCommand(command);
+        boolean isFullQueue = false;
         
-        assert isSavedCommand == true : "Command not saved.";
-        
-        Queue<String> newCommandsQueue = storageController.getCommandsQueue();
+        boolean isSaved = storageInterface.storeCommandLine(command);
+        assert isSaved == true : "Not commited to main file.";
+      
+        Queue<String> newCommandsQueue = storageInterface.getCommandsQueue();
         newCommandsQueue.offer(command);
-        storageController.setCommandsQueue(newCommandsQueue);
-        if (storageController.getCommandsQueue().size() >= QUEUE_SIZE) {
-            isSavedMain = storageController.storeTaskLists(storageController.getWorkingTaskLists());
-            storageController.clearCommandFileOnCommit();
-        }
-        return isSavedMain;
-    }
-    
-    public Queue<String> retrieveCommand() {
-        return storageController.getCommandsQueue();
-    }
-    
-    public void run() {
-        boolean isSavedMain = storageController.storeTaskLists(storageController.getWorkingTaskLists());
-        storageController.clearCommandFileOnCommit();
-        assert isSavedMain == true;
-        System.out.println("Hi, is this running" + isSavedMain);
-    }
-    
-    /**
-     * Runs a thread to store all working task lists every 5 seconds
-     * 5 seconds is for testing, after that will change to 30 minutes interval
-     */
-    public void commitUponTimeOut() {
-        TimerTask saveInterval = new CommandHandler();
-        Timer timer = new Timer();
+        storageInterface.setCommandsQueue(newCommandsQueue);
         
-        timer.schedule(saveInterval, 5*MILLISECONDS_TO_SECONDS, 5*MILLISECONDS_TO_SECONDS); 
+        String[] splitCommand = command.split(" ");
+        if (splitCommand[0].equals(SEARCH_VIEW) == false && newCommandsQueue.size() >= QUEUE_SIZE) {
+            isFullQueue = true;
+        }
+        return isFullQueue;
     }
+    
 }
