@@ -32,7 +32,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	private static final int GAP_SIZE = 10;
 	private static final int THRESHOLD = 50;
 
-	static final int TASK_VIEW_LABEL_HEIGHT = 35;
+	static final int TASK_VIEW_LABEL_HEIGHT = 50;
 	static final int TASK_VIEW_ITEM_HEIGHT = 30;
 	static final int DETAILED_VIEW_ITEM_HEIGHT = 40;
 	static final int SELECTOR_POSITION_Y = TASK_VIEW_LABEL_HEIGHT + TASK_VIEW_ITEM_HEIGHT * 2;
