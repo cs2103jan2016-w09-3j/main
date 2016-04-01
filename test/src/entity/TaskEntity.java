@@ -447,14 +447,45 @@ public class TaskEntity {
 		return _isFullDay;
 	}
 
+	/**
+	 * Adds a zero to the string to show time in double digit format
+	 * 
+	 * @param digit - Digit to be padded
+	 * @return String representation of the time passed in in double digit format
+	 */
+	private String padZero (int time) {
+	    String displayedTime = "";
+	    if( time < 10 ) {
+	        displayedTime += "0";
+	    }
+	    displayedTime += Integer.toString(time);
+	    return displayedTime;
+	}
+	
 	public String getTime() {
 		if (_isFloating) {
 			return null;
 		}
+		
 		if (_isFullDay) {
 			return "Full Day event";
 		}
-		return _dueDate.get(Calendar.HOUR_OF_DAY) + ":" + _dueDate.get(Calendar.MINUTE);
+		
+		//Adding start Date to the display string for showing date
+		String returnDate = "";
+		if( _startDate != null ) {
+		    returnDate += padZero(_startDate.get(Calendar.HOUR_OF_DAY)) + ":" + padZero(_startDate.get(Calendar.MINUTE)) + " - ";
+		}
+		
+		//Error catching
+		assert _dueDate != null : "Due date is null when generating display!";
+		if(_dueDate == null) {
+		    returnDate += "??:??";
+		    return returnDate;
+		}
+		
+		returnDate += padZero(_dueDate.get(Calendar.HOUR_OF_DAY)) + ":" + padZero(_dueDate.get(Calendar.MINUTE));
+		return returnDate;
 	}
 	
 	public String getHashtags () {
