@@ -38,14 +38,11 @@ public class TaskViewUserInterface implements ViewInterface {
 	static final int SELECTOR_POSITION_Y = TASK_VIEW_LABEL_HEIGHT + TASK_VIEW_ITEM_HEIGHT * 2;
 
 	// font
-	static final int FONT_SIZE_LABEL = 16;
-	static final int FONT_SIZE_LABEL_DATE = 10;
+	static final int FONT_SIZE_LABEL_DATE =24;
 	static final int FONT_SIZE_TASK = 12;
 	static final int FONT_SIZE_INDEX = 8;
-	private static final Font FONT_LABEL = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_LABEL);
+	private static final Font FONT_LABEL = new Font("Blackadder ITC", FONT_SIZE_LABEL_DATE);
 	private static final Font FONT_TASK = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_TASK);
-	private static final Font FONT_INDEX = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_INDEX);
-	private static final Font FONT_LABEL_DATE = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_LABEL_DATE);
 
 	private Stage _stage;
 	private int _stageWidth;
@@ -313,22 +310,15 @@ public class TaskViewUserInterface implements ViewInterface {
 		dateNLPLabel.setFont(FONT_LABEL);
 		dateNLPLabel.setAlignment(Pos.BOTTOM_CENTER);
 
-		Label dateLabel = new Label();
-		dateLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
-		dateLabel.setFont(FONT_LABEL_DATE);
-		dateLabel.setAlignment(Pos.BOTTOM_CENTER);
-
 		String labelText = getStringOfDate(taskEntity.getDueDate());
 		if (labelText != null) {
 			dateNLPLabel.setText(labelText);
 			hbox.getChildren().add(dateNLPLabel);
 		} else {
 			SimpleDateFormat daySdf = new SimpleDateFormat("d");
-			dateNLPLabel.setText(daySdf.format(taskEntity.getDueDate().getTime()) + " ");
-			hbox.getChildren().add(dateNLPLabel);
 			SimpleDateFormat sdf = new SimpleDateFormat("MMMMM yyyy");
-			dateLabel.setText(sdf.format(taskEntity.getDueDate().getTime()));
-			hbox.getChildren().add(dateLabel);
+			dateNLPLabel.setText(daySdf.format(taskEntity.getDueDate().getTime()) + " " +sdf.format(taskEntity.getDueDate().getTime()));
+			hbox.getChildren().add(dateNLPLabel);
 		}
 
 		vbox.getChildren().add(hbox);
@@ -362,7 +352,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		grid.setHgap(GAP_SIZE);
 		grid.setMinWidth(_individualItemWidth);
 
-		Label indexLabel = new Label(Integer.toString(index));
+		Label indexLabel = new Label("ID"+Integer.toString(index));
 		indexLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		indexLabel.setFont(Font.font(PrimaryUserInterface.DEFAULT_FONT, FontWeight.BOLD, FONT_SIZE_TASK));
 		indexLabel.setMinWidth(40);

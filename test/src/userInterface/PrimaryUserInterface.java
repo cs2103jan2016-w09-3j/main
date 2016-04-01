@@ -25,7 +25,7 @@ import mainLogic.Utils;
 
 public class PrimaryUserInterface extends Application {
 
-	static final int PREFERED_WINDOW_WIDTH = 600; // change to 1080.
+	static final int PREFERED_WINDOW_WIDTH = 1080	; // change to 1080.
 	static final double PREFERED_WINDOW_SCALE = 0.8;
 
 	private static final boolean SUCCESS = true;
