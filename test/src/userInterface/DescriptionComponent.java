@@ -25,7 +25,7 @@ public class DescriptionComponent implements ViewInterface {
 	private static final int POSITION_ZERO = 0;
 
 	private static final String CSS_LABEL = "cssLabelsDescription";
-	
+
 	private final double LABEL_SIZE_LARGE = 200;
 	private final double LABEL_SIZE_MEDIUM = 100;
 	private final double LABEL_SIZE_SMALL = 24;
@@ -77,15 +77,15 @@ public class DescriptionComponent implements ViewInterface {
 
 		StackPane mainPanel = new StackPane();
 		mainPanel.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
-		mainPanel.setId("cssRootDescriptionViewMainBackground");;
+		mainPanel.setId("cssRootDescriptionViewMainBackground");
 		mainPanel.setPrefSize(_stageWidth, _stageHeight);
 		mainPanel.setAlignment(Pos.TOP_RIGHT);
-		
+
 		_mainVbox = new GridPane();
 		_mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
 
 		mainPanel.getChildren().add(_mainVbox);
-		
+
 		Scene scene = new Scene(mainPanel, windowWidth, windowHeight, Color.TRANSPARENT);
 		_stage.setScene(scene);
 	}
@@ -106,14 +106,20 @@ public class DescriptionComponent implements ViewInterface {
 		StackPane s = new StackPane();
 		s.setMinHeight(dLabel.getHeight());
 		s.setMinWidth(CONPONENT_WIDTH);
-		VBox labelBox = buildLabel(dLabel, totalBuildedHeight);
-		s.getChildren().add(buildGradientRec(CONPONENT_WIDTH, dLabel.getHeight(), dLabel.isSelected()));
+		VBox labelBox = buildLabel(dLabel, totalBuildedHeight, dLabel.isSelected());
+		// s.getChildren().add(buildGradientRec(CONPONENT_WIDTH,
+		// dLabel.getHeight(), dLabel.isSelected()));
 		s.getChildren().add(labelBox);
 		return s;
 	}
 
-	public VBox buildLabel(DescriptionLabel dLabel, double totalBuildedHeight) {
+	public VBox buildLabel(DescriptionLabel dLabel, double totalBuildedHeight, boolean isSelected) {
 		VBox vbox = new VBox();
+		if (isSelected) {
+			vbox.setId("cssDescriptionLabelSelected");
+		} else {
+			vbox.setId("cssDescriptionLabelUnSelected");
+		}
 		vbox.setMinHeight(dLabel.getHeight());
 		vbox.setMinWidth(CONPONENT_WIDTH);
 		double posYStart = _translationY + totalBuildedHeight;
@@ -125,9 +131,11 @@ public class DescriptionComponent implements ViewInterface {
 	public Rectangle buildGradientRec(double width, double height, boolean isSelected) {
 		Stop[] stops;
 		if (isSelected) {
-			stops = new Stop[] {new Stop(0, new Color(1, 0.7, 0.5, 0)),new Stop(0.1, new Color(1, 0.7, 0.5, 0.90)), new Stop(1, new Color(1, 0.7, 0.5, 0.95))};
+			stops = new Stop[] { new Stop(0, new Color(1, 0.7, 0.5, 0)), new Stop(0.1, new Color(1, 0.7, 0.5, 0.90)),
+					new Stop(1, new Color(1, 0.7, 0.5, 0.95)) };
 		} else {
-			stops = new Stop[] { new Stop(0, new Color(1,1,1,0)),new Stop(0.1, new Color(1,1,1,0.9)), new Stop(1, new Color(1, 1, 1, 0.9)) };
+			stops = new Stop[] { new Stop(0, new Color(1, 1, 1, 0)), new Stop(0.1, new Color(1, 1, 1, 0.9)),
+					new Stop(1, new Color(1, 1, 1, 0.9)) };
 		}
 		LinearGradient lg1 = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stops);
 		Rectangle rec = new Rectangle(0, 0, width, height);
