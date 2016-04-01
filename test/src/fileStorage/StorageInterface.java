@@ -13,7 +13,6 @@ public class StorageInterface {
     
     public StorageHandler storageHandler;
     public static final int QUEUE_SIZE = 5;
-    public static int queueCount = 0;
     
     public StorageInterface() {
         storageHandler = new StorageHandler();
@@ -85,40 +84,33 @@ public class StorageInterface {
         
         return storeTaskLists(newList);
     }
+    
+    public AllTaskLists getBackUpTaskLists() {
+        JsonConverter jsonConverter = new JsonConverter();
         
-    public boolean storeCommandLine(String command) {
-        boolean isSaved = storageHandler.writeToCommandFile(command);
-        assert isSaved == true : "Command not stored.";
+        String retrievedTasks = storageHandler.getAllBackUpTasks();
+        AllTaskLists retrievedList = jsonConverter.jsonToJava(retrievedTasks);
         
-        return isSaved;
+        return retrievedList;
     }
     
-    /**
-     * Store input command into command file 
-     * Re-writes main file if command queue is full
-     * Current queue size is 5 for testing
-     * @param command
-     * @return isSavedMain
-     */
+    public void deleteBackUp() {
+        storageHandler.deleteBackUpFile();;
+    }
+        
     public boolean saveUponFullQueue(String command) {
-        boolean isFullQueue = false;
-        
-        storeCommandLine(command);
-      
-        Queue<String> newCommandsQueue = storageHandler.getAllCommandsQueue();
-        newCommandsQueue.offer(command);
-        storageHandler.setAllCommandsQueue(newCommandsQueue);
-        
-        if (storageHandler.getAllCommandsQueue().size() >= QUEUE_SIZE) {
-            isFullQueue = true;
-        }
-        return isFullQueue;
+        CommandHandler commandHandler = new CommandHandler();
+        return commandHandler.saveUponFullQueue(command);
     }
     
     public Queue<String> getCommandsUponInit() {
         Queue<String> retrievedCommands = storageHandler.getAllCommandsQueue();
         
         return retrievedCommands;
+    }
+    
+    public boolean storeCommandLine(String command) {
+        return storageHandler.writeToCommandFile(command);
     }
         
     public Queue<String> getCommandsQueue() {
@@ -128,8 +120,6 @@ public class StorageInterface {
     public void setCommandsQueue(Queue<String> newCommandsQueue) {
         storageHandler.setAllCommandsQueue(newCommandsQueue);
     }
-    
-
     
     public void clearCommandFileOnCommit() {
         storageHandler.clearCommandFileUponCommit();

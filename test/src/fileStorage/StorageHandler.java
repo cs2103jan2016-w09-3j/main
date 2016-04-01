@@ -16,19 +16,26 @@ public class StorageHandler {
 
     private String tasksFilePath;
     private String commandsFilePath;
+    private String backUpTasksFilePath;
 
     private File tasksFile;
     private File commandsFile;
+    private File backUpTasksFile;
 
     private String allStoredTasks;
+    private String allBackUpTasks;
     private Queue<String> allCommandsQueue;
 
     private static Logger logger = Logger.getLogger("MainFileHandler");
     private FileHandler fileHandler;
+    
+    private static final int READ_FROM_MAIN_FILE = 1;
+    private static final int READ_FRON_BACK_UP_FILE = 2;
 
     public StorageHandler() {
         tasksFilePath = "tasksList.txt";
         commandsFilePath = "commandsList.txt";
+        backUpTasksFilePath = "backUpTasksList.txt";
         allCommandsQueue = new LinkedList<String>();
         processFile();
     }
@@ -56,6 +63,10 @@ public class StorageHandler {
     public void setAllStoredTasks(String allStoredTasks) {
         this.allStoredTasks = allStoredTasks;
     }
+    
+    public String getAllBackUpTasks() {
+        return allBackUpTasks;
+    }
 
     public Queue<String> getAllCommandsQueue() {
         return allCommandsQueue;
@@ -71,13 +82,21 @@ public class StorageHandler {
     public void processFile() {
         tasksFile = new File(tasksFilePath);
         commandsFile = new File(commandsFilePath);
+        backUpTasksFile = new File(backUpTasksFilePath);
 
         if (isExists(tasksFile)) {
-            setAllStoredTasks(readFromExistingMainFile());
+            setAllStoredTasks(readFromExistingMainFile(READ_FROM_MAIN_FILE));
             System.out.println("Main file found, begin reading...");
         } else {
             createNewFile(tasksFile);
         }
+        
+        // Temp back up file to be deleted after every session
+        if(isExists(backUpTasksFile) == true) {
+            deleteBackUpFile();
+        }
+        createNewFile(backUpTasksFile);
+        copyToBackUp();
 
         if (isExists(commandsFile)) {
             setAllCommandsQueue(readFromExistingCommandFile());
@@ -105,14 +124,19 @@ public class StorageHandler {
      * Reads data from an existing file and returns the appended string
      * @return String
      */
-    public String readFromExistingMainFile() {        
+    public String readFromExistingMainFile(int fromFile) {        
         BufferedReader buffer;
         String readData = "";
         try {
-            buffer = new BufferedReader(new FileReader(tasksFilePath));
+            if (fromFile == READ_FROM_MAIN_FILE) {
+                buffer = new BufferedReader(new FileReader(tasksFilePath));
+            } else {
+                // Read from back up file
+                buffer = new BufferedReader(new FileReader(backUpTasksFilePath));
+            }
             String currentLine = "";
             while ((currentLine = buffer.readLine()) != null) {
-                readData = readData + currentLine.trim();
+                readData = readData + currentLine + "\n";
             }
             buffer.close();
             System.out.println("Tasks: Read from file.");
@@ -121,7 +145,7 @@ public class StorageHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return readData.trim();
+        return readData;
     }
 
     /**
@@ -145,6 +169,11 @@ public class StorageHandler {
             e.printStackTrace();
         }
         return readCommands;
+    }
+    
+    public boolean copyToBackUp() {
+        allBackUpTasks = readFromExistingMainFile(READ_FROM_MAIN_FILE);
+        return writeToMainFile(allBackUpTasks, backUpTasksFile, backUpTasksFilePath);
     }
 
     /**
@@ -171,6 +200,22 @@ public class StorageHandler {
             logger.log(Level.WARNING, "IOException");
         }
         logger.log(Level.INFO, "End processing...");
+        return isModified(beforeModify, afterModify);
+    }
+    
+    public boolean writeToMainFile(String data, File destFile, String destFilePath) {
+        FileWriter fileWriter;
+        long beforeModify = destFile.lastModified();
+        long afterModify = -1;
+        try {
+            fileWriter = new FileWriter(destFilePath); 
+            fileWriter.write(data);
+            fileWriter.flush();
+            fileWriter.close();
+            afterModify = destFile.lastModified();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return isModified(beforeModify, afterModify);
     }
 
@@ -227,5 +272,9 @@ public class StorageHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void deleteBackUpFile() {
+        backUpTasksFile.delete();
     }
 }

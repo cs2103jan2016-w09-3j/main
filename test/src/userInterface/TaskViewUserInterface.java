@@ -32,7 +32,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	private static final int GAP_SIZE = 10;
 	private static final int THRESHOLD = 50;
 
-	static final int TASK_VIEW_LABEL_HEIGHT = 35;
+	static final int TASK_VIEW_LABEL_HEIGHT = 50;
 	static final int TASK_VIEW_ITEM_HEIGHT = 30;
 	static final int DETAILED_VIEW_ITEM_HEIGHT = 40;
 	static final int SELECTOR_POSITION_Y = TASK_VIEW_LABEL_HEIGHT + TASK_VIEW_ITEM_HEIGHT * 2;
@@ -45,7 +45,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	private static final Font FONT_TASK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TASK);
 
 	private static final String CSS_LABEL = "cssLabels";
-	
+
 	private Stage _stage;
 	private int _stageWidth;
 	private int _stageHeight;
@@ -308,7 +308,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		hbox.setId("cssTaskViewDayLabel");
 
 		Label dateNLPLabel = new Label();
-		dateNLPLabel.getStyleClass().add(CSS_LABEL); 
+		dateNLPLabel.getStyleClass().add(CSS_LABEL);
 		dateNLPLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
 		dateNLPLabel.setFont(FONT_LABEL);
 		dateNLPLabel.setAlignment(Pos.BOTTOM_CENTER);
@@ -331,7 +331,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	private String getStringOfDate(Calendar c) {
-		return r.reParse(c);
+		return r.reParse((Calendar)c.clone());
 	}
 
 	/**
@@ -356,7 +356,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		grid.setMinWidth(_individualItemWidth);
 
 		Label indexLabel = new Label("ID" + Integer.toString(index));
-		indexLabel.getStyleClass().add(CSS_LABEL); 
+		indexLabel.getStyleClass().add(CSS_LABEL);
 		indexLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		indexLabel.setFont(Font.font(PrimaryUserInterface.FONT_DEFAULT, FontWeight.BOLD, FONT_SIZE_TASK));
 		indexLabel.setMinWidth(40);
@@ -365,7 +365,7 @@ public class TaskViewUserInterface implements ViewInterface {
 
 		HBox topBox = new HBox();
 		Label timeLabel = new Label();
-		timeLabel.getStyleClass().add(CSS_LABEL); 
+		timeLabel.getStyleClass().add(CSS_LABEL);
 		timeLabel.setText(taskEntity.getTime());
 		timeLabel.setMinWidth(80);
 		timeLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
@@ -374,7 +374,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		topBox.getChildren().add(timeLabel);
 
 		Label titleLabel = new Label(taskEntity.getName());
-		titleLabel.getStyleClass().add(CSS_LABEL); 
+		titleLabel.getStyleClass().add(CSS_LABEL);
 		titleLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		titleLabel.setFont(FONT_TASK);
 		HBox.setMargin(titleLabel, new Insets(0, 10, 0, 10));
@@ -386,7 +386,7 @@ public class TaskViewUserInterface implements ViewInterface {
 
 		String text = taskEntity.getDescription();
 		Label descriptionLabel2 = new Label(text);
-		descriptionLabel2.getStyleClass().add(CSS_LABEL); 
+		descriptionLabel2.getStyleClass().add(CSS_LABEL);
 		descriptionLabel2.setMinHeight(0);
 		descriptionLabel2.setMaxWidth(_individualItemWidth - 80);
 		descriptionLabel2.setWrapText(true);
@@ -399,7 +399,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		grid.add(midBox, 1, 1);
 
 		Label hashTagLabel = new Label(taskEntity.getHashtags());
-		hashTagLabel.getStyleClass().add(CSS_LABEL); 
+		hashTagLabel.getStyleClass().add(CSS_LABEL);
 		hashTagLabel.setMinHeight(0);
 		hashTagLabel.setMaxWidth(_individualItemWidth - 80);
 		hashTagLabel.setFont(FONT_TASK);
