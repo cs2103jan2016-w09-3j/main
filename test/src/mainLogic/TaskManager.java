@@ -887,7 +887,7 @@ public class TaskManager extends TimerTask {
      * @return ID of the task that is next, counting from the current time
      */
     public int getNextTimeListId() {
-        TaskEntity currentTimePlaceholder = new TaskEntity("", Calendar.getInstance(), false);
+        TaskEntity currentTimePlaceholder = new TaskEntity("", null, Calendar.getInstance(), false);
         int nextTimeId = findPositionToInsert(currentTimePlaceholder);
 
         // Setting ID to the last index in the list if all tasks comes before
@@ -1004,7 +1004,7 @@ public class TaskManager extends TimerTask {
             c.set(Calendar.DATE, dateBuffer);
             c.set(Calendar.HOUR, hourBuffer);
 
-            TaskEntity t = new TaskEntity("Task Name", c, false, "task description");
+            TaskEntity t = new TaskEntity("Task Name", null, c, false, "task description");
             add(t);
             k++;
         }

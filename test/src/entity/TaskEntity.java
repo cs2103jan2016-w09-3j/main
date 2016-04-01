@@ -14,6 +14,7 @@ public class TaskEntity {
 
 	private boolean _isFloating;
 	private boolean _isFullDay;
+	private Calendar _startDate;
 	private Calendar _dueDate;
 	private Calendar _dateCreated;
 	private Calendar _completionDate;
@@ -81,21 +82,23 @@ public class TaskEntity {
 		_isFloating = true;
 	}
 
-	public TaskEntity(String name, Calendar dueDate, boolean isFullDay) {
+	public TaskEntity(String name, Calendar startDate, Calendar dueDate, boolean isFullDay) {
 		initCommonData();
 
 		_name = name;
 		_description = "";
+		_startDate = startDate;
 		_dueDate = dueDate;
 		_isFloating = false;
 		_isFullDay = isFullDay;
 	}
 
-	public TaskEntity(String name, Calendar dueDate, boolean isFullDay, String description) {
+	public TaskEntity(String name, Calendar startDate, Calendar dueDate, boolean isFullDay, String description) {
 		initCommonData();
 
 		_name = name;
 		_description = description;
+		_startDate = startDate;
 		_dueDate = dueDate;
 		_isFullDay = isFullDay;
 		_isFloating = false;
@@ -109,11 +112,12 @@ public class TaskEntity {
 		_isFloating = true;
 	}
 
-    public TaskEntity(boolean isFloating, boolean isFullDay, Calendar dueDate, Calendar dateCreated,
+    public TaskEntity(boolean isFloating, boolean isFullDay, Calendar startDate, Calendar dueDate, Calendar dateCreated,
             String name, String description, int id, int association_status,
             ArrayList<TaskEntity> associations, String associationIDs, boolean isCompleted, Calendar completionDate, String hashtags) {
         _isFloating = isFloating;
         _isFullDay = isFullDay;
+        _startDate = startDate;
         _dueDate = dueDate;
         _dateCreated = dateCreated;
         _name = name;
@@ -204,7 +208,7 @@ public class TaskEntity {
 	}
 	
     public TaskEntity clone() {
-        TaskEntity newInstance = new TaskEntity(_isFloating, _isFullDay, _dueDate, _dateCreated, _name,
+        TaskEntity newInstance = new TaskEntity(_isFloating, _isFullDay, _startDate, _dueDate, _dateCreated, _name,
                 _description, _id, _association_status, _associations, _associationIDs, _isCompleted, _completionDate, _hashtags);
         return newInstance;
 	}
@@ -386,15 +390,32 @@ public class TaskEntity {
 	}
 
 	public Calendar getDueDate() {
+	    assert !_isFloating : "Trying to get due date from a full day task";
 		if (!_isFloating) {
 			return _dueDate;
 		} else {
 			return null;
 		}
 	}
+	
+	public Calendar getStartDate() {
+        if (!_isFloating) {
+            return _startDate;
+        } else {
+            return null;
+        }
+    }
 
-	public void setDueDate(Calendar dueDate, boolean isFullDay) {
+	public void setDate(Calendar dueDate, boolean isFullDay) {
+        _isFloating = false;
+        _startDate = null;
+        _dueDate = dueDate;
+        _isFullDay = isFullDay;
+    }
+	
+	public void setDate(Calendar startDate, Calendar dueDate, boolean isFullDay) {
 		_isFloating = false;
+		_startDate = startDate;
 		_dueDate = dueDate;
 		_isFullDay = isFullDay;
 	}

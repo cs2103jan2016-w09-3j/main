@@ -190,7 +190,7 @@ public class InputParser {
 			String name = infoParser.getTitle();
 			String desc = infoParser.getDescription();
 			if(dates.size() == 0){
-				TaskEntity toAdd = new TaskEntity(name, null, false, desc);
+				TaskEntity toAdd = new TaskEntity(name, desc);
 				toAdd.setFloating(true);
 				for(int i=0; i<hashes.size();i++){
 					toAdd.addHashtag(hashes.get(i));
@@ -203,7 +203,7 @@ public class InputParser {
 					c.setTime(dates.get(i));
 					c.clear(Calendar.SECOND);
 					c.clear(Calendar.MILLISECOND);
-					TaskEntity toAdd = new TaskEntity(name, c, false, desc);
+					TaskEntity toAdd = new TaskEntity(name, null, c, false, desc);
 					for(int j=0; j<hashes.size();j++){
 						toAdd.addHashtag(hashes.get(j));
 					}
