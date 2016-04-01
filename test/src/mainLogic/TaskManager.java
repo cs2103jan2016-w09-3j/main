@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 import java.util.logging.FileHandler;
@@ -255,7 +256,7 @@ public class TaskManager {
     public Queue<String> getBackedupCommands () {
         Queue<String> reloadedCommands = dataLoader.getCommandsUponInit();
         dataLoader.clearCommandFile();
-        return reloadedCommands;
+        return new LinkedList(reloadedCommands);
     }
 
     /**

@@ -101,24 +101,18 @@ public class StorageInterface {
      * @return isSavedMain
      */
     public boolean saveUponFullQueue(String command) {
-        //boolean isFullQueue = false;
+        boolean isFullQueue = false;
         
         storeCommandLine(command);
-       
-        queueCount++;
-        if(queueCount >= QUEUE_SIZE) {
-            queueCount = 0;
-            return true;
-        }
-        return false;
-        /*Queue<String> newCommandsQueue = storageHandler.getAllCommandsQueue();
+      
+        Queue<String> newCommandsQueue = storageHandler.getAllCommandsQueue();
         newCommandsQueue.offer(command);
         storageHandler.setAllCommandsQueue(newCommandsQueue);
         
         if (storageHandler.getAllCommandsQueue().size() >= QUEUE_SIZE) {
             isFullQueue = true;
         }
-        return isFullQueue;*/
+        return isFullQueue;
     }
     
     public Queue<String> getCommandsUponInit() {

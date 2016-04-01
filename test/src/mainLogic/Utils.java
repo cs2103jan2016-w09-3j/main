@@ -2,6 +2,7 @@ package mainLogic;
 
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Queue;
 
 import entity.TaskEntity;
 
@@ -71,7 +72,7 @@ public class Utils {
 	 *            - String representation of a base36 number
 	 * @return - positive integer -1 if unexpected input is given
 	 */
-	public static int convertBase36ToDec2(String base36) {
+	public static int convertBase36ToDec(String base36) {
 		int decNumber = 0;
 		// digitValue increases by 36x per character in the string
 		int digitWeight = 1;
@@ -216,5 +217,4 @@ public class Utils {
 		newDate.set(year, month, day, hour, minutes);
 		return newDate;
 	}
-
 }
