@@ -20,7 +20,7 @@ public class JUnitStorage {
     @Test
     public void testReadAndWriteMain() {
         assertEquals(sh.writeToMainFile("HELLO"), true);
-        assertEquals(sh.readFromExistingMainFile(), "HELLO");
+        assertEquals(sh.readFromExistingMainFile(1), "HELLO\n");
     }
     
     @Test
