@@ -20,12 +20,18 @@
 }
 
 #cssHelpComponentLinker{
-	-fx-background-color: rgba(0.0,0.0,0.0,1);
+	-fx-background-color: rgba(0.0,0.0,0.0,1.0);
 }
 
 #cssHelpComponentDescriptionBox{
-	-fx-background-color: rgba(255,255,255,1);
+	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
 	-fx-border-width: 1.0; 
+	-fx-border-color: black;
+}
+
+#cssHelpTitle{
+	-fx-text-fill: rgba(240.0,180.0,50.0,1.0);
+	-fx-border-width: 0.0 0.0 1.0 0.0; 
 	-fx-border-color: black;
 }
 
@@ -89,7 +95,7 @@
 
 
 #cssDetailComponentEmptyTitle {
-		-fx-background-color: rgba(255.0,178.5,127.5,1.0);	
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0);	
 }
 
 #cssDetailComponentProjectHeadBox{
@@ -128,19 +134,16 @@
 
 /* Floating Bar CSS */
 #cssRootFloatingBar{
-	-fx-background-color: rgba(255.0,255.0,255.0,0.7);
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0), rgba(255.0,255.0,255.0,0.7);
+	-fx-background-insets: 0,0 10 0 10;
+}
+#cssFloatingBarContentArea{
+	-fx-border-width:  0 0 0 1; 
+	-fx-border-color: black;
 }
 
-#cssFloatingTask
-{
-	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
-	-fx-background-insets: 2.0;
-}
+#cssFloatingBarTitleLabel{
 
-#cssFloatingBarTitleLabel
-{
-	-fx-background-color: rgba(255.0,255.0,255.0,1.0), rgba(255.0,178.5,127.5,1.0);
-	-fx-background-insets: 2.0, 0.0 10.0 0.0 235.0;
 }
 
 /* Floating Task View CSS */
@@ -156,24 +159,24 @@
 }
 #cssFloatingTaskViewSelected{
 	-fx-background-radius: 20.0; 
-	-fx-background-color:  rgba(255.0,178.5,127.5,0.8);
-	-fx-background-insets: 1.0 5.0 1.0 5.0;
+	-fx-background-color:  rgba(255.0,178.5,127.5,0.3);
+	-fx-background-insets: 1.0 7.0 1.0 7.0;
 }
 
 /* Search View CSS */
 #cssRootSearchView
 {
-	-fx-background-color: rgba(128.0,0.0,128.0,1.0),rgba(255.0,255.0,255.0,1.0);
+	-fx-background-color: rgba(191.0, 80.0, 191.0,1.0,1.0),rgba(255.0,255.0,255.0,1.0);
 	-fx-background-insets: 0.0,5.0;
 }
 #cssSearchTitle{
-	-fx-background-color: rgba(128.0,0.0,128.0,1.0);
+	-fx-background-color: rgba(191.0, 80.0, 191.0,1.0);
 }
 
 #cssSearchSelected{
-	-fx-background-color: rgba(128.0,0.0,128.0,0.7);
+	-fx-background-color: rgba(191.0, 80.0, 191.0,0.3);
 	-fx-background-radius: 20.0; 
-	-fx-background-insets: 1.0 5.0 1.0 5.0;
+	-fx-background-insets: 1.0 7.0 1.0 7.0;
 }
 
 /* CommandsBar CSS */
@@ -299,12 +302,12 @@
 	-fx-background-radius: 7.0; 
 }
 #cssCommandSaveDir{
-	-fx-background-color: rgba(183.0, 220, 40, 1.0);
+	-fx-background-color: rgba(183.0, 220.0, 40.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 #cssCommandUndo{
-	-fx-background-color: rgba(240, 180, 20, 1.0);
+	-fx-background-color: rgba(240.0, 180.0, 20.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }

@@ -60,7 +60,7 @@ public class CommandBar {
 
 	// font
 	static final int FONT_SIZE_FEEDBACK = 12;
-	private static final Font FONT_FEEDBACK = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_FEEDBACK);
+	private static final Font FONT_FEEDBACK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_FEEDBACK);
 
 	private double _prefHeight;
 	private double _prefWidth;

@@ -32,14 +32,12 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	private VBox _secondaryVbox;
 
 	// font
-	static final int FONT_SIZE_LABEL = 16;
+	static final int FONT_SIZE_LABEL = 20;
 	static final int FONT_SIZE_LABEL_DATE = 10;
 	static final int FONT_SIZE_TASK = 12;
 	static final int FONT_SIZE_INDEX = 8;
-	private static final Font FONT_LABEL = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_LABEL);
-	private static final Font FONT_TASK = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_TASK);
-	private static final Font FONT_INDEX = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_INDEX);
-	private static final Font FONT_LABEL_DATE = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_LABEL_DATE);
+	private static final Font FONT_LABEL = new Font(PrimaryUserInterface.FONT_TITLE_LABLES, FONT_SIZE_LABEL);
+	private static final Font FONT_TASK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TASK);
 
 	static final int LABEL_TITLE_HEIGHT = 35;
 	static final int LABEL_TASK_HEIGHT = 30;
@@ -246,12 +244,11 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		floatingParent.setMaxHeight(LABEL_TASK_HEIGHT);
 		floatingParent.setMinWidth(_stageWidth);
 
-		Label indexLabel = new Label(Integer.toString(index));
-		//Label indexLabel = new Label(Integer.toString(index));
+		Label indexLabel = new Label("ID"+Integer.toString(index));
 		indexLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		indexLabel.setMinWidth(50);
 		indexLabel.setAlignment(Pos.CENTER);
-		indexLabel.setFont(Font.font(PrimaryUserInterface.DEFAULT_FONT, FontWeight.BOLD, FONT_SIZE_TASK));
+		indexLabel.setFont(Font.font(PrimaryUserInterface.FONT_DEFAULT, FontWeight.BOLD, FONT_SIZE_TASK));
 		floatingParent.getChildren().add(indexLabel);
 
 		Label descriptionLabel = new Label();

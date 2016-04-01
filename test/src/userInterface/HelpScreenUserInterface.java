@@ -6,9 +6,11 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -17,12 +19,30 @@ public class HelpScreenUserInterface implements ViewInterface {
 
 	private static HelpScreenUserInterface _myInstance;
 
-	private static final String HELP_DESCRIPTION_FLOATING_BAR = "This is the floating bar, it randomly shows you a task that does not has a date assigned to it.";
-	private static final String HELP_DESCRIPTION_MAIN = "Welcome to PCNM help manual! \n Press the left and right arrow keys to scroll through the help and F1 to close the help screen";
-	private static final String HELP_DESCRIPTION_DESCRIPTION_COMPONENT = "This is the description view. It shows u the range of the week or the dates of the dates.";
-	private static final String HELP_DESCRIPTION_TASK_VIEW = "This is the main view, it shows you your task in chronological order.";
-	private static final String HELP_DESCRIPTION_DETAIL_COMPONENT = "This is the detail component, it shows you more description of the selected task.";
-	private static final String HELP_DESCRIPTION_COMMAND_BAR = "This is the command bar where u type your input commands.";
+	private static final String HELP_DESCRIPTION_FLOATING_BAR_TITLE = "Floating Panel";
+	private static final String HELP_DESCRIPTION_FLOATING_BAR = "This panel shows you a task that does not has a date assigned to it. It changes every 10 seconds.";
+
+	private static final String HELP_DESCRIPTION_MAIN_TITLE = "Welcome to PCNM help manual!";
+	private static final String HELP_DESCRIPTION_MAIN = "Press the left and right arrow keys to scroll through the help and F1 to close the help screen";
+
+	private static final String HELP_DESCRIPTION_DESCRIPTION_COMPONENT_TITLE = "Description Panel";
+	private static final String HELP_DESCRIPTION_DESCRIPTION_COMPONENT = "This panel shows u the range of the week or the dates of the dates.";
+
+	private static final String HELP_DESCRIPTION_TASK_VIEW_TITLE = "Main View";
+	private static final String HELP_DESCRIPTION_TASK_VIEW = "This panel shows you your task in chronological order.";
+
+	private static final String HELP_DESCRIPTION_DETAIL_COMPONENT_TITLE = "Details Panel";
+	private static final String HELP_DESCRIPTION_DETAIL_COMPONENT = "This panel shows you more description of the selected task.";
+
+	private static final String HELP_DESCRIPTION_COMMAND_BAR_TITLE = "Command Bar";
+	private static final String HELP_DESCRIPTION_COMMAND_BAR = "This is where u type your input commands.";
+
+	// font
+	private static final int FONT_SIZE_LABEL_TITLE = 18;
+	private static final Font FONT_LABEL_TITLE = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_LABEL_TITLE);
+	private static final int FONT_SIZE_LABEL = 14;
+	private static final Font FONT_LABEL = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_LABEL);
+
 	private static final int MARGIN = 10;
 	private static final int MAX_ITEMS = 6;
 
@@ -42,6 +62,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private double _taskViewWidth;
 
 	private StackPane _mainPanel;
+	private Pane[] _items = new Pane[MAX_ITEMS];
 
 	private int _selector = 0;
 
@@ -100,29 +121,43 @@ public class HelpScreenUserInterface implements ViewInterface {
 	}
 
 	public void buildComponent() {
-		buildMainHelp();
+		_items[0] = buildMainHelp();
+		_items[1] = buildfloatingBarHelp();
+		_items[2] = buildDescriptionHelp();
+		_items[3] = buildTaskViewHelp();
+		_items[4] = buildDetailComponentHelp();
+		_items[5] = buildCommandBarHelp();
+		_mainPanel.getChildren().add(_items[0]);
 	}
 
-	public void buildMainHelp() {
-		_mainPanel.getChildren().clear();
+	public VBox buildMainHelp() {
+		int minWidth = _stageWidth / 2;
 		VBox main = new VBox();
 		main.setAlignment(Pos.CENTER);
 
-		HBox descriptionBox = new HBox();
-		descriptionBox.setMaxWidth(_stageWidth / 2);
+		VBox descriptionBox = new VBox();
+		descriptionBox.setMaxWidth(minWidth);
+		descriptionBox.setMinWidth(minWidth);
 		descriptionBox.setId("cssHelpComponentDescriptionBox");
 
-		Label descLabel = new Label(HELP_DESCRIPTION_MAIN);
-		descLabel.setWrapText(true);
-		HBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
-		descriptionBox.getChildren().add(descLabel);
+		Label title = new Label(HELP_DESCRIPTION_MAIN_TITLE);
+		title.setFont(FONT_LABEL_TITLE);
+		title.setId("cssHelpTitle");
+		title.setMinWidth(minWidth - MARGIN*2);
+		title.setAlignment(Pos.CENTER);
+		descriptionBox.getChildren().add(title);
 
+		Label descLabel = new Label(HELP_DESCRIPTION_MAIN);
+		descLabel.setFont(FONT_LABEL);
+		descLabel.setWrapText(true);
+		VBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		VBox.setMargin(title, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		descriptionBox.getChildren().add(descLabel);
 		main.getChildren().add(descriptionBox);
-		_mainPanel.getChildren().add(main);
+		return main;
 	}
 
-	public void buildDetailComponentHelp() {
-		_mainPanel.getChildren().clear();
+	public HBox buildDetailComponentHelp() {
 		HBox main = new HBox();
 
 		double componentHeight = 0;
@@ -153,27 +188,33 @@ public class HelpScreenUserInterface implements ViewInterface {
 		link.setMinWidth(LINE_LENGTH);
 		link.setId("cssHelpComponentLinker");
 
-		HBox descriptionBox = new HBox();
+		VBox descriptionBox = new VBox();
 		descriptionBox.setMaxWidth(200);
 		descriptionBox.setMaxHeight(150);
 		descriptionBox.setId("cssHelpComponentDescriptionBox");
 
+		Label title = new Label(HELP_DESCRIPTION_DETAIL_COMPONENT_TITLE);
+		title.setFont(FONT_LABEL_TITLE);
+		title.setId("cssHelpTitle");
+		descriptionBox.getChildren().add(title);
+		
 		Label descLabel = new Label(HELP_DESCRIPTION_DETAIL_COMPONENT);
+		descLabel.setFont(FONT_LABEL);
 		descLabel.setWrapText(true);
-		HBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		VBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		VBox.setMargin(title, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
 		descriptionBox.getChildren().add(descLabel);
 
 		main.getChildren().add(descriptionBox);
 		main.getChildren().add(link);
 		main.getChildren().add(hbox);
-		_mainPanel.getChildren().add(main);
 		main.setTranslateX(_taskViewWidth + DescriptionComponent.CONPONENT_WIDTH
 				+ DescriptionComponent.CONPONENT_RIGHT_MARGIN - 220);
 		main.setTranslateY(FloatingBarViewUserInterface.COMPONENT_HEIGHT);
+		return main;
 	}
 
-	public void buildTaskViewHelp() {
-		_mainPanel.getChildren().clear();
+	public HBox buildTaskViewHelp() {
 		HBox main = new HBox();
 
 		double componentHeight = 0;
@@ -207,26 +248,32 @@ public class HelpScreenUserInterface implements ViewInterface {
 		link.setMinWidth(20);
 		link.setId("cssHelpComponentLinker");
 
-		HBox descriptionBox = new HBox();
+		VBox descriptionBox = new VBox();
 		descriptionBox.setMaxWidth(DESCRIPTION_BOX_SMALL_WIDTH);
 		descriptionBox.setMaxHeight(DESCRIPTION_BOX_HEIGHT);
 		descriptionBox.setId("cssHelpComponentDescriptionBox");
 
+		Label title = new Label(HELP_DESCRIPTION_TASK_VIEW_TITLE);
+		title.setFont(FONT_LABEL_TITLE);
+		title.setId("cssHelpTitle");
+		descriptionBox.getChildren().add(title);
+		
 		Label descLabel = new Label(HELP_DESCRIPTION_TASK_VIEW);
 		descLabel.setWrapText(true);
-		HBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		descLabel.setFont(FONT_LABEL);
+		VBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		VBox.setMargin(title, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
 		descriptionBox.getChildren().add(descLabel);
 
 		main.getChildren().add(hbox);
 		main.getChildren().add(link);
 		main.getChildren().add(descriptionBox);
-		_mainPanel.getChildren().add(main);
 		main.setTranslateX(DescriptionComponent.CONPONENT_WIDTH + DescriptionComponent.CONPONENT_RIGHT_MARGIN);
 		main.setTranslateY(FloatingBarViewUserInterface.COMPONENT_HEIGHT);
+		return main;
 	}
 
-	public void buildDescriptionHelp() {
-		_mainPanel.getChildren().clear();
+	public HBox buildDescriptionHelp() {
 		HBox main = new HBox();
 
 		double componentHeight = 0;
@@ -254,25 +301,31 @@ public class HelpScreenUserInterface implements ViewInterface {
 		link.setMinWidth(LINE_LENGTH);
 		link.setId("cssHelpComponentLinker");
 
-		HBox descriptionBox = new HBox();
+		VBox descriptionBox = new VBox();
 		descriptionBox.setMaxWidth(DESCRIPTION_BOX_WIDTH);
 		descriptionBox.setMaxHeight(DESCRIPTION_BOX_HEIGHT);
 		descriptionBox.setId("cssHelpComponentDescriptionBox");
 
+		Label title = new Label(HELP_DESCRIPTION_DESCRIPTION_COMPONENT_TITLE);
+		title.setFont(FONT_LABEL_TITLE);
+		title.setId("cssHelpTitle");
+		descriptionBox.getChildren().add(title);
+		
 		Label descLabel = new Label(HELP_DESCRIPTION_DESCRIPTION_COMPONENT);
+		descLabel.setFont(FONT_LABEL);
 		descLabel.setWrapText(true);
-		HBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		VBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		VBox.setMargin(title, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
 		descriptionBox.getChildren().add(descLabel);
 
 		main.getChildren().add(hbox);
 		main.getChildren().add(link);
 		main.getChildren().add(descriptionBox);
 		main.setTranslateY(FloatingBarViewUserInterface.COMPONENT_HEIGHT);
-		_mainPanel.getChildren().add(main);
+		return main;
 	}
 
-	public void buildfloatingBarHelp() {
-		_mainPanel.getChildren().clear();
+	public VBox buildfloatingBarHelp() {
 		VBox main = new VBox();
 		main.setAlignment(Pos.TOP_CENTER);
 
@@ -285,24 +338,29 @@ public class HelpScreenUserInterface implements ViewInterface {
 		link.setMaxWidth(LINE_SIZE);
 		link.setId("cssHelpComponentLinker");
 
-		HBox descriptionBox = new HBox();
+		VBox descriptionBox = new VBox();
 		descriptionBox.setMaxWidth(DESCRIPTION_BOX_WIDTH);
 		descriptionBox.setId("cssHelpComponentDescriptionBox");
 
+		Label title = new Label(HELP_DESCRIPTION_FLOATING_BAR_TITLE);
+		title.setFont(FONT_LABEL_TITLE);
+		title.setId("cssHelpTitle");
+		descriptionBox.getChildren().add(title);
+
 		Label descLabel = new Label(HELP_DESCRIPTION_FLOATING_BAR);
+		descLabel.setFont(FONT_LABEL);
 		descLabel.setWrapText(true);
-		HBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		VBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		VBox.setMargin(title, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
 		descriptionBox.getChildren().add(descLabel);
 
 		main.getChildren().add(hbox);
 		main.getChildren().add(link);
 		main.getChildren().add(descriptionBox);
-
-		_mainPanel.getChildren().add(main);
+		return main;
 	}
 
-	public void buildCommandBarHelp() {
-		_mainPanel.getChildren().clear();
+	public VBox buildCommandBarHelp() {
 		VBox main = new VBox();
 		main.setAlignment(Pos.TOP_CENTER);
 
@@ -315,15 +373,22 @@ public class HelpScreenUserInterface implements ViewInterface {
 		link.setMaxWidth(LINE_SIZE);
 		link.setId("cssHelpComponentLinker");
 
-		HBox descriptionBox = new HBox();
+		VBox descriptionBox = new VBox();
 		descriptionBox.setMaxWidth(DESCRIPTION_BOX_WIDTH);
 		descriptionBox.setMaxHeight(DESCRIPTION_BOX_HEIGHT);
 		descriptionBox.setMinHeight(DESCRIPTION_BOX_HEIGHT);
 		descriptionBox.setId("cssHelpComponentDescriptionBox");
 
+		Label title = new Label(HELP_DESCRIPTION_COMMAND_BAR_TITLE);
+		title.setFont(FONT_LABEL_TITLE);
+		title.setId("cssHelpTitle");
+		descriptionBox.getChildren().add(title);
+		
 		Label descLabel = new Label(HELP_DESCRIPTION_COMMAND_BAR);
+		descLabel.setFont(FONT_LABEL);
 		descLabel.setWrapText(true);
-		HBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		VBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		VBox.setMargin(title, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
 		descriptionBox.getChildren().add(descLabel);
 
 		main.getChildren().add(descriptionBox);
@@ -332,7 +397,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 		main.setTranslateY(
 				_stageHeight - PrimaryUserInterface.COMMAND_BAR_HEIGTH - DESCRIPTION_BOX_HEIGHT - LINE_LENGTH);
 
-		_mainPanel.getChildren().add(main);
+		return main;
 	}
 
 	public void update(int value) {
@@ -348,32 +413,8 @@ public class HelpScreenUserInterface implements ViewInterface {
 	}
 
 	private void updateHelpPrompt() {
-		switch (_selector) {
-		case 0: {
-			buildMainHelp();
-			break;
-		}
-		case 1: {
-			buildCommandBarHelp();
-			break;
-		}
-		case 2: {
-			buildDescriptionHelp();
-			break;
-		}
-		case 3: {
-			buildTaskViewHelp();
-			break;
-		}
-		case 4: {
-			buildDetailComponentHelp();
-			break;
-		}
-		case 5: {
-			buildfloatingBarHelp();
-			break;
-		}
-		}
+		_mainPanel.getChildren().clear();
+		_mainPanel.getChildren().add(_items[_selector]);
 	}
 
 	public void updateTranslateY(double posY) {
@@ -385,13 +426,14 @@ public class HelpScreenUserInterface implements ViewInterface {
 			hide();
 		} else {
 			_stage.show();
+			updateHelpPrompt();
 		}
 	}
 
 	public void hide() {
 		_stage.hide();
 		_selector = 0;
-		buildMainHelp();
+		updateHelpPrompt();
 	}
 
 }

@@ -25,7 +25,7 @@ import mainLogic.Utils;
 
 public class PrimaryUserInterface extends Application {
 
-	static final int PREFERED_WINDOW_WIDTH = 600; // change to 1080.
+	static final int PREFERED_WINDOW_WIDTH = 600	; // change to 1080.
 	static final double PREFERED_WINDOW_SCALE = 0.8;
 
 	private static final boolean SUCCESS = true;
@@ -41,7 +41,8 @@ public class PrimaryUserInterface extends Application {
 	static final int TWO = 2;
 
 	// Font and style.
-	static final String DEFAULT_FONT = "Arial";
+	static final String FONT_DEFAULT = "Arial";
+	static final String FONT_TITLE_LABLES = "Blackadder ITC";
 	static final int DEFAULT_FONT_SIZE = 24;
 	static final String STYLE_SHEET = "stylesheet.css";
 
