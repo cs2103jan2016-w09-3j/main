@@ -24,6 +24,8 @@ public class DescriptionComponent implements ViewInterface {
 	static final int CONPONENT_RIGHT_MARGIN = 0;
 	private static final int POSITION_ZERO = 0;
 
+	private static final String CSS_LABEL = "cssLabelsDescription";
+	
 	private final double LABEL_SIZE_LARGE = 200;
 	private final double LABEL_SIZE_MEDIUM = 100;
 	private final double LABEL_SIZE_SMALL = 24;
@@ -135,6 +137,7 @@ public class DescriptionComponent implements ViewInterface {
 
 	public void createLabelBaseOnHeight(double posYStart, double posYEnd, VBox vbox, DescriptionLabel dLabel) {
 		Label main = new Label();
+		main.getStyleClass().add(CSS_LABEL);
 		Label extra = new Label();
 		if ((posYStart >= 0 && posYStart < _stageHeight) || (posYEnd <= _stageHeight && posYEnd > 0)) {
 			// partially or fully inside screen
