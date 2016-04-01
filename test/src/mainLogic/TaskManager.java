@@ -14,8 +14,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Queue;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -28,7 +26,7 @@ import fileStorage.StorageInterface;
 import fileStorage.CommandHandler;
 import fileStorage.StorageHandler;
 
-public class TaskManager extends TimerTask {
+public class TaskManager {
     private StorageInterface dataLoader;
 
     private static TaskManager singleton;
@@ -57,24 +55,6 @@ public class TaskManager extends TimerTask {
     public static void main(String[] args) {
         TaskManager manager = TaskManager.getInstance();
         manager.unloadFile();
-    }
-
-    public void run() {
-        boolean isSavedMain = dataLoader.storeTaskLists(generateSavedTaskArray());
-        dataLoader.clearCommandFileOnCommit();
-        assert isSavedMain == true;
-        System.out.println("Hi, is this running " + isSavedMain);
-    }
-
-    /**
-     * Runs a thread to store all working task lists every 5 seconds
-     * 5 seconds is for testing, after that will change to 30 minutes interval
-     */
-    public void commitUponTimeOut() {
-        TimerTask saveInterval = new CommandHandler();
-        Timer timer = new Timer();
-
-        timer.schedule(saveInterval, 30*1000, 30*1000); 
     }
 
     /**
@@ -182,8 +162,6 @@ public class TaskManager extends TimerTask {
                 i--;
             }
         }
-
-        System.out.println("Here 3");
     }
 
     /**
