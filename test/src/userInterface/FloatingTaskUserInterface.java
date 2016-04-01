@@ -31,6 +31,8 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	private StackPane _mainVbox;
 	private VBox _secondaryVbox;
 
+	private static final String CSS_LABEL = "cssLabelsFloatingTaskInterface";
+	
 	// font
 	static final int FONT_SIZE_LABEL = 20;
 	static final int FONT_SIZE_LABEL_DATE = 10;
@@ -200,6 +202,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		titleLableBox.setMaxHeight(LABEL_TITLE_HEIGHT);
 
 		Label floatingTitle = new Label("Floating View");
+		floatingTitle.getStyleClass().add(CSS_LABEL);
 		floatingTitle.setMinWidth(_stageWidth);
 		floatingTitle.setFont(FONT_LABEL);
 		floatingTitle.setMinHeight(LABEL_TITLE_HEIGHT);
@@ -213,6 +216,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	public void buildHelpWithFloating() {
 		_secondaryVbox.getChildren().clear();
 		Label helpLabel = new Label("You do not have any floating task yet.");
+		helpLabel.getStyleClass().add(CSS_LABEL);
 		helpLabel.setMinWidth(_stageWidth);
 		helpLabel.setMinHeight(_stageHeight - LABEL_TITLE_HEIGHT);
 		helpLabel.setAlignment(Pos.CENTER);
@@ -245,6 +249,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		floatingParent.setMinWidth(_stageWidth);
 
 		Label indexLabel = new Label("ID"+Integer.toString(index));
+		indexLabel.getStyleClass().add(CSS_LABEL);
 		indexLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		indexLabel.setMinWidth(50);
 		indexLabel.setAlignment(Pos.CENTER);
@@ -252,6 +257,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		floatingParent.getChildren().add(indexLabel);
 
 		Label descriptionLabel = new Label();
+		descriptionLabel.getStyleClass().add(CSS_LABEL);
 		descriptionLabel.setText(task.getName());
 		descriptionLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		descriptionLabel.setAlignment(Pos.CENTER);

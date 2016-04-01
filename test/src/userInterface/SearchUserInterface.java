@@ -31,6 +31,8 @@ public class SearchUserInterface implements ViewInterface {
 	private int _windowPosX;
 	private int _windowPosY;
 
+	private static final String CSS_LABEL = "cssLabelsSearchView";
+	
 	// font
 	static final int FONT_SIZE_LABEL = 20;
 	static final int FONT_SIZE_LABEL_DATE = 10;
@@ -157,6 +159,7 @@ public class SearchUserInterface implements ViewInterface {
 	private void buildHelpWithSearch() {
 		_secondaryVbox.getChildren().clear();
 		Label helpLabel = new Label("Start searching by typing search in the command bar");
+		helpLabel.getStyleClass().add(CSS_LABEL);
 		helpLabel.setMinWidth(_stageWidth);
 		helpLabel.setMinHeight(_stageHeight - LABEL_TITLE_HEIGHT);
 		helpLabel.setAlignment(Pos.CENTER);
@@ -175,7 +178,7 @@ public class SearchUserInterface implements ViewInterface {
 		top.setMaxWidth(_stageWidth);
 
 		Label indexLabel = new Label(Integer.toString(index));
-		// Label indexLabel = new Label(Integer.toString(index));
+		indexLabel.getStyleClass().add(CSS_LABEL);
 		indexLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		indexLabel.setMinWidth(50);
 		indexLabel.setAlignment(Pos.CENTER);
@@ -184,12 +187,14 @@ public class SearchUserInterface implements ViewInterface {
 
 		Label timeLabel = new Label();
 		timeLabel.setText(task.getTime());
+		timeLabel.getStyleClass().add(CSS_LABEL);
 		timeLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		timeLabel.setAlignment(Pos.CENTER);
 		timeLabel.setFont(FONT_TASK);
 		top.getChildren().add(timeLabel);
 		
 		Label nameLabel = new Label();
+		nameLabel.getStyleClass().add(CSS_LABEL);
 		nameLabel.setText(task.getName());
 		nameLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		nameLabel.setAlignment(Pos.CENTER);
@@ -200,10 +205,12 @@ public class SearchUserInterface implements ViewInterface {
 		
 		HBox mid = new HBox();
 		Label indexPlaceHolder = new Label();
+		indexPlaceHolder.getStyleClass().add(CSS_LABEL);
 		indexPlaceHolder.setMinWidth(50);
 		mid.getChildren().add(indexPlaceHolder);
 
 		Text description = new Text();
+		description.getStyleClass().add(CSS_LABEL);
 		description.setText(task.getDescription());
 		description.setWrappingWidth(_stageWidth - 50);
 		mid.getChildren().add(description);
@@ -225,6 +232,7 @@ public class SearchUserInterface implements ViewInterface {
 		titleLableBox.setMaxHeight(LABEL_TITLE_HEIGHT);
 
 		Label searchTitle = new Label("Search View");
+		searchTitle.getStyleClass().add(CSS_LABEL);
 		searchTitle.setMinWidth(_stageWidth);
 		searchTitle.setFont(FONT_LABEL);
 		searchTitle.setMinHeight(LABEL_TITLE_HEIGHT);

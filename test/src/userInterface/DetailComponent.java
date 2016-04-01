@@ -233,6 +233,7 @@ public class DetailComponent implements ViewInterface {
 
 	public Label buildEmptyLabel() {
 		Label label = new Label(LABEL_MESSAGE_NO_TASK);
+		label.getStyleClass().add(CSS_LABEL);
 		label.setMinWidth(_stageWidth);
 		label.setId("cssDetailComponentEmptyTitle");
 		label.setAlignment(Pos.CENTER);
@@ -249,7 +250,9 @@ public class DetailComponent implements ViewInterface {
 			return;
 		}
 		TaskEntity task = _targetedTask.getDisplayAssociations().get(index);
+		
 		Text description = new Text(task.getDescription());
+		description.getStyleClass().add(CSS_LABEL);
 		description.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
 		description.setTextAlignment(TextAlignment.JUSTIFY);
 		VBox.setMargin(description, new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS, BOTTOM_MARGIN_INDIVIDUAL_ITEMS,

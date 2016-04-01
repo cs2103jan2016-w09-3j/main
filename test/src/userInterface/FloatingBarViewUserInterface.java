@@ -27,6 +27,8 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	private static final Font FONT_LABEL_TITLE = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TITLE_LABEL);
 	private static final Font FONT_LABEL_TASK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TASK);
 
+	private static final String CSS_LABEL = "cssLabelsFloatingBar";
+	
 	private Stage _stage;
 	private int _stageWidth;
 	private int _stageHeight;
@@ -77,6 +79,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 
 	public void build() {
 		Label floatTitleLabel = new Label("Floating task of the day");
+		floatTitleLabel.getStyleClass().add(CSS_LABEL);
 		floatTitleLabel.setMinHeight(_stageHeight);
 		floatTitleLabel.setMinWidth(LABEL_TITLE_WIDTH);
 		floatTitleLabel.setId("cssFloatingBarTitleLabel");
@@ -93,6 +96,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 
 	public void addTask(String taskDesc) {
 		Label floatTask = new Label(taskDesc);
+		floatTask.getStyleClass().add(CSS_LABEL);
 		floatTask.setMinHeight(_stageHeight);
 		floatTask.setMaxHeight(_stageHeight);
 		floatTask.setAlignment(Pos.CENTER);

@@ -58,6 +58,8 @@ public class CommandBar {
 	private static final int MAIN_PANE_LEFT_RIGHT_MARGIN = 0;
 	private static final int TEXT_FIELD_WIDTH = 10;
 
+	private static final String CSS_LABEL = "cssLabelsCommandBar";
+	
 	// font
 	static final int FONT_SIZE_FEEDBACK = 12;
 	private static final Font FONT_FEEDBACK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_FEEDBACK);
@@ -108,6 +110,7 @@ public class CommandBar {
 
 	private void initilizeFeedbackBar() {
 		_feedbackLabel = new Label();
+		_feedbackLabel.getStyleClass().add(CSS_LABEL);
 		_feedbackLabel.setMinWidth(_prefWidth);
 		_feedbackLabel.setMaxHeight(FEEDBACK_HEIGHT);
 		_feedbackLabel.setMinHeight(FEEDBACK_HEIGHT);
