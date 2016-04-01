@@ -13,7 +13,6 @@ public class StorageInterface {
     
     public StorageHandler storageHandler;
     public static final int QUEUE_SIZE = 5;
-    public static int queueCount = 0;
     
     public StorageInterface() {
         storageHandler = new StorageHandler();
@@ -85,31 +84,38 @@ public class StorageInterface {
         
         return storeTaskLists(newList);
     }
+    
+    public AllTaskLists getBackUpTaskLists() {
+        JsonConverter jsonConverter = new JsonConverter();
         
-    public boolean storeCommandLine(String command) {
-        boolean isSaved = storageHandler.writeToCommandFile(command);
-        assert isSaved == true : "Command not stored.";
+        String retrievedTasks = storageHandler.getAllBackUpTasks();
+        AllTaskLists retrievedList = jsonConverter.jsonToJava(retrievedTasks);
         
-        return isSaved;
+        return retrievedList;
     }
     
+    public void deleteBackUp() {
+        storageHandler.deleteBackUpFile();;
+    }
+        
     /**
      * Store input command into command file 
      * Re-writes main file if command queue is full
      * Current queue size is 5 for testing
      * @param command
-     * @return isSavedMain
+     * @return isFullQueue
      */
     public boolean saveUponFullQueue(String command) {
         boolean isFullQueue = false;
         
-        storeCommandLine(command);
+        boolean isSaved = storageHandler.writeToCommandFile(command);
+        assert isSaved == true : "Not commited to main file.";
       
-        Queue<String> newCommandsQueue = storageHandler.getAllCommandsQueue();
+        Queue<String> newCommandsQueue = getCommandsQueue();
         newCommandsQueue.offer(command);
-        storageHandler.setAllCommandsQueue(newCommandsQueue);
+        setCommandsQueue(newCommandsQueue);
         
-        if (storageHandler.getAllCommandsQueue().size() >= QUEUE_SIZE) {
+        if (newCommandsQueue.size() >= QUEUE_SIZE) {
             isFullQueue = true;
         }
         return isFullQueue;
@@ -128,8 +134,6 @@ public class StorageInterface {
     public void setCommandsQueue(Queue<String> newCommandsQueue) {
         storageHandler.setAllCommandsQueue(newCommandsQueue);
     }
-    
-
     
     public void clearCommandFileOnCommit() {
         storageHandler.clearCommandFileUponCommit();
