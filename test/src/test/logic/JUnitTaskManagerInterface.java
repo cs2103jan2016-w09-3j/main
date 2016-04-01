@@ -18,6 +18,25 @@ public class JUnitTaskManagerInterface {
     TaskManager taskmanager = TaskManager.getInstance();
 
     @Test
+    public void testAdd () {
+        taskmanager.unloadFile();
+
+        ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
+        for (int i = 0; i < 5; i++) {
+            newList.add(new TaskEntity("Task " + Integer.toString(i + 1), null, Utils.createDate(1, 4, 2016, 12 + i, 0), false, "some desc"));
+        }
+        manager.add(newList, "PLACEHOLDER");
+        assertEquals("Task 1, Task 2, Task 3, Task 4, Task 5, ", taskmanager.printArrayContentsToString(taskmanager.DISPLAY_MAIN));
+        
+        newList = new ArrayList<TaskEntity>();
+        for (int i = 0; i < 5; i++) {
+            newList.add(new TaskEntity("Task " + Integer.toString(i + 6), null, Utils.createDate(2, 4, 2016, 12 + i, 0), false, "some desc"));
+        }
+        manager.add(newList, "PLACEHOLDER");
+        assertEquals("Task 1, Task 2, Task 3, Task 4, Task 5, Task 6, Task 7, Task 8, Task 9, Task 10, ", taskmanager.printArrayContentsToString(taskmanager.DISPLAY_MAIN));
+    }
+    
+    @Test
     public void testAddDeleteModifyLink() {
         taskmanager.unloadFile();
 
