@@ -308,6 +308,7 @@ public class CommandBar {
 	private Label buildNormalLabel(ArrayList<String> other) {
 		Label label = buildLabelSkeleton();
 		label.setText(other.get(0));
+		label.setId("cssCommandOther");
 		return label;
 	}
 
