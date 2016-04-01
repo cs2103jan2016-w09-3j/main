@@ -156,24 +156,24 @@
 }
 #cssFloatingTaskViewSelected{
 	-fx-background-radius: 20.0; 
-	-fx-background-color:  rgba(255.0,178.5,127.5,0.8);
-	-fx-background-insets: 1.0 5.0 1.0 5.0;
+	-fx-background-color:  rgba(255.0,178.5,127.5,0.3);
+	-fx-background-insets: 1.0 7.0 1.0 7.0;
 }
 
 /* Search View CSS */
 #cssRootSearchView
 {
-	-fx-background-color: rgba(128.0,0.0,128.0,1.0),rgba(255.0,255.0,255.0,1.0);
+	-fx-background-color: rgba(191, 80, 191,1.0,1.0),rgba(255.0,255.0,255.0,1.0);
 	-fx-background-insets: 0.0,5.0;
 }
 #cssSearchTitle{
-	-fx-background-color: rgba(128.0,0.0,128.0,1.0);
+	-fx-background-color: rgba(191, 80, 191,1.0);
 }
 
 #cssSearchSelected{
-	-fx-background-color: rgba(128.0,0.0,128.0,0.7);
+	-fx-background-color: rgba(191, 80, 191,0.3);
 	-fx-background-radius: 20.0; 
-	-fx-background-insets: 1.0 5.0 1.0 5.0;
+	-fx-background-insets: 1.0 7.0 1.0 7.0;
 }
 
 /* CommandsBar CSS */

@@ -25,8 +25,8 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	private static final int LABEL_TITLE_WIDTH = 250;
 	private static final int FONT_SIZE_TITLE_LABEL = 20;
 	private static final int FONT_SIZE_TASK = 16;
-	private static final Font FONT_LABEL_TITLE = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_TITLE_LABEL);
-	private static final Font FONT_LABEL_TASK = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_TASK);
+	private static final Font FONT_LABEL_TITLE = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TITLE_LABEL);
+	private static final Font FONT_LABEL_TASK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TASK);
 
 	private Stage _stage;
 	private int _stageWidth;

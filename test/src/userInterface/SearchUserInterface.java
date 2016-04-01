@@ -32,14 +32,12 @@ public class SearchUserInterface implements ViewInterface {
 	private int _windowPosY;
 
 	// font
-	static final int FONT_SIZE_LABEL = 16;
+	static final int FONT_SIZE_LABEL = 20;
 	static final int FONT_SIZE_LABEL_DATE = 10;
 	static final int FONT_SIZE_TASK = 12;
 	static final int FONT_SIZE_INDEX = 8;
-	private static final Font FONT_LABEL = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_LABEL);
-	private static final Font FONT_TASK = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_TASK);
-	private static final Font FONT_INDEX = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_INDEX);
-	private static final Font FONT_LABEL_DATE = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_LABEL_DATE);
+	private static final Font FONT_LABEL = new Font(PrimaryUserInterface.FONT_TITLE_LABLES, FONT_SIZE_LABEL);
+	private static final Font FONT_TASK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TASK);
 
 	static final int LABEL_TITLE_HEIGHT = 35;
 	static final int LABEL_TASK_HEIGHT = 30;
@@ -52,7 +50,6 @@ public class SearchUserInterface implements ViewInterface {
 	private int _startIndex = -1;
 	private int _endIndex = -1;
 	private int _selectedIndex = -1;
-	private double transLationY = 0;
 
 	private ArrayList<TaskEntity> _searchList;
 	private ArrayList<HBox> _searchBoxes = new ArrayList<HBox>();
@@ -182,7 +179,7 @@ public class SearchUserInterface implements ViewInterface {
 		indexLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		indexLabel.setMinWidth(50);
 		indexLabel.setAlignment(Pos.CENTER);
-		indexLabel.setFont(Font.font(PrimaryUserInterface.DEFAULT_FONT, FontWeight.BOLD, FONT_SIZE_TASK));
+		indexLabel.setFont(Font.font(PrimaryUserInterface.FONT_DEFAULT, FontWeight.BOLD, FONT_SIZE_TASK));
 		top.getChildren().add(indexLabel);
 
 		Label timeLabel = new Label();

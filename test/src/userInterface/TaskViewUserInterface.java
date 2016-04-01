@@ -38,11 +38,11 @@ public class TaskViewUserInterface implements ViewInterface {
 	static final int SELECTOR_POSITION_Y = TASK_VIEW_LABEL_HEIGHT + TASK_VIEW_ITEM_HEIGHT * 2;
 
 	// font
-	static final int FONT_SIZE_LABEL_DATE =24;
+	static final int FONT_SIZE_LABEL_DATE = 24;
 	static final int FONT_SIZE_TASK = 12;
 	static final int FONT_SIZE_INDEX = 8;
-	private static final Font FONT_LABEL = new Font("Blackadder ITC", FONT_SIZE_LABEL_DATE);
-	private static final Font FONT_TASK = new Font(PrimaryUserInterface.DEFAULT_FONT, FONT_SIZE_TASK);
+	private static final Font FONT_LABEL = new Font(PrimaryUserInterface.FONT_TITLE_LABLES, FONT_SIZE_LABEL_DATE);
+	private static final Font FONT_TASK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TASK);
 
 	private Stage _stage;
 	private int _stageWidth;
@@ -128,10 +128,10 @@ public class TaskViewUserInterface implements ViewInterface {
 		mainPanel.setPrefSize(stageWidth, stageHeight);
 		mainPanel.setId("cssTaskViewMainBackground");
 		mainPanel.setAlignment(Pos.TOP_LEFT);
-		
+
 		_mainVbox = new VBox();
 		mainPanel.getChildren().add(_mainVbox);
-		
+
 		Scene s = new Scene(mainPanel, stageWidth, stageHeight);
 		s.setFill(Color.TRANSPARENT);
 		_stage.setScene(s);
@@ -300,11 +300,11 @@ public class TaskViewUserInterface implements ViewInterface {
 	 */
 	private VBox createDayParent(TaskEntity taskEntity) {
 		VBox vbox = new VBox();
-		vbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT+2);
+		vbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT + 2);
 		HBox hbox = new HBox();
 		hbox.setMinHeight(TASK_VIEW_LABEL_HEIGHT); // setMax
 		hbox.setId("cssTaskViewDayLabel");
-		
+
 		Label dateNLPLabel = new Label();
 		dateNLPLabel.setMinHeight(TaskViewUserInterface.TASK_VIEW_LABEL_HEIGHT);
 		dateNLPLabel.setFont(FONT_LABEL);
@@ -317,7 +317,8 @@ public class TaskViewUserInterface implements ViewInterface {
 		} else {
 			SimpleDateFormat daySdf = new SimpleDateFormat("d");
 			SimpleDateFormat sdf = new SimpleDateFormat("MMMMM yyyy");
-			dateNLPLabel.setText(daySdf.format(taskEntity.getDueDate().getTime()) + " " +sdf.format(taskEntity.getDueDate().getTime()));
+			dateNLPLabel.setText(daySdf.format(taskEntity.getDueDate().getTime()) + " "
+					+ sdf.format(taskEntity.getDueDate().getTime()));
 			hbox.getChildren().add(dateNLPLabel);
 		}
 
@@ -352,9 +353,9 @@ public class TaskViewUserInterface implements ViewInterface {
 		grid.setHgap(GAP_SIZE);
 		grid.setMinWidth(_individualItemWidth);
 
-		Label indexLabel = new Label("ID"+Integer.toString(index));
+		Label indexLabel = new Label("ID" + Integer.toString(index));
 		indexLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
-		indexLabel.setFont(Font.font(PrimaryUserInterface.DEFAULT_FONT, FontWeight.BOLD, FONT_SIZE_TASK));
+		indexLabel.setFont(Font.font(PrimaryUserInterface.FONT_DEFAULT, FontWeight.BOLD, FONT_SIZE_TASK));
 		indexLabel.setMinWidth(40);
 		indexLabel.setAlignment(Pos.CENTER_RIGHT);
 		grid.add(indexLabel, 0, 0);
@@ -367,7 +368,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		timeLabel.setFont(FONT_TASK);
 		timeLabel.setAlignment(Pos.CENTER_LEFT);
 		topBox.getChildren().add(timeLabel);
-		
+
 		Label titleLabel = new Label(taskEntity.getName());
 		titleLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		titleLabel.setFont(FONT_TASK);
