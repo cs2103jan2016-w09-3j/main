@@ -138,6 +138,7 @@
 	-fx-background-color: rgba(255.0,178.5,127.5,1.0), rgba(255.0,255.0,255.0,0.7);
 	-fx-background-insets: 0.0,0.0 10.0 0.0 10.0;
 }
+
 #cssFloatingBarContentArea{
 	-fx-border-width:  0.0 0.0 0.0 1.0; 
 	-fx-border-color: black;
@@ -154,10 +155,10 @@
 	-fx-background-insets: 0.0,5.0;
 }
 
-#cssFloatingTaskViewTitle
-{
+#cssFloatingTaskViewTitle{
 	-fx-background-color: rgba(255.0,178.5,127.5,1.0);
 }
+
 #cssFloatingTaskViewSelected{
 	-fx-background-radius: 20.0; 
 	-fx-background-color:  rgba(255.0,178.5,127.5,0.3);
@@ -165,11 +166,11 @@
 }
 
 /* Search View CSS */
-#cssRootSearchView
-{
+#cssRootSearchView{
 	-fx-background-color: rgba(191.0, 80.0, 191.0,1.0,1.0),rgba(255.0,255.0,255.0,1.0);
 	-fx-background-insets: 0.0,5.0;
 }
+
 #cssSearchTitle{
 	-fx-background-color: rgba(191.0, 80.0, 191.0,1.0);
 }
@@ -192,16 +193,15 @@
 }
 
 
-#cssCommandBarfeedback_normal
-{
+#cssCommandBarfeedback_normal{
 	-fx-background-color: rgba(179.0, 255.0, 153.0, 1.0);
 }
-#cssCommandBarfeedback_conflict
-{
+
+#cssCommandBarfeedback_conflict{
 	-fx-background-color: rgba(249.0, 186.0, 122.0, 1.0);
 }
-#cssCommandBarfeedback_error
-{
+
+#cssCommandBarfeedback_error{
 	-fx-background-color: rgba(249.0, 122.0, 122.0,1.0);
 }
 
@@ -211,7 +211,6 @@
 	-fx-background-color: rgba(72.0, 238.0, 56.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
-	
 }
 
 #cssCommandBarInvalid{
@@ -219,57 +218,68 @@
 }
 
 #cssCommandBarDelete {
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(56.0, 238.0, 223.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarEdit {
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(56.0, 163.0, 238.0, 0.5);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarLink {
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(163.0, 238.0, 56.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarDone {
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(238.0, 132.0, 56.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandTitle {
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(202.0, 247.0, 140.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 #cssCommandDate {
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(247.0, 140.0, 149.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 #cssCommandHashTag{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(247.0, 238.0, 140.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandID {
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(247.0, 184.0, 140.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 #cssCommandDescription {
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(140.0, 202.0, 247.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandJump {
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(238.0, 56.0, 163.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 #cssCommandSearch{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(132.0, 56.0, 238.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
@@ -283,31 +293,37 @@
 }
 
 #cssCommandFloat{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(238.0, 132.0, 56.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 #cssCommandShow{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(223.0, 56.0, 238.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 #cssCommandHide{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(223.0, 56.0, 238.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 #cssCommandMain{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(238.0, 56.0, 163.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 #cssCommandSaveDir{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(183.0, 220.0, 40.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
 #cssCommandUndo{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(240.0, 180.0, 20.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
