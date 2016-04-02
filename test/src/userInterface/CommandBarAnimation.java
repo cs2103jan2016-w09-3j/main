@@ -10,11 +10,25 @@ public class CommandBarAnimation extends Service<Void> {
 	private static final int ANIMATE_SPEED_TOTAL = 1000;
 	private static final int ANIMATION_DELAY = 33;
 	private CommandBar _commandBar;
-	private double _percentageDone;
-	private boolean isDoneAnimating;
+	private static int count = 0;
+	private int individualCount = 0;
 
-	public CommandBarAnimation(CommandBar commandBar) {
+	private static CommandBarAnimation _myInstance;
+
+	public static void start(CommandBar commandBar) {
+		if (_myInstance != null) {
+			while (_myInstance.isRunning()) {
+				_myInstance.cancel();
+			}
+		}
+		_myInstance = new CommandBarAnimation(commandBar, ++count);
+		_myInstance.start();
+	}
+
+	private CommandBarAnimation(CommandBar commandBar, int count) {
 		_commandBar = commandBar;
+		individualCount= count;
+		commandBar.resetFeedBack(individualCount);
 	}
 
 	@Override
@@ -23,10 +37,13 @@ public class CommandBarAnimation extends Service<Void> {
 	}
 
 	private class MyTask extends Task<Void> {
+		private double _percentageDone;
+		private boolean isDoneAnimating;
 
 		@Override
 		protected Void call() throws Exception {
-			_commandBar.resetFeedBack();
+			_percentageDone = 0;
+			isDoneAnimating = false;
 			Thread.sleep(DELAY_BEFORE_START);
 			long timeStart = System.currentTimeMillis();
 			while (!isDoneAnimating) {
@@ -34,7 +51,7 @@ public class CommandBarAnimation extends Service<Void> {
 				_percentageDone = timePast / (double) ANIMATE_SPEED_TOTAL;
 				Platform.runLater(new Runnable() {
 					public void run() {
-						isDoneAnimating = _commandBar.updateCommandStatus(_percentageDone);
+						isDoneAnimating = _commandBar.updateCommandStatus(_percentageDone, individualCount);
 						if (_percentageDone > 1) {
 							isDoneAnimating = true;
 						}

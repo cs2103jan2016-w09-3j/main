@@ -91,7 +91,7 @@ public class CommandBar {
 	private ArrayList<String> _allSessionCmds = new ArrayList<String>();
 	private String fullInput = "";
 
-	private CommandBarAnimation _animation;
+	private int _feedBackCounter;
 
 	public static CommandBar getInstance(int commandBarHeigth, double _commandBarWidth) {
 		if (_myInstance == null) {
@@ -744,12 +744,6 @@ public class CommandBar {
 	}
 
 	public void setFeedBackColor(int feedBackStatus) {
-		if (_animation != null) {
-			if (_animation.isRunning()) {
-				_animation.cancel();
-			}
-			_animation = null;
-		}
 		switch (feedBackStatus) {
 		case FEEDBACK_STATUS_NORMAL: {
 			_feedbackLabel.setId("cssCommandBarfeedback_normal");
@@ -776,23 +770,26 @@ public class CommandBar {
 			break;
 		}
 		}
-		_feedbackLabel.setOpacity(1.0);
-		_animation = new CommandBarAnimation(this);
-		_animation.start();
+		CommandBarAnimation.start(this);
 	}
 
-	public void resetFeedBack() {
+	public void resetFeedBack(int feedCounter) {
+		_feedBackCounter = feedCounter;
 		_feedbackLabel.setOpacity(1.0);
 	}
 
-	public boolean updateCommandStatus(double _percentageDone) {
-		double opacity = _feedbackLabel.getOpacity();
-		if (opacity < 0) {
-			_feedbackLabel.setOpacity(0);
-			return true;
+	public boolean updateCommandStatus(double _percentageDone, int count) {
+		if (_feedBackCounter == count) {
+			double opacity = _feedbackLabel.getOpacity();
+			if (opacity < 0) {
+				_feedbackLabel.setOpacity(0);
+				return true;
+			} else {
+				_feedbackLabel.setOpacity((1 - _percentageDone));
+				return false;
+			}
 		} else {
-			_feedbackLabel.setOpacity((1 - _percentageDone));
-			return false;
+			return true;
 		}
 	}
 
