@@ -35,6 +35,17 @@ public class ParserCommons {
 		return c;
 	}
 
+	public static String padTime(int field){
+		String returnVal = "00";
+		if(field!=0){
+			if (field<10){
+				returnVal = "0"+field;
+			}else{
+				returnVal = Integer.toString(field);
+			}
+		}
+		return returnVal;
+	}
 	/**
 	 * returns the first word of a given String
 	 * @param input

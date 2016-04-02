@@ -331,7 +331,7 @@ public class PrimaryUserInterface extends Application {
 	 * @param indexToModify
 	 */
 	private void getItemToModify(int indexToModify) {
-		String setString = uiController.getTaskToEidtString(indexToModify);
+		String setString = uiController.getTaskToEditString(indexToModify);
 		if (setString != null) {
 			_commandBar.addToFullInput(setString);
 			_commandBar.onKeyReleased();

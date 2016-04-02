@@ -187,7 +187,8 @@ public class InputParser {
 				c2.clear(Calendar.SECOND);
 				c2.clear(Calendar.MILLISECOND);
 				
-				TaskEntity toAdd = new TaskEntity(name, c, c2, false, desc);
+				System.out.println("FULL DAY"+checkFullDay(c,c2));
+				TaskEntity toAdd = new TaskEntity(name, c, c2, checkFullDay(c,c2), desc);
 				for(int j=0; j<hashes.size();j++){
 					toAdd.addHashtag(hashes.get(j));
 				}
@@ -209,6 +210,28 @@ public class InputParser {
 		return tasks;
 	}
 	
+	private boolean checkFullDay(Calendar c, Calendar c2) {
+		boolean isFullDay = false;
+		if(c.get(Calendar.YEAR) == c2.get(Calendar.YEAR)){
+			System.out.println("year");
+			if(c.get(Calendar.MONTH) == c2.get(Calendar.MONTH)){
+				System.out.println("month");
+				if(c.get(Calendar.DATE) == c2.get(Calendar.DATE)){
+					System.out.println("day");
+					if((c.get(Calendar.HOUR_OF_DAY)==0)&&(c2.get(Calendar.HOUR_OF_DAY)==23)){
+						System.out.println("hour");
+						if((c.get(Calendar.MINUTE)==0)&&(c2.get(Calendar.MINUTE)==59)){
+							System.out.println("min");
+							isFullDay = true;
+						}
+					}
+				}
+			}
+		}
+		return isFullDay;
+	}
+
+
 	public String getID(){
 		return idParser.getID(XMLParser.removeAllTags(input));
 	}

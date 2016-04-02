@@ -70,7 +70,25 @@ public class DateParser {
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
 			for (int j = 0; j < dates.size(); j++) {
-					returnDateList.add(dates.get(j));
+					Calendar toCheck = Calendar.getInstance();
+					toCheck.setTime(dates.get(j));
+					toCheck.clear(Calendar.SECOND);
+					toCheck.clear(Calendar.MILLISECOND);
+					Calendar curr = Calendar.getInstance();
+					curr.set(toCheck.get(Calendar.YEAR), toCheck.get(Calendar.MONTH), toCheck.get(Calendar.DATE));
+					curr.clear(Calendar.SECOND);
+					curr.clear(Calendar.MILLISECOND);
+					if(curr.equals(toCheck)){
+						toCheck.set(Calendar.HOUR_OF_DAY,0);
+						toCheck.set(Calendar.MINUTE,0);
+						returnDateList.add(toCheck.getTime());
+						toCheck.set(Calendar.HOUR_OF_DAY, 23);
+						toCheck.set(Calendar.MINUTE,59);
+						returnDateList.add(toCheck.getTime());
+					}
+					else{
+						returnDateList.add(dates.get(j));
+					}
 			}
 		}
 		if(returnDateList.size()>1){

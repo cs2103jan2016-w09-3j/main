@@ -12,6 +12,7 @@ import java.util.zip.Inflater;
 
 import dateParser.InputParser;
 import dateParser.Pair;
+import dateParser.ParserCommons;
 import dateParser.CommandParser.COMMAND;
 import entity.ResultSet;
 import entity.TaskEntity;
@@ -621,13 +622,24 @@ public class UserInterfaceController {
 		}
 	}
 
-	public String getTaskToEidtString(int indexToModify) {
+	public String getTaskToEditString(int indexToModify) {
 		TaskEntity toPopulate = getTaskByID(indexToModify);
 		if (toPopulate != null) {
 			String toSet = " " + toPopulate.getName();
 			if ((toPopulate.getDescription() != null) &&(toPopulate.getDescription().trim().length()>0)){
 				System.out.println("desc"+toPopulate.getDescription());
 				toSet += " : " + toPopulate.getDescription();
+			}
+			if(toPopulate.getStartDate()!= null){
+				Calendar c = toPopulate.getStartDate();
+				int day = c.get(Calendar.DATE);
+				int month = c.get(Calendar.MONTH) + 1;
+				int year = c.get(Calendar.YEAR);
+				int hour = c.get(Calendar.HOUR_OF_DAY);
+				int min = c.get(Calendar.MINUTE);
+				String hourStr = ParserCommons.padTime(hour);
+				String minStr = ParserCommons.padTime(min);
+				toSet += " " + day + "-" + month + "-" + year + " " + hourStr + minStr + "hrs to ";
 			}
 			if (toPopulate.getDueDate() != null) {
 				Calendar c = toPopulate.getDueDate();
@@ -636,7 +648,9 @@ public class UserInterfaceController {
 				int year = c.get(Calendar.YEAR);
 				int hour = c.get(Calendar.HOUR_OF_DAY);
 				int min = c.get(Calendar.MINUTE);
-				toSet += " " + day + "-" + month + "-" + year + " " + hour + min;
+				String hourStr = ParserCommons.padTime(hour);
+				String minStr = ParserCommons.padTime(min);
+				toSet += " " + day + "-" + month + "-" + year + " " + hourStr + minStr + "hrs ";
 			}
 			if (toPopulate.getProjectHead() != null) {
 				toSet += " @" + toPopulate.getProjectHead().getName();
