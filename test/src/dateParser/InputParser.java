@@ -69,7 +69,7 @@ public class InputParser {
 		//System.out.println("after date"+input);
 		addXMLCmd();
 		//System.out.println("after cmd"+input);
-		if((given != COMMAND.SEARCH)&&(given != COMMAND.SAVEDIR)){
+		if((given != COMMAND.SEARCH)&&(given != COMMAND.SAVETO)){
 			addXMLID();
 			//System.out.println("after ID"+input);
 			addXMLTitleDesc();

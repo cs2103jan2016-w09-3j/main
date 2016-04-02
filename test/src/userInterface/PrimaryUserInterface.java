@@ -186,7 +186,7 @@ public class PrimaryUserInterface extends Application {
 			} else if (cmd.equals(COMMAND.SEARCH)) {
 				String stringToSave = _commandBar.getSearchStr();
 				executeSearch(stringToSave, _commandBar.getFullInput());
-			} else if (cmd.equals(COMMAND.SAVEDIR)) {
+			} else if (cmd.equals(COMMAND.SAVETO)) {
 				String stringToSearch = _commandBar.getSearchStr();
 				executeChangeSaveDir(stringToSearch);
 			} else if (cmd.equals(COMMAND.UNDO)) {
@@ -421,7 +421,7 @@ public class PrimaryUserInterface extends Application {
 		if (resultSet.isSuccess()) {
 			resetCommandInput();
 		}
-		_commandBar.showFeedBackMessage(COMMAND.SAVEDIR, resultSet, null);
+		_commandBar.showFeedBackMessage(COMMAND.SAVETO, resultSet, null);
 	}
 
 	private void executeUndo() {
@@ -429,7 +429,7 @@ public class PrimaryUserInterface extends Application {
 		if (resultSet.isSuccess()) {
 			resetCommandInput();
 		}
-		_commandBar.showFeedBackMessage(COMMAND.SAVEDIR, resultSet, null);
+		_commandBar.showFeedBackMessage(COMMAND.SAVETO, resultSet, null);
 	}
 
 	/**

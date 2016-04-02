@@ -431,7 +431,7 @@ public class CommandBar {
 				label.setId("cssCommandShow");
 				break;
 			}
-			case SAVEDIR: {
+			case SAVETO: {
 				label.setId("cssCommandSaveDir");
 				break;
 			}
@@ -692,7 +692,7 @@ public class CommandBar {
 			}
 			break;
 		}
-		case SAVEDIR: {
+		case SAVETO: {
 			if (resultSet != null) {
 				if (resultSet.isSuccess()) {
 					setFeedBackMessage(MESSAGE_SUCCESS_SAVEDIR);
