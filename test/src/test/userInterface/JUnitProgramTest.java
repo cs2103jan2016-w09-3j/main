@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import dateParser.InputParser;
 import dateParser.Pair;
+import entity.ResultSet;
 import entity.TaskEntity;
 import mainLogic.TaskManager;
 import mainLogic.Utils;
@@ -27,39 +28,25 @@ public class JUnitProgramTest {
 	@Test
 	public void testAddCommands() {
 		ex = new UserInterfaceExecuter();
-		assertEquals(runCommand("add basktball"), -1);
-		assertEquals(runCommand("add basktball"), -1);
-		assertEquals(runCommand("add basktball"), -1);
+		assertEquals(runCommand("add basktball").getView(), ResultSet.FLOATING_VIEW);
+		assertEquals(runCommand("add basktball").getView(), ResultSet.FLOATING_VIEW);
+		assertEquals(runCommand("add basktball").getView(), ResultSet.FLOATING_VIEW);
 		ex.switchView(TaskManager.DISPLAY_FLOATING);
-
-		int r1 = runCommand("add basktball");
-		assertTrue(r1 >= 0 && r1 <= ex.getWorkingList().size());
-		int r2 = runCommand("add basktball");
-		assertTrue(r2 >= 0 && r2 <= ex.getWorkingList().size());
-		int r3 = runCommand("add basktball");
-		assertTrue(r3 >= 0 && r3 <= ex.getWorkingList().size());
-		int r4 = runCommand("add basktball");
-		assertTrue(r4 >= 0 && r4 <= ex.getWorkingList().size());
-
-		assertEquals(runCommand("add basktball tmr"), -1);
-		assertEquals(runCommand("add basktball 3/3"), -1);
-		ex.switchView(TaskManager.DISPLAY_MAIN);
-
-		int r5 = runCommand("add basktball tmr");
-		assertTrue(r5 >= 0 && r5 <= ex.getWorkingList().size());
+		assertEquals(runCommand("add what tmr").getView(), ResultSet.TASK_VIEW);
+		assertEquals(runCommand("add har tmr").getStatus(), ResultSet.STATUS_CONFLICT);
 	}
 
 	@Test
 	public void tesDeleteCommands() {
 		ex = new UserInterfaceExecuter();
-		assertEquals(runCommand("delete asda"), -1);
-		assertEquals(runCommand("delete"), -1);
-		assertEquals(runCommand("delete 1231"), -1);
-		assertEquals(runCommand("delete 00--"), -1);
+		assertEquals(runCommand("delete asda"), null);
+		assertEquals(runCommand("delete"), null);
+		assertEquals(runCommand("delete 1231"), null);
+		assertEquals(runCommand("delete 00--"), null);
 
 	}
 
-	public int runCommand(String rawString) {
+	public ResultSet runCommand(String rawString) {
 		InputParser parser = new InputParser(rawString);
 		COMMAND cmd = parser.getCommand();
 		switch (cmd) {
@@ -82,7 +69,7 @@ public class JUnitProgramTest {
 			if (tasks.size() == 1) {
 				return ex.modify(Utils.convertStringToInteger(id), tasks.get(0), rawString);
 			} else {
-				return -1;
+				return null;
 			}
 		}
 		case DONE: {
@@ -91,17 +78,17 @@ public class JUnitProgramTest {
 		}
 		case FLOAT: {
 			ex.switchView(TaskManager.DISPLAY_FLOATING);
-			return 1;
+			return null;
 		}
 		case MAIN: {
 			ex.switchView(TaskManager.DISPLAY_MAIN);
-			return 1;
+			return null;
 		}
 		case SEARCH: {
 			String searchStirng = parser.getSearchString();
-			int r = ex.searchString(searchStirng, rawString);
+			ResultSet r = ex.searchString(searchStirng, rawString);
 			ex.switchView(TaskManager.DISPLAY_SEARCH);
-			return r;
+			return null;
 		}
 		case LINK: {
 			Pair<String, String> ids = parser.getLinkID();
@@ -110,17 +97,14 @@ public class JUnitProgramTest {
 			if (index1 < ex.getWorkingList().size() && index2 < ex.getWorkingList().size()) {
 				TaskEntity t1 = ex.getWorkingList().get(index1);
 				TaskEntity t2 = ex.getWorkingList().get(index2);
-				boolean result = ex.link(t1, t2, rawString);
-				if (result) {
-					return 1;
-				}
+				ResultSet result = ex.link(t1, t2, rawString);
+				return result;
 			} else {
-				return -1;
+				return null;
 			}
-			return 0;
 		}
 		default:
-			return -9;
+			return null;
 		}
 	}
 }
