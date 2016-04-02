@@ -1,11 +1,10 @@
+//@@author A0125514N
 package userInterface;
 
 import userInterface.CommandBar;
 import userInterface.UserInterfaceController;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-
 import dateParser.CommandParser.COMMAND;
 import dateParser.InputParser;
 import dateParser.Pair;

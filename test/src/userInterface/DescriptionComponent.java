@@ -1,3 +1,4 @@
+//@@author A0125514N
 package userInterface;
 
 import java.util.ArrayList;
@@ -128,6 +129,8 @@ public class DescriptionComponent implements ViewInterface {
 		return vbox;
 	}
 
+	//@@author A0125514N-unused
+	//to facilitate changing of ui themen, all css is changed to be controlled with stylesheets
 	public Rectangle buildGradientRec(double width, double height, boolean isSelected) {
 		Stop[] stops;
 		if (isSelected) {
@@ -142,7 +145,8 @@ public class DescriptionComponent implements ViewInterface {
 		rec.setFill(lg1);
 		return rec;
 	}
-
+	
+	//@@author A0125514N
 	public void createLabelBaseOnHeight(double posYStart, double posYEnd, VBox vbox, DescriptionLabel dLabel) {
 		Label main = new Label();
 		main.getStyleClass().add(CSS_LABEL);
