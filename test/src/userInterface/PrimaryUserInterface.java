@@ -9,6 +9,7 @@ import java.util.Calendar;
 import dateParser.CommandParser.COMMAND;
 import dateParser.InputParser;
 import dateParser.Pair;
+import entity.ResultSet;
 import entity.TaskEntity;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -25,7 +26,7 @@ import mainLogic.Utils;
 
 public class PrimaryUserInterface extends Application {
 
-	static final int PREFERED_WINDOW_WIDTH = 600	; // change to 1080.
+	static final int PREFERED_WINDOW_WIDTH = 600; // change to 1080.
 	static final double PREFERED_WINDOW_SCALE = 0.8;
 
 	private static final boolean SUCCESS = true;
@@ -186,10 +187,10 @@ public class PrimaryUserInterface extends Application {
 			} else if (cmd.equals(COMMAND.SEARCH)) {
 				String stringToSave = _commandBar.getSearchStr();
 				executeSearch(stringToSave, _commandBar.getFullInput());
-			}else if (cmd.equals(COMMAND.SAVEDIR)) {
+			} else if (cmd.equals(COMMAND.SAVEDIR)) {
 				String stringToSearch = _commandBar.getSearchStr();
 				executeChangeSaveDir(stringToSearch);
-			}else if (cmd.equals(COMMAND.UNDO)) {
+			} else if (cmd.equals(COMMAND.UNDO)) {
 				executeUndo();
 			}
 		} else {
@@ -250,7 +251,7 @@ public class PrimaryUserInterface extends Application {
 	 * Get feedBack message and show user.
 	 */
 	private void executeInvalidCommand() {
-		_commandBar.showFeedBackMessage(COMMAND.INVALID, FAILURE, TYPE_1, null);
+		_commandBar.showFeedBackMessage(COMMAND.INVALID, null, null);
 	}
 
 	/**
@@ -260,27 +261,16 @@ public class PrimaryUserInterface extends Application {
 	 * @return boolean, true for successful and false for unsuccessful.
 	 */
 	private void executeAdd(ArrayList<TaskEntity> tasks, String rawInput) {
-		int status = -2;
-		String taskName = null;
-		if (tasks.size() == 1) {
+		ResultSet resultSet;
+		String taskName = tasks.get(0).getName();
+		if (tasks.size() > 0) {
 			if (tasks.get(0) != null) {
-				status = uiController.addTask(tasks.get(0), rawInput, true);
+				resultSet = uiController.addTask(tasks.get(0), rawInput, true);
+				if (resultSet.isSuccess()) {
+					resetCommandInput();
+				}
+				_commandBar.showFeedBackMessage(COMMAND.ADD, resultSet, taskName);
 			}
-		} else {
-			status = uiController.addBatchTask(tasks, rawInput, true);
-		}
-		if (status == 1) {
-			taskName = tasks.get(0).getName();
-			_commandBar.showFeedBackMessage(COMMAND.ADD, SUCCESS, TYPE_1, taskName);
-			resetCommandInput();
-		} else if (status == -1) {
-			taskName = tasks.get(0).getName();
-			_commandBar.showFeedBackMessage(COMMAND.ADD, SUCCESS, TYPE_2, taskName);
-			resetCommandInput();
-		} else if (status == -5) {
-			_commandBar.showFeedBackMessage(COMMAND.ADD, SUCCESS, TYPE_3, taskName);
-		} else if (status == -2) {
-			_commandBar.showFeedBackMessage(COMMAND.ADD, FAILURE, TYPE_1, taskName);
 		}
 	}
 
@@ -291,18 +281,16 @@ public class PrimaryUserInterface extends Application {
 	 * @return boolean, true for successful and false for unsuccessful.
 	 */
 	private void executeDelete(String id, String rawString) {
+		ResultSet resultSet = null;
 		if (id != null) {
-			int status = 2;
-			status = uiController.deleteTask(id, rawString, true);
-			if (status > -2) {
-				_commandBar.showFeedBackMessage(COMMAND.DELETE, SUCCESS, TYPE_1, id);
-				resetCommandInput();
-			} else if (status == -2) {
-				_commandBar.showFeedBackMessage(COMMAND.DELETE, FAILURE, TYPE_1, id);
+			resultSet = uiController.deleteTask(id, rawString, true);
+			if (resultSet != null) {
+				if (resultSet.isSuccess()) {
+					resetCommandInput();
+				}
 			}
-		} else {
-			_commandBar.showFeedBackMessage(COMMAND.DELETE, FAILURE, TYPE_2, null);
 		}
+		_commandBar.showFeedBackMessage(COMMAND.DELETE, resultSet, "ID" + id);
 	}
 
 	/**
@@ -324,18 +312,16 @@ public class PrimaryUserInterface extends Application {
 				}
 			}
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_3, null);
+			_commandBar.showFeedBackMessage(COMMAND.EDIT, null, null);
 		}
 	}
 
 	private void executeModify(int indexToModify, TaskEntity taskEntity, String rawString) {
-		boolean success = uiController.modifyTask(indexToModify, taskEntity, rawString, true);
-		if (success) {
-			_commandBar.showFeedBackMessage(COMMAND.EDIT, SUCCESS, TYPE_1, Integer.toString(indexToModify));
+		ResultSet resultSet = uiController.modifyTask(indexToModify, taskEntity, rawString, true);
+		if (resultSet.isSuccess()) {
 			resetCommandInput();
-		} else {
-			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_1, Integer.toString(indexToModify));
 		}
+		_commandBar.showFeedBackMessage(COMMAND.EDIT, resultSet, Integer.toString(indexToModify));
 	}
 
 	/**
@@ -350,7 +336,7 @@ public class PrimaryUserInterface extends Application {
 			_commandBar.addToFullInput(setString);
 			_commandBar.onKeyReleased();
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.EDIT, FAILURE, TYPE_2, Integer.toString(indexToModify));
+			_commandBar.showFeedBackMessage(COMMAND.EDIT, null, Integer.toString(indexToModify));
 		}
 
 	}
@@ -363,16 +349,21 @@ public class PrimaryUserInterface extends Application {
 	 * @return boolean, true if value found, false it value not found
 	 */
 	private void executeJump() {
+		ResultSet resultSet = new ResultSet();
+		resultSet.setFail();
+		resultSet.setIndex(TYPE_2);
+
 		String indexToJump = _commandBar.getId();
 		if (indexToJump != null) {
 			boolean success = uiController.jumpToIndex(indexToJump);
 			if (success) {
 				resetCommandInput();
 			} else {
-				_commandBar.showFeedBackMessage(COMMAND.JUMP, FAILURE, TYPE_1, indexToJump);
+				resultSet.setIndex(TYPE_1);
+				_commandBar.showFeedBackMessage(COMMAND.JUMP, resultSet, indexToJump);
 			}
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.JUMP, FAILURE, TYPE_2, indexToJump);
+			_commandBar.showFeedBackMessage(COMMAND.JUMP, resultSet, indexToJump);
 		}
 	}
 
@@ -382,17 +373,11 @@ public class PrimaryUserInterface extends Application {
 	 * @param stringToSearch
 	 */
 	private void executeSearch(String stringToSearch, String rawString) {
-		int status = uiController.executeSearch(stringToSearch, rawString, true);
-		if (status > -1) {
-			if (status == 0) {
-				_commandBar.showFeedBackMessage(COMMAND.SEARCH, SUCCESS, TYPE_2, null);
-			} else {
-				resetCommandInput();
-				_commandBar.showFeedBackMessage(COMMAND.SEARCH, SUCCESS, TYPE_1, Integer.toString(status));
-			}
-		} else {
-			_commandBar.showFeedBackMessage(COMMAND.SEARCH, FAILURE, TYPE_1, null);
+		ResultSet resultSet = uiController.executeSearch(stringToSearch, rawString, true);
+		if (resultSet.isSuccess()) {
+			resetCommandInput();
 		}
+		_commandBar.showFeedBackMessage(COMMAND.SEARCH, resultSet, null);
 	}
 
 	/**
@@ -403,15 +388,15 @@ public class PrimaryUserInterface extends Application {
 	 */
 	private void executeLink(String indexZZ1, String indexZZ2, String rawString) {
 		if (indexZZ1 != null && indexZZ2 != null) {
-			boolean isSuccess = uiController.link(indexZZ1, indexZZ2, rawString, true);
-			if (isSuccess) {
-				_commandBar.showFeedBackMessage(COMMAND.LINK, SUCCESS, TYPE_1, null);
-				resetCommandInput();
-			} else {
-				_commandBar.showFeedBackMessage(COMMAND.LINK, FAILURE, TYPE_1, null);
+			ResultSet resultSet = uiController.link(indexZZ1, indexZZ2, rawString, true);
+			if (resultSet != null) {
+				if (resultSet.isSuccess()) {
+					resetCommandInput();
+				}
 			}
+			_commandBar.showFeedBackMessage(COMMAND.LINK, resultSet, null);
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.LINK, FAILURE, TYPE_2, null);
+			_commandBar.showFeedBackMessage(COMMAND.LINK, null, null);
 		}
 	}
 
@@ -422,34 +407,30 @@ public class PrimaryUserInterface extends Application {
 	 */
 	private void executeMarkComplete(String indexZZ, String rawString) {
 		if (indexZZ != null) {
-			boolean isSuccess = uiController.markAsCompleted(indexZZ, rawString, true);
-			if (isSuccess) {
-				_commandBar.showFeedBackMessage(COMMAND.DONE, SUCCESS, TYPE_1, indexZZ);
+			ResultSet resultSet = uiController.markAsCompleted(indexZZ, rawString, true);
+			if (resultSet.isSuccess()) {
 				resetCommandInput();
-			} else {
-				_commandBar.showFeedBackMessage(COMMAND.DONE, FAILURE, TYPE_1, indexZZ);
 			}
+			_commandBar.showFeedBackMessage(COMMAND.DONE, resultSet, indexZZ);
 		} else {
-			_commandBar.showFeedBackMessage(COMMAND.DONE, FAILURE, TYPE_2, indexZZ);
+			_commandBar.showFeedBackMessage(COMMAND.DONE, null, indexZZ);
 		}
 	}
 
 	private void executeChangeSaveDir(String stringToSave) {
-		boolean isSuccess = uiController.changeSaveDir(stringToSave);
-		if (isSuccess) {
-			_commandBar.showFeedBackMessage(COMMAND.SAVEDIR, SUCCESS, TYPE_1, null);
-		} else {
-			_commandBar.showFeedBackMessage(COMMAND.SAVEDIR, FAILURE, TYPE_1, null);
+		ResultSet resultSet = uiController.changeSaveDir(stringToSave);
+		if (resultSet.isSuccess()) {
+			resetCommandInput();
 		}
+		_commandBar.showFeedBackMessage(COMMAND.SAVEDIR, resultSet, null);
 	}
-	
+
 	private void executeUndo() {
-		boolean isSuccess = uiController.undoLastCommand();
-		if (isSuccess) {
-			_commandBar.showFeedBackMessage(COMMAND.UNDO, SUCCESS, TYPE_1, null);
-		} else {
-			_commandBar.showFeedBackMessage(COMMAND.UNDO, FAILURE, TYPE_2, null);
+		ResultSet resultSet = uiController.undoLastCommand();
+		if (resultSet.isSuccess()) {
+			resetCommandInput();
 		}
+		_commandBar.showFeedBackMessage(COMMAND.SAVEDIR, resultSet, null);
 	}
 
 	/**

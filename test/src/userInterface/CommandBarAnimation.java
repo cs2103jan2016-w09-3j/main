@@ -26,6 +26,7 @@ public class CommandBarAnimation extends Service<Void> {
 
 		@Override
 		protected Void call() throws Exception {
+			_commandBar.resetFeedBack();
 			Thread.sleep(DELAY_BEFORE_START);
 			long timeStart = System.currentTimeMillis();
 			while (!isDoneAnimating) {

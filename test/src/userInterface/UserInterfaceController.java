@@ -13,6 +13,7 @@ import java.util.zip.Inflater;
 import dateParser.InputParser;
 import dateParser.Pair;
 import dateParser.CommandParser.COMMAND;
+import entity.ResultSet;
 import entity.TaskEntity;
 import mainLogic.TaskManager;
 import mainLogic.TaskManagerInterface;
@@ -446,62 +447,37 @@ public class UserInterfaceController {
 	 *            (false only when recovering lost commands and testing)
 	 * @return
 	 */
-	public int addTask(TaskEntity task, String rawInput, boolean toUpdateView) {
-		if (toUpdateView) {
-			if (_currentView == SEARCH_VIEW || _currentView == FLOATING_VIEW) {
-				showMainView(-1);
+	public ResultSet addTask(TaskEntity task, String rawInput, boolean toUpdateView) {
+		ResultSet resultSet = _logicFace.addTask(task, buildRawCommand(rawInput));
+		if (resultSet.isSuccess()) {
+			if (toUpdateView) {
+				updateChangesToViews(resultSet.getIndex());
 			}
 		}
 
-		int insertedTo = _logicFace.addTask(task, buildRawCommand(rawInput));
-		if (toUpdateView) {
-			if (insertedTo > -2) {
-				updateChangesToViews(insertedTo);
-			}
-		}
-
-		if (insertedTo == SUCCESSFULLY_ADDED_DIFF) {
-			if (_currentView == FLOATING_VIEW) {
-				return SUCCESSFULLY_ADDED;
-			} else if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
-				return SUCCESSFULLY_ADDED_DIFF;
-			} else if (_currentView == SEARCH_VIEW) {
-				return -5;
-			}
-		} else if (insertedTo > SUCCESSFULLY_ADDED_DIFF) {
-
-			if (_currentView == FLOATING_VIEW) {
-				return SUCCESSFULLY_ADDED_DIFF;
-			} else if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
-				return SUCCESSFULLY_ADDED;
-			}
-		}
-		return FAIL_TO_EXECUTE;
+		return resultSet;
 	}
 
 	public int addBatchTask(ArrayList<TaskEntity> task, String rawInput, boolean toUpdateView) {
-		int insertedTo = _logicFace.addBatch(task, buildRawCommand(rawInput));
-		if (insertedTo == -1) {
-			return -2;
-		} else {
-			if (toUpdateView) {
-				updateChangesToViews(insertedTo);
-			}
-			return 1;
-		}
+		/*
+		 * int insertedTo = _logicFace.addBatch(task,
+		 * buildRawCommand(rawInput)); if (insertedTo == -1) { return -2; } else
+		 * { if (toUpdateView) { updateChangesToViews(insertedTo); } return 1; }
+		 */
+		return -2;
 	}
 
-	public int deleteTask(String id, String rawInput, boolean toUpdateView) {
-		int result = _logicFace.delete(id, buildRawCommand(rawInput));
-		if (result == -2) {
-			return result;
-		}
-		if (result > -2) {
-			if (toUpdateView) {
-				updateChangesToViews(result);
+	public ResultSet deleteTask(String id, String rawInput, boolean toUpdateView) {
+		ResultSet resultSet = _logicFace.delete(id, buildRawCommand(rawInput));
+		if (resultSet != null) {
+			if (resultSet.isSuccess()) {
+				if (toUpdateView) {
+					updateChangesToViews(resultSet.getIndex());
+				}
 			}
+			return resultSet;
 		}
-		return result;
+		return null;
 	}
 
 	public TaskEntity getTaskByID(int id) {
@@ -537,15 +513,14 @@ public class UserInterfaceController {
 		return index;
 	}
 
-	public boolean modifyTask(int idToModify, TaskEntity task, String rawInput, boolean toUpdateView) {
-		int index = _logicFace.modify(idToModify, task, buildRawCommand(rawInput));
-		if (index < 0) {
-			return false;
+	public ResultSet modifyTask(int idToModify, TaskEntity task, String rawInput, boolean toUpdateView) {
+		ResultSet resultSet = _logicFace.modify(idToModify, task, buildRawCommand(rawInput));
+		if (resultSet.isSuccess()) {
+			if (toUpdateView) {
+				updateChangesToViews(resultSet.getIndex());
+			}
 		}
-		if (toUpdateView) {
-			updateChangesToViews(index);
-		}
-		return true;
+		return resultSet;
 	}
 
 	public boolean jumpToIndex(String indexToJump) {
@@ -560,30 +535,28 @@ public class UserInterfaceController {
 		}
 	}
 
-	public int executeSearch(String stringToSearch, String rawString, boolean toUpdateView) {
-		int status = _logicFace.searchString(stringToSearch, buildRawCommand(rawString));
-		if (status > -1) {
+	public ResultSet executeSearch(String stringToSearch, String rawString, boolean toUpdateView) {
+		ResultSet resultSet = _logicFace.searchString(stringToSearch, buildRawCommand(rawString));
+		if (resultSet.getSearchCount() > 0) {
 			if (toUpdateView) {
 				showSearchView();
 			}
-			return status;
 		}
-		return status;
+		return resultSet;
 	}
 
-	public boolean markAsCompleted(String indexZZ, String rawString, boolean toUpdateview) {
+	public ResultSet markAsCompleted(String indexZZ, String rawString, boolean toUpdateview) {
 		int indexInt = Utils.convertStringToInteger(indexZZ);
 		if (indexInt == -1) {
-			return false;
+			return null;
 		}
-		int index = _logicFace.markAsDone(indexInt, buildRawCommand(rawString));
-		if (index > -2) {
+		ResultSet resultSet = _logicFace.markAsDone(indexInt, buildRawCommand(rawString));
+		if (resultSet.isSuccess()) {
 			if (toUpdateview) {
-				updateChangesToViews(index);
+				updateChangesToViews(resultSet.getIndex());
 			}
-			return true;
 		}
-		return false;
+		return resultSet;
 	}
 
 	public void stopScrollingAnimation() {
@@ -595,24 +568,31 @@ public class UserInterfaceController {
 		_scorllAnimation = null;
 	}
 
-	public boolean link(String indexZZ1, String indexZZ2, String rawString, boolean toUpdateView) {
+	public ResultSet link(String indexZZ1, String indexZZ2, String rawString, boolean toUpdateView) {
 		int index1 = Utils.convertStringToInteger(indexZZ1);
 		int index2 = Utils.convertStringToInteger(indexZZ2);
 		if (index1 != -1 && index2 != -1) {
 			if (index1 < _logicFace.getWorkingList().size() && index2 < _logicFace.getWorkingList().size()) {
 				_logicFace.getWorkingList().get(index1);
 				_logicFace.getWorkingList().get(index2);
-				boolean success = _logicFace.link(_logicFace.getWorkingList().get(index1),
+				ResultSet resultSet = _logicFace.link(_logicFace.getWorkingList().get(index1),
 						_logicFace.getWorkingList().get(index2), buildRawCommand(rawString));
-				if (success) {
+
+				System.out.println(resultSet.getIndex());
+				if (resultSet.isSuccess()) {
 					if (toUpdateView) {
-						updateChangesToViews(0);
+						updateChangesToViews(resultSet.getIndex());
 					}
-					return true;
 				}
+				return resultSet;
+			} else {
+				ResultSet rs = new ResultSet();
+				rs.setFail();
+				rs.setIndex(-1);
+				return rs;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	/**
@@ -776,19 +756,19 @@ public class UserInterfaceController {
 		}
 	}
 
-	public boolean changeSaveDir(String dirPath) {
+	public ResultSet changeSaveDir(String dirPath) {
 		return _logicFace.changeSaveDir(dirPath);
 	}
 
-	public boolean undoLastCommand() {
+	public ResultSet undoLastCommand() {
 		Queue<String> commandsToRun = _logicFace.getBackedupCommands();
 		if (commandsToRun == null) {
-			return false;
+			return null;
 		}
 		if (commandsToRun.size() == 0) {
-			return false;
+			return null;
 		}
 		runCommands(commandsToRun);
-		return true;
+		return null;
 	}
 }

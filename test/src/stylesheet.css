@@ -109,7 +109,7 @@
 }
 
 #cssDescriptionLabelUnSelected{
-	-fx-background-color:rgba(255,255,255,0.3);
+	-fx-background-color:rgba(255.0,255.0,255.0,0.3);
 }
 
 /* Detail Componenet CSS */
@@ -199,6 +199,14 @@
 
 #cssCommandBarfeedback_conflict{
 	-fx-background-color: rgba(249.0, 186.0, 122.0, 1.0);
+}
+
+#cssCommandBarfeedback_past{
+	
+}
+
+#cssCommandBarfeedback_conflict_past{
+	
 }
 
 #cssCommandBarfeedback_error{
