@@ -41,8 +41,8 @@ public class PrimaryUserInterface extends Application {
 	static final int TWO = 2;
 
 	// Font and style.
-	static final String FONT_DEFAULT = "Arial";
-	static final String FONT_TITLE_LABLES = "Blackadder ITC";
+	static final String FONT_DEFAULT = "lucida sans";
+	static final String FONT_TITLE_LABLES = "lucida sans";
 	static final int DEFAULT_FONT_SIZE = 24;
 	static final String STYLE_SHEET = "stylesheet.css";
 
