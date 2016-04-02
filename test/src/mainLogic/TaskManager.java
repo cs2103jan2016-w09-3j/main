@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import entity.AllTaskLists;
+import entity.ResultSet;
 import entity.TaskEntity;
 import fileStorage.StorageInterface;
 import fileStorage.CommandHandler;
@@ -420,28 +421,28 @@ public class TaskManager {
      *         the task is no longer in displayedTasks returns -2 if the
      *         modification failed (Index out of bounds or deletion failed)
      */
-    public int modify(int index, TaskEntity modifiedTask) {
+    public ResultSet modify(int index, TaskEntity modifiedTask) {
+        ResultSet modificationResults = new ResultSet();
         if (index > displayedTasks.size() - 1) {
-            return -2;
+            modificationResults.setStatus(ResultSet.STATUS_BAD);
+            modificationResults.setFail();
+            return modificationResults;
         }
-
-        int initialDisplayedArraySize = displayedTasks.size();
+        
         int associationState = displayedTasks.get(index).getAssociationState();
         TaskEntity projectHead = displayedTasks.get(index).getProjectHead();
         ArrayList<TaskEntity> childTasks = displayedTasks.get(index).getAssociations();
 
         if (delete(index) == false) {
-            return -2;
+            modificationResults.setStatus(ResultSet.STATUS_BAD);
+            modificationResults.setFail();
+            return modificationResults;
         }
 
         relinkAssociations(modifiedTask, associationState, projectHead, childTasks);
 
-        int newIndex = add(modifiedTask);
-        if (initialDisplayedArraySize == displayedTasks.size()) {
-            return newIndex;
-        } else {
-            return -1;
-        }
+        modificationResults = add(modifiedTask);
+        return modificationResults;
     }
 
     /**
@@ -465,7 +466,6 @@ public class TaskManager {
         } else if (associationState == TaskEntity.PROJECT_HEAD) {
             for (int i = 0; i < childTasks.size(); i++) {
                 link(modifiedTask, childTasks.get(i));
-                ;
             }
         }
     }
@@ -481,7 +481,7 @@ public class TaskManager {
      * @return id of new position of the modified task in the display list if
      *         succeeded in deleting the task, returns -1 otherwise
      */
-    public int modify(String index, TaskEntity modifiedTask) {
+    public ResultSet modify(String index, TaskEntity modifiedTask) {
         return modify(Utils.convertStringToInteger(index), modifiedTask);
     }
 
@@ -493,19 +493,25 @@ public class TaskManager {
      *            - An arrayList of the tasks to be added
      * @return ID of the first task that was inserted
      */
-    public int add(ArrayList<TaskEntity> tasks) {
-        int firstIndex = -1;
+    public ResultSet add(ArrayList<TaskEntity> tasks) {
+        ResultSet batchAddResults = new ResultSet();
         if (tasks.size() >= 1) {
-            firstIndex = add(tasks.get(0));
+            batchAddResults = add(tasks.get(0));
+        }
+        
+        if (!batchAddResults.isSuccess()) {
+            return batchAddResults;
         }
 
         for (int i = 1; i < tasks.size(); i++) {
-            if( add(tasks.get(i)) == -2 ) {
-                return -2;
+            ResultSet currentAddResults = add(tasks.get(i));
+            if(!currentAddResults.isSuccess()) {
+                batchAddResults.setFail();
+                return batchAddResults;
             }
         }
 
-        return firstIndex;
+        return batchAddResults;
     }
 
     /**
@@ -520,27 +526,47 @@ public class TaskManager {
      *         -1 if it is inserted into a list that is not in view
      *         -2 if a any of the main arrays are not initialised.
      */
-    public int add(TaskEntity newTask) {
+    public ResultSet add(TaskEntity newTask) {
         assert displayedTasks != null : "no view set in displayedTasks, probably not initialised!";
 
+        ResultSet addResults = new ResultSet();
+        
         if(displayedTasks == null) {
-            return -2;
+            addResults.setStatus(ResultSet.STATUS_BAD);
+            addResults.setFail();
+            return addResults;
         }
 
         if (newTask.isFloating()) {
-            if(floatingTaskEntities == null) {
-                return -2;
+            if (floatingTaskEntities == null) {
+                addResults.setStatus(ResultSet.STATUS_BAD);
+                addResults.setFail();
+                return addResults;
             }
-            floatingTaskEntities.add(newTask);
-            return updateFloatingDisplay(newTask);
+            assert floatingTaskEntities.add(newTask) == true : "Failed to add to non-null floatingTaskEntities list";
+            addResults.setView(ResultSet.FLOATING_VIEW);
+            addResults.setIndex(updateFloatingDisplay(newTask));
+            addResults.setSuccess();
+            addResults.setStatus(ResultSet.STATUS_GOOD);
+            return addResults;
         } else {
             if(mainTaskEntities == null) {
-                return -2;
+                addResults.setStatus(ResultSet.STATUS_BAD);
+                addResults.setFail();
+                return addResults;
             }
 
+            if (checkClashing(newTask)) {
+                addResults.setStatus(ResultSet.STATUS_CONFLICT);
+            }
+            addResults.setView(ResultSet.TASK_VIEW);
             int idToInsert = findPositionToInsert(newTask);
             mainTaskEntities.add(idToInsert, newTask);
-            return updateMainDisplay(newTask, idToInsert);
+            addResults.setIndex(updateMainDisplay(newTask, idToInsert));
+            
+            addResults.setStatus(ResultSet.STATUS_GOOD);
+            addResults.setSuccess();
+            return addResults;
         }
     }
 
@@ -551,13 +577,18 @@ public class TaskManager {
      * @return true - if the task was successfully marked as done
      *         false - if failed
      */
-    public boolean markAsDone(int index) {
+    public ResultSet markAsDone(int index) {
+        ResultSet markingResults = new ResultSet();
         if ( (index > displayedTasks.size() - 1) || (currentDisplayedList == DISPLAY_COMPLETED) ) {
-            return false;
+            markingResults.setFail();
+            markingResults.setStatus(ResultSet.STATUS_BAD);
+            return markingResults;
         } else {
             //Checks for deletion failure
             if ( !deleteFromCorrespondingDisplayList(displayedTasks.get(index)) ) {
-                return false;
+                markingResults.setFail();
+                markingResults.setStatus(ResultSet.STATUS_BAD);
+                return markingResults;
             }
 
             displayedTasks.get(index).markAsDone();
@@ -568,7 +599,9 @@ public class TaskManager {
 
             //Remove it from displayedTasks only after processing it
             displayedTasks.remove(index);
-            return true;
+            markingResults.setSuccess();
+            markingResults.setStatus(ResultSet.STATUS_GOOD);
+            return markingResults;
         }
     }
 
@@ -781,19 +814,25 @@ public class TaskManager {
         return true;
     }
 
-    public boolean changeDirectory(String newDirectory) {
-        return false;
+    public ResultSet changeDirectory(String newDirectory) {
+        ResultSet changeResult = new ResultSet();
+        changeResult.setFail();
+        changeResult.setStatus(ResultSet.STATUS_BAD);
+        return changeResult;
     }
     
-    public boolean link(String projectHeadId, String taskUnderId) {
+    public ResultSet link(String projectHeadId, String taskUnderId) {
         return link(Utils.convertStringToInteger(projectHeadId), Utils.convertStringToInteger(taskUnderId));
     }
 
-    public boolean link(int projectHeadId, int taskUnderId) {
-        if (projectHeadId >= displayedTasks.size() || taskUnderId >= displayedTasks.size()) {
-            return false;
-        } else if (projectHeadId == taskUnderId) {
-            return false;
+    public ResultSet link(int projectHeadId, int taskUnderId) {
+        ResultSet linkResult = new ResultSet();
+        // Prevents linking to itself and to tasks IDs that are not valid
+        if (projectHeadId >= displayedTasks.size() || taskUnderId >= displayedTasks.size()
+                || projectHeadId == taskUnderId) {
+            linkResult.setFail();
+            linkResult.setStatus(ResultSet.STATUS_BAD);
+            return linkResult;
         } else {
             return link(displayedTasks.get(projectHeadId), displayedTasks.get(taskUnderId));
         }
@@ -811,19 +850,29 @@ public class TaskManager {
      *            - Task to be linked
      * @return True if success in linking false if failed to link
      */
-    public boolean link(TaskEntity projectHead, TaskEntity linkedTask) {
-
+    public ResultSet link(TaskEntity projectHead, TaskEntity linkedTask) {
+        ResultSet linkResult = new ResultSet();
+        int projectHeadId = displayedTasks.indexOf(projectHead);
+        linkResult.setIndex(projectHeadId);
+        
         if(linkedTask.getAssociationState() == TaskEntity.PROJECT_HEAD) {
-            return false;
+            linkResult.setFail();
+            linkResult.setStatus(ResultSet.STATUS_BAD);
+            return linkResult;
         }
 
         boolean linkSuccess = projectHead.addAssociation(linkedTask);
         if (!linkSuccess) {
-            return false;
+            linkResult.setFail();
+            linkResult.setStatus(ResultSet.STATUS_BAD);
+            return linkResult;
         }
 
         linkedTask.setAssociationHead(projectHead);
-        return true;
+        linkResult.setSuccess();
+        linkResult.setStatus(ResultSet.STATUS_GOOD);
+        
+        return linkResult;
     }
 
     /**
@@ -909,15 +958,24 @@ public class TaskManager {
         return false;
     }
 
-    public int searchForCompleted() {
+    public ResultSet searchForCompleted() {
+        ResultSet searchResults = new ResultSet();
         if(completedTaskEntities == null) {
-            return -2;
+            searchResults.setFail();
+            searchResults.setStatus(ResultSet.STATUS_BAD);
+            return searchResults;
         }
         searchedTasks = (ArrayList<TaskEntity>) completedTaskEntities.clone();
         if (searchedTasks.size() > 0) {
-            return searchedTasks.size();
+            searchResults.setSuccess();
+            searchResults.setStatus(ResultSet.STATUS_GOOD);
+            searchResults.setSearchCount(searchedTasks.size());
+            return searchResults;
         } else {
-            return -1;
+            searchResults.setSuccess();
+            searchResults.setStatus(ResultSet.STATUS_GOOD);
+            searchResults.setSearchCount(-1);
+            return searchResults;
         }
     }
 
@@ -927,7 +985,7 @@ public class TaskManager {
      * @param searchTerm - String to search for
      * @return True if there are results, false if otherwise
      */
-    public int searchString (String searchTerm) {
+    public ResultSet searchString (String searchTerm) {
         if( searchTerm.equalsIgnoreCase("completed") ) {
             return searchForCompleted();
         } else {
@@ -947,7 +1005,8 @@ public class TaskManager {
      *          -2 for search failed (null arrays being searched)
      *          number of search results otherwise           
      */
-    public int searchString (String searchTerm, boolean narrowSearch) {
+    public ResultSet searchString (String searchTerm, boolean narrowSearch) {
+        ResultSet searchResults = new ResultSet();
         //Ensure that search is properly initialized
         if(searchedTasks == null) {
             searchedTasks = new ArrayList<TaskEntity>();
@@ -958,7 +1017,9 @@ public class TaskManager {
         }
 
         if (mainTaskEntities == null || floatingTaskEntities == null || completedTaskEntities == null) {
-            return -2;
+            searchResults.setFail();
+            searchResults.setStatus(ResultSet.STATUS_BAD);
+            return searchResults;
         }
 
         SearchModule.searchStringAddToResults(searchTerm, mainTaskEntities, searchedTasks);
@@ -966,9 +1027,15 @@ public class TaskManager {
         SearchModule.searchStringAddToResults(searchTerm, completedTaskEntities, searchedTasks);
 
         if(searchedTasks.size() > 0) {
-            return searchedTasks.size();
+            searchResults.setSuccess();
+            searchResults.setStatus(ResultSet.STATUS_GOOD);
+            searchResults.setSearchCount(searchedTasks.size());
+            return searchResults;
         } else {
-            return -1;
+            searchResults.setSuccess();
+            searchResults.setStatus(ResultSet.STATUS_GOOD);
+            searchResults.setSearchCount(-1);
+            return searchResults;
         }
     }
 

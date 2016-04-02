@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Queue;
 
 import entity.AllTaskLists;
+import entity.ResultSet;
 import entity.TaskEntity;
 
 public class TaskManagerInterface {
@@ -43,18 +44,17 @@ public class TaskManagerInterface {
         return manager.getBackedupCommands();
     }
    
-    public int add (TaskEntity newTask, String command) {
-        int executionResult = manager.add(newTask);
-        System.out.println("Adding new task " + newTask.getDueDate());
-        if(executionResult != -2) {
+    public ResultSet add (TaskEntity newTask, String command) {
+        ResultSet executionResult = manager.add(newTask);
+        if(executionResult.isSuccess()) {
             manager.saveBackupCommand(command);
         }
         return executionResult;
     }
     
-    public int add (ArrayList<TaskEntity> newTasks, String command) {
-        int executionResult = manager.add(newTasks);
-        if(executionResult != -2) {
+    public ResultSet add (ArrayList<TaskEntity> newTasks, String command) {
+        ResultSet executionResult = manager.add(newTasks);
+        if(executionResult.isSuccess()) {
             manager.saveBackupCommand(command);
         }
         return executionResult;
@@ -68,17 +68,17 @@ public class TaskManagerInterface {
         manager.switchView(newView);
     }
     
-    public int modify (String taskId, TaskEntity modifiedTask, String command) {
-        int executionResult = manager.modify(taskId, modifiedTask);
-        if(executionResult != -2) {
+    public ResultSet modify (String taskId, TaskEntity modifiedTask, String command) {
+        ResultSet executionResult = manager.modify(taskId, modifiedTask);
+        if(executionResult.isSuccess()) {
             manager.saveBackupCommand(command);
         }
         return executionResult;
     }
-    
-    public int modify (int taskId, TaskEntity modifiedTask, String command) {
-        int executionResult = manager.modify(taskId, modifiedTask);
-        if(executionResult != -2) {
+
+    public ResultSet modify(int taskId, TaskEntity modifiedTask, String command) {
+        ResultSet executionResult = manager.modify(taskId, modifiedTask);
+        if (executionResult.isSuccess()) {
             manager.saveBackupCommand(command);
         }
         return executionResult;
@@ -89,45 +89,53 @@ public class TaskManagerInterface {
      * 
      * @param taskToMark - Id of the task to be delete in the displayed list
      * 
-     * @return -2 if the deletion failed
-     *         -1 if after deletion, the list is empty
-     *         Id of the position to be in the display list after deleting
-     *         otherwise
+     * @return ResultSet - Deletion status to be good and deletion success to be
+     *         true if deletion succeeded, bad and false otherwise, respectively
+     *         Index to be the position to be in the list after deletion, -1 if the list is empty after deletion
      */
-    public int delete (String taskId, String command) {
-        boolean deletionResult = manager.delete(taskId);
+    public ResultSet delete (String taskId, String command) {
+        ResultSet deletionResult = new ResultSet();
+        if (manager.delete(taskId)) {
+            deletionResult.setSuccess();
+            deletionResult.setStatus(ResultSet.STATUS_GOOD);
+        } else {
+            deletionResult.setFail();
+            deletionResult.setStatus(ResultSet.STATUS_BAD);
+        }
         
-        if (!deletionResult) {
-            return -2;
+        if (!deletionResult.isSuccess()) {
+            return deletionResult;
         } else {
             manager.saveBackupCommand(command);
-            return manager.checkCurrentId(Utils.convertStringToInteger(taskId));
+            deletionResult.setIndex(manager.checkCurrentId(Utils.convertStringToInteger(taskId)));
+            return deletionResult;
         }
     }
     
-    //TODO : Save this to command list for crash. String command now only there for show
+    //TODO : Function to be removed. Left here just in case first
     public boolean delete (String taskIdStart, String taskIdEnd, String command) {
         return manager.delete(taskIdStart, taskIdEnd);
     }
     
-    public boolean changeDirectory (String newDirectory) {
+    public ResultSet changeDirectory (String newDirectory) {
         return manager.changeDirectory(newDirectory);
     }
     
-    public boolean link (TaskEntity projectHeadId, TaskEntity taskUnderId, String command) {
-        boolean executionSucceeded = manager.link(projectHeadId, taskUnderId);
-        if(executionSucceeded) {
+    
+    public ResultSet link (TaskEntity projectHeadId, TaskEntity taskUnderId, String command) {
+        ResultSet executionResults = manager.link(projectHeadId, taskUnderId);
+        if(executionResults.isSuccess()) {
             manager.saveBackupCommand(command);
         }
-        return executionSucceeded;
+        return executionResults;
     }
     
-    public boolean link (String projectHeadId, String taskUnderId, String command) {
-        boolean executionSucceeded = manager.link(projectHeadId, taskUnderId);
-        if(executionSucceeded) {
+    public ResultSet link (String projectHeadId, String taskUnderId, String command) {
+        ResultSet executionResults = manager.link(projectHeadId, taskUnderId);
+        if(executionResults.isSuccess()) {
             manager.saveBackupCommand(command);
         }
-        return executionSucceeded;
+        return executionResults;
     }
     
     /**
@@ -141,18 +149,19 @@ public class TaskManagerInterface {
      *         Id of the position to be in the display list after marking done
      *         otherwise
      */
-    public int markAsDone (String taskToMark, String command) {
+    public ResultSet markAsDone (String taskToMark, String command) {
         return markAsDone(Utils.convertStringToInteger(taskToMark), command);
     }
     
-    public int markAsDone (int taskToMark, String command) {
-        boolean markingResults = manager.markAsDone(taskToMark);
+    public ResultSet markAsDone (int taskToMark, String command) {
+        ResultSet markingResults = manager.markAsDone(taskToMark);
         
-        if(!markingResults) {
-            return -2;
+        if(!markingResults.isSuccess()) {
+            return markingResults;
         } else {
             manager.saveBackupCommand(command);
-            return manager.checkCurrentId(taskToMark);
+            markingResults.setIndex(manager.checkCurrentId(taskToMark));
+            return markingResults;
         }
     }
     
@@ -168,9 +177,9 @@ public class TaskManagerInterface {
         return manager.undo();
     }
     
-    public int searchString (String searchTerm, String command) {
-        int executionResult = manager.searchString(searchTerm);
-        if(executionResult != -2 ) {
+    public ResultSet searchString (String searchTerm, String command) {
+        ResultSet executionResult = manager.searchString(searchTerm);
+        if(executionResult.isSuccess() ) {
             manager.saveBackupCommand(command);
         }
         return executionResult;
