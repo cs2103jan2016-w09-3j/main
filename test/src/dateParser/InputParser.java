@@ -62,31 +62,9 @@ public class InputParser {
 		assert (input!=null) : "Input is null";
 
 		input = XMLParser.removeAllTags(input);
-		/*
-		Scanner sc = new Scanner(input);
-		String temp = "";
-		String returnStr = "";
-		int type = 0;
-		while(sc.hasNext()){
-			temp+=sc.next();
-			if (type == EXPECT_CMD){
-				returnStr += cmdParser.xmlFirstWord(temp);
-				temp = "";
-				type++;
-			}else if (type == EXPECT_INFO){
-				// handle ID
-				if(!dateParser.hasDate(temp))
-				{
-					returnStr += infoParser.xmlTitleAndDesc(temp);
-				}else{
-					
-				}
-			}
-		}
-	*/
 
 		COMMAND given =cmdParser.getCommand(input);
-		//System.out.println("before"+input);
+		System.out.println("before"+input);
 		addXMLDate();//problem with quotes lie here!
 		//System.out.println("after date"+input);
 		addXMLCmd();
@@ -135,7 +113,9 @@ public class InputParser {
 	 * adds xml to date
 	 */
 	private void addXMLDate() {
+		System.out.println("before xml"+ input);
 		input = dateParser.xmlDate(input);
+		System.out.println("after xml2"+ input);
 	}
 
 	/**
@@ -196,8 +176,23 @@ public class InputParser {
 					toAdd.addHashtag(hashes.get(i));
 				}
 				tasks.add(toAdd);
-			}
-			else{
+			}else if(dates.size() == 2){
+				Calendar c = Calendar.getInstance();
+				c.setTime(dates.get(0));
+				c.clear(Calendar.SECOND);
+				c.clear(Calendar.MILLISECOND);
+
+				Calendar c2 = Calendar.getInstance();
+				c2.setTime(dates.get(1));
+				c2.clear(Calendar.SECOND);
+				c2.clear(Calendar.MILLISECOND);
+				
+				TaskEntity toAdd = new TaskEntity(name, c, c2, false, desc);
+				for(int j=0; j<hashes.size();j++){
+					toAdd.addHashtag(hashes.get(j));
+				}
+				tasks.add(toAdd);
+			}else{
 				for(int i=0; i<dates.size(); i++){
 					Calendar c = Calendar.getInstance();
 					c.setTime(dates.get(i));

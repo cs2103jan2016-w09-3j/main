@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.plaf.synth.SynthSplitPaneUI;
+
 import com.joestelmach.natty.*;
 
 public class DateParser {
@@ -62,9 +64,9 @@ public class DateParser {
 		}
 		inputDate = convertFormalDates(inputDate);
 		List<Date> returnDateList = new ArrayList<Date>();
-		hideErr();
+		//hideErr();
 		List<DateGroup> dateGroups = nattyParser.parse(inputDate);
-		showErr();
+		//showErr();
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
 			for (int j = 0; j < dates.size(); j++) {
@@ -72,7 +74,7 @@ public class DateParser {
 			}
 		}
 		if(returnDateList.size()>1){
-			returnDateList = checkMultiple(returnDateList, inputDate);
+			//returnDateList = checkMultiple(returnDateList, inputDate);
 		}
 		return returnDateList;
 	}
@@ -121,34 +123,43 @@ public class DateParser {
 	 * @return String of xmlDate
 	 */
 	public String xmlDate(String input) {
-		hideErr();
+		//hideErr();
 		input = convertFormalDates(input);
+		String workingStr = "";
 		
-		String returnVal = input;
-
+		workingStr+=input;
+		String returnVal = new String(input);
 		ArrayList<Integer> locationQuote= new ArrayList<Integer>();
-		for(int i=0; i< input.length(); i++){
-			char temp = input.charAt(i);
-			if(temp == '"'){
+		for(int i=0; i< workingStr.length(); i++){
+			char temp = workingStr.charAt(i);
+			if(temp == '\''){
 				locationQuote.add(i);
 			}
 		}
-		
+
 		for(int i=0; i<locationQuote.size(); i=i+2){
-			input = input.substring(0, locationQuote.get(i))+input.substring( locationQuote.get(i+1),input.length()-1);
+			if (i+1<locationQuote.size()){
+				workingStr = workingStr.substring(0, locationQuote.get(i))+workingStr.substring( locationQuote.get(i+1),workingStr.length()-1);
+			}else{
+				workingStr = workingStr.substring(0, locationQuote.get(i));
+			}
 		}
-		List<DateGroup> dateGroups = nattyParser.parse(input);
+		
+		workingStr = workingStr.replace('\'', ' ');
+		
+		List<DateGroup> dateGroups = nattyParser.parse(workingStr);
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
 			// System.out.println(dateGroups.get(i).getText());
 			// System.out.println(dates);
 			// String dateUS = dateGroups.get(i).getText();
 			// String dateSG = convertFormalDates(dateUS);
-			//System.out.println("test" + dateGroups.get(i).getText());
 			returnVal = returnVal.replace(dateGroups.get(i).getText(),
 					"<"+XMLParser.DATE_TAG+">" + convertFormalDates(dateGroups.get(i).getText()) + "</"+XMLParser.DATE_TAG+">");
 		}
-		showErr();
+		System.out.println("test" +returnVal);
+		//showErr();
+		//returnVal = returnVal.replace('\'', ' ');
 		return returnVal;
 	}
 
