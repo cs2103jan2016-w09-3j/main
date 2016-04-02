@@ -74,7 +74,7 @@ public class PrimaryUserInterface extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		_primaryStage = primaryStage;
-		_commandBar = new CommandBar(COMMAND_BAR_HEIGTH, _commandBarWidth);
+		_commandBar =CommandBar.getInstance(COMMAND_BAR_HEIGTH, _commandBarWidth);;
 		initializeControls();
 		initializePrimaryStage(primaryStage);
 		initializeUiController(primaryStage);

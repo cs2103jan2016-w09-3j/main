@@ -71,6 +71,7 @@ public class CommandBar {
 	static final int FONT_SIZE_FEEDBACK = 12;
 	private static final Font FONT_FEEDBACK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_FEEDBACK);
 
+	private static CommandBar _myInstance;
 	private double _prefHeight;
 	private double _prefWidth;
 	private double _mainPaneHeight;
@@ -92,7 +93,15 @@ public class CommandBar {
 
 	private CommandBarAnimation _animation;
 
-	public CommandBar(double preHeight, double preWidth) {
+	public static CommandBar getInstance(int commandBarHeigth, double _commandBarWidth) {
+		if (_myInstance == null) {
+			_myInstance = new CommandBar(commandBarHeigth, _commandBarWidth);
+			return _myInstance;
+		}
+		return null;
+	}
+
+	private CommandBar(double preHeight, double preWidth) {
 		this._prefHeight = preHeight;
 		this._prefWidth = preWidth;
 		_mainPaneHeight = _prefHeight - FEEDBACK_HEIGHT;
