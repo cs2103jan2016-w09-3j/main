@@ -21,58 +21,47 @@ public class JUnitTaskManager {
         System.out.println("Started test");
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
         for (int i = 0; i < 5; i++) {
-            Calendar newDate = Calendar.getInstance();
-            newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
+            Calendar newDate = Utils.createDate(1, 3, 2016);
+            newDate.set(Calendar.MINUTE, newDate.get(Calendar.MINUTE) + i);
             newList.add(new TaskEntity("Task " + Integer.toString(i + 1), null, newDate, false, "some desc"));
         }
         manager.add(newList);
         
+        System.out.println(manager.printArrayContentsToString(manager.DISPLAY_MAIN));
         TaskEntity firstFloating = new TaskEntity("Task floating 1"); 
-        manager.add(firstFloating);
+        assertEquals(true, manager.add(firstFloating).isSuccess());
         manager.add(new TaskEntity("Task floating 2"));
         manager.add(new TaskEntity("Task floating 3"));
         manager.add(new TaskEntity("Task floating 4"));
         
-        
-        Calendar newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 2, 5);
-        TaskEntity headTask = new TaskEntity("2016/2/5", null, newDate, true);
+
+        System.out.println(manager.printArrayContentsToString(manager.DISPLAY_FLOATING) + "omg");
+       
+        TaskEntity headTask = new TaskEntity("2016/2/5", null, Utils.createDate(5, 2, 2016), true);
         manager.modify(1, headTask);
 
-        newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 2, 3);
-        TaskEntity childTask = new TaskEntity("2016/2/3", null, newDate, true);
+        TaskEntity childTask = new TaskEntity("2016/2/3", null, Utils.createDate(3, 2, 2016), true);
         manager.modify(3, childTask);
 
-        assertEquals(manager.link(headTask, childTask), true);
+        assertEquals(manager.link(headTask, childTask).isSuccess(), true);
         
-        newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 3, 16);
-        childTask = new TaskEntity("2016/3/16", null, newDate, true);
+        childTask = new TaskEntity("2016/3/16", null, Utils.createDate(16, 3, 2016), true);
         manager.add(childTask);
         manager.link(headTask, childTask);
 
-        assertEquals(manager.link(childTask, headTask), false);
+        assertEquals(manager.link(childTask, headTask).isSuccess(), false);
         
-        newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 3, 15);
-        manager.add(new TaskEntity("2016/3/15", null, newDate, true));
+        manager.add(new TaskEntity("2016/3/15", null, Utils.createDate(15, 3, 2016), true));
 
         manager.link(firstFloating, childTask);
         
-        newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 3, 15);
-        manager.modify(6, new TaskEntity("Modified task", null, newDate, true));
+        manager.modify(6, new TaskEntity("Modified task", null, Utils.createDate(15, 3, 2016), true));
         
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_OTHERS),"2016/2/3, 2016/2/5, Task 1, Task 3, Task 5, 2016/3/15, Modified task, ");
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_FLOATING),"Task floating 1, Task floating 2, Task floating 3, Task floating 4, ");
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_MAIN),"2016/2/3, 2016/2/5, Task 1, Task 3, Task 5, 2016/3/15, Modified task, ");
 	}
+	
 	/*
 	@Test
 	public void testBuildCompletedTasks () {
@@ -181,7 +170,7 @@ public class JUnitTaskManager {
 	    manager.searchString("groOming");
         assertEquals("Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ", manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
 
-        assertEquals(false, manager.markAsDone(2));
+        assertEquals(false, manager.markAsDone(2).isSuccess());
         
         System.out.println(manager.printArrayContentsToString(manager.DISPLAY_FLOATING));
         System.out.println(manager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
@@ -194,7 +183,7 @@ public class JUnitTaskManager {
         assertEquals("Do 2103 V0.4, Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ", manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
         
         manager.switchView(manager.DISPLAY_FLOATING);
-        assertEquals(true, manager.markAsDone(1));
+        assertEquals(true, manager.markAsDone(1).isSuccess());
         
         manager.switchView(manager.DISPLAY_SEARCH);
         

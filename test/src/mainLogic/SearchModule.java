@@ -16,7 +16,14 @@ public class SearchModule {
      */
     public static void searchStringAddToResults (String searchTerm, ArrayList<TaskEntity> listToSearch, ArrayList<TaskEntity> searchResults) {
         String lowerCaseSearchTerm = searchTerm.toLowerCase();
+        
         for (int i = 0; i < listToSearch.size(); i++) {
+            if (listToSearch.get(i).getName() == null || listToSearch.get(i).getDescription() == null
+                    || listToSearch.get(i).getHashtags() == null) {
+            System.out.println("Unable to search current term");
+                return;
+            }
+            
             if ( listToSearch.get(i).getName().toLowerCase().contains(lowerCaseSearchTerm) ) {
                 searchResults.add(listToSearch.get(i));
             } else if ( listToSearch.get(i).getDescription().toLowerCase().contains(lowerCaseSearchTerm) ) {

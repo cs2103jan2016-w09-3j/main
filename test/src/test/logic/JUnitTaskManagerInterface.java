@@ -42,8 +42,8 @@ public class JUnitTaskManagerInterface {
 
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
         for (int i = 0; i < 5; i++) {
-            Calendar newDate = Calendar.getInstance();
-            newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
+            Calendar newDate = Utils.createDate(1, 3, 2016);
+            newDate.set(Calendar.MINUTE, newDate.get(Calendar.MINUTE) + i);
             newList.add(new TaskEntity("Task " + Integer.toString(i + 1), null, newDate, false, "some desc"));
         }
         manager.add(newList, "PLACEHOLDER");
@@ -66,7 +66,7 @@ public class JUnitTaskManagerInterface {
         TaskEntity childTask = new TaskEntity("2016/2/3", null, newDate, true);
         manager.modify(3, childTask, "PLACEHOLDER");
 
-        assertEquals(manager.link(headTask, childTask, "PLACEHOLDER"), true);
+        assertEquals(manager.link(headTask, childTask, "PLACEHOLDER").isSuccess(), true);
 
         newDate = Calendar.getInstance();
         newDate.clear();
@@ -75,7 +75,7 @@ public class JUnitTaskManagerInterface {
         manager.add(childTask, "PLACEHOLDER");
         manager.link(headTask, childTask, "PLACEHOLDER");
 
-        assertEquals(manager.link(childTask, headTask, "PLACEHOLDER"), false);
+        assertEquals(manager.link(childTask, headTask, "PLACEHOLDER").isSuccess(), false);
 
         newDate = Calendar.getInstance();
         newDate.clear();

@@ -543,7 +543,9 @@ public class TaskManager {
                 addResults.setFail();
                 return addResults;
             }
-            assert floatingTaskEntities.add(newTask) == true : "Failed to add to non-null floatingTaskEntities list";
+            boolean addSuccess = floatingTaskEntities.add(newTask);
+            assert addSuccess == true : "Failed to add to non-null floatingTaskEntities list";
+            System.out.println(floatingTaskEntities.size());
             addResults.setView(ResultSet.FLOATING_VIEW);
             addResults.setIndex(updateFloatingDisplay(newTask));
             addResults.setSuccess();
@@ -562,6 +564,7 @@ public class TaskManager {
             addResults.setView(ResultSet.TASK_VIEW);
             int idToInsert = findPositionToInsert(newTask);
             mainTaskEntities.add(idToInsert, newTask);
+            System.out.println(mainTaskEntities.size());
             addResults.setIndex(updateMainDisplay(newTask, idToInsert));
             
             addResults.setStatus(ResultSet.STATUS_GOOD);
