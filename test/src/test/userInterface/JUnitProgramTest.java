@@ -46,6 +46,7 @@ public class JUnitProgramTest {
 
 	}
 
+	//@@ A0125514N
 	public ResultSet runCommand(String rawString) {
 		InputParser parser = new InputParser(rawString);
 		COMMAND cmd = parser.getCommand();

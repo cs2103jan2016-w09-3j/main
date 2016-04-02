@@ -58,8 +58,8 @@ public class CommandBar {
 
 	private static final String MESSAGE_SUCCESS_UNDO = "successfully undo.";
 	private static final String MESSAGE_FAILURE_UNDO_TYPE_1 = "Unable to undo.";
-	private static final String MESSAGE_SUCCESS_SAVEDIR = "successfully changed save directory.";
-	private static final String MESSAGE_FAILURE_SAVEDIR = "Fail to change save directory.";
+	private static final String MESSAGE_SUCCESS_SAVETO = "successfully changed save directory.";
+	private static final String MESSAGE_FAILURE_SAVETO = "Fail to change save directory.";
 
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
@@ -695,14 +695,14 @@ public class CommandBar {
 		case SAVETO: {
 			if (resultSet != null) {
 				if (resultSet.isSuccess()) {
-					setFeedBackMessage(MESSAGE_SUCCESS_SAVEDIR);
+					setFeedBackMessage(MESSAGE_SUCCESS_SAVETO);
 					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 				} else {
-					setFeedBackMessage(MESSAGE_FAILURE_SAVEDIR);
+					setFeedBackMessage(MESSAGE_FAILURE_SAVETO);
 					setFeedBackColor(FEEDBACK_STATUS_ERROR);
 				}
 			} else {
-				setFeedBackMessage(MESSAGE_FAILURE_SAVEDIR);
+				setFeedBackMessage(MESSAGE_FAILURE_SAVETO);
 				setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			}
 		}
