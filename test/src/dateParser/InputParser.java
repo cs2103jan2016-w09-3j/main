@@ -64,7 +64,7 @@ public class InputParser {
 		input = XMLParser.removeAllTags(input);
 
 		COMMAND given =cmdParser.getCommand(input);
-		System.out.println("before"+input);
+		//System.out.println("before"+input);
 		addXMLDate();//problem with quotes lie here!
 		//System.out.println("after date"+input);
 		addXMLCmd();
@@ -76,14 +76,16 @@ public class InputParser {
 			//System.out.println("after title"+input);
 		}
 		addXMLGarbage();
-		System.out.println("after"+input);
+		//System.out.println("after"+input);
 		
 	}
 	
 	public void removeId(){
 		input = XMLParser.removeAllTags(input);
+		//System.out.println("removeId1 "+input);
 		addXMLID();
 		input = XMLParser.removeAllAttributes(input);
+		//System.out.println("removeId2 "+input);
 		
 	}
 	
@@ -156,7 +158,9 @@ public class InputParser {
 	 */
 	public ArrayList<TaskEntity> getTask(){
 		input = XMLParser.removeAllTags(input);
-		input = input.replace("edit", "");
+		if(input.trim().equalsIgnoreCase("edit")){
+			return new ArrayList<TaskEntity>();
+		}
 		ArrayList<TaskEntity> tasks  = new ArrayList<TaskEntity>();
 		if(input.trim().equals("")){
 			//logger.log(Level.WARNING, "Input is empty", new IllegalArgumentException("input is empty"));
@@ -187,7 +191,7 @@ public class InputParser {
 				c2.clear(Calendar.SECOND);
 				c2.clear(Calendar.MILLISECOND);
 				
-				System.out.println("FULL DAY"+checkFullDay(c,c2));
+				//System.out.println("FULL DAY"+checkFullDay(c,c2));
 				TaskEntity toAdd = new TaskEntity(name, c, c2, checkFullDay(c,c2), desc);
 				for(int j=0; j<hashes.size();j++){
 					toAdd.addHashtag(hashes.get(j));
@@ -213,15 +217,15 @@ public class InputParser {
 	private boolean checkFullDay(Calendar c, Calendar c2) {
 		boolean isFullDay = false;
 		if(c.get(Calendar.YEAR) == c2.get(Calendar.YEAR)){
-			System.out.println("year");
+			//System.out.println("year");
 			if(c.get(Calendar.MONTH) == c2.get(Calendar.MONTH)){
-				System.out.println("month");
+				//System.out.println("month");
 				if(c.get(Calendar.DATE) == c2.get(Calendar.DATE)){
-					System.out.println("day");
+					//System.out.println("day");
 					if((c.get(Calendar.HOUR_OF_DAY)==0)&&(c2.get(Calendar.HOUR_OF_DAY)==23)){
-						System.out.println("hour");
+						//System.out.println("hour");
 						if((c.get(Calendar.MINUTE)==0)&&(c2.get(Calendar.MINUTE)==59)){
-							System.out.println("min");
+							//System.out.println("min");
 							isFullDay = true;
 						}
 					}

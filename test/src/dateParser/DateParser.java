@@ -64,9 +64,9 @@ public class DateParser {
 		}
 		inputDate = convertFormalDates(inputDate);
 		List<Date> returnDateList = new ArrayList<Date>();
-		//hideErr();
+		hideErr();
 		List<DateGroup> dateGroups = nattyParser.parse(inputDate);
-		//showErr();
+		showErr();
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
 			for (int j = 0; j < dates.size(); j++) {
@@ -141,7 +141,7 @@ public class DateParser {
 	 * @return String of xmlDate
 	 */
 	public String xmlDate(String input) {
-		//hideErr();
+		hideErr();
 		input = convertFormalDates(input);
 		String workingStr = "";
 		
@@ -168,15 +168,11 @@ public class DateParser {
 		List<DateGroup> dateGroups = nattyParser.parse(workingStr);
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
-			// System.out.println(dateGroups.get(i).getText());
-			// System.out.println(dates);
-			// String dateUS = dateGroups.get(i).getText();
-			// String dateSG = convertFormalDates(dateUS);
 			returnVal = returnVal.replace(dateGroups.get(i).getText(),
 					"<"+XMLParser.DATE_TAG+">" + convertFormalDates(dateGroups.get(i).getText()) + "</"+XMLParser.DATE_TAG+">");
 		}
-		System.out.println("test" +returnVal);
-		//showErr();
+		//System.out.println("test" +returnVal);
+		showErr();
 		//returnVal = returnVal.replace('\'', ' ');
 		return returnVal;
 	}

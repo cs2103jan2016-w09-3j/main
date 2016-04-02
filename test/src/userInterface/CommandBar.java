@@ -255,9 +255,9 @@ public class CommandBar {
 		InputParser parser = new InputParser(fullInput);
 		try {
 			parser.addXML();
-			System.out.println(parser.getInput());
+			//System.out.println(parser.getInput());
 			ArrayList<Pair<String, ArrayList<String>>> items = XMLParser.xmlToArrayList(parser.getInput());
-			System.out.println(items.size());
+			//System.out.println(items.size());
 			for (int i = 0; i < items.size(); i++) {
 				Label label = buildItem(items.get(i));
 				if (label != null) {

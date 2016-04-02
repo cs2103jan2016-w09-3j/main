@@ -628,7 +628,7 @@ public class UserInterfaceController {
 		if (toPopulate != null) {
 			String toSet = " " + toPopulate.getName();
 			if ((toPopulate.getDescription() != null) &&(toPopulate.getDescription().trim().length()>0)){
-				System.out.println("desc"+toPopulate.getDescription());
+				//System.out.println("desc"+toPopulate.getDescription());
 				toSet += " : " + toPopulate.getDescription();
 			}
 			if(toPopulate.getStartDate()!= null){
