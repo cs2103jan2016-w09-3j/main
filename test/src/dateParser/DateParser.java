@@ -202,12 +202,18 @@ public class DateParser {
 	 * @return a String in US dates
 	 */
 	private String convertSGFormalDateToUS(String sgDate) {
-		String usDate = sgDate.replace(FWD_SLASH, DASH);
+		String usDate = sgDate;
+		//.replace(FWD_SLASH, DASH);
 		// usDate = sgDate.replace(DOT, DASH);
 		usDate = addZero(usDate);
 
 		if (usDate.matches(DATE_REGEX_2DAY_2MONTH)) {
-			usDate = swapDayMonth(usDate, DASH);
+			if(usDate.contains("-"))
+			{
+				usDate = swapDayMonth(usDate, DASH);
+			}else if(usDate.contains("/")){
+				usDate = swapDayMonth(usDate, FWD_SLASH);
+			}
 		}
 		return usDate;
 
@@ -236,8 +242,13 @@ public class DateParser {
 			date = CHAR_ZERO + date;
 		}
 		if (addToMonth) {
-			date = date.substring(START_DAY_INDEX, END_DAY_INDEX) + DASH + CHAR_ZERO
+			if(date.contains("-")){
+				date = date.substring(START_DAY_INDEX, END_DAY_INDEX) + DASH + CHAR_ZERO
 					+ date.substring(START_MONTH_INDEX);
+			}else if(date.contains("/")){
+				date = date.substring(START_DAY_INDEX, END_DAY_INDEX) + FWD_SLASH + CHAR_ZERO
+						+ date.substring(START_MONTH_INDEX);
+			}
 		}
 		return date;
 	}
