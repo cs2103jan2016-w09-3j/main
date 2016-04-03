@@ -8,9 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class StorageHandler {
     
@@ -27,12 +24,13 @@ public class StorageHandler {
     private String allStoredTasks;
     private String allBackUpTasks;
     private Queue<String> allCommandsQueue;
-
-    private static Logger logger = Logger.getLogger("MainFileHandler");
-    private FileHandler fileHandler;
     
-    private static final int READ_FROM_MAIN_FILE = 1;
-    private static final int READ_FROM_BACK_UP_FILE = 2;
+    private static final int READ_FROM_CONFIG_FILE = 1;
+    private static final int READ_FROM_MAIN_FILE = 2;
+    private static final int READ_FROM_BACK_UP_FILE = 3;
+    private static final int WRITE_TO_CONFIG_FILE = 1;
+    private static final int WRITE_TO_MAIN_FILE = 2;
+    private static final int WRITE_TO_BACK_UP_FILE = 3;
 
     public StorageHandler() {
         tasksFilePath = "tasksList.txt";
@@ -49,14 +47,6 @@ public class StorageHandler {
 
     public void setMainFilePath(String filePath) {
         this.tasksFilePath = filePath;
-    }
-
-    public String getCommandFilePath() {
-        return commandsFilePath;
-    }
-
-    public void setCommandFilePath(String filePath) {
-        this.commandsFilePath = filePath;
     }
 
     public String getAllStoredTasks() {
@@ -88,33 +78,47 @@ public class StorageHandler {
         commandsFile = new File(commandsFilePath);
         backUpTasksFile = new File(backUpTasksFilePath);
 
-        if (isExists(configFile)) {
-            setAllStoredTasks(readFromExistingMainFile(READ_FROM_MAIN_FILE));
-            System.out.println("Main file found, begin reading...");
+        initConfigFile();     
+        initMainFile();        
+        initBackUpFile();
+        initCommandFile();
+    }
+
+    private void initCommandFile() {
+        if (isExists(commandsFile)) {
+            setAllCommandsQueue(readFromExistingCommandFile());
+            System.out.println("Command file found, begin reading...");
+            System.out.println("Queue size " + getAllCommandsQueue().size());
         } else {
-            createNewFile(tasksFile);
+            createNewFile(commandsFile);
         }
-        
-        if (isExists(tasksFile) || tasksFile.mkdirs()) {
-            setAllStoredTasks(readFromExistingMainFile(READ_FROM_MAIN_FILE));
-            System.out.println("Main file found, begin reading...");
-        } else {
-            createNewFile(tasksFile);
-        }
-        
+    }
+
+    private void initBackUpFile() {
         // Temporary back up file to be deleted after every session
         if(isExists(backUpTasksFile) == true) {
             deleteBackUpFile();
         }
         createNewFile(backUpTasksFile);
         copyToBackUp();
+    }
 
-        if (isExists(commandsFile) || commandsFile.mkdirs()) {
-            setAllCommandsQueue(readFromExistingCommandFile());
-            System.out.println("Command file found, begin reading...");
-            System.out.println("Queue size " + getAllCommandsQueue().size());
+    private void initMainFile() {
+        if (isExists(tasksFile) || tasksFile.mkdirs()) {
+            setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
+            System.out.println("Main file found, begin reading...");
         } else {
-            createNewFile(commandsFile);
+            createNewFile(tasksFile);
+        }
+    }
+
+    private void initConfigFile() {
+        if (isExists(configFile)) {
+            setMainFilePath(readFromExistingFile(READ_FROM_CONFIG_FILE));
+            System.out.println("Config file found, begin reading...");
+        } else {
+            createNewFile(configFile);
+            writeToFile(getMainFilePath(), WRITE_TO_CONFIG_FILE);
         }
     }
 
@@ -135,28 +139,35 @@ public class StorageHandler {
      * Reads data from an existing file and returns the appended string
      * @return String
      */
-    public String readFromExistingMainFile(int fromFile) {        
+    public String readFromExistingFile(int fromFile) {        
         BufferedReader buffer;
         String readData = "";
         try {
-            if (fromFile == READ_FROM_MAIN_FILE) {
-                buffer = new BufferedReader(new FileReader(tasksFilePath));
-            } else {
-                // Read from back up file
-                buffer = new BufferedReader(new FileReader(backUpTasksFilePath));
-            }
+            buffer = identifyReadFrom(fromFile);
             String currentLine = "";
             while ((currentLine = buffer.readLine()) != null) {
                 readData = readData + currentLine + "\n";
             }
             buffer.close();
-            System.out.println("Tasks: Read from file.");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return readData;
+        return readData.trim();
+    }
+
+    private BufferedReader identifyReadFrom(int fromFile) throws FileNotFoundException {
+        BufferedReader buffer;
+        if (fromFile == READ_FROM_MAIN_FILE) {
+            buffer = new BufferedReader(new FileReader(tasksFilePath));
+        } else if (fromFile == READ_FROM_BACK_UP_FILE){
+            buffer = new BufferedReader(new FileReader(backUpTasksFilePath));
+        } else {
+            // Read from config file
+            buffer = new BufferedReader(new FileReader(configFilePath));
+        }
+        return buffer;
     }
 
     /**
@@ -182,29 +193,9 @@ public class StorageHandler {
         return readCommands;
     }
     
-    public void readFromExistingConfigFile() {
-        String readPaths = "";
-        BufferedReader buffer;
-        try {
-            buffer = new BufferedReader(new FileReader(configFilePath));
-            String currentLine = "";
-            while ((currentLine = buffer.readLine()) != null) {
-                readPaths = readPaths + currentLine;
-            }
-            buffer.close();
-            String[] readPathsSplit = readPaths.split("\n");
-            setMainFilePath(readPathsSplit[0]);
-            setCommandFilePath(readPathsSplit[1]);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
     public boolean copyToBackUp() {
-        allBackUpTasks = readFromExistingMainFile(READ_FROM_MAIN_FILE);
-        return writeToMainFile(allBackUpTasks, backUpTasksFile, backUpTasksFilePath);
+        allBackUpTasks = readFromExistingFile(READ_FROM_MAIN_FILE);
+        return writeToFile(allBackUpTasks, WRITE_TO_BACK_UP_FILE);
     }
 
     /**
@@ -213,43 +204,34 @@ public class StorageHandler {
      * @param data
      * @return boolean
      */
-    public boolean writeToMainFile(String data) {
-        FileWriter fileWriter;
-        long beforeModify = tasksFile.lastModified();
-        long afterModify = -1;
-        try {
-            fileHandler = new FileHandler("storageLogFile.log");
-            logger.addHandler(fileHandler);
-            logger.log(Level.INFO, "Start processing...");
-            fileWriter = new FileWriter(tasksFilePath); 
-            fileWriter.write(data);
-            fileWriter.flush();
-            fileWriter.close();
-            afterModify = tasksFile.lastModified();
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.log(Level.WARNING, "IOException");
+    public boolean writeToFile(String data, int toFile) {
+        File file;
+        String filePath;
+        if (toFile == WRITE_TO_MAIN_FILE) {
+            file = tasksFile;
+            filePath = tasksFilePath;
+        } else if (toFile == WRITE_TO_BACK_UP_FILE) {
+            file = backUpTasksFile;
+            filePath = backUpTasksFilePath;
+        } else {
+            file = configFile;
+            filePath = configFilePath;
         }
-        logger.log(Level.INFO, "End processing...");
-        return isModified(beforeModify, afterModify);
-    }
-    
-    public boolean writeToMainFile(String data, File destFile, String destFilePath) {
         FileWriter fileWriter;
-        long beforeModify = destFile.lastModified();
+        long beforeModify = file.lastModified();
         long afterModify = -1;
         try {
-            fileWriter = new FileWriter(destFilePath); 
+            fileWriter = new FileWriter(filePath); 
             fileWriter.write(data);
             fileWriter.flush();
             fileWriter.close();
-            afterModify = destFile.lastModified();
+            afterModify = file.lastModified();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return isModified(beforeModify, afterModify);
     }
-
+  
     /**
      * Returns true if commands written to a file, false otherwise
      * Whether the commands have been written depends on the last modified time of the file
@@ -266,22 +248,6 @@ public class StorageHandler {
             fileWriter.flush();
             fileWriter.close();
             afterModify = commandsFile.lastModified();
-        } catch (IOException e) {
-            e.printStackTrace();  
-        }
-        return isModified(beforeModify, afterModify); 
-    }
-    
-    public boolean writeToConfigFile() {
-        FileWriter fileWriter;
-        long beforeModify = configFile.lastModified();
-        long afterModify = -1;
-        try {
-            fileWriter = new FileWriter(configFilePath); 
-            fileWriter.write(getMainFilePath() + '\n' + getCommandFilePath());
-            fileWriter.flush();
-            fileWriter.close();
-            afterModify = configFile.lastModified();
         } catch (IOException e) {
             e.printStackTrace();  
         }

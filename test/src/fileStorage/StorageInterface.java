@@ -6,21 +6,15 @@ import java.util.Queue;
 
 import entity.AllTaskLists;
 import entity.TaskEntity;
-import mainLogic.TaskManager;
-import mainLogic.TaskManagerInterface;
 
 public class StorageInterface {
     
     public StorageHandler storageHandler;
     public static final int QUEUE_SIZE = 5;
+    private static final int WRITE_TO_MAIN_FILE = 2;
     
     public StorageInterface() {
         storageHandler = new StorageHandler();
-    }
-    
-    public AllTaskLists getWorkingTaskLists () {
-        TaskManager arrayDataLoader = TaskManager.getInstance();
-        return arrayDataLoader.generateSavedTaskArray();
     }
     
     // Test function
@@ -30,7 +24,7 @@ public class StorageInterface {
         JsonConverter jc = new JsonConverter();
         
         AllTaskLists dummyTL = sc.createDummy();
-        sh.writeToMainFile(jc.javaToJson(dummyTL));
+        //sh.writeToMainFile(jc.javaToJson(dummyTL));
         
         //String data = fm.readFromExistingFile();
         //System.out.println(data);
@@ -66,7 +60,7 @@ public class StorageInterface {
         
         String toStore = jsonConverter.javaToJson(allTaskLists);
         
-        boolean isSaved = storageHandler.writeToMainFile(toStore);
+        boolean isSaved = storageHandler.writeToFile(toStore, WRITE_TO_MAIN_FILE);
         assert isSaved == true : "Tasks not stored.";
         
         return isSaved;
