@@ -282,7 +282,7 @@ public class DetailComponent implements ViewInterface {
 		titleLabel.setMinHeight(LABEL_PROJECTHEAD_HEIGHT);
 		titleLabel.setAlignment(Pos.CENTER);
 		itemMain.getChildren().add(titleLabel);
-
+		
 		HBox dateBox = new HBox();
 		Label dateTitleLabel = new Label("Due date : ");
 		dateTitleLabel.getStyleClass().add(CSS_LABEL);
@@ -429,7 +429,6 @@ public class DetailComponent implements ViewInterface {
 	}
 
 	public void updateTranslateY(double posY) {
-		// TODO Auto-generated method stub
 
 	}
 

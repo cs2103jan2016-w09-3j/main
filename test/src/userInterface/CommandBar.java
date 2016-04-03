@@ -64,7 +64,11 @@ public class CommandBar {
 
 	private static final String MESSAGE_SUCCESS_THEME = "Successfully changed theme.";
 	private static final String MESSAGE_FAILURE_THEME = "Invalid theme. Choose a theme from this list -> %1$s.";
-	
+
+	private static final String MESSAGE_CONFLICT = "Conflict detected.";
+	private static final String MESSAGE_PAST = "Task has past deadline.";
+	private static final String MESSAGE_CONFLICT_PAST = "Conflict detected and task has past deadline.";
+
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
 	private static final int MAIN_PANE_LEFT_RIGHT_MARGIN = 0;
@@ -579,20 +583,25 @@ public class CommandBar {
 		}
 		case ADD: {
 			if (resultSet != null) {
+				String feedBackMsg = "";
 				if (resultSet.isSuccess()) {
-					processFeedBackColor(resultSet.getStatus());
 					if (resultSet.getIndex() > -1) {
-						setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE1, msg));
+						feedBackMsg = feedBackMsg.concat(String.format(MESSAGE_SUCCESS_ADD_TYPE1, msg));
 					} else {
 						if (resultSet.getView() == ResultSet.ASSOCIATE_VIEW
 								|| resultSet.getView() == ResultSet.EXPANDED_VIEW
 								|| resultSet.getView() == ResultSet.TASK_VIEW) {
-							setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE2, msg));
+							feedBackMsg = feedBackMsg.concat(String.format(MESSAGE_SUCCESS_ADD_TYPE2, msg));
 						} else if (resultSet.getView() == ResultSet.FLOATING_VIEW) {
-							setFeedBackMessage(String.format(MESSAGE_SUCCESS_ADD_TYPE3, msg));
+							feedBackMsg = feedBackMsg.concat(String.format(MESSAGE_SUCCESS_ADD_TYPE3, msg));
 						}
 					}
-					processFeedBackColor(resultSet.getStatus());
+
+					String feedback = processFeedBackColor(resultSet.getStatus());
+					if (feedback != null) {
+						feedBackMsg = feedBackMsg.concat(" ").concat(feedback);
+					}
+					setFeedBackMessage(feedBackMsg);
 				} else {
 					setFeedBackMessage(MESSAGE_FAILURE_ADD);
 					setFeedBackColor(FEEDBACK_STATUS_ERROR);
@@ -621,9 +630,12 @@ public class CommandBar {
 				setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			} else {
 				if (resultSet.isSuccess()) {
-					setFeedBackMessage(String.format(MESSAGE_SUCCESS_EDIT, msg));
-					processFeedBackColor(resultSet.getStatus());
-					setFeedBackMessage(String.format(MESSAGE_SUCCESS_EDIT, msg));
+					String feedback = processFeedBackColor(resultSet.getStatus());
+					String feedBackMsg = String.format(MESSAGE_SUCCESS_EDIT, msg);
+					if (feedback != null) {
+						feedBackMsg = feedBackMsg.concat(" ").concat(feedback);
+					}
+					setFeedBackMessage(feedBackMsg);
 				} else {
 					setFeedBackMessage(String.format(MESSAGE_FAILURE_EDIT_TYPE1, msg));
 					setFeedBackColor(FEEDBACK_STATUS_ERROR);
@@ -741,16 +753,21 @@ public class CommandBar {
 
 	}
 
-	public void processFeedBackColor(int status) {
+	public String processFeedBackColor(int status) {
 		if (status == ResultSet.STATUS_GOOD) {
 			setFeedBackColor(FEEDBACK_STATUS_NORMAL);
+			return null;
 		} else if (status == ResultSet.STATUS_CONFLICT) {
 			setFeedBackColor(FEEDBACK_STATUS_CONFLICT);
+			return MESSAGE_CONFLICT;
 		} else if (status == ResultSet.STATUS_PAST) {
 			setFeedBackColor(FEEDBACK_STATUS_PAST);
+			return MESSAGE_PAST;
 		} else if (status == ResultSet.STATUS_CONFLICT_AND_PAST) {
 			setFeedBackColor(FEEDBACK_STATUS_CONFLICT_PAST);
+			return MESSAGE_CONFLICT_PAST;
 		}
+		return null;
 	}
 
 	public void getPrevCommand() {
