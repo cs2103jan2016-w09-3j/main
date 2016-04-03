@@ -42,6 +42,7 @@ public class UserInterfaceController {
 	private static final int SUCCESSFULLY_ADDED_DIFF = -1;
 	private static final int SUCCESSFULLY_ADDED = 1;
 
+	private String _styleSheet;
 	private Stage _parentStage;
 	private TaskViewUserInterface _taskViewInterface;
 	private DescriptionComponent _descriptionComponent;
@@ -66,16 +67,16 @@ public class UserInterfaceController {
 	// Debug purpose
 	private static Logger logger = Logger.getLogger("UserInterfaceController");
 
-	public static UserInterfaceController getInstance(Stage primaryStage) {
+	public static UserInterfaceController getInstance(Stage primaryStage, String styleSheet) {
 		if (numberOfInstance == 0) {
 			numberOfInstance++;
-			return new UserInterfaceController(primaryStage);
+			return new UserInterfaceController(primaryStage, styleSheet);
 		} else {
 			return null;
 		}
 	}
 
-	private UserInterfaceController(Stage primaryStage) {
+	private UserInterfaceController(Stage primaryStage, String styleSheet) {
 		try {
 			Handler handler = new FileHandler("uiinterfaceLog.log");
 			logger.addHandler(handler);
@@ -85,6 +86,7 @@ public class UserInterfaceController {
 		}
 		logger.log(Level.INFO, "UserInterfaceController Init");
 
+		_styleSheet = styleSheet;
 		_parentStage = primaryStage;
 		_logicFace = new UserInterfaceExecuter();
 		recoverLostCommands();
@@ -107,26 +109,27 @@ public class UserInterfaceController {
 		initializeFloatingView();
 		initializeSearchView();
 		initializeTaskView();
-		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize);
-		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize);
+		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet);
+		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet);
 		updateComponents(0);
 	}
 
 	private void initializeHelpScreen() {
-		_helpScreen = HelpScreenUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize);
+		_helpScreen = HelpScreenUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet);
 	}
 
 	private void initializeTaskView() {
-		_taskViewInterface = TaskViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize);
+		_taskViewInterface = TaskViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet);
 		_taskViewInterface.buildComponent(_logicFace.getWorkingList(), _logicFace.getNextTimeListId());
 	}
 
 	private void initializeFloatingView() {
-		_floatingViewInterface = FloatingTaskUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize);
+		_floatingViewInterface = FloatingTaskUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize,
+				_styleSheet);
 	}
 
 	private void initializeFloatingBar() {
-		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize);
+		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize, _styleSheet);
 		TaskEntity floatingTask = _logicFace.getRandomFloating();
 		if (floatingTask != null) {
 			startFloatingThread();
@@ -134,7 +137,7 @@ public class UserInterfaceController {
 	}
 
 	private void initializeSearchView() {
-		_searchViewInterface = SearchUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize);
+		_searchViewInterface = SearchUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet);
 	}
 
 	/**
@@ -785,7 +788,7 @@ public class UserInterfaceController {
 			return resultSet;
 		}
 		resultSet.setSuccess();
-		
+
 		if (commandsToRun.size() == 0) {
 			setView(TASK_VIEW);
 			return resultSet;
@@ -804,5 +807,15 @@ public class UserInterfaceController {
 	private void setView(int view) {
 		_currentView = view;
 		updateChangesToViews(-1);
+	}
+
+	public void changeTheme(String styleSheet) {
+		 _taskViewInterface.changeTheme(styleSheet);
+		_descriptionComponent.changeTheme(styleSheet);
+		 _detailComponent.changeTheme(styleSheet);
+		 _floatingBarComponent.changeTheme(styleSheet);
+		_floatingViewInterface.changeTheme(styleSheet);
+		_searchViewInterface.changeTheme(styleSheet);
+		_helpScreen.changeTheme(styleSheet);
 	}
 }

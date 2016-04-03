@@ -102,7 +102,11 @@ public class CommandBar {
 		}
 		return null;
 	}
-
+	
+	public void reDraw()
+	{
+		
+	}
 	private CommandBar(double preHeight, double preWidth) {
 		this._prefHeight = preHeight;
 		this._prefWidth = preWidth;

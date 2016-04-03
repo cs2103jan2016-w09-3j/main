@@ -26,6 +26,7 @@ public class DescriptionComponent implements ViewInterface {
 	private static final int POSITION_ZERO = 0;
 
 	private static final String CSS_LABEL = "cssLabelsDescription";
+	private String _styleSheet;
 
 	private final double LABEL_SIZE_LARGE = 200;
 	private final double LABEL_SIZE_MEDIUM = 100;
@@ -41,7 +42,8 @@ public class DescriptionComponent implements ViewInterface {
 	private double _translationY = 0;
 	private int _currentView;
 
-	public DescriptionComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize) {
+	public DescriptionComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet) {
+		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
 		initializeStage(parentStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
 	}
@@ -77,17 +79,14 @@ public class DescriptionComponent implements ViewInterface {
 		_stage.setY(applicationY);
 
 		StackPane mainPanel = new StackPane();
-		mainPanel.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
 		mainPanel.setId("cssRootDescriptionViewMainBackground");
 		mainPanel.setPrefSize(_stageWidth, _stageHeight);
 		mainPanel.setAlignment(Pos.TOP_RIGHT);
 
 		_mainVbox = new GridPane();
-		_mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
-
 		mainPanel.getChildren().add(_mainVbox);
-
 		Scene scene = new Scene(mainPanel, windowWidth, windowHeight, Color.TRANSPARENT);
+		scene.getStylesheets().add(_styleSheet);
 		_stage.setScene(scene);
 	}
 
@@ -129,8 +128,9 @@ public class DescriptionComponent implements ViewInterface {
 		return vbox;
 	}
 
-	//@@author A0125514N-unused
-	//to facilitate changing of ui themen, all css is changed to be controlled with stylesheets
+	// @@author A0125514N-unused
+	// to facilitate changing of ui themen, all css is changed to be controlled
+	// with stylesheets
 	public Rectangle buildGradientRec(double width, double height, boolean isSelected) {
 		Stop[] stops;
 		if (isSelected) {
@@ -145,8 +145,8 @@ public class DescriptionComponent implements ViewInterface {
 		rec.setFill(lg1);
 		return rec;
 	}
-	
-	//@@author A0125514N
+
+	// @@author A0125514N
 	public void createLabelBaseOnHeight(double posYStart, double posYEnd, VBox vbox, DescriptionLabel dLabel) {
 		Label main = new Label();
 		main.getStyleClass().add(CSS_LABEL);
@@ -256,6 +256,12 @@ public class DescriptionComponent implements ViewInterface {
 
 	public void destoryStage() {
 		_stage.close();
+	}
+
+	public void changeTheme(String styleSheet) {
+		_stage.getScene().getStylesheets().clear();
+		_styleSheet = styleSheet;
+		_stage.getScene().getStylesheets().add(styleSheet);		
 	}
 
 }
