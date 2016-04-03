@@ -24,7 +24,7 @@ public class StorageHandler {
     private String allStoredTasks;
     private String allBackUpTasks;
     private Queue<String> allCommandsQueue;
-    
+
     private String themeName;
 
     private static final int READ_FROM_CONFIG_FILE = 1;
@@ -66,7 +66,7 @@ public class StorageHandler {
     public void setAllCommandsQueue(Queue<String> allCommandsQueue) {
         this.allCommandsQueue = allCommandsQueue;
     }
-    
+
     public void setThemeName(String themeName) {
         this.themeName = themeName;
     }
@@ -74,7 +74,7 @@ public class StorageHandler {
     public String getThemeName() {
         return themeName;
     }
-    
+
     //============================================================================
     // Initialising, creating new files
     // ===========================================================================
@@ -339,19 +339,21 @@ public class StorageHandler {
                 System.out.println("Creating dir: " + isChanged);
             }
         } 
-        try {
-            isChanged = newFile.createNewFile();
-            System.out.println("Create new file: " + isChanged);
-            setMainFilePath(newFile.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (newFile.exists() == false) {
+            try {
+                isChanged = newFile.createNewFile();
+                System.out.println("Create new file: " + isChanged);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        setMainFilePath(newFile.getAbsolutePath());
         writeToFile(transferData, WRITE_TO_MAIN_FILE);
         writeToFile(newFile.getAbsolutePath() + '\n' + themeName, WRITE_TO_CONFIG_FILE);
         oldFile.delete();
         return isChanged;
     }
-    
+
     public boolean saveThemeName(String themeName) {
         setThemeName(themeName);
         return writeToFile(tasksFile.getAbsolutePath() + '\n' + themeName, WRITE_TO_CONFIG_FILE);
