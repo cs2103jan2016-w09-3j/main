@@ -716,7 +716,7 @@ public class UserInterfaceController {
 		_logicFace.switchView(TaskManager.DISPLAY_MAIN);
 	}
 
-	private void runCommands(String rawCommandWithView) {
+	private int runCommands(String rawCommandWithView) {
 		String rawCommand = deStructToRawCommand(rawCommandWithView);
 		String view = deStructToView(rawCommandWithView);
 		int viewInt = Utils.convertStringToInteger(view);
@@ -770,6 +770,7 @@ public class UserInterfaceController {
 				break;
 			}
 		}
+		return viewInt;
 	}
 
 	public ResultSet changeSaveDir(String dirPath) {
@@ -788,11 +789,19 @@ public class UserInterfaceController {
 			resultSet.setIndex(-1);
 			return resultSet;
 		}
-		for (int i = 0; i < commandsToRun.size(); i++) {
+		for (int i = 0; i < commandsToRun.size() - 1; i++) {
 			runCommands(commandsToRun.get(i));
 		}
+		int view = runCommands(commandsToRun.get(commandsToRun.size() - 1));
+		setView(view);
+		
 		resultSet.setIndex(1);
 		_logicFace.undoComplete();
 		return resultSet;
+	}
+	
+	private void setView(int view) {
+		_currentView =view;
+		updateChangesToViews(-1);
 	}
 }
