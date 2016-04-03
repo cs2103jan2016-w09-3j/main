@@ -6,6 +6,38 @@ import java.util.Comparator;
 import entity.TaskEntity;
 
 public class TaskDateComparator implements Comparator<TaskEntity> {
+    private final static String ERROR_COMPAREFLOATING = "Error in TaskDateComparator.java: Trying to compare time on a floating task";
+    private final static String ERROR_DATENULL = "Error in TaskDateComparator.java: Main task has both start and end time as null when comparing";
+    
+    public int compareTime(TaskEntity task1, TaskEntity task2) {
+        Calendar task1TimeToCompare;
+        Calendar task2TimeToCompare;
+
+        task1TimeToCompare = chooseDateToCompare(task1);
+        task2TimeToCompare = chooseDateToCompare(task2);
+
+        //Error catching
+        if (task1TimeToCompare == null || task2TimeToCompare == null) {
+            return 0;
+        }
+        
+        return task1TimeToCompare.compareTo(task2TimeToCompare);
+    }
+
+    private Calendar chooseDateToCompare(TaskEntity task) {
+        if (task.getStartDate() != null) {
+            return task.getStartDate();
+        } else if (task.getDueDate() != null ) {
+            return task.getDueDate();
+        } else {
+            if (task.isFloating()) {
+                System.out.println(ERROR_COMPAREFLOATING);
+            } else {
+                System.out.println(ERROR_DATENULL);
+            }
+            return null;
+        }
+    }
     public int compare(TaskEntity task1, TaskEntity task2) {
         if (task1.isFloating() || task2.isFloating()) {
             return compareFloating(task1, task2);
@@ -41,7 +73,7 @@ public class TaskDateComparator implements Comparator<TaskEntity> {
         } else if (!task1.isFullDay() && task2.isFullDay()) {
             return 1;
         } else if (!task1.isFullDay() && !task2.isFullDay()) {
-            return date1.compareTo(date2);
+            return compareTime(task1, task2);
         } else {
             // If both tasks are full day, sort them alphabetically
             return task1.getName().compareToIgnoreCase(task2.getName());
