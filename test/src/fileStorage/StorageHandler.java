@@ -321,7 +321,7 @@ public class StorageHandler {
         File newFile = new File(newFilePath);
         if (newFile.isDirectory() == false) {
             if (newFile.getParentFile() != null) {
-                isChanged = newFile.mkdirs();
+                isChanged = newFile.getParentFile().mkdirs();
                 System.out.println("Creating dir: " + isChanged);
             }
         } 
