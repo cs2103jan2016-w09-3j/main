@@ -21,7 +21,7 @@ public class SearchModule {
             if (listToSearch.get(i).getName() == null || listToSearch.get(i).getDescription() == null
                     || listToSearch.get(i).getHashtags() == null) {
             System.out.println("Unable to search current term");
-                return;
+                continue;
             }
             
             if ( listToSearch.get(i).getName().toLowerCase().contains(lowerCaseSearchTerm) ) {

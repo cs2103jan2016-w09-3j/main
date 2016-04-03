@@ -173,8 +173,12 @@ public class TaskManagerInterface {
         return manager.getRandomFloating();
     }
     
-    public ArrayList<TaskEntity> undo () {
+    public ArrayList<String> undo () {
         return manager.undo();
+    }
+    
+    public void undoComplete() {
+        manager.undoComplete();
     }
     
     public ResultSet searchString (String searchTerm, String command) {

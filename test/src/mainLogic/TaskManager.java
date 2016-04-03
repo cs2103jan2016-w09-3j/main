@@ -39,6 +39,10 @@ public class TaskManager {
     private static ArrayList<TaskEntity> floatingTaskEntities = new ArrayList<TaskEntity>();
     private static ArrayList<TaskEntity> mainTaskEntities = new ArrayList<TaskEntity>();
     private static ArrayList<TaskEntity> completedTaskEntities = new ArrayList<TaskEntity>();
+    
+    private static ArrayList<String> undoList = new ArrayList<String>();
+    private int undoPointer = -1;
+    private boolean _undoing = false;
 
     private static ArrayList<TaskEntity> searchedTasks = new ArrayList<TaskEntity>();
 
@@ -266,9 +270,23 @@ public class TaskManager {
      * @param command - Raw command (the one that the user types) to be passed down
      */
     public void saveBackupCommand (String command) {
+        //For crash
         boolean requiresFullSave = dataLoader.saveUponFullQueue(command);
         if( requiresFullSave ) {
             commitFullSave();
+        }
+        
+        //For undo
+        if(!_undoing) {
+            if(undoPointer == undoList.size() - 1) {
+                undoList.add(command);
+                undoPointer++;
+            } else {
+                //Trims off the additional commands
+                undoList = (ArrayList<String>) undoList.subList(0, undoPointer);
+                undoList.add(command);
+                undoPointer++;
+            }
         }
     }
 
@@ -1047,11 +1065,32 @@ public class TaskManager {
      * 
      * @return The currently displayed list after the undo operation
      */
-    public ArrayList<TaskEntity> undo() {
-        // TODO
-        return getWorkingList();
+    public ArrayList<String> undo() {
+        reloadFile();
+        _undoing = true;
+        dataLoader.clearCommandFile();
+        undoPointer--;
+        return (ArrayList<String>) undoList.subList(0, undoPointer + 1);
+    }
+    
+    public void undoComplete() {
+        _undoing = false;
     }
 
+    public void reloadFile() {
+        AllTaskLists taskdata = dataLoader.getBackUpTaskLists();
+
+        mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
+        floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
+
+        initializeAssociations();
+
+        updateTaskEntityCurrentId();
+        buildCompletedTasks();
+        displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
+        currentDisplayedList = DISPLAY_MAIN;
+    }
+    
     // ys method, do not remove, ys will remove it ^_^
     // generate fake data.
     public ArrayList<TaskEntity> generateFakeData() {
