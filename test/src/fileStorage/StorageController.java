@@ -86,7 +86,7 @@ public class StorageController {
     }
     
     public void deleteBackUp() {
-        storageHandler.deleteBackUpFile();;
+        storageHandler.deleteBackUpFile();
     }
     
     //============================================================================
@@ -111,6 +111,7 @@ public class StorageController {
         return isFullQueue;
     }
     
+    // Gonna remove this
     public Queue<String> getCommandsUponInit() {
         Queue<String> retrievedCommands = storageHandler.getAllCommandsQueue();
         
