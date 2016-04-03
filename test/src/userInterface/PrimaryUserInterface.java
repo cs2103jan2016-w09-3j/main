@@ -229,6 +229,16 @@ public class PrimaryUserInterface extends Application {
 				uiController.showHelpView();
 			}
 		}
+		if (event.getCode().isFunctionKey()) {
+			if (event.getCode().compareTo(KeyCode.F2) == 0) {
+				uiController.hide();
+			}
+		}
+		if (event.getCode().isFunctionKey()) {
+			if (event.getCode().compareTo(KeyCode.F3) == 0) {
+				uiController.show();
+			}
+		}
 		if (event.getCode().compareTo(KeyCode.LEFT) == 0) {
 			uiController.updateHelpView(-1);
 		} else if (event.getCode().compareTo(KeyCode.RIGHT) == 0) {
