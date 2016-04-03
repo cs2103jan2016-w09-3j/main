@@ -779,15 +779,16 @@ public class UserInterfaceController {
 
 	public ResultSet undoLastCommand() {
 		ArrayList<String> commandsToRun = _logicFace.getCommandsToRun();
-		
+		System.out.println(commandsToRun.size()+"size");
 		ResultSet resultSet = new ResultSet();
 		if (commandsToRun == null) {
 			resultSet.setFail();
 			return resultSet;
 		}
 		resultSet.setSuccess();
+		
 		if (commandsToRun.size() == 0) {
-			resultSet.setIndex(-1);
+			setView(TASK_VIEW);
 			return resultSet;
 		}
 		int view = -1;
@@ -797,8 +798,6 @@ public class UserInterfaceController {
 		if (view != -1) {
 			setView(view);
 		}
-
-		resultSet.setIndex(1);
 		_logicFace.undoComplete();
 		return resultSet;
 	}
