@@ -62,6 +62,9 @@ public class CommandBar {
 	private static final String MESSAGE_SUCCESS_SAVETO = "successfully changed save directory.";
 	private static final String MESSAGE_FAILURE_SAVETO = "Fail to change save directory.";
 
+	private static final String MESSAGE_SUCCESS_THEME = "Successfully changed theme.";
+	private static final String MESSAGE_FAILURE_THEME = "Invalid theme. Choose a theme from this list -> %1$s.";
+	
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
 	private static final int MAIN_PANE_LEFT_RIGHT_MARGIN = 0;
@@ -102,11 +105,11 @@ public class CommandBar {
 		}
 		return null;
 	}
-	
-	public void reDraw()
-	{
-		
+
+	public void reDraw() {
+
 	}
+
 	private CommandBar(double preHeight, double preWidth) {
 		this._prefHeight = preHeight;
 		this._prefWidth = preWidth;
@@ -296,7 +299,7 @@ public class CommandBar {
 			_mainPane.add(itemsToAdd.get(i), _numberOfItems++, 1);
 			if (itemsToAdd.get(i) instanceof Label) {
 				Label l = (Label) itemsToAdd.get(i);
-				GridPane.setMargin(l, new Insets(0,0,0,2));
+				GridPane.setMargin(l, new Insets(0, 0, 0, 2));
 				labels.add(l);
 			}
 		}
@@ -444,6 +447,10 @@ public class CommandBar {
 			}
 			case UNDO: {
 				label.setId("cssCommandUndo");
+				break;
+			}
+			case THEME: {
+				label.setId("cssCommandTheme");
 				break;
 			}
 			default:
@@ -711,6 +718,20 @@ public class CommandBar {
 				}
 			} else {
 				setFeedBackMessage(MESSAGE_FAILURE_SAVETO);
+				setFeedBackColor(FEEDBACK_STATUS_ERROR);
+			}
+		}
+		case THEME: {
+			if (resultSet != null) {
+				if (resultSet.isSuccess()) {
+					setFeedBackMessage(MESSAGE_SUCCESS_THEME);
+					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
+				} else {
+					setFeedBackMessage(String.format(MESSAGE_FAILURE_THEME, msg));
+					setFeedBackColor(FEEDBACK_STATUS_ERROR);
+				}
+			} else {
+				setFeedBackMessage(String.format(MESSAGE_FAILURE_THEME, msg));
 				setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			}
 		}

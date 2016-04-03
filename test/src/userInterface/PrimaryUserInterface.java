@@ -48,7 +48,6 @@ public class PrimaryUserInterface extends Application {
 	private static String[] styles = { "default.css", "blackandwhite.css" };
 
 	private String _styleSheet = styles[0];
-
 	private double _commandBarWidth;
 	private Rectangle2D _screenBounds;
 	private Stage _primaryStage;
@@ -445,15 +444,41 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	private void executeChangeTheme(String themeChange) {
+		if (themeChange != null) {
+			if (themeChange.indexOf(" ") == -1) {
+				boolean hasChange = false;
+				for (int i = 0; i < styles.length; i++) {
+					if (styles[i].equals(themeChange)) {
+						hasChange = true;
+						_styleSheet = styles[i];
+						_primaryStage.getScene().getStylesheets().clear();
+						_primaryStage.getScene().getStylesheets().add(_styleSheet);
+						ResultSet resultSet = uiController.changeTheme(_styleSheet);
+						_commandBar.showFeedBackMessage(COMMAND.THEME, resultSet, getStyleSheetList());
+						break;
+					}
+				}
+				if (!hasChange) {
+					_commandBar.showFeedBackMessage(COMMAND.THEME, null, getStyleSheetList());
+				}
+
+			} else {
+				_commandBar.showFeedBackMessage(COMMAND.THEME, null, getStyleSheetList());
+			}
+		} else {
+			_commandBar.showFeedBackMessage(COMMAND.THEME, null, getStyleSheetList());
+		}
+	}
+
+	public String getStyleSheetList() {
+		String styleList = "";
 		for (int i = 0; i < styles.length; i++) {
-			if (styles[i].equals(themeChange)) {
-				_styleSheet = styles[i];
-				_primaryStage.getScene().getStylesheets().clear();
-				_primaryStage.getScene().getStylesheets().add(_styleSheet);
-				uiController.changeTheme(_styleSheet);
-				break;
+			styleList = styleList.concat(styles[i]);
+			if (i < styles.length - 1) {
+				styleList= styleList.concat(",");
 			}
 		}
+		return styleList;
 	}
 
 	/**

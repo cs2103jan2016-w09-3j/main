@@ -81,4 +81,7 @@ public class UserInterfaceExecuter {
 		_taskManager.undoComplete();
 	}
 
+	public ResultSet changeTheme(String styleSheet) {
+		return null;
+	}
 }
