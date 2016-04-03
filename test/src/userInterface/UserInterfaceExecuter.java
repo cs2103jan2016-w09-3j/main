@@ -73,8 +73,12 @@ public class UserInterfaceExecuter {
 		return _taskManager.getBackedupCommands();
 	}
 
-	public Queue<String> getCommandsToRun() {
-		return null;
+	public ArrayList<String> getCommandsToRun() {
+		return _taskManager.undo();
+	}
+
+	public void undoComplete() {
+		_taskManager.undoComplete();
 	}
 
 }

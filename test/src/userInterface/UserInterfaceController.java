@@ -627,11 +627,11 @@ public class UserInterfaceController {
 		TaskEntity toPopulate = getTaskByID(indexToModify);
 		if (toPopulate != null) {
 			String toSet = " " + toPopulate.getName();
-			if ((toPopulate.getDescription() != null) &&(toPopulate.getDescription().trim().length()>0)){
-				//System.out.println("desc"+toPopulate.getDescription());
+			if ((toPopulate.getDescription() != null) && (toPopulate.getDescription().trim().length() > 0)) {
+				// System.out.println("desc"+toPopulate.getDescription());
 				toSet += " : " + toPopulate.getDescription();
 			}
-			if(toPopulate.getStartDate()!= null){
+			if (toPopulate.getStartDate() != null) {
 				Calendar c = toPopulate.getStartDate();
 				int day = c.get(Calendar.DATE);
 				int month = c.get(Calendar.MONTH) + 1;
@@ -709,65 +709,65 @@ public class UserInterfaceController {
 
 	public void recoverLostCommands() {
 		Queue<String> qCommands = _logicFace.getBackedupCommands();
-		runCommands(qCommands);
+		while (!qCommands.isEmpty()) {
+			String rawCommandWithView = qCommands.poll();
+			runCommands(rawCommandWithView);
+		}
 		_logicFace.switchView(TaskManager.DISPLAY_MAIN);
 	}
 
-	private void runCommands(Queue<String> qCommands) {
-		while (!qCommands.isEmpty()) {
-			String rawCommandWithView = qCommands.poll();
-			String rawCommand = deStructToRawCommand(rawCommandWithView);
-			String view = deStructToView(rawCommandWithView);
-			int viewInt = Utils.convertStringToInteger(view);
-			if (viewInt != -1) {
-				setManagerView(viewInt);
+	private void runCommands(String rawCommandWithView) {
+		String rawCommand = deStructToRawCommand(rawCommandWithView);
+		String view = deStructToView(rawCommandWithView);
+		int viewInt = Utils.convertStringToInteger(view);
+		if (viewInt != -1) {
+			setManagerView(viewInt);
+		}
+		if (rawCommand != null) {
+			InputParser parser = new InputParser(rawCommand);
+			COMMAND cmd = parser.getCommand();
+			switch (cmd) {
+			case ADD: {
+				ArrayList<TaskEntity> tasks = parser.getTask();
+				if (tasks.size() == 1) {
+					addTask(tasks.get(0), rawCommand, false);
+				} else {
+					addBatchTask(tasks, rawCommand, false);
+				}
+				break;
 			}
-			if (rawCommand != null) {
-				InputParser parser = new InputParser(rawCommand);
-				COMMAND cmd = parser.getCommand();
-				switch (cmd) {
-				case ADD: {
-					ArrayList<TaskEntity> tasks = parser.getTask();
-					if (tasks.size() == 1) {
-						addTask(tasks.get(0), rawCommand, false);
-					} else {
-						addBatchTask(tasks, rawCommand, false);
-					}
-					break;
+			case DELETE: {
+				String id = parser.getID();
+				deleteTask(id, rawCommand, false);
+				break;
+			}
+			case EDIT: {
+				int id = Utils.convertStringToInteger(parser.getID());
+				parser.removeId();
+				ArrayList<TaskEntity> tasks = parser.getTask();
+				if (tasks.size() == 1) {
+					modifyTask(id, tasks.get(0), rawCommand, false);
 				}
-				case DELETE: {
-					String id = parser.getID();
-					deleteTask(id, rawCommand, false);
-					break;
-				}
-				case EDIT: {
-					int id = Utils.convertStringToInteger(parser.getID());
-					parser.removeId();
-					ArrayList<TaskEntity> tasks = parser.getTask();
-					if (tasks.size() == 1) {
-						modifyTask(id, tasks.get(0), rawCommand, false);
-					}
-					break;
-				}
-				case DONE: {
-					String id = parser.getID();
-					markAsCompleted(id, rawCommand, false);
-					break;
-				}
-				case SEARCH: {
-					String searchStirng = parser.getSearchString();
-					executeSearch(searchStirng, rawCommand, false);
-					_logicFace.switchView(TaskManager.DISPLAY_SEARCH);
-					break;
-				}
-				case LINK: {
-					Pair<String, String> ids = parser.getLinkID();
-					link(ids.getFirst(), ids.getSecond(), rawCommand, false);
-					break;
-				}
-				default:
-					break;
-				}
+				break;
+			}
+			case DONE: {
+				String id = parser.getID();
+				markAsCompleted(id, rawCommand, false);
+				break;
+			}
+			case SEARCH: {
+				String searchStirng = parser.getSearchString();
+				executeSearch(searchStirng, rawCommand, false);
+				_logicFace.switchView(TaskManager.DISPLAY_SEARCH);
+				break;
+			}
+			case LINK: {
+				Pair<String, String> ids = parser.getLinkID();
+				link(ids.getFirst(), ids.getSecond(), rawCommand, false);
+				break;
+			}
+			default:
+				break;
 			}
 		}
 	}
@@ -777,14 +777,17 @@ public class UserInterfaceController {
 	}
 
 	public ResultSet undoLastCommand() {
-		Queue<String> commandsToRun = _logicFace.getBackedupCommands();
+		ArrayList<String> commandsToRun = _logicFace.getCommandsToRun();
 		if (commandsToRun == null) {
 			return null;
 		}
 		if (commandsToRun.size() == 0) {
 			return null;
 		}
-		runCommands(commandsToRun);
+		for (int i = 0; i < commandsToRun.size(); i++) {
+			runCommands(commandsToRun.get(i));
+		}
+		_logicFace.undoComplete();
 		return null;
 	}
 }
