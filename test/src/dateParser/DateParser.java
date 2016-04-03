@@ -258,9 +258,13 @@ public class DateParser {
 		if (START_YEAR_INDEX < input.length()) {
 			year = input.substring(START_YEAR_INDEX, input.length());
 		} else {
-			year = getYear(day, month);
+			//year = getYear(day, month);
 		}
-		usDate = month + seperator + day + seperator + year;
+		if(year.length()>0){
+			usDate = month + seperator + day + seperator + year;
+		}else{
+			usDate = month + seperator + day;
+		}
 		return usDate;
 	}
 
