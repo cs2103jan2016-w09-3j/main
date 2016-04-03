@@ -203,11 +203,11 @@
 }
 
 #cssCommandBarfeedback_past{
-	
+	-fx-background-color: rgba(246.0, 246.0, 39.0, 1.0);
 }
 
 #cssCommandBarfeedback_conflict_past{
-	
+	-fx-background-color: rgba(244.0, 251.0, 212.0, 1.0);
 }
 
 #cssCommandBarfeedback_error{
