@@ -32,13 +32,7 @@ public class StorageHandler {
     private static final int WRITE_TO_MAIN_FILE = 2;
     private static final int WRITE_TO_BACK_UP_FILE = 3;
     
-    private static final String MAIN_FILE_NAME = "tasksList.txt";
-
     public StorageHandler() {
-        tasksFilePath = MAIN_FILE_NAME;
-        commandsFilePath = "commandsList.txt";
-        backUpTasksFilePath = "backUpTasksList.txt";
-        configFilePath = "configFile.txt";
         allCommandsQueue = new LinkedList<String>();
         processFile();
     }
@@ -79,32 +73,33 @@ public class StorageHandler {
      * Reads and stores data from existing file if any, creates a new file otherwise
      */
     public void processFile() {
-        configFile = new File(configFilePath);
-        tasksFile = new File(tasksFilePath);
-        commandsFile = new File(commandsFilePath);
-        backUpTasksFile = new File(backUpTasksFilePath);
-
-        initConfigFile();     
+        initConfigFile(); 
         initMainFile();        
         initBackUpFile();
         initCommandFile();
     }
 
     private void initCommandFile() {
+        commandsFilePath = "commandsList.txt";
+        commandsFile = new File(commandsFilePath);
         if (isExists(commandsFile)) {
             setAllCommandsQueue(readFromExistingCommandFile());
             System.out.println("Command file found, begin reading...");
             System.out.println("Queue size " + getAllCommandsQueue().size());
         } else {
+            System.out.println("New command file created.");
             createNewFile(commandsFile);
         }
     }
 
     private void initBackUpFile() {
+        backUpTasksFilePath = "backUpTasksList.txt";
+        backUpTasksFile = new File(backUpTasksFilePath);
         // Temporary back up file to be deleted after every session
         if(isExists(backUpTasksFile) == true) {
             deleteBackUpFile();
         }
+        System.out.println("New back up created.");
         createNewFile(backUpTasksFile);
         copyToBackUp();
     }
@@ -114,18 +109,24 @@ public class StorageHandler {
             setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
             System.out.println("Main file found, begin reading...");
         } else {
+            System.out.println("New main file created.");
             createNewFile(tasksFile);
         }
     }
 
     private void initConfigFile() {
+        configFilePath = "configFile.txt";
+        configFile = new File(configFilePath);
         if (isExists(configFile)) {
             setMainFilePath(readFromExistingFile(READ_FROM_CONFIG_FILE));
+            tasksFile = new File(tasksFilePath);
             System.out.println(tasksFilePath);
             System.out.println("Config file found, begin reading...");
         } else {
             createNewFile(configFile);
-            tasksFilePath = tasksFile.getAbsolutePath();
+            tasksFilePath = "tasksList.txt";
+            tasksFile = new File(tasksFilePath);
+            setMainFilePath(tasksFile.getAbsolutePath());
             writeToFile(tasksFilePath, WRITE_TO_CONFIG_FILE);
         }
     }
@@ -224,7 +225,7 @@ public class StorageHandler {
         File file;
         String filePath;
         if (toFile == WRITE_TO_MAIN_FILE) {
-            file = tasksFile;
+            file = new File(tasksFilePath);
             filePath = tasksFilePath;
         } else if (toFile == WRITE_TO_BACK_UP_FILE) {
             file = backUpTasksFile;
@@ -316,6 +317,7 @@ public class StorageHandler {
         
         File oldFile = new File(tasksFilePath);
         String transferData = readFromExistingFile(READ_FROM_MAIN_FILE);
+        
         File newFile = new File(newFilePath);
         setMainFilePath(newFile.getAbsolutePath());
         if (newFile.isDirectory() == false) {
@@ -329,6 +331,7 @@ public class StorageHandler {
             e.printStackTrace();
         }
         writeToFile(transferData, WRITE_TO_MAIN_FILE);
+        writeToFile(newFile.getAbsolutePath(), WRITE_TO_CONFIG_FILE);
         oldFile.delete();
         return isChanged;
     }
