@@ -291,7 +291,9 @@ public class CommandBar {
 		for (int i = 0; i < itemsToAdd.size(); i++) {
 			_mainPane.add(itemsToAdd.get(i), _numberOfItems++, 1);
 			if (itemsToAdd.get(i) instanceof Label) {
-				labels.add((Label) itemsToAdd.get(i));
+				Label l = (Label) itemsToAdd.get(i);
+				GridPane.setMargin(l, new Insets(0,0,0,2));
+				labels.add(l);
 			}
 		}
 	}
@@ -609,7 +611,8 @@ public class CommandBar {
 			} else {
 				if (resultSet.isSuccess()) {
 					setFeedBackMessage(String.format(MESSAGE_SUCCESS_EDIT, msg));
-					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
+					processFeedBackColor(resultSet.getStatus());
+					setFeedBackMessage(String.format(MESSAGE_SUCCESS_EDIT, msg));
 				} else {
 					setFeedBackMessage(String.format(MESSAGE_FAILURE_EDIT_TYPE1, msg));
 					setFeedBackColor(FEEDBACK_STATUS_ERROR);
