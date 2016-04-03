@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.plaf.InputMapUIResource;
 
 public class ReverseParser {
-	private static Map<Long,String> dictionary = new HashMap<Long,String> ();
-	
+	private Map<Long,String> dictionary = new HashMap<Long,String> ();
+	private Map<Integer,String> dayWeekStr =new HashMap<Integer,String>();
 	public ReverseParser(){
 		try {
 			FileReader fr = new FileReader("../test/src/reverseParserDict.txt");
@@ -29,6 +29,13 @@ public class ReverseParser {
 				//System.out.println(index+" "+value);
 				dictionary.put(index, value);
 			}
+			dayWeekStr.put(Calendar.SUNDAY, "Sunday");
+			dayWeekStr.put(Calendar.MONDAY, "Monday");
+			dayWeekStr.put(Calendar.TUESDAY, "Tuesday");
+			dayWeekStr.put(Calendar.WEDNESDAY, "Wednesday");
+			dayWeekStr.put(Calendar.THURSDAY, "Thursday");
+			dayWeekStr.put(Calendar.FRIDAY, "Friday");
+			dayWeekStr.put(Calendar.SATURDAY, "Saturday");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -50,6 +57,13 @@ public class ReverseParser {
 		long mills = input.getTimeInMillis()-curr.getTimeInMillis();
 		long days =(long) Math.floor(mills/86400000);
 		output = dictionary.get(days);
+		int dayOfWeek = input.get(Calendar.DAY_OF_WEEK);
+		if ((days>1)&&(days<7)){
+			output = "Upcoming " + dayWeekStr.get(dayOfWeek);
+		}
+		if ((days>-7)&&(days<-1)){
+			output = "Previous " + dayWeekStr.get(dayOfWeek);
+		}
 		return output;
 	}
 	
