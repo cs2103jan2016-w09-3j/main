@@ -1124,7 +1124,7 @@ public class TaskManager {
     
     public ResultSet saveTheme(String theme) {
         ResultSet saveResult = new ResultSet();
-        boolean saveSuccess = false;
+        boolean saveSuccess = dataLoader.saveThemePreference(theme);
         
         if(saveSuccess) {
             saveResult.setSuccess();;
@@ -1137,7 +1137,7 @@ public class TaskManager {
     }
     
     public String loadTheme () {
-        return "";
+        return dataLoader.getThemePreference();
     }
     
     // ys method, do not remove, ys will remove it ^_^
