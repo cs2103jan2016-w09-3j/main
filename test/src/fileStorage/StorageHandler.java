@@ -24,6 +24,8 @@ public class StorageHandler {
     private String allStoredTasks;
     private String allBackUpTasks;
     private Queue<String> allCommandsQueue;
+    
+    private String themeName;
 
     private static final int READ_FROM_CONFIG_FILE = 1;
     private static final int READ_FROM_MAIN_FILE = 2;
@@ -64,7 +66,15 @@ public class StorageHandler {
     public void setAllCommandsQueue(Queue<String> allCommandsQueue) {
         this.allCommandsQueue = allCommandsQueue;
     }
+    
+    public void setThemeName(String themeName) {
+        this.themeName = themeName;
+    }
 
+    public String getThemeName() {
+        return themeName;
+    }
+    
     //============================================================================
     // Initialising, creating new files
     // ===========================================================================
@@ -118,7 +128,10 @@ public class StorageHandler {
         configFilePath = "configFile.txt";
         configFile = new File(configFilePath);
         if (isExists(configFile)) {
-            setMainFilePath(readFromExistingFile(READ_FROM_CONFIG_FILE));
+            String settings = readFromExistingFile(READ_FROM_CONFIG_FILE);
+            String[] settingsSplit = settings.split("\n");
+            setMainFilePath(settingsSplit[0]);
+            setThemeName(settingsSplit[1]);
             tasksFile = new File(tasksFilePath);
             System.out.println(tasksFilePath);
             System.out.println("Config file found, begin reading...");
@@ -127,7 +140,8 @@ public class StorageHandler {
             tasksFilePath = "tasksList.txt";
             tasksFile = new File(tasksFilePath);
             setMainFilePath(tasksFile.getAbsolutePath());
-            writeToFile(tasksFilePath, WRITE_TO_CONFIG_FILE);
+            themeName = "default";
+            writeToFile(tasksFilePath + "\n" + themeName, WRITE_TO_CONFIG_FILE);
         }
     }
 
@@ -333,8 +347,13 @@ public class StorageHandler {
             e.printStackTrace();
         }
         writeToFile(transferData, WRITE_TO_MAIN_FILE);
-        writeToFile(newFile.getAbsolutePath(), WRITE_TO_CONFIG_FILE);
+        writeToFile(newFile.getAbsolutePath() + '\n' + themeName, WRITE_TO_CONFIG_FILE);
         oldFile.delete();
         return isChanged;
+    }
+    
+    public boolean saveThemeName(String themeName) {
+        setThemeName(themeName);
+        return writeToFile(tasksFile.getAbsolutePath() + '\n' + themeName, WRITE_TO_CONFIG_FILE);
     }
 }

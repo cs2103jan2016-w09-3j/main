@@ -53,8 +53,9 @@ public class ResultSet {
             _status = STATUS_CONFLICT_AND_PAST;
         } else if (status == STATUS_PAST && _status == STATUS_CONFLICT) {
             _status = STATUS_CONFLICT_AND_PAST;
-        } else if (status == STATUS_GOOD && _status == STATUS_CONFLICT || _status == STATUS_PAST) {
-            //Do nothing - Keeps the warning messages not overwritten by good outcomes
+        } else if (status == STATUS_GOOD && (_status == STATUS_CONFLICT || _status == STATUS_PAST
+                || _status == STATUS_CONFLICT_AND_PAST)) {
+            // Do nothing - Keeps the warning messages not overwritten by good outcomes
         } else {
             _status = status;
         }

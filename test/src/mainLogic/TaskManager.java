@@ -258,7 +258,7 @@ public class TaskManager {
      * @return all commands to be re-run before start of program
      */
     public Queue<String> getBackedupCommands () {
-        Queue<String> reloadedCommands = dataLoader.getCommandsUponInit();
+        Queue<String> reloadedCommands = dataLoader.getCommandsQueue();
         dataLoader.clearCommandFile();
         return new LinkedList(reloadedCommands);
     }
@@ -584,12 +584,10 @@ public class TaskManager {
 
             if (checkClashing(newTask)) {
                 addResults.setStatus(ResultSet.STATUS_CONFLICT);
-                System.out.println("Event conflicting!");
             }
             
             if(Utils.isDateBeforeNow(newTask.getDueDate())) {
                 addResults.setStatus(ResultSet.STATUS_PAST);
-                System.out.println("Event passed!");
             }
             addResults.setView(ResultSet.TASK_VIEW);
             int idToInsert = findPositionToInsert(newTask);
@@ -599,6 +597,7 @@ public class TaskManager {
             
             addResults.setStatus(ResultSet.STATUS_GOOD);
             addResults.setSuccess();
+            System.out.println("status of add: " + addResults.getStatus());
             return addResults;
         }
     }
