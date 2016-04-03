@@ -1084,7 +1084,7 @@ public class TaskManager {
                 return commandsToRun;
             }
         } else {
-            return new ArrayList<String>();
+            return null;
         }
     }
     
