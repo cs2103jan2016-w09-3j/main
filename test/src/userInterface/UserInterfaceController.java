@@ -779,7 +779,6 @@ public class UserInterfaceController {
 
 	public ResultSet undoLastCommand() {
 		ArrayList<String> commandsToRun = _logicFace.getCommandsToRun();
-		System.out.println(commandsToRun.size()+"size");
 		ResultSet resultSet = new ResultSet();
 		if (commandsToRun == null) {
 			resultSet.setFail();
