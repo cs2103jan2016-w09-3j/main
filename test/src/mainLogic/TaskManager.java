@@ -1107,6 +1107,7 @@ public class TaskManager {
         _undoing = false;
     }
 
+    
     public void reloadFile() {
         AllTaskLists taskdata = dataLoader.getBackUpTaskLists();
 
@@ -1119,6 +1120,24 @@ public class TaskManager {
         buildCompletedTasks();
         displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
         currentDisplayedList = DISPLAY_MAIN;
+    }
+    
+    public ResultSet saveTheme(String theme) {
+        ResultSet saveResult = new ResultSet();
+        boolean saveSuccess = dataLoader.saveThemePreference(theme);
+        
+        if(saveSuccess) {
+            saveResult.setSuccess();;
+            saveResult.setStatus(ResultSet.STATUS_GOOD);
+        } else {
+            saveResult.setFail();
+            saveResult.setStatus(ResultSet.STATUS_BAD);
+        }
+        return saveResult;
+    }
+    
+    public String loadTheme () {
+        return dataLoader.getThemePreference();
     }
     
     // ys method, do not remove, ys will remove it ^_^

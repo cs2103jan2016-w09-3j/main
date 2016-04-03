@@ -196,11 +196,19 @@ public class TaskManagerInterface {
      * 
      * @return processed task arrays fit for saving via JSON
      */
-    public AllTaskLists getSaveArray () {
+    public AllTaskLists getSaveArray() {
         return manager.generateSavedTaskArray();
     }
     
-    public void closeTaskManager () {
+    public ResultSet saveTheme(String theme) {
+        return manager.saveTheme(theme);
+    }
+
+    public String loadTheme() {
+        return manager.loadTheme();
+    }
+
+    public void closeTaskManager() {
         manager.commitFullSave();
     }
     
