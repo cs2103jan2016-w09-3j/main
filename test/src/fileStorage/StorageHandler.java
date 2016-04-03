@@ -331,24 +331,28 @@ public class StorageHandler {
 
         File oldFile = new File(tasksFilePath);
         String transferData = readFromExistingFile(READ_FROM_MAIN_FILE);
-
+        
         File newFile = new File(newFilePath);
-        if (newFile.isDirectory() == false) {
-            if (newFile.getParentFile() != null) {
-                isChanged = newFile.getParentFile().mkdirs();
-                System.out.println("Creating dir: " + isChanged);
-            }
-        } 
+        setMainFilePath(newFile.getAbsolutePath());
+        
         if (newFile.exists() == false) {
+            if (newFile.isDirectory() == false) {
+                if (newFile.getParentFile() != null) {
+                    isChanged = newFile.getParentFile().mkdirs();
+                    System.out.println("Creating dir: " + isChanged);
+                }
+            } 
             try {
                 isChanged = newFile.createNewFile();
                 System.out.println("Create new file: " + isChanged);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            writeToFile(transferData, WRITE_TO_MAIN_FILE);
+        } else {
+            setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
+            isChanged = true;
         }
-        setMainFilePath(newFile.getAbsolutePath());
-        writeToFile(transferData, WRITE_TO_MAIN_FILE);
         writeToFile(newFile.getAbsolutePath() + '\n' + themeName, WRITE_TO_CONFIG_FILE);
         oldFile.delete();
         return isChanged;
