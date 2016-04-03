@@ -283,10 +283,13 @@ public class TaskManager {
                 undoPointer++;
             } else {
                 //Trims off the additional commands
-                undoList = (ArrayList<String>) undoList.subList(0, undoPointer);
+                undoList = new ArrayList<String>(undoList.subList(0, undoPointer));
                 undoList.add(command);
                 undoPointer++;
             }
+            System.out.println("Undo pointer updated to " + undoPointer);
+        } else {
+            System.out.println("running an undo command");
         }
     }
 
@@ -1066,11 +1069,23 @@ public class TaskManager {
      * @return The currently displayed list after the undo operation
      */
     public ArrayList<String> undo() {
-        reloadFile();
-        _undoing = true;
-        dataLoader.clearCommandFile();
-        undoPointer--;
-        return (ArrayList<String>) undoList.subList(0, undoPointer + 1);
+        System.out.println("undolist size: " + undoList.size() + " undoPointer : " + undoPointer);
+        if(undoList.size() > 0 && undoPointer >= 0) {
+            reloadFile();
+            _undoing = true;
+            dataLoader.clearCommandFile();
+            undoPointer--;
+            if(undoPointer == -1) {
+                System.out.println("Running 0 commands for undo");
+                return new ArrayList<String>();
+            } else {
+                System.out.println("Running " + (undoPointer + 1) + " commands for undo");
+                ArrayList<String> commandsToRun = new ArrayList<String>(undoList.subList(0, undoPointer + 1));
+                return commandsToRun;
+            }
+        } else {
+            return new ArrayList<String>();
+        }
     }
     
     public void undoComplete() {
