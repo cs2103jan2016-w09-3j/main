@@ -67,32 +67,31 @@ public class UserInterfaceController {
 	// Debug purpose
 	private static Logger logger = Logger.getLogger("UserInterfaceController");
 
-	public static UserInterfaceController getInstance(Stage primaryStage, String styleSheet) {
+	public static UserInterfaceController getInstance(Stage primaryStage) {
 		if (numberOfInstance == 0) {
 			numberOfInstance++;
-			return new UserInterfaceController(primaryStage, styleSheet);
+			return new UserInterfaceController(primaryStage);
 		} else {
 			return null;
 		}
 	}
 
-	private UserInterfaceController(Stage primaryStage, String styleSheet) {
+	private UserInterfaceController(Stage primaryStage) {
 		try {
 			Handler handler = new FileHandler("uiinterfaceLog.log");
 			logger.addHandler(handler);
 			logger.setLevel(Level.FINEST);
 		} catch (IOException e) {
-			System.out.println(e);
 		}
 		logger.log(Level.INFO, "UserInterfaceController Init");
 
-		_styleSheet = styleSheet;
 		_parentStage = primaryStage;
 		_logicFace = new UserInterfaceExecuter();
 		recoverLostCommands();
 	}
 
-	public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize) {
+	public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize, String styleSheet) {
+		_styleSheet = styleSheet;
 		this._screenBounds = screenBounds;
 		this._fixedSize = fixedSize;
 		initializeViews();
@@ -810,15 +809,18 @@ public class UserInterfaceController {
 	}
 
 	public ResultSet changeTheme(String styleSheet) {
-		 _taskViewInterface.changeTheme(styleSheet);
+		_taskViewInterface.changeTheme(styleSheet);
 		_descriptionComponent.changeTheme(styleSheet);
-		 _detailComponent.changeTheme(styleSheet);
-		 _floatingBarComponent.changeTheme(styleSheet);
+		_detailComponent.changeTheme(styleSheet);
+		_floatingBarComponent.changeTheme(styleSheet);
 		_floatingViewInterface.changeTheme(styleSheet);
 		_searchViewInterface.changeTheme(styleSheet);
 		_helpScreen.changeTheme(styleSheet);
 		ResultSet resultSet = _logicFace.changeTheme(styleSheet);
-		
 		return resultSet;
+	}
+
+	public String loadTheme() {
+		return _logicFace.loadTheme();
 	}
 }

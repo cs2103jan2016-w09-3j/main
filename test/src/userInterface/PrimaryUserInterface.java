@@ -116,8 +116,14 @@ public class PrimaryUserInterface extends Application {
 	 * @param primaryStage.
 	 */
 	private void initializeUiController(Stage primaryStage) {
-		uiController = UserInterfaceController.getInstance(primaryStage, _styleSheet);
-		uiController.initializeInterface(_screenBounds, _fixedSize);
+		uiController = UserInterfaceController.getInstance(primaryStage);
+		String theme = uiController.loadTheme();
+		if (isValidTheme(theme)) {
+			_styleSheet = theme;
+			_primaryStage.getScene().getStylesheets().clear();
+			_primaryStage.getScene().getStylesheets().add(theme);
+		}
+		uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet);
 	}
 
 	/**
@@ -444,30 +450,30 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	private void executeChangeTheme(String themeChange) {
-		if (themeChange != null) {
-			if (themeChange.indexOf(" ") == -1) {
-				boolean hasChange = false;
-				for (int i = 0; i < styles.length; i++) {
-					if (styles[i].equals(themeChange)) {
-						hasChange = true;
-						_styleSheet = styles[i];
-						_primaryStage.getScene().getStylesheets().clear();
-						_primaryStage.getScene().getStylesheets().add(_styleSheet);
-						ResultSet resultSet = uiController.changeTheme(_styleSheet);
-						_commandBar.showFeedBackMessage(COMMAND.THEME, resultSet, getStyleSheetList());
-						break;
-					}
-				}
-				if (!hasChange) {
-					_commandBar.showFeedBackMessage(COMMAND.THEME, null, getStyleSheetList());
-				}
-
-			} else {
-				_commandBar.showFeedBackMessage(COMMAND.THEME, null, getStyleSheetList());
+		if (isValidTheme(themeChange)) {
+			_styleSheet = themeChange;
+			_primaryStage.getScene().getStylesheets().clear();
+			_primaryStage.getScene().getStylesheets().add(_styleSheet);
+			ResultSet resultSet = uiController.changeTheme(_styleSheet);
+			if (resultSet.isSuccess()) {
+				resetCommandInput();
 			}
+			_commandBar.showFeedBackMessage(COMMAND.THEME, resultSet, getStyleSheetList());
 		} else {
 			_commandBar.showFeedBackMessage(COMMAND.THEME, null, getStyleSheetList());
 		}
+	}
+
+	public boolean isValidTheme(String theme) {
+		if (theme == null) {
+			return false;
+		}
+		for (int i = 0; i < styles.length; i++) {
+			if (styles[i].equals(theme)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String getStyleSheetList() {
@@ -475,7 +481,7 @@ public class PrimaryUserInterface extends Application {
 		for (int i = 0; i < styles.length; i++) {
 			styleList = styleList.concat(styles[i]);
 			if (i < styles.length - 1) {
-				styleList= styleList.concat(",");
+				styleList = styleList.concat(",");
 			}
 		}
 		return styleList;
