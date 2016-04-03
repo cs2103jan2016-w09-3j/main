@@ -178,6 +178,7 @@ public class TaskManagerInterface {
     }
     
     public void undoComplete() {
+        System.out.println("Undo completed");
         manager.undoComplete();
     }
     

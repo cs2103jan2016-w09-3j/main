@@ -843,8 +843,14 @@ public class TaskManager {
 
     public ResultSet changeDirectory(String newDirectory) {
         ResultSet changeResult = new ResultSet();
-        changeResult.setFail();
-        changeResult.setStatus(ResultSet.STATUS_BAD);
+        boolean saveSuccess = dataLoader.saveToNewDirectory(newDirectory);
+        if(saveSuccess) {
+            changeResult.setSuccess();
+            changeResult.setStatus(ResultSet.STATUS_GOOD);
+        } else {
+            changeResult.setFail();
+            changeResult.setStatus(ResultSet.STATUS_BAD);
+        }
         return changeResult;
     }
     
