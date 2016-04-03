@@ -19,7 +19,7 @@ import entity.ResultSet;
 import entity.TaskEntity;
 import mainLogic.TaskManager;
 import mainLogic.TaskManagerInterface;
-import mainLogic.Utils;
+import mainLogic.TaskUtils;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.input.MouseEvent;
@@ -537,7 +537,7 @@ public class UserInterfaceController {
 	public boolean jumpToIndex(String indexToJump) {
 		int selected = _taskViewInterface.getSelectIndex();
 		if (selected != -1) {
-			_scorllAnimation = ScrollTaskAnimation.getInstance(selected, Utils.convertStringToInteger(indexToJump),
+			_scorllAnimation = ScrollTaskAnimation.getInstance(selected, TaskUtils.convertStringToInteger(indexToJump),
 					this);
 			_scorllAnimation.start();
 			return true;
@@ -557,7 +557,7 @@ public class UserInterfaceController {
 	}
 
 	public ResultSet markAsCompleted(String indexZZ, String rawString, boolean toUpdateview) {
-		int indexInt = Utils.convertStringToInteger(indexZZ);
+		int indexInt = TaskUtils.convertStringToInteger(indexZZ);
 		if (indexInt == -1) {
 			return null;
 		}
@@ -580,8 +580,8 @@ public class UserInterfaceController {
 	}
 
 	public ResultSet link(String indexZZ1, String indexZZ2, String rawString, boolean toUpdateView) {
-		int index1 = Utils.convertStringToInteger(indexZZ1);
-		int index2 = Utils.convertStringToInteger(indexZZ2);
+		int index1 = TaskUtils.convertStringToInteger(indexZZ1);
+		int index2 = TaskUtils.convertStringToInteger(indexZZ2);
 		if (index1 != -1 && index2 != -1) {
 			if (index1 < _logicFace.getWorkingList().size() && index2 < _logicFace.getWorkingList().size()) {
 				_logicFace.getWorkingList().get(index1);
@@ -728,7 +728,7 @@ public class UserInterfaceController {
 	private int runCommands(String rawCommandWithView) {
 		String rawCommand = deStructToRawCommand(rawCommandWithView);
 		String view = deStructToView(rawCommandWithView);
-		int viewInt = Utils.convertStringToInteger(view);
+		int viewInt = TaskUtils.convertStringToInteger(view);
 		if (viewInt != -1) {
 			setManagerView(viewInt);
 		}
@@ -751,7 +751,7 @@ public class UserInterfaceController {
 				break;
 			}
 			case EDIT: {
-				int id = Utils.convertStringToInteger(parser.getID());
+				int id = TaskUtils.convertStringToInteger(parser.getID());
 				parser.removeId();
 				ArrayList<TaskEntity> tasks = parser.getTask();
 				if (tasks.size() == 1) {

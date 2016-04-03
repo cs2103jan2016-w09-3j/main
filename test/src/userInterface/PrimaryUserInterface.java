@@ -22,7 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import mainLogic.Utils;
+import mainLogic.TaskUtils;
 
 public class PrimaryUserInterface extends Application {
 
@@ -324,7 +324,7 @@ public class PrimaryUserInterface extends Application {
 	 */
 	private void executeModify(String id) {
 		if (id != null) {
-			int indexToModify = Utils.convertStringToInteger(id);
+			int indexToModify = TaskUtils.convertStringToInteger(id);
 			ArrayList<TaskEntity> tasks = _commandBar.getTasksPartialInput();
 			if (indexToModify != -1) {
 				if (tasks.size() == 1) {

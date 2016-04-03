@@ -6,7 +6,7 @@ import java.util.Queue;
 
 import entity.TaskEntity;
 
-public class Utils {
+public class TaskUtils {
 
 	/**
 	 * Converts an integer into its base 36, 0~Z equivalent. Supports any length
@@ -197,15 +197,15 @@ public class Utils {
     public static boolean isClashing(TaskEntity task1, TaskEntity task2) {
         if (task1.getStartDate() == null) {
             if (task2.getStartDate() == null) {
-                return Utils.compareTwoDueDates(task1, task2);
+                return TaskUtils.compareTwoDueDates(task1, task2);
             } else {
-                return Utils.checkDueDateInRange(task1, task2);
+                return TaskUtils.checkDueDateInRange(task1, task2);
             }
         } else {
             if (task2.getStartDate() == null) {
-                return Utils.checkDueDateInRange(task2, task1);
+                return TaskUtils.checkDueDateInRange(task2, task1);
             } else {
-                return Utils.checkOverlappingDuration(task1, task2);
+                return TaskUtils.checkOverlappingDuration(task1, task2);
             }
         }
     }

@@ -107,7 +107,7 @@ public class TaskManagerInterface {
             return deletionResult;
         } else {
             manager.saveBackupCommand(command);
-            deletionResult.setIndex(manager.checkCurrentId(Utils.convertStringToInteger(taskId)));
+            deletionResult.setIndex(manager.checkCurrentId(TaskUtils.convertStringToInteger(taskId)));
             return deletionResult;
         }
     }
@@ -150,7 +150,7 @@ public class TaskManagerInterface {
      *         otherwise
      */
     public ResultSet markAsDone (String taskToMark, String command) {
-        return markAsDone(Utils.convertStringToInteger(taskToMark), command);
+        return markAsDone(TaskUtils.convertStringToInteger(taskToMark), command);
     }
     
     public ResultSet markAsDone (int taskToMark, String command) {

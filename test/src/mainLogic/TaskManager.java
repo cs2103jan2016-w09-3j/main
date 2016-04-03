@@ -506,7 +506,7 @@ public class TaskManager {
      *         succeeded in deleting the task, returns -1 otherwise
      */
     public ResultSet modify(String index, TaskEntity modifiedTask) {
-        return modify(Utils.convertStringToInteger(index), modifiedTask);
+        return modify(TaskUtils.convertStringToInteger(index), modifiedTask);
     }
 
     /**
@@ -586,7 +586,7 @@ public class TaskManager {
                 addResults.setStatus(ResultSet.STATUS_CONFLICT);
             }
             
-            if(Utils.isDateBeforeNow(newTask.getDueDate())) {
+            if(TaskUtils.isDateBeforeNow(newTask.getDueDate())) {
                 addResults.setStatus(ResultSet.STATUS_PAST);
             }
             addResults.setView(ResultSet.TASK_VIEW);
@@ -611,7 +611,7 @@ public class TaskManager {
      */
     public ResultSet markAsDone(int index) {
         ResultSet markingResults = new ResultSet();
-        if ( (index > displayedTasks.size() - 1) || (currentDisplayedList == DISPLAY_COMPLETED) ) {
+        if ( (index > displayedTasks.size() - 1) || (currentDisplayedList == DISPLAY_COMPLETED) || index < 0) {
             markingResults.setFail();
             markingResults.setStatus(ResultSet.STATUS_BAD);
             return markingResults;
@@ -815,7 +815,7 @@ public class TaskManager {
      *         failed
      */
     public boolean delete(String index) {
-        return delete(Utils.convertStringToInteger(index));
+        return delete(TaskUtils.convertStringToInteger(index));
     }
 
     /**
@@ -860,7 +860,7 @@ public class TaskManager {
     }
     
     public ResultSet link(String projectHeadId, String taskUnderId) {
-        return link(Utils.convertStringToInteger(projectHeadId), Utils.convertStringToInteger(taskUnderId));
+        return link(TaskUtils.convertStringToInteger(projectHeadId), TaskUtils.convertStringToInteger(taskUnderId));
     }
 
     public ResultSet link(int projectHeadId, int taskUnderId) {
@@ -949,7 +949,7 @@ public class TaskManager {
      *         failed
      */
     public boolean delete(String startIndex, String endIndex) {
-        return delete(Utils.convertStringToInteger(startIndex), Utils.convertStringToInteger(endIndex));
+        return delete(TaskUtils.convertStringToInteger(startIndex), TaskUtils.convertStringToInteger(endIndex));
     }
 
     /**
@@ -988,7 +988,7 @@ public class TaskManager {
 
     public boolean checkClashing(TaskEntity newlyAddedTask) {
         for (int i = 0; i < mainTaskEntities.size(); i++) {
-            if ( Utils.isClashing(newlyAddedTask, mainTaskEntities.get(i)) ) {
+            if ( TaskUtils.isClashing(newlyAddedTask, mainTaskEntities.get(i)) ) {
                 return true;
             }
         }

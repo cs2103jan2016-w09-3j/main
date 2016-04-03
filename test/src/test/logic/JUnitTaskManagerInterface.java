@@ -10,7 +10,7 @@ import org.junit.Test;
 import entity.TaskEntity;
 import mainLogic.TaskManager;
 import mainLogic.TaskManagerInterface;
-import mainLogic.Utils;
+import mainLogic.TaskUtils;
 
 public class JUnitTaskManagerInterface {
 
@@ -23,14 +23,14 @@ public class JUnitTaskManagerInterface {
 
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
         for (int i = 0; i < 5; i++) {
-            newList.add(new TaskEntity("Task " + Integer.toString(i + 1), null, Utils.createDate(1, 4, 2016, 12 + i, 0), false, "some desc"));
+            newList.add(new TaskEntity("Task " + Integer.toString(i + 1), null, TaskUtils.createDate(1, 4, 2016, 12 + i, 0), false, "some desc"));
         }
         manager.add(newList, "PLACEHOLDER");
         assertEquals("Task 1, Task 2, Task 3, Task 4, Task 5, ", taskmanager.printArrayContentsToString(taskmanager.DISPLAY_MAIN));
         
         newList = new ArrayList<TaskEntity>();
         for (int i = 0; i < 5; i++) {
-            newList.add(new TaskEntity("Task " + Integer.toString(i + 6), null, Utils.createDate(2, 4, 2016, 12 + i, 0), false, "some desc"));
+            newList.add(new TaskEntity("Task " + Integer.toString(i + 6), null, TaskUtils.createDate(2, 4, 2016, 12 + i, 0), false, "some desc"));
         }
         manager.add(newList, "PLACEHOLDER");
         assertEquals("Task 1, Task 2, Task 3, Task 4, Task 5, Task 6, Task 7, Task 8, Task 9, Task 10, ", taskmanager.printArrayContentsToString(taskmanager.DISPLAY_MAIN));
@@ -42,7 +42,7 @@ public class JUnitTaskManagerInterface {
 
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
         for (int i = 0; i < 5; i++) {
-            Calendar newDate = Utils.createDate(1, 3, 2016);
+            Calendar newDate = TaskUtils.createDate(1, 3, 2016);
             newDate.set(Calendar.MINUTE, newDate.get(Calendar.MINUTE) + i);
             newList.add(new TaskEntity("Task " + Integer.toString(i + 1), null, newDate, false, "some desc"));
         }
@@ -152,10 +152,10 @@ public class JUnitTaskManagerInterface {
         System.out.println(taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING));
         System.out.println(taskmanager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
 
-        manager.add(new TaskEntity("Do 2103 V0.4", null, Utils.createDate(4, 4, 2016), true,
+        manager.add(new TaskEntity("Do 2103 V0.4", null, TaskUtils.createDate(4, 4, 2016), true,
                 "Remember to be in before 9pm"), "PLACEHOLDER");
-        manager.add(new TaskEntity("Do 2103 V0.3", null, Utils.createDate(28, 3, 2016), true), "PLACEHOLDER");
-        manager.add(new TaskEntity("Do 2104 V0.5", null, Utils.createDate(11, 4, 2016), true), "PLACEHOLDER");
+        manager.add(new TaskEntity("Do 2103 V0.3", null, TaskUtils.createDate(28, 3, 2016), true), "PLACEHOLDER");
+        manager.add(new TaskEntity("Do 2104 V0.5", null, TaskUtils.createDate(11, 4, 2016), true), "PLACEHOLDER");
 
         manager.searchString("remember", "PLACEHOLDER");
         assertEquals("Do 2103 V0.4, Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ",

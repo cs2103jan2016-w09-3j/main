@@ -22,7 +22,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import mainLogic.Utils;
+import mainLogic.TaskUtils;
 
 public class SearchUserInterface implements ViewInterface {
 

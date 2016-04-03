@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import entity.TaskEntity;
 import mainLogic.TaskManager;
-import mainLogic.Utils;
+import mainLogic.TaskUtils;
 
 public class JUnitTaskManager {
     TaskManager manager = TaskManager.getInstance();
@@ -21,7 +21,7 @@ public class JUnitTaskManager {
         System.out.println("Started test");
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
         for (int i = 0; i < 5; i++) {
-            Calendar newDate = Utils.createDate(1, 3, 2016);
+            Calendar newDate = TaskUtils.createDate(1, 3, 2016);
             newDate.set(Calendar.MINUTE, newDate.get(Calendar.MINUTE) + i);
             newList.add(new TaskEntity("Task " + Integer.toString(i + 1), null, newDate, false, "some desc"));
         }
@@ -37,25 +37,25 @@ public class JUnitTaskManager {
 
         System.out.println(manager.printArrayContentsToString(manager.DISPLAY_FLOATING) + "omg");
        
-        TaskEntity headTask = new TaskEntity("2016/2/5", null, Utils.createDate(5, 2, 2016), true);
+        TaskEntity headTask = new TaskEntity("2016/2/5", null, TaskUtils.createDate(5, 2, 2016), true);
         manager.modify(1, headTask);
 
-        TaskEntity childTask = new TaskEntity("2016/2/3", null, Utils.createDate(3, 2, 2016), true);
+        TaskEntity childTask = new TaskEntity("2016/2/3", null, TaskUtils.createDate(3, 2, 2016), true);
         manager.modify(3, childTask);
 
         assertEquals(manager.link(headTask, childTask).isSuccess(), true);
         
-        childTask = new TaskEntity("2016/3/16", null, Utils.createDate(16, 3, 2016), true);
+        childTask = new TaskEntity("2016/3/16", null, TaskUtils.createDate(16, 3, 2016), true);
         manager.add(childTask);
         manager.link(headTask, childTask);
 
         assertEquals(manager.link(childTask, headTask).isSuccess(), false);
         
-        manager.add(new TaskEntity("2016/3/15", null, Utils.createDate(15, 3, 2016), true));
+        manager.add(new TaskEntity("2016/3/15", null, TaskUtils.createDate(15, 3, 2016), true));
 
         manager.link(firstFloating, childTask);
         
-        manager.modify(6, new TaskEntity("Modified task", null, Utils.createDate(15, 3, 2016), true));
+        manager.modify(6, new TaskEntity("Modified task", null, TaskUtils.createDate(15, 3, 2016), true));
         
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_OTHERS),"2016/2/3, 2016/2/5, Task 1, Task 3, Task 5, 2016/3/15, Modified task, ");
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_FLOATING),"Task floating 1, Task floating 2, Task floating 3, Task floating 4, ");
@@ -175,9 +175,9 @@ public class JUnitTaskManager {
         System.out.println(manager.printArrayContentsToString(manager.DISPLAY_FLOATING));
         System.out.println(manager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
 
-        manager.add(new TaskEntity("Do 2103 V0.4", null, Utils.createDate(4, 4, 2016), true, "Remember to be in before 9pm"));
-        manager.add(new TaskEntity("Do 2103 V0.3", null, Utils.createDate(28, 3, 2016), true));
-        manager.add(new TaskEntity("Do 2104 V0.5", null, Utils.createDate(11, 4, 2016), true));
+        manager.add(new TaskEntity("Do 2103 V0.4", null, TaskUtils.createDate(4, 4, 2016), true, "Remember to be in before 9pm"));
+        manager.add(new TaskEntity("Do 2103 V0.3", null, TaskUtils.createDate(28, 3, 2016), true));
+        manager.add(new TaskEntity("Do 2104 V0.5", null, TaskUtils.createDate(11, 4, 2016), true));
         
         manager.searchString("remember");
         assertEquals("Do 2103 V0.4, Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ", manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
