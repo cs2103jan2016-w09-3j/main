@@ -43,6 +43,8 @@ public class DetailComponent implements ViewInterface {
 	
 	private static final String CSS_LABEL = "cssLabelsDetails";
 
+	private String _styleSheet;
+	
 	private Stage _stage;
 	private int _stageWidth;
 	private int _stageHeight;
@@ -58,8 +60,9 @@ public class DetailComponent implements ViewInterface {
 	private boolean _haveAssociation;
 	private TaskEntity _targetedTask;
 
-	public DetailComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize) {
+	public DetailComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet) {
 		_currentSelectView = TASK_VIEW;
+		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
 		initializeScenes();
 		initializeStage(parentStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
@@ -71,10 +74,10 @@ public class DetailComponent implements ViewInterface {
 		for (int i = 0; i < TOTAL_VIEWS; i++) {
 			_mainVbox[i] = new VBox();
 			_mainVbox[i].setMinSize(_stageWidth, _stageHeight);
-			_mainVbox[i].getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
 			_mainVbox[i].setId("cssDetailComponentRoot");
 			_scenes[i] = new Scene(_mainVbox[i], _stageWidth, _stageHeight);
 			_scenes[i].setFill(Color.TRANSPARENT);
+			_scenes[i].getStylesheets().add(_styleSheet);
 		}
 	}
 
@@ -435,6 +438,14 @@ public class DetailComponent implements ViewInterface {
 
 	public void destoryStage() {
 		_stage.close();
+	}
+
+	public void changeTheme(String styleSheet) {
+		_styleSheet = styleSheet;
+		for (int i = 0; i < TOTAL_VIEWS; i++) {
+			_scenes[i].getStylesheets().clear();
+			_scenes[i].getStylesheets().add(styleSheet);		
+		}
 	}
 
 }

@@ -33,7 +33,7 @@ public class SearchUserInterface implements ViewInterface {
 	private int _windowPosY;
 
 	private static final String CSS_LABEL = "cssLabelsSearchView";
-	
+
 	// font
 	static final int FONT_SIZE_LABEL = 20;
 	static final int FONT_SIZE_LABEL_DATE = 10;
@@ -46,6 +46,8 @@ public class SearchUserInterface implements ViewInterface {
 	static final int LABEL_TASK_HEIGHT = 30;
 	private static final int THRESHOLD = 20;
 
+	private String _styleSheet;
+
 	private StackPane _mainVbox;
 	private VBox _secondaryVbox;
 
@@ -57,18 +59,20 @@ public class SearchUserInterface implements ViewInterface {
 	private ArrayList<TaskEntity> _searchList;
 	private ArrayList<HBox> _searchBoxes = new ArrayList<HBox>();
 
-	public static SearchUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
+	public static SearchUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
+			String styleSheet) {
 		if (_myInstance == null) {
 			if (primaryStage == null || screenBounds == null) {
 				return null;
 			}
-			_myInstance = new SearchUserInterface(primaryStage, screenBounds, fixedSize);
+			_myInstance = new SearchUserInterface(primaryStage, screenBounds, fixedSize, styleSheet);
 			return _myInstance;
 		}
 		return null;
 	}
 
-	private SearchUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
+	private SearchUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet) {
+		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
 		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
 		buildComponent();
@@ -106,12 +110,12 @@ public class SearchUserInterface implements ViewInterface {
 
 		_mainVbox = new StackPane();
 		_mainVbox.setPrefSize(stageWidth, stageHeight);
-		_mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
 		_mainVbox.setId("cssRootSearchView");
 
-		Scene s = new Scene(_mainVbox, stageWidth, stageHeight);
-		s.setFill(Color.TRANSPARENT);
-		_stage.setScene(s);
+		Scene scene = new Scene(_mainVbox, stageWidth, stageHeight);
+		scene.getStylesheets().add(_styleSheet);
+		scene.setFill(Color.TRANSPARENT);
+		_stage.setScene(scene);
 	}
 
 	private void buildComponent() {
@@ -193,7 +197,7 @@ public class SearchUserInterface implements ViewInterface {
 		timeLabel.setAlignment(Pos.CENTER);
 		timeLabel.setFont(FONT_TASK);
 		top.getChildren().add(timeLabel);
-		
+
 		Label nameLabel = new Label();
 		nameLabel.getStyleClass().add(CSS_LABEL);
 		nameLabel.setText(task.getName());
@@ -203,7 +207,7 @@ public class SearchUserInterface implements ViewInterface {
 		HBox.setMargin(nameLabel, new Insets(0, 10, 0, 10));
 		top.getChildren().add(nameLabel);
 		top.setMinHeight(LABEL_TASK_HEIGHT);
-		
+
 		HBox mid = new HBox();
 		Label indexPlaceHolder = new Label();
 		indexPlaceHolder.getStyleClass().add(CSS_LABEL);
@@ -219,7 +223,7 @@ public class SearchUserInterface implements ViewInterface {
 
 		parentBoxChild.getChildren().add(top);
 		parentBoxChild.getChildren().add(mid);
-		parentBoxChild.setMinHeight(top.getMinHeight()+mid.getMinHeight());
+		parentBoxChild.setMinHeight(top.getMinHeight() + mid.getMinHeight());
 		parentBox.getChildren().add(parentBoxChild);
 		parentBox.setMinHeight(parentBoxChild.getMinHeight());
 		return parentBox;
@@ -338,6 +342,12 @@ public class SearchUserInterface implements ViewInterface {
 	public void updateTranslateY(double posY) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void changeTheme(String styleSheet) {
+		_stage.getScene().getStylesheets().clear();
+		_styleSheet = styleSheet;
+		_stage.getScene().getStylesheets().add(styleSheet);		
 	}
 
 }

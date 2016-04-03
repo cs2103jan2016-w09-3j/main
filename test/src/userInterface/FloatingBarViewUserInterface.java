@@ -20,7 +20,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	static final int COMPONENT_TOP_MARGIN = 50;
 	static final int COMPONENT_BOTTOM_MARGIN = 2;
 	private static final int POSITION_ZERO = 0;
-	private static final int LEFT_MARGIN =10;
+	private static final int LEFT_MARGIN = 10;
 
 	private static final int LABEL_TITLE_WIDTH = 250;
 	private static final int FONT_SIZE_TITLE_LABEL = 20;
@@ -29,7 +29,9 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	private static final Font FONT_LABEL_TASK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TASK);
 
 	private static final String CSS_LABEL = "cssLabelsFloatingBar";
-	
+
+	private String _styleSheet;
+
 	private Stage _stage;
 	private int _stageWidth;
 	private int _stageHeight;
@@ -38,7 +40,9 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	private HBox _mainHBox;
 	private VBox _mainfloatingTaskArea;
 
-	public FloatingBarViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
+	public FloatingBarViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
+			String styleSheet) {
+		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
 		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
 	}
@@ -68,10 +72,10 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		_mainHBox = new HBox();
 		_mainHBox.setPrefHeight(_stageHeight);
 		_mainHBox.setMaxHeight(_stageHeight);
-		_mainHBox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
 		_mainHBox.setId("cssRootFloatingBar");
 
 		Scene scene = new Scene(_mainHBox, windowWidth, windowHeight, Color.TRANSPARENT);
+		scene.getStylesheets().add(_styleSheet);
 		scene.setFill(Color.TRANSPARENT);
 		_stage.setScene(scene);
 
@@ -90,7 +94,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		_mainfloatingTaskArea = new VBox();
 		_mainfloatingTaskArea.setMinWidth(_stageWidth - LABEL_TITLE_WIDTH);
 		_mainfloatingTaskArea.setId("cssFloatingBarContentArea");
-		
+
 		_mainHBox.getChildren().add(floatTitleLabel);
 		_mainHBox.getChildren().add(_mainfloatingTaskArea);
 	}
@@ -102,7 +106,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		floatTask.setMaxHeight(_stageHeight);
 		floatTask.setAlignment(Pos.CENTER);
 		floatTask.setFont(FONT_LABEL_TASK);
-		VBox.setMargin(floatTask, new Insets(0,0,0,LEFT_MARGIN));
+		VBox.setMargin(floatTask, new Insets(0, 0, 0, LEFT_MARGIN));
 		_mainfloatingTaskArea.getChildren().add(floatTask);
 	}
 
@@ -146,6 +150,12 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 
 	public void destoryStage() {
 		_stage.close();
+	}
+
+	public void changeTheme(String styleSheet) {
+		_stage.getScene().getStylesheets().clear();
+		_styleSheet = styleSheet;
+		_stage.getScene().getStylesheets().add(styleSheet);		
 	}
 
 }

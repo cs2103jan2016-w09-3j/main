@@ -23,6 +23,8 @@ public class FloatingTaskUserInterface implements ViewInterface {
 
 	private static FloatingTaskUserInterface _myInstance;
 
+	private String _styleSheet;
+
 	private Stage _stage;
 	private int _stageWidth;
 	private int _stageHeight;
@@ -33,7 +35,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	private VBox _secondaryVbox;
 
 	private static final String CSS_LABEL = "cssLabelsFloatingTaskInterface";
-	
+
 	// font
 	static final int FONT_SIZE_LABEL = 20;
 	static final int FONT_SIZE_LABEL_DATE = 10;
@@ -50,25 +52,25 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	private int _startIndex = -1;
 	private int _endIndex = -1;
 	private int _selectedIndex = -1;
-	private int _individualItemWidth = -1;
-	private double transLationY = 0;
 
 	private ArrayList<TaskEntity> _floatingList;
 	private ArrayList<HBox> _floatingBoxes = new ArrayList<HBox>();
 
-	public static FloatingTaskUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds,
-			boolean fixedSize) {
+	public static FloatingTaskUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
+			String styleSheet) {
 		if (_myInstance == null) {
 			if (primaryStage == null || screenBounds == null) {
 				return null;
 			}
-			_myInstance = new FloatingTaskUserInterface(primaryStage, screenBounds, fixedSize);
+			_myInstance = new FloatingTaskUserInterface(primaryStage, screenBounds, fixedSize, styleSheet);
 			return _myInstance;
 		}
 		return null;
 	}
 
-	private FloatingTaskUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
+	private FloatingTaskUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
+			String styleSheet) {
+		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
 		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
 		buildComponent();
@@ -106,12 +108,12 @@ public class FloatingTaskUserInterface implements ViewInterface {
 
 		_mainVbox = new StackPane();
 		_mainVbox.setPrefSize(stageWidth, stageHeight);
-		_mainVbox.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
 		_mainVbox.setId("cssRootFloatingTaskView");
 
-		Scene s = new Scene(_mainVbox, stageWidth, stageHeight);
-		s.setFill(Color.TRANSPARENT);
-		_stage.setScene(s);
+		Scene scene = new Scene(_mainVbox, stageWidth, stageHeight);
+		scene.getStylesheets().add(_styleSheet);
+		scene.setFill(Color.TRANSPARENT);
+		_stage.setScene(scene);
 	}
 
 	public void update(int value) {
@@ -176,7 +178,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		_secondaryVbox = new VBox();
 		_secondaryVbox.setMinHeight(_stageHeight - LABEL_TITLE_HEIGHT);
 		_secondaryVbox.setMaxHeight(_stageHeight - LABEL_TITLE_HEIGHT);
-		
+
 		_mainVbox.getChildren().add(_secondaryVbox);
 		HBox labelTitle = buildTilteLabel();
 		_mainVbox.getChildren().add(labelTitle);
@@ -249,7 +251,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		floatingParent.setMaxHeight(LABEL_TASK_HEIGHT);
 		floatingParent.setMinWidth(_stageWidth);
 
-		Label indexLabel = new Label("ID"+Integer.toString(index));
+		Label indexLabel = new Label("ID" + Integer.toString(index));
 		indexLabel.getStyleClass().add(CSS_LABEL);
 		indexLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		indexLabel.setMinWidth(50);
@@ -291,7 +293,7 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		if (itemTopHeight + LABEL_TASK_HEIGHT > entireAreaHeight) {
 			posY += itemTopHeight + LABEL_TASK_HEIGHT - entireAreaHeight;
 		} else if (itemTopHeight < entireAreaHeight) {
-			
+
 		}
 		_secondaryVbox.setTranslateY(-posY);
 	}
@@ -305,5 +307,11 @@ public class FloatingTaskUserInterface implements ViewInterface {
 
 	public StackPane getMainLayoutComponent() {
 		return _mainVbox;
+	}
+
+	public void changeTheme(String styleSheet) {
+		_stage.getScene().getStylesheets().clear();
+		_styleSheet = styleSheet;
+		_stage.getScene().getStylesheets().add(styleSheet);
 	}
 }

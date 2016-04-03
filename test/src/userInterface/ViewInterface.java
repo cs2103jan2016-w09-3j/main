@@ -18,5 +18,7 @@ public interface ViewInterface {
     public void show();
 
     public void hide();
+    
+    public void changeTheme(String styleSheet);
 
 }

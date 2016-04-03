@@ -64,6 +64,7 @@ public class TaskViewUserInterface implements ViewInterface {
 
 	private VBox _mainVbox; // main parent for items.
 	private int _itemIndexCounter = 0;
+	private String _styleSheet;
 
 	ReverseParser r = new ReverseParser();
 
@@ -71,18 +72,20 @@ public class TaskViewUserInterface implements ViewInterface {
 	private ArrayList<GridPane> _gridPanes = new ArrayList<GridPane>();
 	private ArrayList<TaskEntity> workingList;
 
-	public static TaskViewUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
+	public static TaskViewUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
+			String styleSheet) {
 		if (_myInstance == null) {
 			if (primaryStage == null || screenBounds == null) {
 				return null;
 			}
-			_myInstance = new TaskViewUserInterface(primaryStage, screenBounds, fixedSize);
+			_myInstance = new TaskViewUserInterface(primaryStage, screenBounds, fixedSize, styleSheet);
 			return _myInstance;
 		}
 		return null;
 	}
 
-	private TaskViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
+	private TaskViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet) {
+		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
 		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
 	}
@@ -127,7 +130,6 @@ public class TaskViewUserInterface implements ViewInterface {
 		_stage.setY(applicationY);
 
 		StackPane mainPanel = new StackPane();
-		mainPanel.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
 		mainPanel.setPrefSize(stageWidth, stageHeight);
 		mainPanel.setId("cssTaskViewMainBackground");
 		mainPanel.setAlignment(Pos.TOP_LEFT);
@@ -136,6 +138,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		mainPanel.getChildren().add(_mainVbox);
 
 		Scene s = new Scene(mainPanel, stageWidth, stageHeight);
+		s.getStylesheets().add(_styleSheet);
 		s.setFill(Color.TRANSPARENT);
 		_stage.setScene(s);
 	}
@@ -332,7 +335,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	private String getStringOfDate(Calendar c) {
-		return r.reParse((Calendar)c.clone());
+		return r.reParse((Calendar) c.clone());
 	}
 
 	/**
@@ -877,5 +880,11 @@ public class TaskViewUserInterface implements ViewInterface {
 
 	public void setSelectedIndex(int index) {
 		_selectedIndex = index;
+	}
+
+	public void changeTheme(String styleSheet) {
+		_styleSheet = styleSheet;
+		_stage.getScene().getStylesheets().clear();
+		_stage.getScene().getStylesheets().add(_styleSheet);
 	}
 }

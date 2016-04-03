@@ -10,10 +10,9 @@ public class JUnitUserInterfaceController {
 
 	@Test
 	public void testSingleton() {
-		UserInterfaceController ui1 = UserInterfaceController.getInstance(null);
-		UserInterfaceController ui2 = UserInterfaceController.getInstance(null);
-		assertEquals(ui2,null);
+		UserInterfaceController ui1 = UserInterfaceController.getInstance(null, null);
+		UserInterfaceController ui2 = UserInterfaceController.getInstance(null, null);
+		assertEquals(ui2, null);
 	}
 
-	
 }

@@ -44,7 +44,10 @@ public class PrimaryUserInterface extends Application {
 	static final String FONT_DEFAULT = "lucida sans";
 	static final String FONT_TITLE_LABLES = "lucida sans";
 	static final int DEFAULT_FONT_SIZE = 24;
-	static final String STYLE_SHEET = "stylesheet.css";
+
+	private static String[] styles = { "default.css", "blackandwhite.css" };
+
+	private String _styleSheet = styles[0];
 
 	private double _commandBarWidth;
 	private Rectangle2D _screenBounds;
@@ -92,7 +95,7 @@ public class PrimaryUserInterface extends Application {
 		primaryStage.setX((_screenBounds.getWidth() - _commandBarWidth) / TWO);
 		primaryStage.setY((_screenBounds.getHeight() - COMMAND_BAR_HEIGTH - COMMAND_BAR_BOTTOM_MARGIN));
 		Scene primaryScene = new Scene(initializeRootLayout(), _commandBarWidth, COMMAND_BAR_HEIGTH);
-		primaryScene.getStylesheets().add(STYLE_SHEET);
+		primaryScene.getStylesheets().add(_styleSheet);
 		primaryStage.setScene(primaryScene);
 		_primaryStage.show();
 	}
@@ -114,7 +117,7 @@ public class PrimaryUserInterface extends Application {
 	 * @param primaryStage.
 	 */
 	private void initializeUiController(Stage primaryStage) {
-		uiController = UserInterfaceController.getInstance(primaryStage);
+		uiController = UserInterfaceController.getInstance(primaryStage, _styleSheet);
 		uiController.initializeInterface(_screenBounds, _fixedSize);
 	}
 
@@ -184,13 +187,16 @@ public class PrimaryUserInterface extends Application {
 				Pair<String, String> ids = _commandBar.getLinkId();
 				executeLink(ids.getFirst(), ids.getSecond(), _commandBar.getFullInput());
 			} else if (cmd.equals(COMMAND.SEARCH)) {
-				String stringToSave = _commandBar.getSearchStr();
-				executeSearch(stringToSave, _commandBar.getFullInput());
+				String stringToSearch = _commandBar.getSearchStr();
+				executeSearch(stringToSearch, _commandBar.getFullInput());
 			} else if (cmd.equals(COMMAND.SAVETO)) {
 				String stringToSearch = _commandBar.getSearchStr();
 				executeChangeSaveDir(stringToSearch);
 			} else if (cmd.equals(COMMAND.UNDO)) {
 				executeUndo();
+			} else if (cmd.equals(COMMAND.THEME)) {
+				String themeChange = _commandBar.getSearchStr();
+				executeChangeTheme(themeChange);
 			}
 		} else {
 			_commandBar.onKeyReleased();
@@ -227,18 +233,13 @@ public class PrimaryUserInterface extends Application {
 		if (event.getCode().isFunctionKey()) {
 			if (event.getCode().compareTo(KeyCode.F1) == 0) {
 				uiController.showHelpView();
-			}
-		}
-		if (event.getCode().isFunctionKey()) {
-			if (event.getCode().compareTo(KeyCode.F2) == 0) {
+			} else if (event.getCode().compareTo(KeyCode.F2) == 0) {
 				uiController.hide();
-			}
-		}
-		if (event.getCode().isFunctionKey()) {
-			if (event.getCode().compareTo(KeyCode.F3) == 0) {
+			} else if (event.getCode().compareTo(KeyCode.F3) == 0) {
 				uiController.show();
 			}
 		}
+
 		if (event.getCode().compareTo(KeyCode.LEFT) == 0) {
 			uiController.updateHelpView(-1);
 		} else if (event.getCode().compareTo(KeyCode.RIGHT) == 0) {
@@ -441,6 +442,18 @@ public class PrimaryUserInterface extends Application {
 			resetCommandInput();
 		}
 		_commandBar.showFeedBackMessage(COMMAND.UNDO, resultSet, null);
+	}
+
+	private void executeChangeTheme(String themeChange) {
+		for (int i = 0; i < styles.length; i++) {
+			if (styles[i].equals(themeChange)) {
+				_styleSheet = styles[i];
+				_primaryStage.getScene().getStylesheets().clear();
+				_primaryStage.getScene().getStylesheets().add(_styleSheet);
+				uiController.changeTheme(_styleSheet);
+				break;
+			}
+		}
 	}
 
 	/**

@@ -258,7 +258,7 @@ public class TaskManager {
      * @return all commands to be re-run before start of program
      */
     public Queue<String> getBackedupCommands () {
-        Queue<String> reloadedCommands = dataLoader.getCommandsUponInit();
+        Queue<String> reloadedCommands = dataLoader.getCommandsQueue();
         dataLoader.clearCommandFile();
         return new LinkedList(reloadedCommands);
     }

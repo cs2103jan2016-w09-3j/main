@@ -53,6 +53,8 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private static final int LINE_SIZE = 2;
 	private static final int LINE_LENGTH = 20;
 
+	private String _styleSheet;
+
 	private Stage _stage;
 	private int _stageWidth;
 	private int _stageHeight;
@@ -67,18 +69,20 @@ public class HelpScreenUserInterface implements ViewInterface {
 
 	private int _selector = 0;
 
-	public static HelpScreenUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
+	public static HelpScreenUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
+			String styleSheet) {
 		if (_myInstance == null) {
 			if (primaryStage == null || screenBounds == null) {
 				return null;
 			}
-			_myInstance = new HelpScreenUserInterface(primaryStage, screenBounds, fixedSize);
+			_myInstance = new HelpScreenUserInterface(primaryStage, screenBounds, fixedSize, styleSheet);
 			return _myInstance;
 		}
 		return null;
 	}
 
-	public HelpScreenUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize) {
+	public HelpScreenUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet) {
+		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
 		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
 	}
@@ -110,14 +114,14 @@ public class HelpScreenUserInterface implements ViewInterface {
 		_stage.setY(applicationY);
 
 		_mainPanel = new StackPane();
-		_mainPanel.getStylesheets().add(PrimaryUserInterface.STYLE_SHEET);
 		_mainPanel.setId("cssHelpScreenRoot");
 		_mainPanel.setPrefSize(windowWidth, windowHeight);
 		_mainPanel.setAlignment(Pos.TOP_CENTER);
 
-		Scene s = new Scene(_mainPanel, windowWidth, windowHeight);
-		s.setFill(Color.TRANSPARENT);
-		_stage.setScene(s);
+		Scene scene = new Scene(_mainPanel, windowWidth, windowHeight);
+		scene.getStylesheets().add(_styleSheet);
+		scene.setFill(Color.TRANSPARENT);
+		_stage.setScene(scene);
 		buildComponent();
 	}
 
@@ -144,7 +148,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 		Label title = new Label(HELP_DESCRIPTION_MAIN_TITLE);
 		title.setFont(FONT_LABEL_TITLE);
 		title.setId("cssHelpTitle");
-		title.setMinWidth(minWidth - MARGIN*2);
+		title.setMinWidth(minWidth - MARGIN * 2);
 		title.setAlignment(Pos.CENTER);
 		descriptionBox.getChildren().add(title);
 
@@ -198,7 +202,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 		title.setFont(FONT_LABEL_TITLE);
 		title.setId("cssHelpTitle");
 		descriptionBox.getChildren().add(title);
-		
+
 		Label descLabel = new Label(HELP_DESCRIPTION_DETAIL_COMPONENT);
 		descLabel.setFont(FONT_LABEL);
 		descLabel.setWrapText(true);
@@ -258,7 +262,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 		title.setFont(FONT_LABEL_TITLE);
 		title.setId("cssHelpTitle");
 		descriptionBox.getChildren().add(title);
-		
+
 		Label descLabel = new Label(HELP_DESCRIPTION_TASK_VIEW);
 		descLabel.setWrapText(true);
 		descLabel.setFont(FONT_LABEL);
@@ -311,7 +315,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 		title.setFont(FONT_LABEL_TITLE);
 		title.setId("cssHelpTitle");
 		descriptionBox.getChildren().add(title);
-		
+
 		Label descLabel = new Label(HELP_DESCRIPTION_DESCRIPTION_COMPONENT);
 		descLabel.setFont(FONT_LABEL);
 		descLabel.setWrapText(true);
@@ -384,7 +388,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 		title.setFont(FONT_LABEL_TITLE);
 		title.setId("cssHelpTitle");
 		descriptionBox.getChildren().add(title);
-		
+
 		Label descLabel = new Label(HELP_DESCRIPTION_COMMAND_BAR);
 		descLabel.setFont(FONT_LABEL);
 		descLabel.setWrapText(true);
@@ -435,6 +439,12 @@ public class HelpScreenUserInterface implements ViewInterface {
 		_stage.hide();
 		_selector = 0;
 		updateHelpPrompt();
+	}
+
+	public void changeTheme(String styleSheet) {
+		_stage.getScene().getStylesheets().clear();
+		_styleSheet = styleSheet;
+		_stage.getScene().getStylesheets().add(styleSheet);
 	}
 
 }

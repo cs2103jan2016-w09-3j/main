@@ -58,4 +58,11 @@ public class StorageInterface {
         return sc.saveToNewDirectory(newFilePath);
     }
     
+    public boolean saveThemePreference(String themeName) {
+        return sc.saveThemePreference(themeName);
+    }
+    
+    public String getThemePreference() {
+        return sc.getThemePreference();
+    }
 }

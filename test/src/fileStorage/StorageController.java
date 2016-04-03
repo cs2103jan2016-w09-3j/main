@@ -111,13 +111,6 @@ public class StorageController {
         return isFullQueue;
     }
     
-    // Gonna remove this
-    public Queue<String> getCommandsUponInit() {
-        Queue<String> retrievedCommands = storageHandler.getAllCommandsQueue();
-        
-        return retrievedCommands;
-    }
-    
     public boolean storeCommandLine(String command) {
         return storageHandler.writeToCommandFile(command);
     }
@@ -138,8 +131,24 @@ public class StorageController {
         storageHandler.clearCommandFile();
     }
     
+    //============================================================================
+    // Changing directory
+    // ===========================================================================
+    
     public boolean saveToNewDirectory(String newFilePath) {
         return storageHandler.changeDirectory(newFilePath);
+    }
+    
+    //============================================================================
+    // Saving theme
+    // ===========================================================================
+    
+    public boolean saveThemePreference(String themeName) {
+        return storageHandler.saveThemeName(themeName);
+    }
+    
+    public String getThemePreference() {
+        return storageHandler.getThemeName();
     }
     
     //============================================================================
