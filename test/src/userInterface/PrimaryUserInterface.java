@@ -73,7 +73,7 @@ public class PrimaryUserInterface extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		_primaryStage = primaryStage;
-		_commandBar =CommandBar.getInstance(COMMAND_BAR_HEIGTH, _commandBarWidth);
+		_commandBar = CommandBar.getInstance(COMMAND_BAR_HEIGTH, _commandBarWidth);
 		initializeControls();
 		initializePrimaryStage(primaryStage);
 		initializeUiController(primaryStage);
@@ -425,11 +425,12 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	private void executeUndo() {
+
 		ResultSet resultSet = uiController.undoLastCommand();
 		if (resultSet.isSuccess()) {
 			resetCommandInput();
 		}
-		_commandBar.showFeedBackMessage(COMMAND.SAVETO, resultSet, null);
+		_commandBar.showFeedBackMessage(COMMAND.UNDO, resultSet, null);
 	}
 
 	/**

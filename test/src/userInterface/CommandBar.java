@@ -56,8 +56,9 @@ public class CommandBar {
 	private static final String MESSAGE_FAILURE_LINK_TYPE_1 = "Failed to link, IDs are not within range.";
 	private static final String MESSAGE_FAILURE_LINK_TYPE_2 = "Failed to link.";
 
-	private static final String MESSAGE_SUCCESS_UNDO = "successfully undo.";
-	private static final String MESSAGE_FAILURE_UNDO_TYPE_1 = "Unable to undo.";
+	private static final String MESSAGE_SUCCESS_UNDO_TYPE_1 = "successfully undo.";
+	private static final String MESSAGE_FAILURE_UNDO_TYPE_1 = "There are no commands to undo.";
+
 	private static final String MESSAGE_SUCCESS_SAVETO = "successfully changed save directory.";
 	private static final String MESSAGE_FAILURE_SAVETO = "Fail to change save directory.";
 
@@ -255,9 +256,9 @@ public class CommandBar {
 		InputParser parser = new InputParser(fullInput);
 		try {
 			parser.addXML();
-			//System.out.println(parser.getInput());
+			// System.out.println(parser.getInput());
 			ArrayList<Pair<String, ArrayList<String>>> items = XMLParser.xmlToArrayList(parser.getInput());
-			//System.out.println(items.size());
+			// System.out.println(items.size());
 			for (int i = 0; i < items.size(); i++) {
 				Label label = buildItem(items.get(i));
 				if (label != null) {
@@ -680,7 +681,7 @@ public class CommandBar {
 		case UNDO: {
 			if (resultSet != null) {
 				if (resultSet.isSuccess()) {
-					setFeedBackMessage(MESSAGE_SUCCESS_UNDO);
+					setFeedBackMessage(MESSAGE_SUCCESS_UNDO_TYPE_1);
 					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 				} else {
 					setFeedBackMessage(MESSAGE_FAILURE_UNDO_TYPE_1);
