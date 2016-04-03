@@ -1081,6 +1081,7 @@ public class TaskManager {
             undoPointer--;
             if(undoPointer == -1) {
                 System.out.println("Running 0 commands for undo");
+                _undoing = false;
                 return new ArrayList<String>();
             } else {
                 System.out.println("Running " + (undoPointer + 1) + " commands for undo");
