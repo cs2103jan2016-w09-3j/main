@@ -3,10 +3,12 @@ package userInterface;
 
 import java.util.ArrayList;
 import entity.DescriptionLabel;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -42,10 +44,11 @@ public class DescriptionComponent implements ViewInterface {
 	private double _translationY = 0;
 	private int _currentView;
 
-	public DescriptionComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet) {
+	public DescriptionComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
+			EventHandler<MouseEvent> mouseEvent) {
 		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
-		initializeStage(parentStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
+		initializeStage(parentStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
 	}
 
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
@@ -71,7 +74,8 @@ public class DescriptionComponent implements ViewInterface {
 		}
 	}
 
-	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight) {
+	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight,
+			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
 		_stage.initOwner(owner);
 		_stage.initStyle(StageStyle.TRANSPARENT);
@@ -87,6 +91,8 @@ public class DescriptionComponent implements ViewInterface {
 		mainPanel.getChildren().add(_mainVbox);
 		Scene scene = new Scene(mainPanel, windowWidth, windowHeight, Color.TRANSPARENT);
 		scene.getStylesheets().add(_styleSheet);
+		scene.setOnMousePressed(mouseEvent);
+
 		_stage.setScene(scene);
 	}
 
@@ -261,7 +267,7 @@ public class DescriptionComponent implements ViewInterface {
 	public void changeTheme(String styleSheet) {
 		_stage.getScene().getStylesheets().clear();
 		_styleSheet = styleSheet;
-		_stage.getScene().getStylesheets().add(styleSheet);		
+		_stage.getScene().getStylesheets().add(styleSheet);
 	}
 
 }

@@ -1,11 +1,13 @@
 //@@author A0125514N
 package userInterface;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -41,10 +43,10 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	private VBox _mainfloatingTaskArea;
 
 	public FloatingBarViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
-			String styleSheet) {
+			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
 		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
-		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
+		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight,mouseEvent);
 	}
 
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
@@ -62,7 +64,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		}
 	}
 
-	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight) {
+	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight,EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
 		_stage.initOwner(owner);
 		_stage.initStyle(StageStyle.TRANSPARENT);
@@ -77,6 +79,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		Scene scene = new Scene(_mainHBox, windowWidth, windowHeight, Color.TRANSPARENT);
 		scene.getStylesheets().add(_styleSheet);
 		scene.setFill(Color.TRANSPARENT);
+		scene.setOnMousePressed(mouseEvent);
 		_stage.setScene(scene);
 
 		build();

@@ -20,7 +20,9 @@ import entity.TaskEntity;
 import mainLogic.TaskManager;
 import mainLogic.TaskManagerInterface;
 import mainLogic.Utils;
+import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class UserInterfaceController {
@@ -50,6 +52,8 @@ public class UserInterfaceController {
 	private FloatingBarViewUserInterface _floatingBarComponent;
 	private FloatingTaskUserInterface _floatingViewInterface;
 	private SearchUserInterface _searchViewInterface;
+
+	private EventHandler<MouseEvent> _mouseEvent;
 
 	private HelpScreenUserInterface _helpScreen;
 
@@ -90,10 +94,12 @@ public class UserInterfaceController {
 		recoverLostCommands();
 	}
 
-	public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize, String styleSheet) {
-		_styleSheet = styleSheet;
+	public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
+			EventHandler<MouseEvent> mouseEvent) {
+		this._styleSheet = styleSheet;
 		this._screenBounds = screenBounds;
 		this._fixedSize = fixedSize;
+		this._mouseEvent = mouseEvent;
 		initializeViews();
 		show();
 	}
@@ -108,27 +114,28 @@ public class UserInterfaceController {
 		initializeFloatingView();
 		initializeSearchView();
 		initializeTaskView();
-		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet);
-		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet);
+		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet, _mouseEvent);
+		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet, _mouseEvent);
 		updateComponents(0);
 	}
 
 	private void initializeHelpScreen() {
-		_helpScreen = HelpScreenUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet);
+		_helpScreen = HelpScreenUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,_mouseEvent);
 	}
 
 	private void initializeTaskView() {
-		_taskViewInterface = TaskViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet);
+		_taskViewInterface = TaskViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+				_mouseEvent);
 		_taskViewInterface.buildComponent(_logicFace.getWorkingList(), _logicFace.getNextTimeListId());
 	}
 
 	private void initializeFloatingView() {
 		_floatingViewInterface = FloatingTaskUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize,
-				_styleSheet);
+				_styleSheet,_mouseEvent);
 	}
 
 	private void initializeFloatingBar() {
-		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize, _styleSheet);
+		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize, _styleSheet,_mouseEvent);
 		TaskEntity floatingTask = _logicFace.getRandomFloating();
 		if (floatingTask != null) {
 			startFloatingThread();
@@ -136,7 +143,7 @@ public class UserInterfaceController {
 	}
 
 	private void initializeSearchView() {
-		_searchViewInterface = SearchUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet);
+		_searchViewInterface = SearchUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,_mouseEvent);
 	}
 
 	/**

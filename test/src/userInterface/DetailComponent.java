@@ -6,12 +6,14 @@ import java.util.Calendar;
 import java.util.Random;
 
 import entity.TaskEntity;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -40,11 +42,11 @@ public class DetailComponent implements ViewInterface {
 	private static final int LABEL_TASK_HEIGHT = 25;
 	private static final int LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS = 20;
 	private static final int BOTTOM_MARGIN_INDIVIDUAL_ITEMS = 10;
-	
+
 	private static final String CSS_LABEL = "cssLabelsDetails";
 
 	private String _styleSheet;
-	
+
 	private Stage _stage;
 	private int _stageWidth;
 	private int _stageHeight;
@@ -60,15 +62,16 @@ public class DetailComponent implements ViewInterface {
 	private boolean _haveAssociation;
 	private TaskEntity _targetedTask;
 
-	public DetailComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet) {
+	public DetailComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
+			EventHandler<MouseEvent> mouseEvent) {
 		_currentSelectView = TASK_VIEW;
 		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
-		initializeScenes();
-		initializeStage(parentStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
+		initializeScenes(mouseEvent);
+		initializeStage(parentStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
 	}
 
-	private void initializeScenes() {
+	private void initializeScenes(EventHandler<MouseEvent> mouseEvent) {
 		_scenes = new Scene[TOTAL_VIEWS];
 		_mainVbox = new VBox[TOTAL_VIEWS];
 		for (int i = 0; i < TOTAL_VIEWS; i++) {
@@ -78,6 +81,7 @@ public class DetailComponent implements ViewInterface {
 			_scenes[i] = new Scene(_mainVbox[i], _stageWidth, _stageHeight);
 			_scenes[i].setFill(Color.TRANSPARENT);
 			_scenes[i].getStylesheets().add(_styleSheet);
+			_scenes[i].setOnMousePressed(mouseEvent);
 		}
 	}
 
@@ -106,7 +110,8 @@ public class DetailComponent implements ViewInterface {
 		_individualItemWidth = _stageWidth - ITEM_MARGIN;
 	}
 
-	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight) {
+	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight,
+			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
 		_stage.initOwner(owner);
 		_stage.initStyle(StageStyle.TRANSPARENT);
@@ -254,7 +259,7 @@ public class DetailComponent implements ViewInterface {
 			return;
 		}
 		TaskEntity task = _targetedTask.getDisplayAssociations().get(index);
-		
+
 		Text description = new Text(task.getDescription());
 		description.getStyleClass().add(CSS_LABEL);
 		description.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
@@ -444,7 +449,7 @@ public class DetailComponent implements ViewInterface {
 		_styleSheet = styleSheet;
 		for (int i = 0; i < TOTAL_VIEWS; i++) {
 			_scenes[i].getStylesheets().clear();
-			_scenes[i].getStylesheets().add(styleSheet);		
+			_scenes[i].getStylesheets().add(styleSheet);
 		}
 	}
 

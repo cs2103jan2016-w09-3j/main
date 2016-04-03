@@ -4,11 +4,13 @@ package userInterface;
 import java.util.ArrayList;
 
 import entity.TaskEntity;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -60,21 +62,22 @@ public class SearchUserInterface implements ViewInterface {
 	private ArrayList<HBox> _searchBoxes = new ArrayList<HBox>();
 
 	public static SearchUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
-			String styleSheet) {
+			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
 		if (_myInstance == null) {
 			if (primaryStage == null || screenBounds == null) {
 				return null;
 			}
-			_myInstance = new SearchUserInterface(primaryStage, screenBounds, fixedSize, styleSheet);
+			_myInstance = new SearchUserInterface(primaryStage, screenBounds, fixedSize, styleSheet, mouseEvent);
 			return _myInstance;
 		}
 		return null;
 	}
 
-	private SearchUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet) {
+	private SearchUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
+			EventHandler<MouseEvent> mouseEvent) {
 		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
-		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
+		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
 		buildComponent();
 	}
 
@@ -101,7 +104,8 @@ public class SearchUserInterface implements ViewInterface {
 		}
 	}
 
-	public void initializeStage(Window owner, int applicationX, int applicationY, int stageWidth, int stageHeight) {
+	public void initializeStage(Window owner, int applicationX, int applicationY, int stageWidth, int stageHeight,
+			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
 		_stage.initOwner(owner);
 		_stage.initStyle(StageStyle.TRANSPARENT);
@@ -115,6 +119,7 @@ public class SearchUserInterface implements ViewInterface {
 		Scene scene = new Scene(_mainVbox, stageWidth, stageHeight);
 		scene.getStylesheets().add(_styleSheet);
 		scene.setFill(Color.TRANSPARENT);
+		scene.setOnMousePressed(mouseEvent);
 		_stage.setScene(scene);
 	}
 
@@ -347,7 +352,7 @@ public class SearchUserInterface implements ViewInterface {
 	public void changeTheme(String styleSheet) {
 		_stage.getScene().getStylesheets().clear();
 		_styleSheet = styleSheet;
-		_stage.getScene().getStylesheets().add(styleSheet);		
+		_stage.getScene().getStylesheets().add(styleSheet);
 	}
 
 }

@@ -1,11 +1,13 @@
 //@@author A0125514N
 package userInterface;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -70,21 +72,22 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private int _selector = 0;
 
 	public static HelpScreenUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
-			String styleSheet) {
+			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
 		if (_myInstance == null) {
 			if (primaryStage == null || screenBounds == null) {
 				return null;
 			}
-			_myInstance = new HelpScreenUserInterface(primaryStage, screenBounds, fixedSize, styleSheet);
+			_myInstance = new HelpScreenUserInterface(primaryStage, screenBounds, fixedSize, styleSheet, mouseEvent);
 			return _myInstance;
 		}
 		return null;
 	}
 
-	public HelpScreenUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet) {
+	public HelpScreenUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
+			EventHandler<MouseEvent> mouseEvent) {
 		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
-		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight);
+		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
 	}
 
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
@@ -106,7 +109,8 @@ public class HelpScreenUserInterface implements ViewInterface {
 		}
 	}
 
-	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight) {
+	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight,
+			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
 		_stage.initOwner(owner);
 		_stage.initStyle(StageStyle.TRANSPARENT);
@@ -121,6 +125,8 @@ public class HelpScreenUserInterface implements ViewInterface {
 		Scene scene = new Scene(_mainPanel, windowWidth, windowHeight);
 		scene.getStylesheets().add(_styleSheet);
 		scene.setFill(Color.TRANSPARENT);
+		scene.setOnMousePressed(mouseEvent);
+
 		_stage.setScene(scene);
 		buildComponent();
 	}

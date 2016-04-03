@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -116,6 +117,12 @@ public class PrimaryUserInterface extends Application {
 	 * @param primaryStage.
 	 */
 	private void initializeUiController(Stage primaryStage) {
+		EventHandler<MouseEvent> mainEventHandler = new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent arg0) {
+				focus();
+			}
+		};
+		
 		uiController = UserInterfaceController.getInstance(primaryStage);
 		String theme = uiController.loadTheme();
 		if (isValidTheme(theme)) {
@@ -123,7 +130,7 @@ public class PrimaryUserInterface extends Application {
 			_primaryStage.getScene().getStylesheets().clear();
 			_primaryStage.getScene().getStylesheets().add(theme);
 		}
-		uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet);
+		uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet, mainEventHandler);
 	}
 
 	/**
