@@ -24,12 +24,11 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import entity.AllTaskLists;
 import entity.ResultSet;
 import entity.TaskEntity;
-import fileStorage.StorageInterface;
-import fileStorage.CommandHandler;
+import fileStorage.StorageController;
 import fileStorage.StorageHandler;
 
 public class TaskManager {
-    private StorageInterface dataLoader;
+    private StorageController dataLoader;
 
     private static TaskManager singleton;
     private Logger logger;
@@ -132,7 +131,7 @@ public class TaskManager {
         initLogger();
 
 
-        dataLoader = new StorageInterface();
+        dataLoader = new StorageController();
         AllTaskLists taskdata = dataLoader.getTaskLists();
 
         mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();

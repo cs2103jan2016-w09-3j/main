@@ -1,7 +1,5 @@
 package fileStorage;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -9,24 +7,24 @@ import java.util.Queue;
 import entity.AllTaskLists;
 import entity.TaskEntity;
 
-public class StorageInterface {
+public class StorageController {
     
     public StorageHandler storageHandler;
     public static final int QUEUE_SIZE = 5;
     private static final int SEARCH_VIEW = 4;
     private static final int WRITE_TO_MAIN_FILE = 2;
     
-    public StorageInterface() {
+    public StorageController() {
         storageHandler = new StorageHandler();
     }
     
     // Test function
     public static void main (String args[]) {
         StorageHandler sh = new StorageHandler();
-        StorageInterface si = new StorageInterface();
+        StorageController si = new StorageController();
         
-        sh.writeToFile("testing see if it works", 2);
-        sh.changeDirectory("C:/Users/User/Desktop/list.txt");
+        //sh.writeToFile("testing see if it works", 2);
+        //sh.changeDirectory("Desktop/list.txt");
     }
 
     //============================================================================
