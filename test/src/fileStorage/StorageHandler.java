@@ -10,12 +10,12 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class StorageHandler {
-    
+
     private String configFilePath;
     private String tasksFilePath;
     private String commandsFilePath;
     private String backUpTasksFilePath;
-    
+
     private File configFile;
     private File tasksFile;
     private File commandsFile;
@@ -24,14 +24,14 @@ public class StorageHandler {
     private String allStoredTasks;
     private String allBackUpTasks;
     private Queue<String> allCommandsQueue;
-    
+
     private static final int READ_FROM_CONFIG_FILE = 1;
     private static final int READ_FROM_MAIN_FILE = 2;
     private static final int READ_FROM_BACK_UP_FILE = 3;
     private static final int WRITE_TO_CONFIG_FILE = 1;
     private static final int WRITE_TO_MAIN_FILE = 2;
     private static final int WRITE_TO_BACK_UP_FILE = 3;
-    
+
     public StorageHandler() {
         allCommandsQueue = new LinkedList<String>();
         processFile();
@@ -52,7 +52,7 @@ public class StorageHandler {
     public void setAllStoredTasks(String allStoredTasks) {
         this.allStoredTasks = allStoredTasks;
     }
-    
+
     public String getAllBackUpTasks() {
         return allBackUpTasks;
     }
@@ -64,7 +64,7 @@ public class StorageHandler {
     public void setAllCommandsQueue(Queue<String> allCommandsQueue) {
         this.allCommandsQueue = allCommandsQueue;
     }
-    
+
     //============================================================================
     // Initialising, creating new files
     // ===========================================================================
@@ -143,7 +143,7 @@ public class StorageHandler {
             e.printStackTrace();
         }
     }
-    
+
     //============================================================================
     // Reading from existing files
     // ===========================================================================
@@ -205,12 +205,12 @@ public class StorageHandler {
         }
         return readCommands;
     }
-    
+
     public boolean copyToBackUp() {
         allBackUpTasks = readFromExistingFile(READ_FROM_MAIN_FILE);
         return writeToFile(allBackUpTasks, WRITE_TO_BACK_UP_FILE);
     }
-    
+
     //============================================================================
     // Writing to files
     // ===========================================================================
@@ -248,7 +248,7 @@ public class StorageHandler {
         }
         return isModified(beforeModify, afterModify);
     }
-  
+
     /**
      * Returns true if commands written to a file, false otherwise
      * Whether the commands have been written depends on the last modified time of the file
@@ -280,7 +280,7 @@ public class StorageHandler {
     private boolean isModified(long timeBeforeModification, long timeAfterModification) {
         return timeAfterModification > timeBeforeModification;
     }
-    
+
     //============================================================================
     // Clearing and removing files
     // ===========================================================================
@@ -292,7 +292,7 @@ public class StorageHandler {
         clearCommandFile();
         allCommandsQueue.clear();
     }
-    
+
     /**
      * Clears command file upon committing
      */
@@ -307,29 +307,30 @@ public class StorageHandler {
             e.printStackTrace();
         }
     }
-    
+
     public void deleteBackUpFile() {
         backUpTasksFile.delete();
     }
-    
+
     public boolean changeDirectory(String newFilePath) {
         boolean isChanged = false;
-        
+
         File oldFile = new File(tasksFilePath);
         String transferData = readFromExistingFile(READ_FROM_MAIN_FILE);
-        
+
         File newFile = new File(newFilePath);
         setMainFilePath(newFile.getAbsolutePath());
         if (newFile.isDirectory() == false) {
-            isChanged = newFile.getParentFile().mkdirs();
-        } else {
-            isChanged = true;
-        }
-        try {
-            newFile.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            if (newFile.getParentFile() != null) {
+                isChanged = newFile.mkdir();
+                try {
+                    newFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                isChanged = true;
+            }
+        } 
         writeToFile(transferData, WRITE_TO_MAIN_FILE);
         writeToFile(newFile.getAbsolutePath(), WRITE_TO_CONFIG_FILE);
         oldFile.delete();
