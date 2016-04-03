@@ -317,3 +317,10 @@
 #cssCommandOther{
 	-fx-text-fill:rgba(255,255,255,1.0);
 }
+
+#cssCommandTheme{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-background-color: rgba(238.0, 120, 163.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
