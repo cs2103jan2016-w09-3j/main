@@ -584,6 +584,12 @@ public class TaskManager {
 
             if (checkClashing(newTask)) {
                 addResults.setStatus(ResultSet.STATUS_CONFLICT);
+                System.out.println("Event conflicting!");
+            }
+            
+            if(Utils.isDateBeforeNow(newTask.getDueDate())) {
+                addResults.setStatus(ResultSet.STATUS_PAST);
+                System.out.println("Event passed!");
             }
             addResults.setView(ResultSet.TASK_VIEW);
             int idToInsert = findPositionToInsert(newTask);
@@ -844,7 +850,7 @@ public class TaskManager {
     public ResultSet changeDirectory(String newDirectory) {
         ResultSet changeResult = new ResultSet();
         boolean saveSuccess = dataLoader.saveToNewDirectory(newDirectory);
-        if(saveSuccess) {
+        if(saveSuccess) {   
             changeResult.setSuccess();
             changeResult.setStatus(ResultSet.STATUS_GOOD);
         } else {

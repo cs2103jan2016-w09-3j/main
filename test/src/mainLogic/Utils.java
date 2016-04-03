@@ -269,8 +269,8 @@ public class Utils {
             }
         }
     }
-	
-	/**
+
+    /**
      * Compares if the 2 due dates of the task is the same (Task order dont
      * matter)
      * 
@@ -335,5 +335,15 @@ public class Utils {
 		newDate.clear();
 		newDate.set(year, month, day, hour, minutes);
 		return newDate;
+	}
+	
+	public static boolean isDateBeforeNow (Calendar timeToCheck) {
+	    Calendar currentTime = Calendar.getInstance();
+	    
+	    if( currentTime.compareTo(timeToCheck) > 0 ) {
+	        return true;
+	    } else {
+	        return false;
+	    }
 	}
 }
