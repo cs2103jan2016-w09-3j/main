@@ -448,6 +448,7 @@ public class PrimaryUserInterface extends Application {
 		for (int i = 0; i < styles.length; i++) {
 			if (styles[i].equals(themeChange)) {
 				_styleSheet = styles[i];
+				_primaryStage.getScene().getStylesheets().clear();
 				_primaryStage.getScene().getStylesheets().add(_styleSheet);
 				uiController.changeTheme(_styleSheet);
 				break;

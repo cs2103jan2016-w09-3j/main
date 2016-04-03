@@ -444,7 +444,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 	public void changeTheme(String styleSheet) {
 		_stage.getScene().getStylesheets().clear();
 		_styleSheet = styleSheet;
-		_stage.getScene().getStylesheets().add(styleSheet);		
+		_stage.getScene().getStylesheets().add(styleSheet);
 	}
 
 }

@@ -809,7 +809,7 @@ public class UserInterfaceController {
 		updateChangesToViews(-1);
 	}
 
-	public void changeTheme(String styleSheet) {
+	public boolean changeTheme(String styleSheet) {
 		 _taskViewInterface.changeTheme(styleSheet);
 		_descriptionComponent.changeTheme(styleSheet);
 		 _detailComponent.changeTheme(styleSheet);
@@ -817,5 +817,6 @@ public class UserInterfaceController {
 		_floatingViewInterface.changeTheme(styleSheet);
 		_searchViewInterface.changeTheme(styleSheet);
 		_helpScreen.changeTheme(styleSheet);
+		return true;
 	}
 }
