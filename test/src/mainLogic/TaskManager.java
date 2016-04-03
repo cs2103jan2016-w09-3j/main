@@ -283,7 +283,11 @@ public class TaskManager {
                 undoPointer++;
             } else {
                 //Trims off the additional commands
-                undoList = new ArrayList<String>(undoList.subList(0, undoPointer));
+                if(undoPointer == -1) {
+                    undoList = new ArrayList<String>();
+                } else {
+                    undoList = new ArrayList<String>(undoList.subList(0, undoPointer + 1));
+                }
                 undoList.add(command);
                 undoPointer++;
             }
