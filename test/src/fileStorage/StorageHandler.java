@@ -319,18 +319,19 @@ public class StorageHandler {
         String transferData = readFromExistingFile(READ_FROM_MAIN_FILE);
 
         File newFile = new File(newFilePath);
-        setMainFilePath(newFile.getAbsolutePath());
         if (newFile.isDirectory() == false) {
             if (newFile.getParentFile() != null) {
-                isChanged = newFile.mkdir();
-                try {
-                    newFile.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                isChanged = true;
+                isChanged = newFile.mkdirs();
+                System.out.println("Creating dir: " + isChanged);
             }
         } 
+        try {
+            isChanged = newFile.createNewFile();
+            System.out.println("Create new file: " + isChanged);
+            setMainFilePath(newFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         writeToFile(transferData, WRITE_TO_MAIN_FILE);
         writeToFile(newFile.getAbsolutePath(), WRITE_TO_CONFIG_FILE);
         oldFile.delete();
