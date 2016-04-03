@@ -1,5 +1,7 @@
 package fileStorage;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -11,6 +13,7 @@ public class StorageInterface {
     
     public StorageHandler storageHandler;
     public static final int QUEUE_SIZE = 5;
+    private static final int SEARCH_VIEW = 4;
     private static final int WRITE_TO_MAIN_FILE = 2;
     
     public StorageInterface() {
@@ -19,24 +22,16 @@ public class StorageInterface {
     
     // Test function
     public static void main (String args[]) {
-        StorageInterface sc = new StorageInterface();
         StorageHandler sh = new StorageHandler();
-        JsonConverter jc = new JsonConverter();
+        StorageInterface si = new StorageInterface();
         
-        AllTaskLists dummyTL = sc.createDummy();
-        //sh.writeToMainFile(jc.javaToJson(dummyTL));
-        
-        //String data = fm.readFromExistingFile();
-        //System.out.println(data);
-        //AllTaskLists convertedDummy = jc.jsonToJava(data);
-        
-        Queue<String> dummyCommands = sc.createDummyCommands();
-        sh.writeToCommandFile("HELLO COMMAND");
-        //sh.writeToMainFile("HELLO MAIN");
-        
-        //ch.saveUponExit(true);
-        //System.out.println(ch.readFromExistingCommandFile()); 
+        sh.writeToFile("testing see if it works", 2);
+        sh.changeDirectory("C:/Users/User/Desktop/list.txt");
     }
+
+    //============================================================================
+    // Handling main file
+    // ===========================================================================
 
     /**
      * Retrieve all tasks previously saved in the text file.
@@ -79,6 +74,10 @@ public class StorageInterface {
         return storeTaskLists(newList);
     }
     
+    //============================================================================
+    // Handling back up file
+    // ===========================================================================
+
     public AllTaskLists getBackUpTaskLists() {
         JsonConverter jsonConverter = new JsonConverter();
         
@@ -91,9 +90,12 @@ public class StorageInterface {
     public void deleteBackUp() {
         storageHandler.deleteBackUpFile();;
     }
+    
+    //============================================================================
+    // Handling command file
+    // ===========================================================================
         
     public boolean saveUponFullQueue(String command) {
-        CommandHandler commandHandler = new CommandHandler();
         
         boolean isSaved = storeCommandLine(command);
         assert isSaved == true : "Not commited to main file.";
@@ -102,7 +104,13 @@ public class StorageInterface {
         newCommandsQueue.offer(command);
         setCommandsQueue(newCommandsQueue);
         
-        return commandHandler.saveUponFullQueue(command, newCommandsQueue.size());
+        boolean isFullQueue = false;
+        
+        String[] splitCommand = command.split(" ");
+        if (splitCommand[0].equals(SEARCH_VIEW) == false && newCommandsQueue.size() >= QUEUE_SIZE) {
+            isFullQueue = true;
+        }
+        return isFullQueue;
     }
     
     public Queue<String> getCommandsUponInit() {
@@ -130,6 +138,14 @@ public class StorageInterface {
     public void clearCommandFile() {
         storageHandler.clearCommandFile();
     }
+    
+    public boolean saveToNewDirectory(String newFilePath) {
+        return storageHandler.changeDirectory(newFilePath);
+    }
+    
+    //============================================================================
+    // Generate dummy data
+    // ===========================================================================
     
     private AllTaskLists createDummy() {
         ArrayList<TaskEntity> dummyMainList = new ArrayList<TaskEntity>();
