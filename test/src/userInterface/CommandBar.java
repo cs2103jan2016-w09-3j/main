@@ -60,7 +60,7 @@ public class CommandBar {
 	private static final String MESSAGE_FAILURE_UNDO_TYPE_1 = "There are no commands to undo.";
 
 	private static final String MESSAGE_SUCCESS_SAVETO = "successfully changed save directory.";
-	private static final String MESSAGE_FAILURE_SAVETO = "Fail to change save directory.";
+	private static final String MESSAGE_FAILURE_SAVETO = "Saving directory failed, Setting reset to defaults.";
 
 	private static final String MESSAGE_SUCCESS_THEME = "Successfully changed theme.";
 	private static final String MESSAGE_FAILURE_THEME = "Invalid theme. Choose a theme from this list -> %1$s.";
