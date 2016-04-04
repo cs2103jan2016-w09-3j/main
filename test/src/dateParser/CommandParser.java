@@ -2,15 +2,18 @@ package dateParser;
 
 public class CommandParser {
 
+	/**
+	 * @@author :a0125415n
+	 */
 	public enum COMMAND {
-		ADD, EDIT, DELETE, EXIT, MAIN, HIDE, SHOW, FLOAT,SEARCH, JUMP, LINK, DONE,SAVETO, UNDO,THEME, INVALID;
+		ADD, EDIT, DELETE, EXIT, MAIN, HIDE, SHOW, FLOAT,SEARCH, JUMP, LINK, DONE,SAVETO,LOADFROM, UNDO,THEME, INVALID;
 	};
 
 	public CommandParser() {
 
 	}
 
-	/**
+	/**@@author :a0125415n
 	 * takes in a string and retuns the related command
 	 * @param input
 	 * @return COMMAND enum
@@ -48,11 +51,13 @@ public class CommandParser {
 			returnVal = COMMAND.UNDO;
 		}else if (inputCmd.equalsIgnoreCase("theme")) {
 			returnVal = COMMAND.THEME;
+		}else if (inputCmd.equalsIgnoreCase("loadfrom")) {
+			returnVal = COMMAND.LOADFROM;
 		}
 		return returnVal;
 	}
 
-	/**
+	/**@@author :a0125415n
 	 * takes the first word and adds XML to it
 	 * @param input
 	 * @return xml of input

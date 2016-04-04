@@ -7,7 +7,7 @@ import java.util.List;
 public class ParserCommons {
 	private static final int FIRST_WORD = 0;
 	
-	/**
+	/**@@author :a0125415n
 	 * returns the last word  of a given string
 	 * @param input
 	 * @return String last word
@@ -21,7 +21,7 @@ public class ParserCommons {
 		return returnVal;
 	}
 	
-	/**
+	/**@@author :a0125415n
 	 * For File reading, Converts a Date.toString() value and returns a Calendar object
 	 * @param input
 	 * @return Calendar
@@ -52,7 +52,7 @@ public class ParserCommons {
 		return returnVal;
 	}
 	
-	/**
+	/**@@author :a0125415n
 	 * creates a date time in format xth month year xxxxhrs
 	 * @param Calendar c
 	 * @return a string in date followed by time
@@ -67,7 +67,7 @@ public class ParserCommons {
 		returnVal += "hrs";
 		return returnVal;
 	}
-	/**
+	/**@@author :a0125415n
 	 * returns the first word of a given String
 	 * @param input
 	 * @return String, first word
