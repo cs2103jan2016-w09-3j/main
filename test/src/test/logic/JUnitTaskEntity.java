@@ -1,3 +1,9 @@
+/**
+ * @author qy
+ * @@author a0125493a
+ * 
+ *          Testing unit for TaskEntity's functionalities
+ */
 package test.logic;
 
 import static org.junit.Assert.*;

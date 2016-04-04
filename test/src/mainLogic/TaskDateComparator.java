@@ -1,3 +1,9 @@
+/**
+ * @author qy
+ * @@author a0125493a
+ * 
+ *          Comparator used to sort the tasks in the timed arrayList
+ */
 package mainLogic;
 
 import java.util.Calendar;

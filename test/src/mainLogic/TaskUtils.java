@@ -1,3 +1,9 @@
+/**
+ * @author qy
+ * @@author a0125493a
+ * 
+ *          Common utilities from logic for use through the program
+ */
 package mainLogic;
 
 import java.util.Calendar;
@@ -210,35 +216,53 @@ public class TaskUtils {
         }
     }
 
+
     /**
      * Checks if the durations of 2 tasks are overlapping
      * 
-     * @param dueDate - Task with due date to be checked
-     * @param range - Task with the start and end time
-     * @return True if the due date is within the 2 timing
-     *         False if the due date is within the
+     * @param task1 - tasks to be compared
+     * @param task2 - tasks to be compared
+     * @return true if the range from start-end time of both tasks intersects
+     *         false otherwise
      */
     public static boolean checkOverlappingDuration(TaskEntity task1, TaskEntity task2) {
         assert task1.getDueDate() != null && task1.getStartDate() != null && task2.getDueDate() != null
                 && task2.getStartDate() != null : "One of the variables being compared is null in checkOverlappingDuration";
+        
         if (task1.getDueDate() == null || task1.getStartDate() == null || task2.getDueDate() == null
                 || task2.getStartDate() == null) {
             return false;
-        } else {
-            clearSeconds(task1.getDueDate());
-            clearSeconds(task1.getStartDate());
-            clearSeconds(task2.getDueDate());
-            clearSeconds(task2.getStartDate());
+        } else if (task1.isFullDay() || task2.isFullDay()){
+            return false;
+        }else {
+            return checkOverlapping(task1, task2);
+        }
+    }
 
-            if (task1.getDueDate().compareTo(task2.getDueDate()) <= 0
-                    && task1.getDueDate().compareTo(task2.getStartDate()) >= 0) {
-                return true;
-            } else if (task2.getDueDate().compareTo(task1.getDueDate()) <= 0
-                    && task2.getDueDate().compareTo(task1.getStartDate()) >= 0) {
-                return true;
-            } else {
-                return false;
-            }
+    /**
+     * Checks if either startDate or dueDate of task1 is within the range of
+     * startDate and dueDate of task2. Function strips the seconds and
+     * milliseconds of all dates compared
+     * 
+     * @param task1
+     * @param task2
+     * @return True if either dates is within range
+     *         false otherwise
+     */
+    private static boolean checkOverlapping(TaskEntity task1, TaskEntity task2) {
+        clearSeconds(task1.getDueDate());
+        clearSeconds(task1.getStartDate());
+        clearSeconds(task2.getDueDate());
+        clearSeconds(task2.getStartDate());
+
+        if (task1.getDueDate().compareTo(task2.getDueDate()) <= 0
+                && task1.getDueDate().compareTo(task2.getStartDate()) >= 0) {
+            return true;
+        } else if (task1.getStartDate().compareTo(task2.getDueDate()) <= 0
+                && task1.getStartDate().compareTo(task2.getStartDate()) >= 0) {
+            return true;
+        } else {
+            return false;
         }
     }
     
@@ -254,19 +278,36 @@ public class TaskUtils {
     public static boolean checkDueDateInRange(TaskEntity dueDate, TaskEntity range) {
         assert range.getDueDate() != null && range.getDueDate() != null && range
                 .getStartDate() != null : "One of the variables being compared is null in checkDueDateInRange";
+        
         if (range.getDueDate() == null || range.getDueDate() == null || range.getStartDate() == null) {
             return false;
+        } else if (dueDate.isFullDay() || range.isFullDay()){
+            return false;
         } else {
-            clearSeconds(dueDate.getDueDate());
-            clearSeconds(range.getDueDate());
-            clearSeconds(range.getStartDate());
-            
-            if (dueDate.getDueDate().compareTo(range.getDueDate()) <= 0
-                    && dueDate.getDueDate().compareTo(range.getStartDate()) >= 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return checkWithinRange(dueDate, range);
+        }
+    }
+
+    /**
+     * Checks if dueDate of "dueDate" variable is within the range specified by
+     * startDate and dueDate of "range" variable. Function strips the seconds
+     * and milliseconds of all dates compared
+     * 
+     * @param dueDate
+     * @param range
+     * @return true if it is within the range
+     *         false otherwise
+     */
+    private static boolean checkWithinRange(TaskEntity dueDate, TaskEntity range) {
+        clearSeconds(dueDate.getDueDate());
+        clearSeconds(range.getDueDate());
+        clearSeconds(range.getStartDate());
+        
+        if (dueDate.getDueDate().compareTo(range.getDueDate()) <= 0
+                && dueDate.getDueDate().compareTo(range.getStartDate()) >= 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -285,14 +326,29 @@ public class TaskUtils {
 
         if (task1.getDueDate() == null || task2.getDueDate() == null) {
             return false;
+        } else if (task1.isFullDay() || task2.isFullDay()){
+            return false;
         } else {
-            clearSeconds(task1.getDueDate());
-            clearSeconds(task2.getDueDate());
-            if (task1.getDueDate().compareTo(task2.getDueDate()) == 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return checkSameDueDate(task1, task2);
+        }
+    }
+
+    /**
+     * Checks if the dueDates of both tasks are the same. Function strips the
+     * seconds and milliseconds of all dates compared
+     * 
+     * @param task1
+     * @param task2
+     * @return True if the dueDates are the same
+     *          false otherwise
+     */
+    private static boolean checkSameDueDate(TaskEntity task1, TaskEntity task2) {
+        clearSeconds(task1.getDueDate());
+        clearSeconds(task2.getDueDate());
+        if (task1.getDueDate().compareTo(task2.getDueDate()) == 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 

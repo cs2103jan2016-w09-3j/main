@@ -1,3 +1,10 @@
+/**
+ * @author qy
+ * @@author a0125493a
+ * 
+ *          Testing unit for TaskManagerInterface's functionalities
+ */
+
 package test.logic;
 
 import static org.junit.Assert.*;

@@ -1,5 +1,6 @@
 /**
- * @author Qin Ying
+ * @author qy
+ * @@author a0125493a
  * 
  *         Class to manage the handling of tasks during runtime. Singleton
  *         class, use GetInstance() to use this class
@@ -848,6 +849,8 @@ public class TaskManager {
 
     public ResultSet changeDirectory(String newDirectory) {
         ResultSet changeResult = new ResultSet();
+        
+        commitFullSave();
         boolean saveSuccess = dataLoader.saveToNewDirectory(newDirectory);
         if(saveSuccess) {   
             changeResult.setSuccess();

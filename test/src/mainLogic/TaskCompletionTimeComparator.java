@@ -1,3 +1,9 @@
+/**
+ * @author qy
+ * @@author a0125493a
+ * 
+ *          Comparator to sort tasks based off their completion time
+ */
 package mainLogic;
 
 import java.util.Calendar;
@@ -7,9 +13,9 @@ import entity.TaskEntity;
 
 public class TaskCompletionTimeComparator implements Comparator<TaskEntity> {
     private final String ERROR_DATE_NULL = "Error at TaskCompletionTime: Completion date of one date is null";
-    
+
     public int compare(TaskEntity task1, TaskEntity task2) {
-        if(task1.getCompletionDate() == null || task2.getCompletionDate() == null) {
+        if (task1.getCompletionDate() == null || task2.getCompletionDate() == null) {
             System.out.println(ERROR_DATE_NULL);
             return 0;
         }

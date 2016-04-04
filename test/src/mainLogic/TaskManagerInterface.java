@@ -1,5 +1,6 @@
 /**
- * @author Qin Ying
+ * @author qy
+ * @@author a0125493a
  * 
  *         Interface class to the class that manages the handling of tasks
  *         during runtime
