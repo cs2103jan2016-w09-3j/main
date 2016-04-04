@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
+import dateParser.ParserCommons;
 import dateParser.ReverseParser;
 import entity.TaskEntity;
 import javafx.event.EventHandler;
@@ -317,7 +318,8 @@ public class DetailComponent implements ViewInterface {
 	}
 
 	private String getStringOfDate(Calendar c) {
-		return _reverseParser.reParse((Calendar) c.clone());
+		return ParserCommons.detailedDateTime((Calendar) c.clone());
+		// return _reverseParser.reParse((Calendar) c.clone());
 	}
 
 	public VBox buildComponentToShowDate(TaskEntity task) {
@@ -411,13 +413,7 @@ public class DetailComponent implements ViewInterface {
 		dateBox.setAlignment(Pos.CENTER_LEFT);
 
 		Label dateLabel = new Label();
-		if (task.isFullDay()) {
-			dateLabel.setText("Full Day Event");
-		} else if (task.getStartDate() != null) {
-			dateLabel.setText(getDate(task.getStartDate()));
-		} else {
-			dateLabel.setText(getDate(task.getDueDate()));
-		}
+		dateLabel.setText(task.getTime());
 		dateLabel.getStyleClass().add(CSS_LABEL);
 		dateBox.getChildren().add(dateLabel);
 		dateBox.setMinHeight(LABEL_TASK_HEIGHT);

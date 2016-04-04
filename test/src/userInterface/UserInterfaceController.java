@@ -114,13 +114,15 @@ public class UserInterfaceController {
 		initializeFloatingView();
 		initializeSearchView();
 		initializeTaskView();
-		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet, _mouseEvent);
+		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+				_mouseEvent);
 		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet, _mouseEvent);
 		updateComponents(0);
 	}
 
 	private void initializeHelpScreen() {
-		_helpScreen = HelpScreenUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,_mouseEvent);
+		_helpScreen = HelpScreenUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+				_mouseEvent);
 	}
 
 	private void initializeTaskView() {
@@ -131,11 +133,12 @@ public class UserInterfaceController {
 
 	private void initializeFloatingView() {
 		_floatingViewInterface = FloatingTaskUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize,
-				_styleSheet,_mouseEvent);
+				_styleSheet, _mouseEvent);
 	}
 
 	private void initializeFloatingBar() {
-		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize, _styleSheet,_mouseEvent);
+		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+				_mouseEvent);
 		TaskEntity floatingTask = _logicFace.getRandomFloating();
 		if (floatingTask != null) {
 			startFloatingThread();
@@ -143,7 +146,8 @@ public class UserInterfaceController {
 	}
 
 	private void initializeSearchView() {
-		_searchViewInterface = SearchUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,_mouseEvent);
+		_searchViewInterface = SearchUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+				_mouseEvent);
 	}
 
 	/**
@@ -307,6 +311,7 @@ public class UserInterfaceController {
 	}
 
 	public void showHelpView() {
+		showMainView(-1);
 		_helpScreen.show();
 	}
 

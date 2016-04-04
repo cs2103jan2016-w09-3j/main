@@ -46,9 +46,9 @@ public class PrimaryUserInterface extends Application {
 	static final String FONT_TITLE_LABLES = "lucida sans";
 	static final int DEFAULT_FONT_SIZE = 24;
 
-	private static String[] styles = { "default.css", "blackandwhite.css" };
+	private static String[] styles = { "default.css", "blackandwhite.css","red.css" };
 
-	private String _styleSheet = styles[0];
+	private String _styleSheet = styles[2];
 	private double _commandBarWidth;
 	private Rectangle2D _screenBounds;
 	private Stage _primaryStage;

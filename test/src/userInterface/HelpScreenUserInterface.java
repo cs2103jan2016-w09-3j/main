@@ -8,12 +8,15 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -37,6 +40,13 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private static final String HELP_DESCRIPTION_DETAIL_COMPONENT_TITLE = "Details Panel";
 	private static final String HELP_DESCRIPTION_DETAIL_COMPONENT = "This panel shows you more description of the selected task.";
 
+	private static final String[][] CHEAT_SHEET_SHORT_CUTS = { { "F1", "Brings up the help manual!" },
+			{ "Up/Down", "Look up previous command entered." },
+			{ "Ctrl + Up/Down", "Scroll through your task in the selected view." },
+			{ "Ctrl + Left/Right", "Change view from the main view to other views." }, { "", "" } };
+	private static final String[][] CHEAT_SHEET_COMMANDS = { { "ADD", "Add a task" }, { "DELETE", "Delete a task." },
+			{ "EDIT", "EDIT <ID-INDEX>" }, { "LINK", "" }, { "SEARCH", "search la" }, { "HIDE", "" }, { "SHOW", "" },
+			{ "FLOAT", "" }, { "MAIN", "" }, { "THEME", "" }, { "SAVETO", "" } };
 	private static final String HELP_DESCRIPTION_COMMAND_BAR_TITLE = "Command Bar";
 	private static final String HELP_DESCRIPTION_COMMAND_BAR = "This is where u type your input commands.";
 
@@ -142,7 +152,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 	}
 
 	public VBox buildMainHelp() {
-		int minWidth = _stageWidth / 2;
+		double minWidth = _stageWidth * 0.8;
 		VBox main = new VBox();
 		main.setAlignment(Pos.CENTER);
 
@@ -159,11 +169,61 @@ public class HelpScreenUserInterface implements ViewInterface {
 		descriptionBox.getChildren().add(title);
 
 		Label descLabel = new Label(HELP_DESCRIPTION_MAIN);
+		descLabel.setMinWidth(minWidth - MARGIN * 2);
 		descLabel.setFont(FONT_LABEL);
+		descLabel.setAlignment(Pos.CENTER);
 		descLabel.setWrapText(true);
 		VBox.setMargin(descLabel, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
 		VBox.setMargin(title, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
 		descriptionBox.getChildren().add(descLabel);
+
+		Label titleCheatSheet = new Label("Cheat Sheet");
+		titleCheatSheet.setFont(FONT_LABEL_TITLE);
+		titleCheatSheet.setId("cssHelpTitle");
+		titleCheatSheet.setMinWidth(minWidth - MARGIN * 2);
+		titleCheatSheet.setAlignment(Pos.CENTER);
+		VBox.setMargin(titleCheatSheet, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		descriptionBox.getChildren().add(titleCheatSheet);
+
+		GridPane gp = new GridPane();
+		Label shortcutsTitle = new Label("Short-cut Keys");
+		shortcutsTitle.setMinWidth(120);
+		Label shortcutDesriptionTitle = new Label("Description");
+		gp.add(shortcutsTitle, 0, 0);
+		gp.add(shortcutDesriptionTitle, 1, 0);
+		int rowCount = 1;
+		for (int i = 0; i < CHEAT_SHEET_SHORT_CUTS.length; i++) {
+			Label shortcuts = new Label(CHEAT_SHEET_SHORT_CUTS[i][0]);
+			shortcuts.setFont(FONT_LABEL);
+			gp.add(shortcuts, 0, i + 1);
+			Label shortcutsDescription = new Label(CHEAT_SHEET_SHORT_CUTS[i][1]);
+			shortcutsDescription.setFont(FONT_LABEL);
+			gp.add(shortcutsDescription, 1, i + 1);
+			rowCount = i;
+		}
+		rowCount++;
+
+		Label commandsTitle = new Label("Commands");
+		GridPane.setMargin(commandsTitle, new Insets(MARGIN, 0, 0, 0));
+		Label commandsDesriptionTitle = new Label("Description");
+		GridPane.setMargin(commandsDesriptionTitle, new Insets(MARGIN, 0, 0, 0));
+		gp.add(commandsTitle, 0, rowCount);
+		gp.add(commandsDesriptionTitle, 1, rowCount);
+		rowCount++;
+
+		for (int i = 0; i < CHEAT_SHEET_COMMANDS.length; i++) {
+			Label shortcuts = new Label(CHEAT_SHEET_COMMANDS[i][0]);
+			shortcuts.setFont(FONT_LABEL);
+			gp.add(shortcuts, 0, rowCount);
+			Label shortcutsDescription = new Label(CHEAT_SHEET_COMMANDS[i][1]);
+			shortcutsDescription.setFont(FONT_LABEL);
+			gp.add(shortcutsDescription, 1, rowCount);
+			rowCount++;
+		}
+
+		VBox.setMargin(gp, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
+		descriptionBox.getChildren().add(gp);
+
 		main.getChildren().add(descriptionBox);
 		return main;
 	}
