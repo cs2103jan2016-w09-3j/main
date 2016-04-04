@@ -1,5 +1,8 @@
 package dateParser;
 
+/**
+* @@author :a0125415n
+*/
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -14,6 +17,7 @@ import javax.swing.plaf.synth.SynthSplitPaneUI;
 import com.joestelmach.natty.*;
 
 public class DateParser {
+
 	private static final int CONVERSION_FROM_GREGORIAN_CAL = 1;
 	private static final char CHAR_ZERO = '0';
 	private static final String SPACE_DELIM = " ";
@@ -35,6 +39,9 @@ public class DateParser {
 	private PrintStream printStreamOriginal = System.err;
 	private Parser nattyParser = new Parser();
 
+	/**
+	 * @@author :a0125415n
+	 */
 	public DateParser() {
 		// init the parser so that there's no lag later
 		hideErr();
@@ -43,23 +50,25 @@ public class DateParser {
 	}
 
 	/**
-	 * Takes in a string with dates and returns a list of date
+	 * @@author :a0125415n Takes in a string with dates and returns a list of
+	 *          date
 	 * 
 	 * @param input
 	 * @return List of all possible dates
 	 */
 	public List<Date> parseToList(String inputDate) {
-		ArrayList<Integer> locationQuote= new ArrayList<Integer>();
-		for(int i=0; i< inputDate.length(); i++){
+		ArrayList<Integer> locationQuote = new ArrayList<Integer>();
+		for (int i = 0; i < inputDate.length(); i++) {
 			char temp = inputDate.charAt(i);
-			if(temp == '"'){
+			if (temp == '"') {
 				locationQuote.add(i);
 			}
 		}
 		System.out.println("test");
-		for(int i=0; i<locationQuote.size(); i=i+2){
-			if(i+1<locationQuote.size()){
-				inputDate = inputDate.substring(0, locationQuote.get(i))+inputDate.substring( locationQuote.get(i+1),inputDate.length()-1);
+		for (int i = 0; i < locationQuote.size(); i = i + 2) {
+			if (i + 1 < locationQuote.size()) {
+				inputDate = inputDate.substring(0, locationQuote.get(i))
+						+ inputDate.substring(locationQuote.get(i + 1), inputDate.length() - 1);
 			}
 		}
 		inputDate = convertFormalDates(inputDate);
@@ -70,71 +79,33 @@ public class DateParser {
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
 			for (int j = 0; j < dates.size(); j++) {
-					Calendar toCheck = Calendar.getInstance();
-					toCheck.setTime(dates.get(j));
-					toCheck.clear(Calendar.SECOND);
-					toCheck.clear(Calendar.MILLISECOND);
-					Calendar curr = Calendar.getInstance();
-					curr.set(toCheck.get(Calendar.YEAR), toCheck.get(Calendar.MONTH), toCheck.get(Calendar.DATE));
-					curr.clear(Calendar.SECOND);
-					curr.clear(Calendar.MILLISECOND);
-					if(curr.equals(toCheck)){
-						toCheck.set(Calendar.HOUR_OF_DAY,0);
-						toCheck.set(Calendar.MINUTE,0);
-						returnDateList.add(toCheck.getTime());
-						toCheck.set(Calendar.HOUR_OF_DAY, 23);
-						toCheck.set(Calendar.MINUTE,59);
-						returnDateList.add(toCheck.getTime());
-					}
-					else{
-						returnDateList.add(dates.get(j));
-					}
+				Calendar toCheck = Calendar.getInstance();
+				toCheck.setTime(dates.get(j));
+				toCheck.clear(Calendar.SECOND);
+				toCheck.clear(Calendar.MILLISECOND);
+				Calendar curr = Calendar.getInstance();
+				curr.set(toCheck.get(Calendar.YEAR), toCheck.get(Calendar.MONTH), toCheck.get(Calendar.DATE));
+				curr.clear(Calendar.SECOND);
+				curr.clear(Calendar.MILLISECOND);
+				if (curr.equals(toCheck)) {
+					toCheck.set(Calendar.HOUR_OF_DAY, 0);
+					toCheck.set(Calendar.MINUTE, 0);
+					returnDateList.add(toCheck.getTime());
+					toCheck.set(Calendar.HOUR_OF_DAY, 23);
+					toCheck.set(Calendar.MINUTE, 59);
+					returnDateList.add(toCheck.getTime());
+				} else {
+					returnDateList.add(dates.get(j));
+				}
 			}
 		}
-		if(returnDateList.size()>1){
-			//returnDateList = checkMultiple(returnDateList, inputDate);
-		}
+
 		return returnDateList;
 	}
-	
-	public boolean hasDate(String input){
-		List<Date> dates = parseToList(input);
-		if (dates.size()>0){
-			return false;
-		}
-		return true;
-	}
 
-	public List<Date> checkMultiple(List<Date> dateList, String input){
-		List<Date> returnList = new ArrayList<Date>();
-		if (checkKeyWord(input)){
-			Date endDate = dateList.get(dateList.size()-1);
-			Date curr = dateList.get(0);
-			while(!curr.after(endDate)){
-				Calendar c = Calendar.getInstance();
-				c.setTime(curr);
-				returnList.add(curr);
-				c.add(Calendar.DATE, 1);
-				curr = c.getTime();
-			}
-			return returnList;
-		}else{
-			return dateList;
-		}
-	}
-	
-	private boolean checkKeyWord(String input){
-		boolean returnBool= false;
-		if(input.contains("to")){
-			returnBool = true;
-		}
-		if(input.contains("till")){
-			returnBool = true;
-		}
-		return returnBool;
-	}
 	/**
-	 * takes in a string with date and adds XML to the date portions
+	 * @@author :a0125415n takes in a string with date and adds XML to the date
+	 *          portions
 	 * 
 	 * @param input
 	 *            String with date in it
@@ -144,41 +115,42 @@ public class DateParser {
 		hideErr();
 		input = convertFormalDates(input);
 		String workingStr = "";
-		
-		workingStr+=input;
+
+		workingStr += input;
 		String returnVal = new String(input);
-		ArrayList<Integer> locationQuote= new ArrayList<Integer>();
-		for(int i=0; i< workingStr.length(); i++){
+		ArrayList<Integer> locationQuote = new ArrayList<Integer>();
+		for (int i = 0; i < workingStr.length(); i++) {
 			char temp = workingStr.charAt(i);
-			if(temp == '\''){
+			if (temp == '\'') {
 				locationQuote.add(i);
 			}
 		}
 
-		for(int i=0; i<locationQuote.size(); i=i+2){
-			if (i+1<locationQuote.size()){
-				workingStr = workingStr.substring(0, locationQuote.get(i))+workingStr.substring( locationQuote.get(i+1),workingStr.length()-1);
-			}else{
+		for (int i = 0; i < locationQuote.size(); i = i + 2) {
+			if (i + 1 < locationQuote.size()) {
+				workingStr = workingStr.substring(0, locationQuote.get(i))
+						+ workingStr.substring(locationQuote.get(i + 1), workingStr.length() - 1);
+			} else {
 				workingStr = workingStr.substring(0, locationQuote.get(i));
 			}
 		}
-		
+
 		workingStr = workingStr.replace('\'', ' ');
-		
+
 		List<DateGroup> dateGroups = nattyParser.parse(workingStr);
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
-			returnVal = returnVal.replace(dateGroups.get(i).getText(),
-					"<"+XMLParser.DATE_TAG+">" + convertFormalDates(dateGroups.get(i).getText()) + "</"+XMLParser.DATE_TAG+">");
+			returnVal = returnVal.replace(dateGroups.get(i).getText(), "<" + XMLParser.DATE_TAG + ">"
+					+ convertFormalDates(dateGroups.get(i).getText()) + "</" + XMLParser.DATE_TAG + ">");
 		}
-		//System.out.println("test" +returnVal);
+		// System.out.println("test" +returnVal);
 		showErr();
-		//returnVal = returnVal.replace('\'', ' ');
+		// returnVal = returnVal.replace('\'', ' ');
 		return returnVal;
 	}
 
 	/**
-	 * Convert all formal dates from SG to US
+	 * @@author :a0125415n Convert all formal dates from SG to US
 	 * 
 	 * @param input
 	 * @return String formal date in a US format
@@ -195,7 +167,7 @@ public class DateParser {
 	}
 
 	/**
-	 * convert a single date from SG to US
+	 * @@author :a0125415n convert a single date from SG to US
 	 * 
 	 * @param sgDate
 	 *            a String in US dates
@@ -203,15 +175,14 @@ public class DateParser {
 	 */
 	private String convertSGFormalDateToUS(String sgDate) {
 		String usDate = sgDate;
-		//.replace(FWD_SLASH, DASH);
+		// .replace(FWD_SLASH, DASH);
 		// usDate = sgDate.replace(DOT, DASH);
 		usDate = addZero(usDate);
 
 		if (usDate.matches(DATE_REGEX_2DAY_2MONTH)) {
-			if(usDate.contains("-"))
-			{
+			if (usDate.contains("-")) {
 				usDate = swapDayMonth(usDate, DASH);
-			}else if(usDate.contains("/")){
+			} else if (usDate.contains("/")) {
 				usDate = swapDayMonth(usDate, FWD_SLASH);
 			}
 		}
@@ -242,10 +213,10 @@ public class DateParser {
 			date = CHAR_ZERO + date;
 		}
 		if (addToMonth) {
-			if(date.contains("-")){
+			if (date.contains("-")) {
 				date = date.substring(START_DAY_INDEX, END_DAY_INDEX) + DASH + CHAR_ZERO
-					+ date.substring(START_MONTH_INDEX);
-			}else if(date.contains("/")){
+						+ date.substring(START_MONTH_INDEX);
+			} else if (date.contains("/")) {
 				date = date.substring(START_DAY_INDEX, END_DAY_INDEX) + FWD_SLASH + CHAR_ZERO
 						+ date.substring(START_MONTH_INDEX);
 			}
@@ -255,8 +226,10 @@ public class DateParser {
 
 	/**
 	 * Swaps day and month of a date in string with format DD/MM/YYYY
-	 * @param input 
-	 * @param seperator Character which is used to seperate day month and year
+	 * 
+	 * @param input
+	 * @param seperator
+	 *            Character which is used to seperate day month and year
 	 * @return the input with the day and month swapped
 	 */
 	private String swapDayMonth(String input, char seperator) {
@@ -269,18 +242,20 @@ public class DateParser {
 		if (START_YEAR_INDEX < input.length()) {
 			year = input.substring(START_YEAR_INDEX, input.length());
 		} else {
-			//year = getYear(day, month);
+			// year = getYear(day, month);
 		}
-		if(year.length()>0){
+		if (year.length() > 0) {
 			usDate = month + seperator + day + seperator + year;
-		}else{
+		} else {
 			usDate = month + seperator + day;
 		}
 		return usDate;
 	}
 
 	/**
-	 * Checks the date and sets the year to next year if it the date has already passed
+	 * Checks the date and sets the year to next year if it the date has already
+	 * passed
+	 * 
 	 * @param dayStr
 	 * @param monthStr
 	 * @return String year
@@ -292,12 +267,9 @@ public class DateParser {
 		int inputMonth = Integer.parseInt(monthStr);
 		int inputDay = Integer.parseInt(dayStr);
 		/*
-		if (currMonth > inputMonth) {
-			currYear++;
-		} else if ((currMonth == inputMonth) && (currDay > inputDay)) {
-			currYear++;
-		}
-		*/
+		 * if (currMonth > inputMonth) { currYear++; } else if ((currMonth ==
+		 * inputMonth) && (currDay > inputDay)) { currYear++; }
+		 */
 		return Integer.toString(currYear);
 	}
 
@@ -333,7 +305,7 @@ public class DateParser {
 				tempNLP.hideErr();
 				List<Date> dates = tempNLP.parseToList(tempDate);
 				tempNLP.showErr();
-				//System.out.println("test2"+dates);
+				// System.out.println("test2"+dates);
 
 				tempNLP.hideErr();
 				System.out.println(dates);
