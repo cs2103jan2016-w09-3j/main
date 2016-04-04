@@ -158,6 +158,12 @@ public class PrimaryUserInterface extends Application {
 		}
 	}
 
+	//@@author a0125415n
+	/**
+	 * takes the data from key press and executes the related command
+	 * @param textField
+	 * @param KeyEvent event
+	 */
 	private void processKeyPress(TextField textField, KeyEvent event) {
 
 		if (event.getCode().compareTo(KeyCode.BACK_SPACE) == 0) {
@@ -216,7 +222,7 @@ public class PrimaryUserInterface extends Application {
 		processControls(event);
 		focus();
 	}
-
+	//@@author A0125514N
 	private void processControls(KeyEvent event) {
 		if (event.getCode().compareTo(KeyCode.UP) == 0 && !event.isControlDown() && !event.isShiftDown()) {
 			_commandBar.getPrevCommand();
@@ -276,6 +282,7 @@ public class PrimaryUserInterface extends Application {
 		_commandBar.showFeedBackMessage(COMMAND.INVALID, null, null);
 	}
 
+	//@@author a0125415n
 	/**
 	 * add a task into the system and display the changes in the selected view.
 	 * 
@@ -455,7 +462,7 @@ public class PrimaryUserInterface extends Application {
 		}
 		_commandBar.showFeedBackMessage(COMMAND.UNDO, resultSet, null);
 	}
-
+	//@@author A0125514N
 	private void executeChangeTheme(String themeChange) {
 		if (isValidTheme(themeChange)) {
 			_styleSheet = themeChange;

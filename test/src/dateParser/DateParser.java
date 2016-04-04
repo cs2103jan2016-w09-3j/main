@@ -1,8 +1,6 @@
+//@@author a0125415n
 package dateParser;
 
-/**
-* @@author :a0125415n
-*/
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -39,9 +37,6 @@ public class DateParser {
 	private PrintStream printStreamOriginal = System.err;
 	private Parser nattyParser = new Parser();
 
-	/**
-	 * @@author :a0125415n
-	 */
 	public DateParser() {
 		// init the parser so that there's no lag later
 		hideErr();
@@ -50,9 +45,6 @@ public class DateParser {
 	}
 
 	/**
-	 * @@author :a0125415n Takes in a string with dates and returns a list of
-	 *          date
-	 * 
 	 * @param input
 	 * @return List of all possible dates
 	 */
@@ -103,12 +95,9 @@ public class DateParser {
 		return returnDateList;
 	}
 
-	/**
-	 * @@author :a0125415n takes in a string with date and adds XML to the date
-	 *          portions
+	/**takes in a string with date and adds XML to the date portions
 	 * 
-	 * @param input
-	 *            String with date in it
+	 * @param input String with date in it
 	 * @return String of xmlDate
 	 */
 	public String xmlDate(String input) {
@@ -149,8 +138,7 @@ public class DateParser {
 		return returnVal;
 	}
 
-	/**
-	 * @@author :a0125415n Convert all formal dates from SG to US
+	/**Convert all formal dates from SG to US
 	 * 
 	 * @param input
 	 * @return String formal date in a US format
@@ -166,8 +154,7 @@ public class DateParser {
 		return convertedFormalDates;
 	}
 
-	/**
-	 * @@author :a0125415n convert a single date from SG to US
+	/**convert a single date from SG to US
 	 * 
 	 * @param sgDate
 	 *            a String in US dates

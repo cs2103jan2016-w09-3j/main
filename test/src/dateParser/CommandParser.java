@@ -1,10 +1,8 @@
+//@@author a0125415n
 package dateParser;
 
 public class CommandParser {
 
-	/**
-	 * @@author :a0125415n
-	 */
 	public enum COMMAND {
 		ADD, EDIT, DELETE, EXIT, MAIN, HIDE, SHOW, FLOAT,SEARCH, JUMP, LINK, DONE,SAVETO,LOADFROM, UNDO,THEME, INVALID;
 	};
@@ -13,7 +11,7 @@ public class CommandParser {
 
 	}
 
-	/**@@author :a0125415n
+	/**
 	 * takes in a string and retuns the related command
 	 * @param input
 	 * @return COMMAND enum
@@ -57,7 +55,7 @@ public class CommandParser {
 		return returnVal;
 	}
 
-	/**@@author :a0125415n
+	/**
 	 * takes the first word and adds XML to it
 	 * @param input
 	 * @return xml of input

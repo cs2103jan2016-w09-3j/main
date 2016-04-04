@@ -1,20 +1,15 @@
+//@@author a0125415n
 package dateParser;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
- * 
- * @@author :a0125415n
- *
- */
 public class GarbageCollectorParser {
 	private ArrayList<String> hashes= new ArrayList<String>();
 	public GarbageCollectorParser(){
 	}
 	
-	/**@@author :a0125415n
-	 * 
+	/**
 	 * adds xml to anything that has hashtags
 	 * @param String input
 	 * @return input with xml around any word with has in front
@@ -35,8 +30,7 @@ public class GarbageCollectorParser {
 		return input;
 	}
 	
-	/**@@author :a0125415n
-	 * 
+	/**
 	 * get the hashes in the string, precondition: run xmlHash first
 	 * @return ArrayList of hashes in string
 	 */
@@ -44,8 +38,7 @@ public class GarbageCollectorParser {
 		return hashes;
 	}
 	
-	/**@@author :a0125415n
-	 * 
+	/**
 	 * add xml to anything that hasn't already got xml.
 	 * @param String input
 	 * @return input with xml on any other not yet defined fields
