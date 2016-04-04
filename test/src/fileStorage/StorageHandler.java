@@ -39,6 +39,10 @@ public class StorageHandler {
         processFile();
     }
 
+    //============================================================================
+    // Getters and setters
+    // ===========================================================================
+
     public String getMainFilePath() {
         return tasksFilePath;
     }
@@ -120,7 +124,9 @@ public class StorageHandler {
             System.out.println("Main file found, begin reading...");
         } else {
             System.out.println("New main file created.");
-            tasksFile.getParentFile().mkdirs();
+            if (tasksFile.isDirectory() == false) {
+                tasksFile.getParentFile().mkdirs();
+            }
             createNewFile(tasksFile);
         }
     }
