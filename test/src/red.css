@@ -120,8 +120,8 @@
 }
 
 #cssDetailComponentRootAssociation{
-	-fx-background-color: rgba(255.0,178.5,127.5,1),rgba(255.0,255.0,255.0,0.7),rgba(193.0,230.0,255.0,0.95);
-	-fx-background-insets: 0,2,2;
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0),rgba(255.0,255.0,255.0,0.7),rgba(193.0,230.0,255.0,0.95);
+	-fx-background-insets: 0.0,2.0,2.0;
 }
 
 #cssDetailComponentEmptyTitle {
@@ -350,6 +350,12 @@
 #cssCommandTheme{
 	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(238.0, 120.0, 163.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+#cssCommandLoadFrom{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-background-color: rgba(183.0, 220.0, 40.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }

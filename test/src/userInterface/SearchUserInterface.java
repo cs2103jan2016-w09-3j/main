@@ -2,7 +2,9 @@
 package userInterface;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
+import dateParser.ParserCommons;
 import entity.TaskEntity;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -16,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -187,7 +190,7 @@ public class SearchUserInterface implements ViewInterface {
 		top.setMinWidth(_stageWidth);
 		top.setMaxWidth(_stageWidth);
 
-		Label indexLabel = new Label(Integer.toString(index));
+		Label indexLabel = new Label("ID" + Integer.toString(index));
 		indexLabel.getStyleClass().add(CSS_LABEL);
 		indexLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		indexLabel.setMinWidth(50);
@@ -203,13 +206,17 @@ public class SearchUserInterface implements ViewInterface {
 		timeLabel.setFont(FONT_TASK);
 		top.getChildren().add(timeLabel);
 
+		if (task.getAssociationState() == TaskEntity.PROJECT_HEAD) {
+			top.getChildren().add(createStar(LABEL_TASK_HEIGHT));
+		}
+
 		Label nameLabel = new Label();
 		nameLabel.getStyleClass().add(CSS_LABEL);
 		nameLabel.setText(task.getName());
 		nameLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		nameLabel.setAlignment(Pos.CENTER);
 		nameLabel.setFont(FONT_TASK);
-		HBox.setMargin(nameLabel, new Insets(0, 10, 0, 10));
+		HBox.setMargin(nameLabel, new Insets(0, 10, 0, 0));
 		top.getChildren().add(nameLabel);
 		top.setMinHeight(LABEL_TASK_HEIGHT);
 
@@ -232,6 +239,38 @@ public class SearchUserInterface implements ViewInterface {
 		parentBox.getChildren().add(parentBoxChild);
 		parentBox.setMinHeight(parentBoxChild.getMinHeight());
 		return parentBox;
+	}
+
+	private StackPane createStar(double size) {
+		StackPane stackPane = new StackPane();
+		stackPane.setMinHeight(size);
+		stackPane.setMaxHeight(size);
+		stackPane.setMinWidth(size);
+		stackPane.setMaxWidth(size);
+		stackPane.setAlignment(Pos.CENTER);
+		stackPane.getChildren().add(buildStar(0.5 * (size / 2)));
+		return stackPane;
+	}
+
+	public Polygon buildStar(double size) {
+		int arms = 5;
+		double rOuter = 1 * size;
+		double rInner = 0.5 * size;
+		double angle = Math.PI / arms;
+		int c = 0;
+		Double[] starCoor = new Double[20];
+		for (int i = 0; i < arms * 2; i++) {
+			double r = (i & 1) == 0 ? rOuter : rInner;
+			double x = Math.cos(i * angle) * r;
+			double y = Math.sin(i * angle) * r;
+			starCoor[c++] = x;
+			starCoor[c++] = y;
+		}
+		Polygon polygon = new Polygon();
+		polygon.getPoints().addAll(starCoor);
+		polygon.setFill(Color.WHITE);
+		polygon.setStroke(Color.BLACK);
+		return polygon;
 	}
 
 	public HBox buildTilteLabel() {

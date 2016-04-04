@@ -457,6 +457,10 @@ public class CommandBar {
 				label.setId("cssCommandTheme");
 				break;
 			}
+			case LOADFROM: {
+				label.setId("cssCommandLoadFrom");
+				break;
+			}
 			default:
 				break;
 			}
@@ -732,6 +736,10 @@ public class CommandBar {
 				setFeedBackMessage(MESSAGE_FAILURE_SAVETO);
 				setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			}
+			break;
+		}
+		case LOADFROM: {
+			
 			break;
 		}
 		case THEME: {
