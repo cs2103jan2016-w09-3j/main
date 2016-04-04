@@ -33,7 +33,14 @@ public class StorageHandler {
     private static final int WRITE_TO_CONFIG_FILE = 1;
     private static final int WRITE_TO_MAIN_FILE = 2;
     private static final int WRITE_TO_BACK_UP_FILE = 3;
-
+    
+    private static final String CONFIG_FILE_NAME = "configFile.txt";
+    private static final String MAIN_FILE_NAME = "mainTasksFile.txt";
+    private static final String BACK_UP_FILE_NAME = "backUpTasksFile.txt";
+    private static final String COMMAND_FILE_NAME = "commandsFile.txt";
+    private static final String DEFAULT_THEME = "default";
+    private static final String NEW_LINE = "\n";
+    
     public StorageHandler() {
         allCommandsQueue = new LinkedList<String>();
         processFile();
@@ -71,12 +78,12 @@ public class StorageHandler {
         this.allCommandsQueue = allCommandsQueue;
     }
 
-    public void setThemeName(String themeName) {
-        this.themeName = themeName;
-    }
-
     public String getThemeName() {
         return themeName;
+    }
+        
+    public void setThemeName(String themeName) {
+        this.themeName = themeName;
     }
 
     //============================================================================
@@ -92,72 +99,67 @@ public class StorageHandler {
         initBackUpFile();
         initCommandFile();
     }
-
-    private void initCommandFile() {
-        commandsFilePath = "commandsList.txt";
-        commandsFile = new File(commandsFilePath);
-        if (isExists(commandsFile)) {
-            setAllCommandsQueue(readFromExistingCommandFile());
-            System.out.println("Command file found, begin reading...");
-            System.out.println("Queue size " + getAllCommandsQueue().size());
+    
+    private void initConfigFile() {
+        configFilePath = CONFIG_FILE_NAME;
+        configFile = new File(configFilePath);
+        
+        if (isExists(configFile)) {
+            extractConfigSettings();
+            tasksFile = new File(tasksFilePath);
         } else {
-            System.out.println("New command file created.");
-            createNewFile(commandsFile);
+            createNewFile(configFile);
+            tasksFilePath = MAIN_FILE_NAME;
+            tasksFile = new File(tasksFilePath);
+            themeName = DEFAULT_THEME;
+            writeConfigSettings();
         }
     }
 
+    private void writeConfigSettings() {
+        writeToFile(tasksFilePath + NEW_LINE + themeName, WRITE_TO_CONFIG_FILE);
+    }
+
+    private void extractConfigSettings() {
+        String settings = readFromExistingFile(READ_FROM_CONFIG_FILE);
+        String[] settingsSplit = settings.split("\n");
+        setMainFilePath(settingsSplit[0]);
+        setThemeName(settingsSplit[1]);
+    }
+        
+    private void initMainFile() {
+        if (isExists(tasksFile)) {
+            setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
+        } else {
+            makeNewDirectory(tasksFile);
+            createNewFile(tasksFile);
+        }
+    }
+       
     private void initBackUpFile() {
-        backUpTasksFilePath = "backUpTasksList.txt";
+        backUpTasksFilePath = BACK_UP_FILE_NAME;
         backUpTasksFile = new File(backUpTasksFilePath);
+        
         // Temporary back up file to be deleted after every session
         if(isExists(backUpTasksFile) == true) {
             deleteBackUpFile();
         }
-        System.out.println("New back up created.");
+        
         createNewFile(backUpTasksFile);
         copyToBackUp();
     }
-
-    private void initMainFile() {
-        if (isExists(tasksFile)) {
-            setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
-            System.out.println("Main file found, begin reading...");
+    
+    private void initCommandFile() {
+        commandsFilePath = COMMAND_FILE_NAME;
+        commandsFile = new File(commandsFilePath);
+        
+        if (isExists(commandsFile)) {
+            setAllCommandsQueue(readFromExistingCommandFile());
         } else {
-            System.out.println("New main file created.");
-            /*if (tasksFile.isDirectory() == false) {
-                if (tasksFile.getParentFile() != null) {
-                    tasksFile.getParentFile().mkdirs();
-                }
-            }*/
-            createNewFile(tasksFile);
+            createNewFile(commandsFile);
         }
     }
-
-    private void initConfigFile() {
-        configFilePath = "configFile.txt";
-        configFile = new File(configFilePath);
-        if (isExists(configFile)) {
-            String settings = readFromExistingFile(READ_FROM_CONFIG_FILE);
-            String[] settingsSplit = settings.split("\n");
-            setMainFilePath(settingsSplit[0]);
-            setThemeName(settingsSplit[1]);
-            tasksFile = new File(tasksFilePath);
-            System.out.println(tasksFilePath);
-            System.out.println("Config file found, begin reading...");
-        } else {
-            createNewFile(configFile);
-            tasksFilePath = "tasksList.txt";
-            tasksFile = new File(tasksFilePath);
-            setMainFilePath(tasksFile.getAbsolutePath());
-            themeName = "default";
-            writeToFile(tasksFilePath + "\n" + themeName, WRITE_TO_CONFIG_FILE);
-        }
-    }
-
-    public boolean isExists(File file) {
-        return file.exists();
-    }
-
+   
     private void createNewFile(File file) {
         try {
             file.createNewFile();
@@ -166,11 +168,43 @@ public class StorageHandler {
             e.printStackTrace();
         }
     }
+    
+    private boolean makeNewDirectory(File file) {
+        boolean isCreated = false;
+        
+        if (hasDirectory(file) == false) {
+            if (file.getParentFile() != null) {
+                isCreated = file.getParentFile().mkdirs();
+            }
+        }
+        return isCreated;
+    }
+
+    private boolean hasDirectory(File file) {
+        return file.isDirectory();
+    }
+
+    public boolean isExists(File file) {
+        return file.exists();
+    }
 
     //============================================================================
     // Reading from existing files
     // ===========================================================================
 
+    private BufferedReader identifyReadFrom(int fromFile) throws FileNotFoundException {
+        BufferedReader buffer;
+        if (fromFile == READ_FROM_CONFIG_FILE) {
+            buffer = new BufferedReader(new FileReader(configFilePath));
+        } else if (fromFile == READ_FROM_MAIN_FILE){
+            buffer = new BufferedReader(new FileReader(tasksFilePath));
+        } else {
+            // Read from back up file
+            buffer = new BufferedReader(new FileReader(backUpTasksFilePath));
+        }
+        return buffer;
+    }
+    
     /**
      * Reads data from an existing file and returns the appended string
      * @return String
@@ -180,10 +214,7 @@ public class StorageHandler {
         String readData = "";
         try {
             buffer = identifyReadFrom(fromFile);
-            String currentLine = "";
-            while ((currentLine = buffer.readLine()) != null) {
-                readData = readData + currentLine + "\n";
-            }
+            readData = readString(buffer, readData);
             buffer.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -193,17 +224,12 @@ public class StorageHandler {
         return readData.trim();
     }
 
-    private BufferedReader identifyReadFrom(int fromFile) throws FileNotFoundException {
-        BufferedReader buffer;
-        if (fromFile == READ_FROM_MAIN_FILE) {
-            buffer = new BufferedReader(new FileReader(tasksFilePath));
-        } else if (fromFile == READ_FROM_BACK_UP_FILE){
-            buffer = new BufferedReader(new FileReader(backUpTasksFilePath));
-        } else {
-            // Read from config file
-            buffer = new BufferedReader(new FileReader(configFilePath));
+    private String readString(BufferedReader buffer, String readData) throws IOException {
+        String currentLine;
+        while ((currentLine = buffer.readLine()) != null) {
+            readData = readData + currentLine + "\n";
         }
-        return buffer;
+        return readData;
     }
 
     /**
@@ -215,10 +241,7 @@ public class StorageHandler {
         BufferedReader buffer;
         try {
             buffer = new BufferedReader(new FileReader(commandsFilePath));
-            String currentLine = "";
-            while ((currentLine = buffer.readLine()) != null) {
-                readCommands.offer(currentLine);
-            }
+            readQueue(readCommands, buffer);
             buffer.close();
             System.out.println("Commands: Read from file.");
         } catch (FileNotFoundException e) {
@@ -227,6 +250,13 @@ public class StorageHandler {
             e.printStackTrace();
         }
         return readCommands;
+    }
+
+    private void readQueue(Queue<String> readCommands, BufferedReader buffer) throws IOException {
+        String currentLine;
+        while ((currentLine = buffer.readLine()) != null) {
+            readCommands.offer(currentLine);
+        }
     }
 
     public boolean copyToBackUp() {
@@ -246,7 +276,7 @@ public class StorageHandler {
      */
     public boolean writeToFile(String data, int toFile) {
         File file;
-        String filePath;
+        String filePath; 
         if (toFile == WRITE_TO_MAIN_FILE) {
             file = new File(tasksFilePath);
             filePath = tasksFilePath;
@@ -254,6 +284,7 @@ public class StorageHandler {
             file = backUpTasksFile;
             filePath = backUpTasksFilePath;
         } else {
+            // Write to config file
             file = configFile;
             filePath = configFilePath;
         }
@@ -344,7 +375,7 @@ public class StorageHandler {
         File newFile = new File(newFilePath);
         
         if (newFile.exists() == false) {
-            if (newFile.isDirectory() == false) {
+            if (hasDirectory(newFile) == false) {
                 if (newFile.getParentFile() != null) {
                     isChanged = newFile.getParentFile().mkdirs();
                     System.out.println("Creating dir: " + isChanged);
