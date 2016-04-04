@@ -325,15 +325,17 @@ public class StorageHandler {
     public void deleteBackUpFile() {
         backUpTasksFile.delete();
     }
+    
+    //============================================================================
+    // Changing file directory
+    // ===========================================================================
 
     public boolean changeDirectory(String newFilePath) {
         boolean isChanged = false;
 
-        File oldFile = new File(tasksFilePath);
         String transferData = readFromExistingFile(READ_FROM_MAIN_FILE);
         
         File newFile = new File(newFilePath);
-        setMainFilePath(newFile.getAbsolutePath());
         
         if (newFile.exists() == false) {
             if (newFile.isDirectory() == false) {
@@ -348,15 +350,31 @@ public class StorageHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            setMainFilePath(newFile.getAbsolutePath());
+            tasksFile = newFile;
+            setAllStoredTasks(transferData);
             writeToFile(transferData, WRITE_TO_MAIN_FILE);
         } else {
+            setMainFilePath(newFile.getAbsolutePath());
+            tasksFile = newFile;
             setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
             isChanged = true;
+            System.out.println("Read data from previous txt: " + getAllStoredTasks());
         }
-        writeToFile(newFile.getAbsolutePath() + '\n' + themeName, WRITE_TO_CONFIG_FILE);
-        oldFile.delete();
+        
+        if (isChanged == false) {
+            // Reset to default
+            setMainFilePath("taskLists.txt");
+            File defaultFile = new File(getMainFilePath());
+            tasksFile = defaultFile;
+        }
+        writeToFile(tasksFile.getAbsolutePath() + '\n' + themeName, WRITE_TO_CONFIG_FILE);
         return isChanged;
     }
+
+    //============================================================================
+    // Saving theme preference
+    // ===========================================================================
 
     public boolean saveThemeName(String themeName) {
         setThemeName(themeName);
