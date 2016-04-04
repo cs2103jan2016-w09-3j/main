@@ -35,6 +35,11 @@ public class ParserCommons {
 		return c;
 	}
 
+	/**
+	 * pad an input if its less than 2 digits, used for hours and mins
+	 * @param int hour (or min)
+	 * @return padded hour (or min)
+	 */
 	public static String padTime(int field){
 		String returnVal = "00";
 		if(field!=0){
@@ -47,6 +52,11 @@ public class ParserCommons {
 		return returnVal;
 	}
 	
+	/**
+	 * creates a date time in format xth month year xxxxhrs
+	 * @param Calendar c
+	 * @return a string in date followed by time
+	 */
 	public static String detailedDateTime(Calendar c){
 		int hour = c.get(Calendar.HOUR_OF_DAY);
 		int min = c.get(Calendar.MINUTE);
