@@ -71,7 +71,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	private int _itemIndexCounter = 0;
 	private String _styleSheet;
 
-	ReverseParser r = new ReverseParser();
+	private ReverseParser _reverseParser = new ReverseParser();
 
 	// container to store current gridPanes builded for easy reference.
 	private ArrayList<GridPane> _gridPanes = new ArrayList<GridPane>();
@@ -345,7 +345,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	private String getStringOfDate(Calendar c) {
-		return r.reParse((Calendar) c.clone());
+		return _reverseParser.reParse((Calendar) c.clone());
 	}
 
 	/**

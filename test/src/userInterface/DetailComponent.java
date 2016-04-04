@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
+import dateParser.ReverseParser;
 import entity.TaskEntity;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -61,6 +62,8 @@ public class DetailComponent implements ViewInterface {
 
 	private boolean _haveAssociation;
 	private TaskEntity _targetedTask;
+
+	private ReverseParser _reverseParser = new ReverseParser();
 
 	public DetailComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
 			EventHandler<MouseEvent> mouseEvent) {
@@ -282,16 +285,8 @@ public class DetailComponent implements ViewInterface {
 		titleLabel.setMinHeight(LABEL_PROJECTHEAD_HEIGHT);
 		titleLabel.setAlignment(Pos.CENTER);
 		itemMain.getChildren().add(titleLabel);
-		
-		HBox dateBox = new HBox();
-		Label dateTitleLabel = new Label("Due date : ");
-		dateTitleLabel.getStyleClass().add(CSS_LABEL);
-		dateBox.getChildren().add(dateTitleLabel);
-		Label dateLabel = new Label(getDate(task.getDueDate()));
-		dateLabel.getStyleClass().add(CSS_LABEL);
-		dateBox.getChildren().add(dateLabel);
-		VBox.setMargin(dateBox, new Insets(0, 20, 0, 20));
-		itemMain.getChildren().add(dateBox);
+
+		itemMain.getChildren().add(buildComponentToShowDate(task));
 
 		String description = task.getDescription();
 		if (!description.equals("")) {
@@ -301,8 +296,8 @@ public class DetailComponent implements ViewInterface {
 			descriptionLabel.setTextAlignment(TextAlignment.JUSTIFY);
 			itemMain.getChildren().add(descriptionLabel);
 			itemMain.setMaxHeight(itemMain.getMaxHeight() + descriptionLabel.getBoundsInLocal().getHeight());
-			VBox.setMargin(descriptionLabel, new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS,
-					BOTTOM_MARGIN_INDIVIDUAL_ITEMS, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS));
+			VBox.setMargin(descriptionLabel,
+					new Insets(0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS, 0, LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS));
 		}
 
 		String hash = task.getHashtags();
@@ -317,6 +312,29 @@ public class DetailComponent implements ViewInterface {
 		}
 
 		return itemMain;
+	}
+
+	private String getStringOfDate(Calendar c) {
+		return _reverseParser.reParse((Calendar) c.clone());
+	}
+
+	public VBox buildComponentToShowDate(TaskEntity task) {
+		VBox dateBox = new VBox();
+		
+		if (task.isFullDay()) {
+			Label dateTitleLabel = new Label("Full Day Event");
+			dateTitleLabel.setMinHeight(LABEL_TASK_HEIGHT);
+			dateTitleLabel.getStyleClass().add(CSS_LABEL);
+			dateBox.getChildren().add(dateTitleLabel);
+		} else {
+			Label dateTitleLabel = new Label(getStringOfDate(task.getDueDate()));
+			dateTitleLabel.setMinHeight(LABEL_TASK_HEIGHT);
+			dateTitleLabel.getStyleClass().add(CSS_LABEL);
+			dateBox.getChildren().add(dateTitleLabel);
+		}
+
+		VBox.setMargin(dateBox, new Insets(0, 20, 0, 20));
+		return dateBox;
 	}
 
 	public VBox buildProjectHead(TaskEntity task) {
