@@ -23,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -127,7 +128,8 @@ public class TaskViewUserInterface implements ViewInterface {
 		_individualItemWidth = _stageWidth;
 	}
 
-	public void initializeStage(Window owner, int applicationX, int applicationY, int stageWidth, int stageHeight, EventHandler<MouseEvent> mouseEvent) {
+	public void initializeStage(Window owner, int applicationX, int applicationY, int stageWidth, int stageHeight,
+			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
 		_stage.initOwner(owner);
 		_stage.initStyle(StageStyle.TRANSPARENT);
@@ -385,11 +387,14 @@ public class TaskViewUserInterface implements ViewInterface {
 		timeLabel.setAlignment(Pos.CENTER_LEFT);
 		topBox.getChildren().add(timeLabel);
 
+		if (taskEntity.getAssociationState() == TaskEntity.PROJECT_HEAD) {
+			topBox.getChildren().add(createStar(TASK_VIEW_ITEM_HEIGHT));
+		}
 		Label titleLabel = new Label(taskEntity.getName());
 		titleLabel.getStyleClass().add(CSS_LABEL);
 		titleLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		titleLabel.setFont(FONT_TASK);
-		HBox.setMargin(titleLabel, new Insets(0, 10, 0, 10));
+		HBox.setMargin(titleLabel, new Insets(0, 10, 0, 0));
 		topBox.getChildren().add(titleLabel);
 		grid.add(topBox, 1, 0);
 
@@ -431,6 +436,38 @@ public class TaskViewUserInterface implements ViewInterface {
 				DETAILED_VIEW_ITEM_HEIGHT + t.getBoundsInLocal().getHeight() + t2.getBoundsInLocal().getHeight());
 
 		return grid;
+	}
+
+	private StackPane createStar(double size) {
+		StackPane stackPane = new StackPane();
+		stackPane.setMinHeight(size);
+		stackPane.setMaxHeight(size);
+		stackPane.setMinWidth(size);
+		stackPane.setMaxWidth(size);
+		stackPane.setAlignment(Pos.CENTER);
+		stackPane.getChildren().add(buildStar(0.5 * (size / 2)));
+		return stackPane;
+	}
+
+	public Polygon buildStar(double size) {
+		int arms = 5;
+		double rOuter = 1 * size;
+		double rInner = 0.5 * size;
+		double angle = Math.PI / arms;
+		int c = 0;
+		Double[] starCoor = new Double[20];
+		for (int i = 0; i < arms * 2; i++) {
+			double r = (i & 1) == 0 ? rOuter : rInner;
+			double x = Math.cos(i * angle) * r;
+			double y = Math.sin(i * angle) * r;
+			starCoor[c++] = x;
+			starCoor[c++] = y;
+		}
+		Polygon polygon = new Polygon();
+		polygon.getPoints().addAll(starCoor);
+		polygon.setFill(Color.WHITE);
+		polygon.setStroke(Color.BLACK);
+		return polygon;
 	}
 
 	/**
