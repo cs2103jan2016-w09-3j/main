@@ -139,6 +139,10 @@ public class StorageController {
         return storageHandler.changeDirectory(newFilePath);
     }
     
+    public boolean loadFromNewFile(String newFilePath) {
+        return storageHandler.loadFromExistingFile(newFilePath);
+    }
+    
     //============================================================================
     // Saving theme
     // ===========================================================================

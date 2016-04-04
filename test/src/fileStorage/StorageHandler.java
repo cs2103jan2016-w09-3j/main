@@ -124,11 +124,11 @@ public class StorageHandler {
             System.out.println("Main file found, begin reading...");
         } else {
             System.out.println("New main file created.");
-            if (tasksFile.isDirectory() == false) {
+            /*if (tasksFile.isDirectory() == false) {
                 if (tasksFile.getParentFile() != null) {
                     tasksFile.getParentFile().mkdirs();
                 }
-            }
+            }*/
             createNewFile(tasksFile);
         }
     }
@@ -341,9 +341,6 @@ public class StorageHandler {
 
     public boolean changeDirectory(String newFilePath) {
         boolean isChanged = false;
-
-        String transferData = readFromExistingFile(READ_FROM_MAIN_FILE);
-        
         File newFile = new File(newFilePath);
         
         if (newFile.exists() == false) {
@@ -359,26 +356,35 @@ public class StorageHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            String transferData = readFromExistingFile(READ_FROM_MAIN_FILE);
             setMainFilePath(newFile.getAbsolutePath());
             tasksFile = newFile;
             setAllStoredTasks(transferData);
             writeToFile(transferData, WRITE_TO_MAIN_FILE);
-        } else {
-            setMainFilePath(newFile.getAbsolutePath());
-            tasksFile = newFile;
-            setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
-            isChanged = true;
-            System.out.println("Read data from previous txt: " + getAllStoredTasks());
-        }
+        } 
         
         if (isChanged == false) {
             // Reset to default
             setMainFilePath("taskLists.txt");
-            File defaultFile = new File(getMainFilePath());
+            File defaultFile = new File(tasksFilePath);
             tasksFile = defaultFile;
         }
         writeToFile(tasksFile.getAbsolutePath() + '\n' + themeName, WRITE_TO_CONFIG_FILE);
         return isChanged;
+    }
+    
+    public boolean loadFromExistingFile(String newFilePath) {
+        boolean isLoaded = false;
+        File newFile = new File(newFilePath);
+        
+        if (isExists(newFile)) {
+            isLoaded = true;
+            setMainFilePath(newFile.getAbsolutePath());
+            tasksFile = newFile;
+            setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
+            writeToFile(tasksFile.getAbsolutePath() + '\n' + themeName, WRITE_TO_CONFIG_FILE);
+        }
+        return isLoaded;
     }
 
     //============================================================================
