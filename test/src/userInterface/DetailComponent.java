@@ -136,8 +136,10 @@ public class DetailComponent implements ViewInterface {
 		_currentSelectView = view;
 		if (_currentSelectView == ASSOCIATE_VIEW) {
 			_stage.setScene(_scenes[EXPANDED_VIEW]);
+			_mainVbox[EXPANDED_VIEW].setId("cssDetailComponentRootAssociation");
 		} else {
 			_stage.setScene(_scenes[_currentSelectView]);
+			_mainVbox[EXPANDED_VIEW].setId("cssDetailComponentRoot");
 		}
 	}
 
@@ -320,17 +322,30 @@ public class DetailComponent implements ViewInterface {
 
 	public VBox buildComponentToShowDate(TaskEntity task) {
 		VBox dateBox = new VBox();
-		
+		dateBox.setMinHeight(0.0);
 		if (task.isFullDay()) {
 			Label dateTitleLabel = new Label("Full Day Event");
 			dateTitleLabel.setMinHeight(LABEL_TASK_HEIGHT);
 			dateTitleLabel.getStyleClass().add(CSS_LABEL);
 			dateBox.getChildren().add(dateTitleLabel);
+			dateBox.setMinHeight(dateBox.getMinHeight() + LABEL_TASK_HEIGHT);
 		} else {
-			Label dateTitleLabel = new Label(getStringOfDate(task.getDueDate()));
-			dateTitleLabel.setMinHeight(LABEL_TASK_HEIGHT);
-			dateTitleLabel.getStyleClass().add(CSS_LABEL);
-			dateBox.getChildren().add(dateTitleLabel);
+
+			if (task.getStartDate() != null) {
+				Label dateTitleLabelStart = new Label(getStringOfDate(task.getStartDate()));
+				dateTitleLabelStart.setMinHeight(LABEL_TASK_HEIGHT);
+				dateTitleLabelStart.getStyleClass().add(CSS_LABEL);
+				dateBox.getChildren().add(dateTitleLabelStart);
+				dateBox.setMinHeight(dateBox.getMinHeight() + LABEL_TASK_HEIGHT);
+			}
+
+			if (task.getDueDate() != null) {
+				Label dateTitleLabel = new Label(getStringOfDate(task.getDueDate()));
+				dateTitleLabel.setMinHeight(LABEL_TASK_HEIGHT);
+				dateTitleLabel.getStyleClass().add(CSS_LABEL);
+				dateBox.getChildren().add(dateTitleLabel);
+				dateBox.setMinHeight(dateBox.getMinHeight() + LABEL_TASK_HEIGHT);
+			}
 		}
 
 		VBox.setMargin(dateBox, new Insets(0, 20, 0, 20));
@@ -352,16 +367,10 @@ public class DetailComponent implements ViewInterface {
 		itemMain.getChildren().add(titleLabel);
 		itemMain.setMaxHeight(LABEL_PROJECTHEAD_HEIGHT);
 
-		HBox dateBox = new HBox();
-		Label dateTitleLabel = new Label("Due date : ");
-		dateTitleLabel.getStyleClass().add(CSS_LABEL);
-		dateBox.getChildren().add(dateTitleLabel);
-		Label dateLabel = new Label(getDate(task.getDueDate()));
-		dateLabel.getStyleClass().add(CSS_LABEL);
-		dateBox.getChildren().add(dateLabel);
+		VBox dateBox = buildComponentToShowDate(task);
 		VBox.setMargin(dateBox, new Insets(0, 20, 0, 20));
 		itemMain.getChildren().add(dateBox);
-		itemMain.setMaxHeight(itemMain.getMaxHeight() + LABEL_TASK_HEIGHT);
+		itemMain.setMaxHeight(itemMain.getMaxHeight() + dateBox.getMinHeight());
 
 		String description = task.getDescription();
 		if (!description.equals("")) {
@@ -401,7 +410,14 @@ public class DetailComponent implements ViewInterface {
 		dateBox.setMinHeight(LABEL_TASK_HEIGHT);
 		dateBox.setAlignment(Pos.CENTER_LEFT);
 
-		Label dateLabel = new Label(getDate(task.getDueDate()));
+		Label dateLabel = new Label();
+		if (task.isFullDay()) {
+			dateLabel.setText("Full Day Event");
+		} else if (task.getStartDate() != null) {
+			dateLabel.setText(getDate(task.getStartDate()));
+		} else {
+			dateLabel.setText(getDate(task.getDueDate()));
+		}
 		dateLabel.getStyleClass().add(CSS_LABEL);
 		dateBox.getChildren().add(dateLabel);
 		dateBox.setMinHeight(LABEL_TASK_HEIGHT);
