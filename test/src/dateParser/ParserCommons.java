@@ -46,6 +46,15 @@ public class ParserCommons {
 		}
 		return returnVal;
 	}
+	
+	public static String padTime(Calendar c){
+		int hour = c.get(Calendar.HOUR_OF_DAY);
+		int min = c.get(Calendar.MINUTE);
+		String returnVal = "";
+		returnVal += padTime(hour);
+		returnVal += padTime(min);
+		return returnVal;
+	}
 	/**
 	 * returns the first word of a given String
 	 * @param input
