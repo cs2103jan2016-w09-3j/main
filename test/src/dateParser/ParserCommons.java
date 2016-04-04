@@ -53,6 +53,7 @@ public class ParserCommons {
 		String returnVal = "";
 		returnVal += padTime(hour);
 		returnVal += padTime(min);
+		returnVal += "hrs";
 		return returnVal;
 	}
 	/**
