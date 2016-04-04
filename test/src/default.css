@@ -119,6 +119,11 @@
 	-fx-background-color: rgba(255.0,255.0,255.0,0.7),rgba(193.0,230.0,255.0,0.95);
 }
 
+#cssDetailComponentRootAssociation{
+	-fx-background-color: rgba(255.0,178.5,127.5,1),rgba(255.0,255.0,255.0,0.7),rgba(193.0,230.0,255.0,0.95);
+	-fx-background-insets: 0,2,2;
+}
+
 #cssDetailComponentEmptyTitle {
 	-fx-background-color: rgba(255.0,178.5,127.5,1.0);	
 }
