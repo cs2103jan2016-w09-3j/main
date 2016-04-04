@@ -119,13 +119,15 @@ public class StorageHandler {
     }
 
     private void initMainFile() {
-        if (isExists(tasksFile) && tasksFile.isDirectory()) {
+        if (isExists(tasksFile)) {
             setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
             System.out.println("Main file found, begin reading...");
         } else {
             System.out.println("New main file created.");
             if (tasksFile.isDirectory() == false) {
-                tasksFile.getParentFile().mkdirs();
+                if (tasksFile.getParentFile() != null) {
+                    tasksFile.getParentFile().mkdirs();
+                }
             }
             createNewFile(tasksFile);
         }
