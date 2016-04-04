@@ -47,11 +47,12 @@ public class ParserCommons {
 		return returnVal;
 	}
 	
-	public static String padTime(Calendar c){
+	public static String detailedDateTime(Calendar c){
 		int hour = c.get(Calendar.HOUR_OF_DAY);
 		int min = c.get(Calendar.MINUTE);
-		String returnVal = "";
-		returnVal += padTime(hour);
+		ReverseParser rp = new ReverseParser();
+		String returnVal = rp.detailedReParse(c);
+		returnVal += " "+padTime(hour);
 		returnVal += padTime(min);
 		returnVal += "hrs";
 		return returnVal;

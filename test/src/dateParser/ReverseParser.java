@@ -77,6 +77,21 @@ public class ReverseParser {
 		}
 		return output;
 	}
+	
+	public String detailedReParse(Calendar input) {
+		String output = null;
+		int dayOfWeek = input.get(Calendar.DAY_OF_WEEK);
+
+		output = dayWeekStr.get(dayOfWeek);
+
+		String date = getFormattedDate(input.getTime());
+		if (output == null) {
+			output = date;
+		} else {
+			output += " " + date;
+		}
+		return output;
+	}
 
 	private String getFormattedDate(Date date) {
 		Calendar cal = Calendar.getInstance();
