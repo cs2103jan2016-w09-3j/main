@@ -732,6 +732,7 @@ public class CommandBar {
 				setFeedBackMessage(MESSAGE_FAILURE_SAVETO);
 				setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			}
+			break;
 		}
 		case THEME: {
 			if (resultSet != null) {

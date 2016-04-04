@@ -207,7 +207,7 @@
 }
 
 #cssCommandBarfeedback_conflict_past{
-	-fx-background-color: rgba(180, 251.0, 212.0, 1.0);
+	-fx-background-color: rgba(180.0, 251.0, 212.0, 1.0);
 }
 
 #cssCommandBarfeedback_error{
@@ -344,7 +344,7 @@
 
 #cssCommandTheme{
 	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
-	-fx-background-color: rgba(238.0, 120, 163.0, 1.0);
+	-fx-background-color: rgba(238.0, 120.0, 163.0, 1.0);
 	-fx-font-weight:bold;
 	-fx-background-radius: 7.0; 
 }
