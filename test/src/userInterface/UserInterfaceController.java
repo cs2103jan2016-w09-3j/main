@@ -26,8 +26,9 @@ import javafx.stage.Stage;
 public class UserInterfaceController {
 
 	// Singleton
-	private static int numberOfInstance = 0;
+	private static UserInterfaceController _instance;
 
+	private static final int ZERO_VALUE = 0;
 	// view indicators
 	final static int CALENDAR_VIEW = 0;
 	final static int TASK_VIEW = 1;
@@ -38,9 +39,7 @@ public class UserInterfaceController {
 	private int _previousView = -1;
 
 	// Return values
-	private static final int FAIL_TO_EXECUTE = -2;
 	private static final int SUCCESSFULLY_ADDED_DIFF = -1;
-	private static final int SUCCESSFULLY_ADDED = 1;
 
 	private String _styleSheet;
 	private Stage _parentStage;
@@ -50,10 +49,11 @@ public class UserInterfaceController {
 	private FloatingBarViewUserInterface _floatingBarComponent;
 	private FloatingTaskUserInterface _floatingViewInterface;
 	private SearchUserInterface _searchViewInterface;
-
-	private EventHandler<MouseEvent> _mouseEvent;
-
 	private HelpScreenUserInterface _helpScreen;
+
+	// This mouseEvent is to aid focus, when user click on other areas of the
+	// application, focus will be triggered to command bar.
+	private EventHandler<MouseEvent> _mouseEvent;
 
 	private Rectangle2D _screenBounds;
 	private boolean _fixedSize;
@@ -63,21 +63,32 @@ public class UserInterfaceController {
 	private ScrollTaskAnimation _scorllAnimation;
 	private FloatingBarAnimationThread _floatingThread;
 
-	// main logic class to interact
+	// Main logic class to interact
 	private UserInterfaceExecuter _logicFace;
 
 	// Debug purpose
 	private static Logger logger = Logger.getLogger("UserInterfaceController");
 
+	/**
+	 * Only 1 instance of UserInterfaceController can be initialize.
+	 * 
+	 * @param primaryStage
+	 * @return instance of UserInterfaceController
+	 */
 	public static UserInterfaceController getInstance(Stage primaryStage) {
-		if (numberOfInstance == 0) {
-			numberOfInstance++;
-			return new UserInterfaceController(primaryStage);
+		if (_instance == null) {
+			_instance = new UserInterfaceController(primaryStage);
+			return _instance;
 		} else {
 			return null;
 		}
 	}
 
+	/**
+	 * Initialize logic components and try to recover any lost data.
+	 * 
+	 * @param primaryStage
+	 */
 	private UserInterfaceController(Stage primaryStage) {
 		try {
 			Handler handler = new FileHandler("uiinterfaceLog.log");
@@ -85,11 +96,13 @@ public class UserInterfaceController {
 			logger.setLevel(Level.FINEST);
 		} catch (IOException e) {
 		}
-		logger.log(Level.INFO, "UserInterfaceController Init");
+		logger.log(Level.INFO, "Init");
 
 		_parentStage = primaryStage;
 		_logicFace = new UserInterfaceExecuter();
 		recoverLostCommands();
+		logger.log(Level.INFO, "Recovery done.");
+
 	}
 
 	public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
@@ -107,34 +120,38 @@ public class UserInterfaceController {
 	 * DescriptionComponent, DetailsComponent
 	 */
 	public void initializeViews() {
+		logger.log(Level.INFO, "initializing views.");
 		initializeHelpScreen();
 		initializeFloatingBar();
 		initializeFloatingView();
 		initializeSearchView();
 		initializeTaskView();
-		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet,
-				_mouseEvent);
-		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet, _mouseEvent);
-		updateComponents(0);
+		initializeDescriptionComponent();
+		initializeDetailComponent();
+		updateComponents(ZERO_VALUE);
 	}
 
 	private void initializeHelpScreen() {
+		logger.log(Level.INFO, "initializing help view.");
 		_helpScreen = HelpScreenUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
 				_mouseEvent);
 	}
 
 	private void initializeTaskView() {
+		logger.log(Level.INFO, "initializing task view.");
 		_taskViewInterface = TaskViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
 				_mouseEvent);
 		_taskViewInterface.buildComponent(_logicFace.getWorkingList(), _logicFace.getNextTimeListId());
 	}
 
 	private void initializeFloatingView() {
+		logger.log(Level.INFO, "initializing floating view.");
 		_floatingViewInterface = FloatingTaskUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize,
 				_styleSheet, _mouseEvent);
 	}
 
 	private void initializeFloatingBar() {
+		logger.log(Level.INFO, "initializing floating bar component.");
 		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize, _styleSheet,
 				_mouseEvent);
 		TaskEntity floatingTask = _logicFace.getRandomFloating();
@@ -144,7 +161,19 @@ public class UserInterfaceController {
 	}
 
 	private void initializeSearchView() {
+		logger.log(Level.INFO, "initializing search view.");
 		_searchViewInterface = SearchUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+				_mouseEvent);
+	}
+
+	private void initializeDetailComponent() {
+		logger.log(Level.INFO, "initializing detail component.");
+		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet, _mouseEvent);
+	}
+
+	private void initializeDescriptionComponent() {
+		logger.log(Level.INFO, "initializing description component.");
+		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet,
 				_mouseEvent);
 	}
 
@@ -157,7 +186,6 @@ public class UserInterfaceController {
 			_descriptionComponent.show();
 			_floatingBarComponent.show();
 			_detailComponent.show();
-
 			_floatingViewInterface.hide();
 			_searchViewInterface.hide();
 			_helpScreen.hide();
@@ -166,7 +194,6 @@ public class UserInterfaceController {
 			_descriptionComponent.show();
 			_floatingBarComponent.show();
 			_detailComponent.show();
-
 			_floatingViewInterface.hide();
 			_searchViewInterface.hide();
 			_helpScreen.hide();
@@ -175,7 +202,6 @@ public class UserInterfaceController {
 			_descriptionComponent.hide();
 			_detailComponent.hide();
 			_searchViewInterface.hide();
-
 			_floatingBarComponent.show();
 			_floatingViewInterface.show();
 			_helpScreen.hide();
@@ -185,7 +211,6 @@ public class UserInterfaceController {
 			_detailComponent.hide();
 			_searchViewInterface.hide();
 			_floatingViewInterface.hide();
-
 			_floatingBarComponent.show();
 			_searchViewInterface.show();
 			_helpScreen.hide();
@@ -239,6 +264,9 @@ public class UserInterfaceController {
 		}
 	}
 
+	/**
+	 * Update the description panel to reflect the updates on the task view.
+	 */
 	public void updateDescriptionComponent() {
 		if (_currentView == TASK_VIEW) {
 			_taskViewInterface.rebuildDescriptionLabelsForWeek();
@@ -248,6 +276,11 @@ public class UserInterfaceController {
 		}
 	}
 
+	/**
+	 * translate the views base on the user controls.
+	 * 
+	 * @param value
+	 */
 	public void translateComponentsY(double value) {
 		_descriptionComponent.updateTranslateY(value);
 		_taskViewInterface.updateTranslateY(value);
@@ -397,6 +430,12 @@ public class UserInterfaceController {
 		TaskViewDescriptionAnimation.getInstance(this, direction).start();
 	}
 
+	/**
+	 * This method is only called by the animator thread to animation the view
+	 * to the Expanded view.
+	 * 
+	 * @return - boolean true when animation is done.
+	 */
 	public boolean animateToExpanedView() {
 		boolean isDoneTranslating = _taskViewInterface.isAtDetailedView(1);
 		_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(), EXPANDED_VIEW);
@@ -404,6 +443,12 @@ public class UserInterfaceController {
 		return isDoneTranslating;
 	}
 
+	/**
+	 * This method is only called by the animator thread to animation the view
+	 * to the Main view.
+	 * 
+	 * @return - boolean true when animation is done.
+	 */
 	public boolean animateToTaskView() {
 		boolean isDoneTranslating = _taskViewInterface.isAtTaskView(-1);
 		_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
@@ -596,8 +641,6 @@ public class UserInterfaceController {
 				_logicFace.getWorkingList().get(index2);
 				ResultSet resultSet = _logicFace.link(_logicFace.getWorkingList().get(index1),
 						_logicFace.getWorkingList().get(index2), buildRawCommand(rawString));
-
-				System.out.println(resultSet.getIndex());
 				if (resultSet.isSuccess()) {
 					if (toUpdateView) {
 						updateChangesToViews(resultSet.getIndex());
@@ -837,6 +880,20 @@ public class UserInterfaceController {
 
 	public String loadTheme() {
 		return _logicFace.loadTheme();
+	}
+
+	public ResultSet processLoadFrom(String loadFrom) {
+		ResultSet resultSet = _logicFace.loadFrom(loadFrom);
+		if (resultSet != null) {
+			if (resultSet.isSuccess()) {
+				setManagerView(TASK_VIEW);
+				_currentView = TASK_VIEW;
+				int id = _logicFace.getNextTimeListId();
+				updateChangesToViews(id);
+				showMainView(-1);
+			}
+		}
+		return resultSet;
 	}
 
 	public boolean processEnter() {

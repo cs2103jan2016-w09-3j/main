@@ -217,6 +217,9 @@ public class PrimaryUserInterface extends Application {
 			} else if (cmd.equals(COMMAND.THEME)) {
 				String themeChange = _commandBar.getSearchStr();
 				executeChangeTheme(themeChange);
+			} else if (cmd.equals(COMMAND.LOADFROM)) {
+				String loadFrom = _commandBar.getSearchStr();
+				executeLoadFrom(loadFrom);
 			}
 		} else {
 			_commandBar.onKeyReleased();
@@ -465,6 +468,16 @@ public class PrimaryUserInterface extends Application {
 			resetCommandInput();
 		}
 		_commandBar.showFeedBackMessage(COMMAND.UNDO, resultSet, null);
+	}
+
+	private void executeLoadFrom(String loadFrom) {
+		ResultSet resultSet = uiController.processLoadFrom(loadFrom);
+		if (resultSet != null) {
+			if (resultSet.isSuccess()) {
+				resetCommandInput();
+			}
+		}
+		_commandBar.showFeedBackMessage(COMMAND.LOADFROM, resultSet, loadFrom);
 	}
 
 	// @@author A0125514N

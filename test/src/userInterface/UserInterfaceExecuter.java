@@ -85,6 +85,10 @@ public class UserInterfaceExecuter {
 		return _taskManager.saveTheme(styleSheet);
 	}
 
+	public ResultSet loadFrom(String loadFrom) {
+		return null;
+	}
+
 	public String loadTheme() {
 		return _taskManager.loadTheme();
 	}

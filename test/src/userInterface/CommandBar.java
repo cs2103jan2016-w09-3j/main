@@ -69,6 +69,9 @@ public class CommandBar {
 	private static final String MESSAGE_PAST = "Task has past deadline.";
 	private static final String MESSAGE_CONFLICT_PAST = "Conflict detected and task has past deadline.";
 
+	private static final String MESSAGE_SUCCESS_LOADFROM = "Successfully loaded from %1$s";
+	private static final String MESSAGE_FAILURE_LOADFROM = "Failed to load from %1$s";
+
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
 	private static final int MAIN_PANE_LEFT_RIGHT_MARGIN = 0;
@@ -739,7 +742,15 @@ public class CommandBar {
 			break;
 		}
 		case LOADFROM: {
-			
+			if (resultSet != null) {
+				if (resultSet.isSuccess()) {
+					setFeedBackMessage(String.format(MESSAGE_SUCCESS_LOADFROM));
+					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
+					break;
+				}
+			}
+			setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM));
+			setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			break;
 		}
 		case THEME: {
