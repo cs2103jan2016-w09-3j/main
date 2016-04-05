@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Queue;
 
 import entity.AllTaskLists;
+import entity.ResultSet;
 import entity.TaskEntity;
 
 public class StorageInterface {
@@ -54,16 +55,12 @@ public class StorageInterface {
         sc.clearCommandFile();
     }
     
-    public boolean saveTo(String newFilePath) {
+    public ResultSet saveTo(String newFilePath) {
         return sc.saveToNewDirectory(newFilePath);
     }
     
     public boolean loadFrom(String newFilePath) {
         return sc.loadFromNewFile(newFilePath);
-    }
-    
-    public boolean resetDefault() {
-        return sc.resetToDefault();
     }
     
     public boolean saveThemePreference(String themeName) {

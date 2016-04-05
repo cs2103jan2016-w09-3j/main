@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import entity.ResultSet;
+
 public class StorageHandler {
 
     private String configFilePath;
@@ -23,7 +25,7 @@ public class StorageHandler {
 
     private String allStoredTasks;
     private String allBackUpTasks;
-    private Queue<String> allCommandsQueue;
+    private Queue<String> allCommandsQueue = new LinkedList<String>();
 
     private String themeName;
 
@@ -33,20 +35,19 @@ public class StorageHandler {
     private static final int WRITE_TO_CONFIG_FILE = 1;
     private static final int WRITE_TO_MAIN_FILE = 2;
     private static final int WRITE_TO_BACK_UP_FILE = 3;
-    
+
     private static final String CONFIG_FILE_NAME = "configFile.txt";
     private static final String MAIN_FILE_NAME = "mainTasksFile.txt";
     private static final String BACK_UP_FILE_NAME = "backUpTasksFile.txt";
     private static final String COMMAND_FILE_NAME = "commandsFile.txt";
     private static final String DEFAULT_THEME = "default";
     private static final String NEW_LINE = "\n";
-    
+
     public StorageHandler() {
-        allCommandsQueue = new LinkedList<String>();
         processFile();
     }
 
-    //============================================================================
+    // ============================================================================
     // Getters and setters
     // ===========================================================================
 
@@ -81,29 +82,30 @@ public class StorageHandler {
     public String getThemeName() {
         return themeName;
     }
-        
+
     public void setThemeName(String themeName) {
         this.themeName = themeName;
     }
 
-    //============================================================================
+    // ============================================================================
     // Initialising, creating new files
     // ===========================================================================
 
     /**
-     * Reads and stores data from existing file if any, creates a new file otherwise
+     * Reads and stores data from existing file if any, creates a new file
+     * otherwise
      */
     public void processFile() {
-        initConfigFile(); 
-        initMainFile();        
+        initConfigFile();
+        initMainFile();
         initBackUpFile();
         initCommandFile();
     }
-    
+
     private void initConfigFile() {
         configFilePath = CONFIG_FILE_NAME;
         configFile = new File(configFilePath);
-        
+
         if (isExists(configFile)) {
             extractConfigSettings();
             tasksFile = new File(tasksFilePath);
@@ -122,11 +124,11 @@ public class StorageHandler {
 
     private void extractConfigSettings() {
         String settings = readFromExistingFile(READ_FROM_CONFIG_FILE);
-        String[] settingsSplit = settings.split("\n");
+        String[] settingsSplit = settings.split(NEW_LINE);
         setMainFilePath(settingsSplit[0]);
         setThemeName(settingsSplit[1]);
     }
-        
+
     private void initMainFile() {
         if (isExists(tasksFile)) {
             setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
@@ -135,34 +137,34 @@ public class StorageHandler {
             createNewFile(tasksFile);
         }
     }
-       
+
     private void initBackUpFile() {
         backUpTasksFilePath = BACK_UP_FILE_NAME;
         backUpTasksFile = new File(backUpTasksFilePath);
-        
+
         // Temporary back up file to be deleted after every session
-        if(isExists(backUpTasksFile) == true) {
+        if (isExists(backUpTasksFile) == true) {
             deleteBackUpFile();
         }
-        
+
         createNewFile(backUpTasksFile);
         copyToBackUp();
     }
-    
+
     private void initCommandFile() {
         commandsFilePath = COMMAND_FILE_NAME;
         commandsFile = new File(commandsFilePath);
-        
+
         if (isExists(commandsFile)) {
             setAllCommandsQueue(readFromExistingCommandFile());
         } else {
             createNewFile(commandsFile);
         }
     }
-   
+
     private boolean createNewFile(File file) {
         boolean isCreated = false;
-        
+
         try {
             isCreated = file.createNewFile();
         } catch (IOException e) {
@@ -170,10 +172,10 @@ public class StorageHandler {
         }
         return isCreated;
     }
-    
+
     private boolean makeNewDirectory(File file) {
         boolean isCreated = false;
-        
+
         if (hasDirectory(file) == false) {
             if (file.getParentFile() != null) {
                 isCreated = file.getParentFile().mkdirs();
@@ -190,31 +192,32 @@ public class StorageHandler {
         return file.exists();
     }
 
-    //============================================================================
+    // ============================================================================
     // Reading from existing files
     // ===========================================================================
 
     private BufferedReader identifyReadFrom(int fromFile) throws FileNotFoundException {
         BufferedReader buffer = null;
         switch (fromFile) {
-            case READ_FROM_MAIN_FILE:
+            case READ_FROM_MAIN_FILE :
                 buffer = new BufferedReader(new FileReader(tasksFilePath));
                 break;
-            case READ_FROM_BACK_UP_FILE:
+            case READ_FROM_BACK_UP_FILE :
                 buffer = new BufferedReader(new FileReader(backUpTasksFilePath));
                 break;
-            case READ_FROM_CONFIG_FILE:
+            case READ_FROM_CONFIG_FILE :
                 buffer = new BufferedReader(new FileReader(configFilePath));
                 break;
         }
         return buffer;
     }
-    
+
     /**
      * Reads data from an existing file and returns the appended string
+     * 
      * @return String
      */
-    public String readFromExistingFile(int fromFile) {        
+    public String readFromExistingFile(int fromFile) {
         BufferedReader buffer;
         String readData = "";
         try {
@@ -239,6 +242,7 @@ public class StorageHandler {
 
     /**
      * Reads commands from an existing file and returns the queue
+     * 
      * @return Queue<String>
      */
     public Queue<String> readFromExistingCommandFile() {
@@ -269,29 +273,31 @@ public class StorageHandler {
         return identifyWriteTo(allBackUpTasks, WRITE_TO_BACK_UP_FILE);
     }
 
-    //============================================================================
+    // ============================================================================
     // Writing to files
     // ===========================================================================
 
     /**
      * Returns true if data is written to a file, false otherwise
-     * Whether the data has been written depends on the last modified time of the file
+     * Whether the data has been written depends on the last modified time of
+     * the file
+     * 
      * @param data
      * @return boolean
      */
     public boolean identifyWriteTo(String data, int toFile) {
         File file = null;
-        String filePath = null; 
+        String filePath = null;
         switch (toFile) {
-            case WRITE_TO_MAIN_FILE:
+            case WRITE_TO_MAIN_FILE :
                 file = new File(tasksFilePath);
                 filePath = tasksFilePath;
                 break;
-            case WRITE_TO_BACK_UP_FILE:
+            case WRITE_TO_BACK_UP_FILE :
                 file = backUpTasksFile;
                 filePath = backUpTasksFilePath;
                 break;
-            case WRITE_TO_CONFIG_FILE:
+            case WRITE_TO_CONFIG_FILE :
                 file = configFile;
                 filePath = configFilePath;
                 break;
@@ -309,7 +315,7 @@ public class StorageHandler {
     private long writeToFile(String data, File file, String filePath, long afterModify) {
         FileWriter fileWriter;
         try {
-            fileWriter = new FileWriter(filePath); 
+            fileWriter = new FileWriter(filePath);
             fileWriter.write(data);
             fileWriter.flush();
             fileWriter.close();
@@ -322,7 +328,9 @@ public class StorageHandler {
 
     /**
      * Returns true if commands written to a file, false otherwise
-     * Whether the commands have been written depends on the last modified time of the file
+     * Whether the commands have been written depends on the last modified time
+     * of the file
+     * 
      * @param writeCommands
      * @return boolean
      */
@@ -332,18 +340,19 @@ public class StorageHandler {
         long afterModify = -1;
         try {
             fileWriter = new FileWriter(commandsFilePath, true); // True to append to file
-            fileWriter.write(command + '\n');
+            fileWriter.write(command + NEW_LINE);
             fileWriter.flush();
             fileWriter.close();
             afterModify = commandsFile.lastModified();
         } catch (IOException e) {
-            e.printStackTrace();  
+            e.printStackTrace();
         }
-        return isModified(beforeModify, afterModify); 
+        return isModified(beforeModify, afterModify);
     }
 
     /**
      * Returns true if timeAfterMod is after timeBeforeMod, false otherwise
+     * 
      * @param timeBeforeModification
      * @param timeAfterModification
      * @return boolean
@@ -352,7 +361,7 @@ public class StorageHandler {
         return timeAfterModification > timeBeforeModification;
     }
 
-    //============================================================================
+    // ============================================================================
     // Clearing and removing files
     // ===========================================================================
 
@@ -382,33 +391,44 @@ public class StorageHandler {
     public void deleteBackUpFile() {
         backUpTasksFile.delete();
     }
-    
-    //============================================================================
+
+    // ============================================================================
     // Changing file directory
     // ===========================================================================
 
-    public boolean changeDirectory(String newFilePath) {
+    public ResultSet changeDirectory(String newFilePath) {
+        ResultSet resultSet = new ResultSet();
+        resultSet.setIndex(0);
         boolean isChanged = false;
         File newFile = new File(newFilePath);
-        
+
         if (newFile.exists() == false) {
             isChanged = makeNewDirectory(newFile);
             isChanged = createNewFile(newFile);
-            
+
             String transferData = readFromExistingFile(READ_FROM_MAIN_FILE);
             setMainFilePath(newFile.getAbsolutePath());
             tasksFile = newFile;
             setAllStoredTasks(transferData);
             identifyWriteTo(transferData, WRITE_TO_MAIN_FILE);
-        }         
-        isChanged = writeConfigSettings();
-        return isChanged;
+        } else {
+            resultSet.setIndex(-1);
+        }
+        if (isChanged == true) {
+            isChanged = writeConfigSettings();
+        }
+        if (isChanged) {
+            resultSet.setSuccess();
+        } else {
+            resultSet.setFail();
+        }
+        return resultSet;
     }
-    
+
     public boolean loadFromExistingFile(String newFilePath) {
         boolean isLoaded = false;
         File newFile = new File(newFilePath);
-        
+
         if (isExists(newFile)) {
             isLoaded = true;
             setMainFilePath(newFile.getAbsolutePath());
@@ -418,15 +438,8 @@ public class StorageHandler {
         }
         return isLoaded;
     }
-    
-    public boolean resetToDefaultSettings() {
-        setMainFilePath(MAIN_FILE_NAME);
-        tasksFile = new File(tasksFilePath);
-        initMainFile();
-        return loadFromExistingFile(MAIN_FILE_NAME);
-    }
 
-    //============================================================================
+    // ============================================================================
     // Saving theme preference
     // ===========================================================================
 
