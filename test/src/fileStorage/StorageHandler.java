@@ -23,7 +23,7 @@ public class StorageHandler {
 
     private String allStoredTasks;
     private String allBackUpTasks;
-    private Queue<String> allCommandsQueue;
+    private Queue<String> allCommandsQueue = new LinkedList<String>();
 
     private String themeName;
 
@@ -42,7 +42,6 @@ public class StorageHandler {
     private static final String NEW_LINE = "\n";
     
     public StorageHandler() {
-        allCommandsQueue = new LinkedList<String>();
         processFile();
     }
 
@@ -122,7 +121,7 @@ public class StorageHandler {
 
     private void extractConfigSettings() {
         String settings = readFromExistingFile(READ_FROM_CONFIG_FILE);
-        String[] settingsSplit = settings.split("\n");
+        String[] settingsSplit = settings.split(NEW_LINE);
         setMainFilePath(settingsSplit[0]);
         setThemeName(settingsSplit[1]);
     }
@@ -332,7 +331,7 @@ public class StorageHandler {
         long afterModify = -1;
         try {
             fileWriter = new FileWriter(commandsFilePath, true); // True to append to file
-            fileWriter.write(command + '\n');
+            fileWriter.write(command + NEW_LINE);
             fileWriter.flush();
             fileWriter.close();
             afterModify = commandsFile.lastModified();
