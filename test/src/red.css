@@ -59,7 +59,7 @@
 }
 
 #cssTaskViewWeekSelected{
-	-fx-background-color: rgba(193.0,230.0,255.0,0.95);
+	-fx-background-color: rgba(240.0,240.0,255,1.0);
 }
 
 #cssTaskViewWeekUnSelected{
@@ -74,11 +74,12 @@
 
 #cssTaskViewSelectedTask{
 	-fx-background-radius: 20.0; 
-	-fx-background-color:  rgba(255.0, 255.0, 255.0, 0.8);
+	-fx-background-color:  rgba(255.0,178.5,178.5,1.0);
 	-fx-background-insets: 1.0 5.0 1.0 5.0;
 }
 
 #cssTaskViewUnSelectedTask{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.5);
 }
 
 #cssTaskViewDayLabel{
@@ -94,7 +95,7 @@
 }
 
 #cssExpandedViewVBoxSelected{
-	-fx-background-color: rgba(255.0,230.0,255.0,1.0);
+	-fx-background-color: rgba(255.0,178.5,178.5,1.0);
 	-fx-background-radius: 7.0;
 	-fx-background-insets: 0.0 5.0 0.0 5.0;
 }
@@ -106,26 +107,26 @@
 }
 
 #cssDescriptionLabelSelected{
-	-fx-background-color:rgba(255.0,178.5,127.5,1.0);
+	-fx-background-color:rgba(255.0,178.5,178.5,1.0);
 }
 
 #cssDescriptionLabelUnSelected{
-	-fx-background-color:rgba(255.0,255.0,255.0,0.3);
+	-fx-background-color:rgba(255.0,255.0,255.0,0.9);
 }
 
 /* Detail Componenet CSS */
 
 #cssDetailComponentRoot{
-	-fx-background-color: rgba(255.0,255.0,255.0,0.7),rgba(193.0,230.0,255.0,0.95);
+	-fx-background-color: rgba(225.0,225.0,255.0,0.7),rgba(225.0,225.0,255.0,0.95);
 }
 
 #cssDetailComponentRootAssociation{
-	-fx-background-color: rgba(255.0,178.5,127.5,1.0),rgba(255.0,255.0,255.0,0.7),rgba(193.0,230.0,255.0,0.95);
+	-fx-background-color:rgba(225.0,225.0,255.0,0.7)rgba(225.0,225.0,255.0,0.7),rgba(255.0,255.0,255.0,0.7),rgba(225.0,225.0,255.0,0.7);
 	-fx-background-insets: 0.0,2.0,2.0;
 }
 
 #cssDetailComponentEmptyTitle {
-	-fx-background-color: rgba(255.0,178.5,127.5,1.0);	
+	-fx-background-color: rgba(138.0,138.0,255,1.0);	
 }
 
 #cssDetailComponentProjectHeadBox{
@@ -141,7 +142,7 @@
 /* Floating Bar CSS */
 
 #cssRootFloatingBar{
-	-fx-background-color: rgba(255.0,178.5,127.5,1.0), rgba(255.0,255.0,255.0,0.7);
+	-fx-background-color: rgba(200.0,200,255,1.0), rgba(225.0,225.0,255.0,0.7);
 	-fx-background-insets: 0.0,0.0 10.0 0.0 10.0;
 }
 
@@ -157,32 +158,32 @@
 /* Floating Task View CSS */
 
 #cssRootFloatingTaskView{
-	-fx-background-color: rgba(255.0,178.5,127.5,1.0),rgba(255.0,255.0,255.0,1.0);
+	-fx-background-color: rgba(225.0,225.0,255.0,1.0,1.0)rgba(225.0,225.0,255.0,1.0);
 	-fx-background-insets: 0.0,5.0;
 }
 
 #cssFloatingTaskViewTitle{
-	-fx-background-color: rgba(255.0,178.5,127.5,1.0);
+	-fx-background-color: rgba(159.0, 138.0, 232.0,1.0);
 }
 
 #cssFloatingTaskViewSelected{
 	-fx-background-radius: 20.0; 
-	-fx-background-color:  rgba(255.0,178.5,127.5,0.3);
+	-fx-background-color:  rgba(255.0,178.5,178.5,1.0);
 	-fx-background-insets: 1.0 7.0 1.0 7.0;
 }
 
 /* Search View CSS */
 #cssRootSearchView{
-	-fx-background-color: rgba(191.0, 80.0, 191.0,1.0,1.0),rgba(255.0,255.0,255.0,1.0);
+	-fx-background-color: rgba(225.0,225.0,255.0,1.0,1.0)rgba(225.0,225.0,255.0,1.0);
 	-fx-background-insets: 0.0,5.0;
 }
 
 #cssSearchTitle{
-	-fx-background-color: rgba(191.0, 80.0, 191.0,1.0);
+	-fx-background-color: rgba(138.0, 159.0, 232.0,1.0);
 }
 
 #cssSearchSelected{
-	-fx-background-color: rgba(191.0, 80.0, 191.0,0.3);
+	-fx-background-color: rgba(255.0,178.5,178.5,1.0);
 	-fx-background-radius: 20.0; 
 	-fx-background-insets: 1.0 7.0 1.0 7.0;
 }
@@ -200,23 +201,23 @@
 
 
 #cssCommandBarfeedback_normal{
-	-fx-background-color: rgba(179.0, 255.0, 153.0, 1.0);
+	-fx-background-color: rgba(23.0, 219.0, 36.0, 1.0);
 }
 
 #cssCommandBarfeedback_conflict{
-	-fx-background-color: rgba(249.0, 186.0, 122.0, 1.0);
+	-fx-background-color: rgba(255.0, 208.0, 42.0, 1.0);
 }
 
 #cssCommandBarfeedback_past{
-	-fx-background-color: rgba(246.0, 246.0, 39.0, 1.0);
+	-fx-background-color: rgba(255.0, 208.0, 42.0, 1.0);
 }
 
 #cssCommandBarfeedback_conflict_past{
-	-fx-background-color: rgba(180.0, 251.0, 212.0, 1.0);
+	-fx-background-color: rgba(255.0, 208.0, 42.0, 1.0);
 }
 
 #cssCommandBarfeedback_error{
-	-fx-background-color: rgba(249.0, 122.0, 122.0,1.0);
+	-fx-background-color: rgba(255.0, 42.0, 44.0,1.0);
 }
 
 /* Commands CSS */
