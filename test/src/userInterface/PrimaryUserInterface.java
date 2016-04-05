@@ -44,9 +44,9 @@ public class PrimaryUserInterface extends Application {
 	static final String FONT_TITLE_LABLES = "lucida sans";
 	static final int DEFAULT_FONT_SIZE = 24;
 
-	private static String[] styles = { "default.css", "blackandwhite.css", "red.css" };
+	private static String[] styles = { "default.css", "blackandwhite.css", "red.css", "pastel.css" };
 
-	private String _styleSheet = styles[2];
+	private String _styleSheet = styles[3];
 	private double _commandBarWidth;
 	private Rectangle2D _screenBounds;
 	private Stage _primaryStage;
@@ -263,7 +263,7 @@ public class PrimaryUserInterface extends Application {
 				uiController.hide();
 			} else if (event.getCode().compareTo(KeyCode.F3) == 0) {
 				uiController.show();
-			}else if (event.getCode().compareTo(KeyCode.F4) == 0) {
+			} else if (event.getCode().compareTo(KeyCode.F4) == 0) {
 				uiController.destory();
 				uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet, _mainEventHandler);
 				resetCommandInput();
