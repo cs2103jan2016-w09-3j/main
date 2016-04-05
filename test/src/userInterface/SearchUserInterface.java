@@ -395,9 +395,11 @@ public class SearchUserInterface implements ViewInterface {
 		_stage.getScene().getStylesheets().add(styleSheet);
 	}
 
-	public void processEnter() {
-		// TODO Auto-generated method stub
-		
+	public TaskEntity processEnter() {
+		if (_selectedIndex > -1 && _selectedIndex < _searchList.size()) {
+			return _searchList.get(_selectedIndex);
+		}
+		return null;
 	}
 
 }

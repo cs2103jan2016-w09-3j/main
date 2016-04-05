@@ -9,7 +9,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.Inflater;
 
 import dateParser.InputParser;
 import dateParser.Pair;
@@ -18,7 +17,6 @@ import dateParser.CommandParser.COMMAND;
 import entity.ResultSet;
 import entity.TaskEntity;
 import mainLogic.TaskManager;
-import mainLogic.TaskManagerInterface;
 import mainLogic.TaskUtils;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
@@ -841,7 +839,24 @@ public class UserInterfaceController {
 		return _logicFace.loadTheme();
 	}
 
-	public void processEnter() {
-		_searchViewInterface.processEnter();
+	public boolean processEnter() {
+		if (_currentView == SEARCH_VIEW) {
+			TaskEntity task = _searchViewInterface.processEnter();
+			if (task != null) {
+				setManagerView(TASK_VIEW);
+				_currentView = TASK_VIEW;
+				ArrayList<TaskEntity> tasks = _logicFace.getWorkingList();
+
+				for (int i = 0; i < tasks.size(); i++) {
+					if (task.getId() == tasks.get(i).getId()) {
+						updateChangesToViews(i);
+						showMainView(-1);
+						break;
+					}
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 }

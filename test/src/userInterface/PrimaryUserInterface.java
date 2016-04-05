@@ -174,7 +174,9 @@ public class PrimaryUserInterface extends Application {
 			if (cmd.equals(COMMAND.EXIT)) {
 				executeExit();
 			} else if (cmd.equals(COMMAND.INVALID)) {
-				executeInvalidCommand();
+				if (!uiController.processEnter()) {
+					executeInvalidCommand();
+				}
 			} else if (cmd.equals(COMMAND.ADD)) {
 				executeAdd(_commandBar.getTasks(), _commandBar.getFullInput());
 			} else if (cmd.equals(COMMAND.DELETE)) {
@@ -226,9 +228,6 @@ public class PrimaryUserInterface extends Application {
 	// @@author A0125514N
 	private void processControls(KeyEvent event) {
 
-		if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
-			uiController.processEnter();
-		}
 		if (event.getCode().compareTo(KeyCode.UP) == 0 && !event.isControlDown() && !event.isShiftDown()) {
 			_commandBar.getPrevCommand();
 		}
