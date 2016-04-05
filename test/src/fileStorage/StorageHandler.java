@@ -400,8 +400,10 @@ public class StorageHandler {
             tasksFile = newFile;
             setAllStoredTasks(transferData);
             identifyWriteTo(transferData, WRITE_TO_MAIN_FILE);
-        }         
-        isChanged = writeConfigSettings();
+        } 
+        if (isChanged == true) {
+            writeConfigSettings();
+        }
         return isChanged;
     }
     
