@@ -59,8 +59,8 @@ public class CommandBar {
 	private static final String MESSAGE_SUCCESS_UNDO_TYPE_1 = "successfully undo.";
 	private static final String MESSAGE_FAILURE_UNDO_TYPE_1 = "There are no commands to undo.";
 
-	private static final String MESSAGE_SUCCESS_SAVETO = "successfully changed save directory.";
-	private static final String MESSAGE_FAILURE_SAVETO = "Saving directory failed, Setting reset to defaults.";
+	private static final String MESSAGE_SUCCESS_SAVETO = "Saved to new file successfully.";
+	private static final String MESSAGE_FAILURE_SAVETO = "Unable to create new directory and file. Please check for clashes or duplicate files.";
 
 	private static final String MESSAGE_SUCCESS_THEME = "Successfully changed theme.";
 	private static final String MESSAGE_FAILURE_THEME = "Invalid theme. Choose a theme from this list -> %1$s.";
@@ -69,8 +69,8 @@ public class CommandBar {
 	private static final String MESSAGE_PAST = "Task has past deadline.";
 	private static final String MESSAGE_CONFLICT_PAST = "Conflict detected and task has past deadline.";
 
-	private static final String MESSAGE_SUCCESS_LOADFROM = "Successfully loaded from %1$s";
-	private static final String MESSAGE_FAILURE_LOADFROM = "Failed to load from %1$s";
+	private static final String MESSAGE_SUCCESS_LOADFROM = "Loaded from %1$s file successfully.";
+	private static final String MESSAGE_FAILURE_LOADFROM = "Unable to find %1$s. Please check that the file is available for reading.";
 
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
@@ -744,12 +744,12 @@ public class CommandBar {
 		case LOADFROM: {
 			if (resultSet != null) {
 				if (resultSet.isSuccess()) {
-					setFeedBackMessage(String.format(MESSAGE_SUCCESS_LOADFROM));
+					setFeedBackMessage(String.format(MESSAGE_SUCCESS_LOADFROM, msg));
 					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 					break;
 				}
 			}
-			setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM));
+			setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM, msg));
 			setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			break;
 		}

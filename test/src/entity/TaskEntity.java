@@ -473,7 +473,7 @@ public class TaskEntity {
 		}
 
 		if (_isFullDay) {
-			return "Full Day event";
+			return "Full Day";
 		}
 
 		// Adding start Date to the display string for showing date

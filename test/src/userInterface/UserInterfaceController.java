@@ -355,8 +355,11 @@ public class UserInterfaceController {
 	}
 
 	public void showHelpView() {
-		showMainView(-1);
-		_helpScreen.show();
+		boolean isShown = _helpScreen.toggleHelpView();
+		if(isShown){
+			showMainView(-1);
+			_helpScreen.show();
+		}
 	}
 
 	public void updateHelpView(int value) {
