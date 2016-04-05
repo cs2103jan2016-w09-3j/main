@@ -1,7 +1,14 @@
+/**
+ * @author angie
+ * @@author A0126357A
+ * 
+ *         StorageController to create instances of StorageHandler and JsonConverter
+ *         to merge functionalities.
+ */
+
 package fileStorage;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Queue;
 
 import entity.AllTaskLists;
@@ -19,21 +26,13 @@ public class StorageController {
         storageHandler = new StorageHandler();
     }
     
-    // Test function
-    public static void main (String args[]) {
-        StorageHandler sh = new StorageHandler();
-        StorageController si = new StorageController();
-        
-        //sh.writeToFile("testing see if it works", 2);
-        //sh.changeDirectory("Desktop/list.txt");
-    }
-
     //============================================================================
     // Handling main file
     // ===========================================================================
 
     /**
      * Retrieve all tasks previously saved in the text file.
+     * 
      * @return AllTaskLists
      */
     public AllTaskLists getTaskLists() {
@@ -46,7 +45,8 @@ public class StorageController {
     }
 
     /** 
-     * Returns true if tasks are written to file, false otherwise. 
+     * Returns true if tasks are written to file, false otherwise.
+     *  
      * @return boolean
      */    
     public boolean storeTaskLists(AllTaskLists allTaskLists) {
@@ -93,7 +93,14 @@ public class StorageController {
     //============================================================================
     // Handling command file
     // ===========================================================================
-        
+    
+    /**
+     * Returns true if commands queue is full, false otherwise
+     * This is to be passed on to Logic, Logic will then commit the working tasks
+     * 
+     * @param command
+     * @return isFullQueue
+     */
     public boolean saveUponFullQueue(String command) {
         
         boolean isSaved = storeCommandLine(command);
@@ -154,34 +161,5 @@ public class StorageController {
     
     public String getThemePreference() {
         return storageHandler.getThemeName();
-    }
-    
-    //============================================================================
-    // Generate dummy data
-    // ===========================================================================
-    
-    private AllTaskLists createDummy() {
-        ArrayList<TaskEntity> dummyMainList = new ArrayList<TaskEntity>();
-        dummyMainList.add(new TaskEntity("firstTask"));
-        dummyMainList.add(new TaskEntity("secondTask"));
-        assert dummyMainList.size() > 0;
-        
-        ArrayList<TaskEntity> dummyFloatingList = new ArrayList<TaskEntity>();
-        dummyFloatingList.add(new TaskEntity("floatingTaskOne"));
-        dummyFloatingList.add(new TaskEntity("floatingTaskTwo"));
-        assert dummyFloatingList.size() > 0;
-        
-        AllTaskLists dummyTL = new AllTaskLists();
-        dummyTL.setFloatingTaskList(dummyFloatingList);
-        dummyTL.setMainTaskList(dummyMainList);
-        return dummyTL;
-    }
-    
-    private Queue<String> createDummyCommands() {
-        Queue<String> dummyCommands = new LinkedList<String>();
-        dummyCommands.offer("add whatever : blah blah at blah time blah data");
-        dummyCommands.offer("add hello : blah blah at blah time blah data");
-        dummyCommands.offer("add annyeong : blah blah at blah time blah data");
-        return dummyCommands;
     }
 }

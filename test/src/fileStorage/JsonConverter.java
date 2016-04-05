@@ -1,3 +1,11 @@
+/**
+ * @author angie
+ * @@author A0126357A
+ * 
+ *         JsonConverter converts Java to JSON and from JSON to Java via GSON.
+ *         This is to facilitate easy saving and retrieving of data.
+ */
+
 package fileStorage;
 
 import java.util.ArrayList;
@@ -18,6 +26,7 @@ public class JsonConverter {
     /**
      * Converts Java Object to Json format via the Gson builder
      * String returned will include nulls for empty fields 
+     * 
      * @param allLists
      * @return String in Json format
      */
@@ -40,6 +49,7 @@ public class JsonConverter {
 
     /**
      * Converts Json format to Java Object via the Gson library
+     * 
      * @param input
      * @return AllTaskLists
      */

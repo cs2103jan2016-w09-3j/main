@@ -1,3 +1,11 @@
+/**
+ * @author angie
+ * @@author A0126357A
+ * 
+ *         StorageHandler to handle reading, writing and changing directory of files
+ *         Four files involved: config, main task, back up task and command files
+ */
+
 package fileStorage;
 
 import java.io.BufferedReader;
@@ -35,6 +43,8 @@ public class StorageHandler {
     private static final int WRITE_TO_CONFIG_FILE = 1;
     private static final int WRITE_TO_MAIN_FILE = 2;
     private static final int WRITE_TO_BACK_UP_FILE = 3;
+
+    private static final int FILE_DOES_NOT_EXIST = -1;
 
     private static final String CONFIG_FILE_NAME = "configFile.txt";
     private static final String MAIN_FILE_NAME = "mainTasksFile.txt";
@@ -92,8 +102,7 @@ public class StorageHandler {
     // ===========================================================================
 
     /**
-     * Reads and stores data from existing file if any, creates a new file
-     * otherwise
+     * Initialises all four files required
      */
     public void processFile() {
         initConfigFile();
@@ -101,7 +110,10 @@ public class StorageHandler {
         initBackUpFile();
         initCommandFile();
     }
-
+    
+    /**
+     * Initialises config file which contains settings of the file path and theme
+     */
     private void initConfigFile() {
         configFilePath = CONFIG_FILE_NAME;
         configFile = new File(configFilePath);
@@ -129,6 +141,9 @@ public class StorageHandler {
         setThemeName(settingsSplit[1]);
     }
 
+    /**
+     * Initialises main file which consists of all tasks
+     */
     private void initMainFile() {
         if (isExists(tasksFile)) {
             setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
@@ -138,6 +153,9 @@ public class StorageHandler {
         }
     }
 
+    /**
+     * Initialises back up file for undo purposes
+     */
     private void initBackUpFile() {
         backUpTasksFilePath = BACK_UP_FILE_NAME;
         backUpTasksFile = new File(backUpTasksFilePath);
@@ -151,6 +169,9 @@ public class StorageHandler {
         copyToBackUp();
     }
 
+    /**
+     * Initialises command file for data recovery
+     */
     private void initCommandFile() {
         commandsFilePath = COMMAND_FILE_NAME;
         commandsFile = new File(commandsFilePath);
@@ -252,7 +273,6 @@ public class StorageHandler {
             buffer = new BufferedReader(new FileReader(commandsFilePath));
             readQueue(readCommands, buffer);
             buffer.close();
-            System.out.println("Commands: Read from file.");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -268,6 +288,9 @@ public class StorageHandler {
         }
     }
 
+    /**
+     * Copies data from main file to back up file to facilitate undo
+     */
     public boolean copyToBackUp() {
         allBackUpTasks = readFromExistingFile(READ_FROM_MAIN_FILE);
         return identifyWriteTo(allBackUpTasks, WRITE_TO_BACK_UP_FILE);
@@ -282,7 +305,7 @@ public class StorageHandler {
      * Whether the data has been written depends on the last modified time of
      * the file
      * 
-     * @param data
+     * @param data, toFile
      * @return boolean
      */
     public boolean identifyWriteTo(String data, int toFile) {
@@ -304,7 +327,13 @@ public class StorageHandler {
         }
         return isWritten(data, file, filePath);
     }
-
+    
+    /**
+     * Returns true if file is modified and data is written into file, false otherwise
+     * 
+     * @param data, file, filePath
+     * @return isModified
+     */
     private boolean isWritten(String data, File file, String filePath) {
         long beforeModify = file.lastModified();
         long afterModify = -1;
@@ -396,6 +425,14 @@ public class StorageHandler {
     // Changing file directory
     // ===========================================================================
 
+    /**
+     * Save tasks to new file
+     * Returns success ResultSet if directory is successfully changed, fail otherwise
+     * Returns -1 if file does not exist
+     * 
+     * @param newFilePath
+     * @return resultSet
+     */
     public ResultSet changeDirectory(String newFilePath) {
         ResultSet resultSet = new ResultSet();
         resultSet.setIndex(0);
@@ -413,7 +450,7 @@ public class StorageHandler {
             setAllStoredTasks(transferData);
             identifyWriteTo(transferData, WRITE_TO_MAIN_FILE);
         } else {
-            resultSet.setIndex(-1);
+            resultSet.setIndex(FILE_DOES_NOT_EXIST);
         }
         if (isChanged == true) {
             isChanged = writeConfigSettings();
@@ -429,7 +466,13 @@ public class StorageHandler {
             resultSet.setFail();
         }
     }
-
+    
+    /**
+     * Load from existing file
+     * 
+     * @param newFilePath
+     * @return isLoaded
+     */
     public boolean loadFromExistingFile(String newFilePath) {
         boolean isLoaded = false;
         File newFile = new File(newFilePath);

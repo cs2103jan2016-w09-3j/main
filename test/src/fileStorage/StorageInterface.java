@@ -1,3 +1,10 @@
+/**
+ * @author angie
+ * @@author A0126357A
+ * 
+ *         StorageInterface as facade class for fileStorage
+ */
+
 package fileStorage;
 
 import java.util.ArrayList;
