@@ -104,7 +104,11 @@ public class StorageController {
     public boolean saveUponFullQueue(String command) {
         
         boolean isSaved = storeCommandLine(command);
-        assert isSaved == true : "Not commited to main file.";
+        if (isSaved == false) {
+            System.out.println("============================");
+            System.out.println("***DID NOT WRITE TO FILE***");
+            System.out.println("============================");
+        }
       
         Queue<String> newCommandsQueue = getCommandsQueue();
         newCommandsQueue.offer(command);
