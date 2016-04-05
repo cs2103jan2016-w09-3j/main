@@ -25,11 +25,10 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import entity.AllTaskLists;
 import entity.ResultSet;
 import entity.TaskEntity;
-import fileStorage.StorageController;
-import fileStorage.StorageHandler;
+import fileStorage.StorageInterface;
 
 public class TaskManager {
-    private StorageController dataLoader;
+    private StorageInterface dataLoader;
 
     private static TaskManager singleton;
     private Logger logger;
@@ -63,6 +62,15 @@ public class TaskManager {
         manager.unloadFile();
     }
 
+    /**
+     * Function for loadFrom to reset the undo stack upon loading other file
+     */
+    private void resetUndo() {
+        undoList = new ArrayList<String>();
+        undoPointer = -1;
+        _undoing = false;
+    }
+    
     /**
      * Prints out all the names of the tasks in the main array
      * 
@@ -132,7 +140,7 @@ public class TaskManager {
         initLogger();
 
 
-        dataLoader = new StorageController();
+        dataLoader = new StorageInterface();
         AllTaskLists taskdata = dataLoader.getTaskLists();
 
         mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
@@ -851,15 +859,26 @@ public class TaskManager {
         ResultSet changeResult = new ResultSet();
         
         commitFullSave();
-        boolean saveSuccess = dataLoader.saveToNewDirectory(newDirectory);
-        if(saveSuccess) {   
-            changeResult.setSuccess();
-            changeResult.setStatus(ResultSet.STATUS_GOOD);
-        } else {
-            changeResult.setFail();
-            changeResult.setStatus(ResultSet.STATUS_BAD);
-        }
+        ResultSet saveSuccess = dataLoader.saveTo(newDirectory);
+        
         return changeResult;
+    }
+    
+    public ResultSet loadFrom (String newDirectory) {
+        ResultSet loadResult = new ResultSet();
+        
+        boolean loadSuccess = dataLoader.loadFrom(newDirectory);
+        if (loadSuccess == true) {
+            reloadFile();
+            resetUndo();
+            loadResult.setSuccess();
+            loadResult.setStatus(ResultSet.STATUS_GOOD);
+        } else {
+            loadResult.setFail();
+            loadResult.setStatus(ResultSet.STATUS_BAD);
+        }
+        
+        return loadResult;
     }
     
     public ResultSet link(String projectHeadId, String taskUnderId) {
