@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -249,11 +250,14 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	}
 
 	public HBox buildIndividualFloating(TaskEntity task, int index) {
-		HBox floatingParent = new HBox();
-		floatingParent.toBack();
-		floatingParent.setMinHeight(LABEL_TASK_HEIGHT);
-		floatingParent.setMaxHeight(LABEL_TASK_HEIGHT);
-		floatingParent.setMinWidth(_stageWidth);
+		HBox parentBox = new HBox();
+		VBox parentBoxChild = new VBox();
+		parentBoxChild.setMinWidth(_stageWidth);
+		parentBoxChild.setMaxWidth(_stageWidth);
+
+		HBox top = new HBox();
+		top.setMinWidth(_stageWidth);
+		top.setMaxWidth(_stageWidth);
 
 		Label indexLabel = new Label("ID" + Integer.toString(index));
 		indexLabel.getStyleClass().add(CSS_LABEL);
@@ -261,17 +265,46 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		indexLabel.setMinWidth(50);
 		indexLabel.setAlignment(Pos.CENTER);
 		indexLabel.setFont(Font.font(PrimaryUserInterface.FONT_DEFAULT, FontWeight.BOLD, FONT_SIZE_TASK));
-		floatingParent.getChildren().add(indexLabel);
+		top.getChildren().add(indexLabel);
 
-		Label descriptionLabel = new Label();
-		descriptionLabel.getStyleClass().add(CSS_LABEL);
-		descriptionLabel.setText(task.getName());
-		descriptionLabel.setMinHeight(LABEL_TASK_HEIGHT);
-		descriptionLabel.setAlignment(Pos.CENTER);
-		descriptionLabel.setFont(FONT_TASK);
-		floatingParent.getChildren().add(descriptionLabel);
+		Label timeLabel = new Label();
+		timeLabel.setText(task.getTime());
+		timeLabel.getStyleClass().add(CSS_LABEL);
+		timeLabel.setMinHeight(LABEL_TASK_HEIGHT);
+		timeLabel.setAlignment(Pos.CENTER);
+		timeLabel.setFont(FONT_TASK);
+		HBox.setMargin(timeLabel, new Insets(0, 10, 0, 0));
+		top.getChildren().add(timeLabel);
 
-		return floatingParent;
+		Label nameLabel = new Label();
+		nameLabel.getStyleClass().add(CSS_LABEL);
+		nameLabel.setText(task.getName());
+		nameLabel.setMinHeight(LABEL_TASK_HEIGHT);
+		nameLabel.setAlignment(Pos.CENTER);
+		nameLabel.setFont(FONT_TASK);
+		HBox.setMargin(nameLabel, new Insets(0, 10, 0, 0));
+		top.getChildren().add(nameLabel);
+		top.setMinHeight(LABEL_TASK_HEIGHT);
+
+		HBox mid = new HBox();
+		Label indexPlaceHolder = new Label();
+		indexPlaceHolder.getStyleClass().add(CSS_LABEL);
+		indexPlaceHolder.setMinWidth(50);
+		mid.getChildren().add(indexPlaceHolder);
+
+		Text description = new Text();
+		description.getStyleClass().add(CSS_LABEL);
+		description.setText(task.getDescription());
+		description.setWrappingWidth(_stageWidth - 50);
+		mid.getChildren().add(description);
+		mid.setMinHeight(description.getBoundsInLocal().getHeight() + 10);
+
+		parentBoxChild.getChildren().add(top);
+		parentBoxChild.getChildren().add(mid);
+		parentBoxChild.setMinHeight(top.getMinHeight() + mid.getMinHeight());
+		parentBox.getChildren().add(parentBoxChild);
+		parentBox.setMinHeight(parentBoxChild.getMinHeight());
+		return parentBox;
 	}
 
 	public void setSelected(int value) {
@@ -287,8 +320,11 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	}
 
 	public double getTopHeight(int index) {
-		double sizeTop = index * LABEL_TASK_HEIGHT;
-		return sizeTop;
+		double posY = 0;
+		for (int i = 0; i <= index; i++) {
+			posY += _floatingBoxes.get(i).getMinHeight();
+		}
+		return posY;
 	}
 
 	public void translateY(double itemTopHeight) {
