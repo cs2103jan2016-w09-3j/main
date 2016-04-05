@@ -154,8 +154,8 @@ public class UserInterfaceController {
 
 	private void initializeFloatingBar() {
 		logger.log(Level.INFO, "initializing floating bar component.");
-		_floatingBarComponent = FloatingBarViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
-				_mouseEvent);
+		_floatingBarComponent = FloatingBarViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize,
+				_styleSheet, _mouseEvent);
 		TaskEntity floatingTask = _logicFace.getRandomFloating();
 		if (floatingTask != null) {
 			startFloatingThread();
@@ -245,7 +245,7 @@ public class UserInterfaceController {
 		_searchViewInterface.destoryStage();
 		_helpScreen.destory();
 		killFloatingThread();
-		
+
 	}
 
 	/**
@@ -356,7 +356,7 @@ public class UserInterfaceController {
 
 	public void showHelpView() {
 		boolean isShown = _helpScreen.toggleHelpView();
-		if(isShown){
+		if (isShown) {
 			showMainView(-1);
 			_helpScreen.show();
 		}
@@ -919,6 +919,20 @@ public class UserInterfaceController {
 					if (task.getId() == tasks.get(i).getId()) {
 						updateChangesToViews(i);
 						showMainView(-1);
+						break;
+					}
+				}
+				return true;
+			}
+		} else if (_currentView == ASSOCIATE_VIEW) {
+			TaskEntity task = _detailComponent.processEnter();
+			if (task != null) {
+				setManagerView(TASK_VIEW);
+				ArrayList<TaskEntity> tasks = _logicFace.getWorkingList();
+
+				for (int i = 0; i < tasks.size(); i++) {
+					if (task.getId() == tasks.get(i).getId()) {
+						updateChangesToViews(i);
 						break;
 					}
 				}

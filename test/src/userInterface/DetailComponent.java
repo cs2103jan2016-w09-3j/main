@@ -490,4 +490,24 @@ public class DetailComponent implements ViewInterface {
 		}
 	}
 
+	public TaskEntity processEnter() {
+		if (_currentSelectView == ASSOCIATE_VIEW) {
+			if (_targetedTask != null) {
+				if (_targetedTask.getAssociationState() == TaskEntity.PROJECT_HEAD) {
+					if (_selectedIndex - 1 > -1 && _selectedIndex - 1 < _targetedTask.getAssociations().size()) {
+						return _targetedTask.getAssociations().get(_selectedIndex - 1);
+					}
+				} else {
+					TaskEntity pHead = _targetedTask.getProjectHead();
+					if (_selectedIndex - 1 > -1 && _selectedIndex - 1 < pHead.getAssociations().size()) {
+						return pHead.getAssociations().get(_selectedIndex - 1);
+					} else if (_selectedIndex == 0) {
+						return pHead;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 }
