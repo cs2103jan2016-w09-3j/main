@@ -46,7 +46,7 @@ public class PrimaryUserInterface extends Application {
 
 	private static String[] styles = { "default.css", "blackandwhite.css", "red.css", "pastel.css" };
 
-	private String _styleSheet = styles[3];
+	private String _styleSheet = styles[0];
 	private double _commandBarWidth;
 	private Rectangle2D _screenBounds;
 	private Stage _primaryStage;
@@ -518,7 +518,7 @@ public class PrimaryUserInterface extends Application {
 		for (int i = 0; i < styles.length; i++) {
 			styleList = styleList.concat(styles[i]);
 			if (i < styles.length - 1) {
-				styleList = styleList.concat(",");
+				styleList = styleList.concat(", ");
 			}
 		}
 		return styleList;
