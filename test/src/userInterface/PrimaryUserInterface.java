@@ -53,6 +53,7 @@ public class PrimaryUserInterface extends Application {
 	private CommandBar _commandBar;
 	private boolean _fixedSize = false;
 	private UserInterfaceController uiController;
+	private EventHandler<MouseEvent> _mainEventHandler;
 
 	/**
 	 * This Constructor is called during JavaFX launch(). Determines user screen
@@ -115,7 +116,7 @@ public class PrimaryUserInterface extends Application {
 	 * @param primaryStage.
 	 */
 	private void initializeUiController(Stage primaryStage) {
-		EventHandler<MouseEvent> mainEventHandler = new EventHandler<MouseEvent>() {
+		_mainEventHandler = new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent arg0) {
 				focus();
 			}
@@ -128,7 +129,7 @@ public class PrimaryUserInterface extends Application {
 			_primaryStage.getScene().getStylesheets().clear();
 			_primaryStage.getScene().getStylesheets().add(theme);
 		}
-		uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet, mainEventHandler);
+		uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet, _mainEventHandler);
 	}
 
 	/**
@@ -262,6 +263,10 @@ public class PrimaryUserInterface extends Application {
 				uiController.hide();
 			} else if (event.getCode().compareTo(KeyCode.F3) == 0) {
 				uiController.show();
+			}else if (event.getCode().compareTo(KeyCode.F4) == 0) {
+				uiController.destory();
+				uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet, _mainEventHandler);
+				resetCommandInput();
 			}
 		}
 

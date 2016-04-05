@@ -45,6 +45,7 @@ public class DetailComponent implements ViewInterface {
 	private static final int LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS = 20;
 	private static final int BOTTOM_MARGIN_INDIVIDUAL_ITEMS = 10;
 
+	private static DetailComponent _myInstance;
 	private static final String CSS_LABEL = "cssLabelsDetails";
 
 	private String _styleSheet;
@@ -64,9 +65,16 @@ public class DetailComponent implements ViewInterface {
 	private boolean _haveAssociation;
 	private TaskEntity _targetedTask;
 
-	private ReverseParser _reverseParser = new ReverseParser();
+	public static DetailComponent getInstance(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize,
+			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
+		if (_myInstance == null) {
+			_myInstance = new DetailComponent(parentStage, screenBounds, fixedSize, styleSheet, mouseEvent);
+			return _myInstance;
+		}
+		return null;
+	}
 
-	public DetailComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
+	private DetailComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
 			EventHandler<MouseEvent> mouseEvent) {
 		_currentSelectView = TASK_VIEW;
 		_styleSheet = styleSheet;
@@ -471,6 +479,7 @@ public class DetailComponent implements ViewInterface {
 	}
 
 	public void destoryStage() {
+		_myInstance =null;
 		_stage.close();
 	}
 

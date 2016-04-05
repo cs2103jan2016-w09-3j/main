@@ -402,4 +402,9 @@ public class SearchUserInterface implements ViewInterface {
 		return null;
 	}
 
+	public void destoryStage() {
+		_myInstance = null;
+		_stage.close();
+	}
+
 }

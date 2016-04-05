@@ -318,4 +318,9 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		_styleSheet = styleSheet;
 		_stage.getScene().getStylesheets().add(styleSheet);
 	}
+
+	public void destoryStage() {
+		_myInstance = null;
+		_stage.close();
+	}
 }

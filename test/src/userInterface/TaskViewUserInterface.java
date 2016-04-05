@@ -878,6 +878,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	public void destoryStage() {
+		_myInstance =null;
 		_stage.close();
 	}
 

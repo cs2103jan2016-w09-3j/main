@@ -120,6 +120,8 @@ public class UserInterfaceController {
 	 * DescriptionComponent, DetailsComponent
 	 */
 	public void initializeViews() {
+		_currentView = TASK_VIEW;
+		setManagerView(TASK_VIEW);
 		logger.log(Level.INFO, "initializing views.");
 		initializeHelpScreen();
 		initializeFloatingBar();
@@ -152,7 +154,7 @@ public class UserInterfaceController {
 
 	private void initializeFloatingBar() {
 		logger.log(Level.INFO, "initializing floating bar component.");
-		_floatingBarComponent = new FloatingBarViewUserInterface(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+		_floatingBarComponent = FloatingBarViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
 				_mouseEvent);
 		TaskEntity floatingTask = _logicFace.getRandomFloating();
 		if (floatingTask != null) {
@@ -168,12 +170,13 @@ public class UserInterfaceController {
 
 	private void initializeDetailComponent() {
 		logger.log(Level.INFO, "initializing detail component.");
-		_detailComponent = new DetailComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet, _mouseEvent);
+		_detailComponent = DetailComponent.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+				_mouseEvent);
 	}
 
 	private void initializeDescriptionComponent() {
 		logger.log(Level.INFO, "initializing description component.");
-		_descriptionComponent = new DescriptionComponent(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+		_descriptionComponent = DescriptionComponent.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
 				_mouseEvent);
 	}
 
@@ -236,8 +239,12 @@ public class UserInterfaceController {
 	public void destory() {
 		_taskViewInterface.destoryStage();
 		_descriptionComponent.destoryStage();
-		_floatingBarComponent.destoryStage();
 		_detailComponent.destoryStage();
+		_floatingBarComponent.destoryStage();
+		_floatingViewInterface.destoryStage();
+		_searchViewInterface.destoryStage();
+		_helpScreen.destory();
+		
 	}
 
 	/**

@@ -522,4 +522,9 @@ public class HelpScreenUserInterface implements ViewInterface {
 		_stage.getScene().getStylesheets().add(styleSheet);
 	}
 
+	public void destory() {
+		_myInstance = null;
+		_stage.close();
+	}
+
 }

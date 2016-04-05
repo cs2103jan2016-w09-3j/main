@@ -27,6 +27,7 @@ public class DescriptionComponent implements ViewInterface {
 	static final int CONPONENT_RIGHT_MARGIN = 0;
 	private static final int POSITION_ZERO = 0;
 
+	private static DescriptionComponent _myInstance;
 	private static final String CSS_LABEL = "cssLabelsDescription";
 	private String _styleSheet;
 
@@ -44,7 +45,16 @@ public class DescriptionComponent implements ViewInterface {
 	private double _translationY = 0;
 	private int _currentView;
 
-	public DescriptionComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
+	public static DescriptionComponent getInstance(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize,
+			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
+		if (_myInstance == null) {
+			_myInstance = new DescriptionComponent(parentStage, screenBounds, fixedSize, styleSheet, mouseEvent);
+			return _myInstance;
+		}
+		return null;
+	}
+
+	private DescriptionComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
 			EventHandler<MouseEvent> mouseEvent) {
 		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
@@ -261,6 +271,7 @@ public class DescriptionComponent implements ViewInterface {
 	}
 
 	public void destoryStage() {
+		_myInstance = null;
 		_stage.close();
 	}
 

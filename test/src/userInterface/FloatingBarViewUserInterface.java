@@ -30,6 +30,7 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	private static final Font FONT_LABEL_TITLE = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TITLE_LABEL);
 	private static final Font FONT_LABEL_TASK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TASK);
 
+	private static FloatingBarViewUserInterface _myInstance;
 	private static final String CSS_LABEL = "cssLabelsFloatingBar";
 
 	private String _styleSheet;
@@ -42,11 +43,21 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	private HBox _mainHBox;
 	private VBox _mainfloatingTaskArea;
 
-	public FloatingBarViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
+	public static FloatingBarViewUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
+			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
+		if (_myInstance == null) {
+			_myInstance = new FloatingBarViewUserInterface(primaryStage, screenBounds, fixedSize, styleSheet,
+					mouseEvent);
+			return _myInstance;
+		}
+		return null;
+	}
+
+	private FloatingBarViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
 			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
 		_styleSheet = styleSheet;
 		initializeVaribles(screenBounds, fixedSize);
-		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight,mouseEvent);
+		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
 	}
 
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
@@ -64,7 +75,8 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		}
 	}
 
-	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight,EventHandler<MouseEvent> mouseEvent) {
+	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight,
+			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
 		_stage.initOwner(owner);
 		_stage.initStyle(StageStyle.TRANSPARENT);
@@ -152,13 +164,14 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	}
 
 	public void destoryStage() {
+		_myInstance = null;
 		_stage.close();
 	}
 
 	public void changeTheme(String styleSheet) {
 		_stage.getScene().getStylesheets().clear();
 		_styleSheet = styleSheet;
-		_stage.getScene().getStylesheets().add(styleSheet);		
+		_stage.getScene().getStylesheets().add(styleSheet);
 	}
 
 }
