@@ -856,12 +856,10 @@ public class TaskManager {
     }
 
     public ResultSet changeDirectory(String newDirectory) {
-        ResultSet changeResult = new ResultSet();
-        
         commitFullSave();
         ResultSet saveSuccess = dataLoader.saveTo(newDirectory);
         
-        return changeResult;
+        return saveSuccess;
     }
     
     public ResultSet loadFrom (String newDirectory) {

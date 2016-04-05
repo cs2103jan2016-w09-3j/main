@@ -400,6 +400,7 @@ public class StorageHandler {
         ResultSet resultSet = new ResultSet();
         resultSet.setIndex(0);
         boolean isChanged = false;
+        
         File newFile = new File(newFilePath);
 
         if (newFile.exists() == false) {
@@ -417,12 +418,16 @@ public class StorageHandler {
         if (isChanged == true) {
             isChanged = writeConfigSettings();
         }
+        resultSetChecker(resultSet, isChanged);
+        return resultSet;
+    }
+
+    private void resultSetChecker(ResultSet resultSet, boolean isChanged) {
         if (isChanged) {
             resultSet.setSuccess();
         } else {
             resultSet.setFail();
         }
-        return resultSet;
     }
 
     public boolean loadFromExistingFile(String newFilePath) {
