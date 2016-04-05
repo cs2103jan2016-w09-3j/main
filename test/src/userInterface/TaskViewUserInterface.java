@@ -327,7 +327,13 @@ public class TaskViewUserInterface implements ViewInterface {
 		dateNLPLabel.setFont(FONT_LABEL);
 		dateNLPLabel.setAlignment(Pos.BOTTOM_CENTER);
 
-		String labelText = getStringOfDate(taskEntity.getDueDate());
+		Calendar calendar;
+		if (taskEntity.getStartDate() != null) {
+			calendar = taskEntity.getStartDate();
+		} else {
+			calendar = taskEntity.getDueDate();
+		}
+		String labelText = getStringOfDate(calendar);
 		if (labelText != null) {
 			dateNLPLabel.setText(labelText);
 			hbox.getChildren().add(dateNLPLabel);
@@ -730,9 +736,21 @@ public class TaskViewUserInterface implements ViewInterface {
 		if (task1 == null) { // new day
 			return false;
 		}
-		if (task1.getDueDate().get(Calendar.YEAR) == task2.getDueDate().get(Calendar.YEAR)) {
-			if (task1.getDueDate().get(Calendar.MONTH) == task2.getDueDate().get(Calendar.MONTH)) {
-				if (task1.getDueDate().get(Calendar.DATE) == task2.getDueDate().get(Calendar.DATE)) {
+		Calendar calendar1;
+		Calendar calendar2;
+		if (task1.getStartDate() != null) {
+			calendar1 = task1.getStartDate();
+		} else {
+			calendar1 = task1.getDueDate();
+		}
+		if (task2.getStartDate() != null) {
+			calendar2 = task2.getStartDate();
+		} else {
+			calendar2 = task2.getDueDate();
+		}
+		if (calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)) {
+			if (calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH)) {
+				if (calendar1.get(Calendar.DATE) == calendar2.get(Calendar.DATE)) {
 					return true;
 				}
 			}
@@ -744,18 +762,30 @@ public class TaskViewUserInterface implements ViewInterface {
 		if (task1 == null) {
 			return false;
 		}
-		if (task1.getDueDate().get(Calendar.YEAR) == task2.getDueDate().get(Calendar.YEAR)) {
+		Calendar calendar1;
+		Calendar calendar2;
+		if (task1.getStartDate() != null) {
+			calendar1 = task1.getStartDate();
+		} else {
+			calendar1 = task1.getDueDate();
+		}
+		if (task2.getStartDate() != null) {
+			calendar2 = task2.getStartDate();
+		} else {
+			calendar2 = task2.getDueDate();
+		}
+
+		if (calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)) {
 
 			// display by year week //remove after decided
 			boolean byYearWeek = true;
 			if (byYearWeek) {
-				if (task1.getDueDate().get(Calendar.WEEK_OF_YEAR) == task2.getDueDate().get(Calendar.WEEK_OF_YEAR)) {
+				if (calendar1.get(Calendar.WEEK_OF_YEAR) == calendar2.get(Calendar.WEEK_OF_YEAR)) {
 					return true;
 				}
 			} else {
-				if (task1.getDueDate().get(Calendar.MONTH) == task2.getDueDate().get(Calendar.MONTH)) {
-					if (task1.getDueDate().get(Calendar.WEEK_OF_MONTH) == task2.getDueDate()
-							.get(Calendar.WEEK_OF_MONTH)) {
+				if (calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH)) {
+					if (calendar1.get(Calendar.WEEK_OF_MONTH) == calendar2.get(Calendar.WEEK_OF_MONTH)) {
 						return true;
 					}
 				}
