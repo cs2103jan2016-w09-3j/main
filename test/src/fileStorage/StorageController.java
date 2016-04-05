@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import entity.AllTaskLists;
+import entity.ResultSet;
 import entity.TaskEntity;
 
 public class StorageController {
@@ -135,16 +136,12 @@ public class StorageController {
     // Changing directory
     // ===========================================================================
     
-    public boolean saveToNewDirectory(String newFilePath) {
+    public ResultSet saveToNewDirectory(String newFilePath) {
         return storageHandler.changeDirectory(newFilePath);
     }
     
     public boolean loadFromNewFile(String newFilePath) {
         return storageHandler.loadFromExistingFile(newFilePath);
-    }
-    
-    public boolean resetToDefault() {
-        return storageHandler.resetToDefaultSettings();
     }
     
     //============================================================================
