@@ -61,7 +61,7 @@ public class TaskEntity {
 		_association_status = NOT_ASSOCIATED;
 		_associations = new ArrayList<TaskEntity>();
 		_completionDate = Calendar.getInstance();
-		//Tasks to have a default same value of completion date at the start
+		// Tasks to have a default same value of completion date at the start
 		_completionDate.set(0, 0, 0);
 		_hashtags = "";
 	}
@@ -112,81 +112,82 @@ public class TaskEntity {
 		_isFloating = true;
 	}
 
-    public TaskEntity(boolean isFloating, boolean isFullDay, Calendar startDate, Calendar dueDate, Calendar dateCreated,
-            String name, String description, int id, int association_status,
-            ArrayList<TaskEntity> associations, String associationIDs, boolean isCompleted, Calendar completionDate, String hashtags) {
-        _isFloating = isFloating;
-        _isFullDay = isFullDay;
-        _startDate = startDate;
-        _dueDate = dueDate;
-        _dateCreated = dateCreated;
-        _name = name;
-        _description = description;
-        _id = id;
-        _association_status = association_status;
-        _associations = associations;
-        _associationIDs = associationIDs;
-        _isCompleted = isCompleted;
-        _completionDate = completionDate;
-        _hashtags = hashtags;
-    }
-    
+	public TaskEntity(boolean isFloating, boolean isFullDay, Calendar startDate, Calendar dueDate, Calendar dateCreated,
+			String name, String description, int id, int association_status, ArrayList<TaskEntity> associations,
+			String associationIDs, boolean isCompleted, Calendar completionDate, String hashtags) {
+		_isFloating = isFloating;
+		_isFullDay = isFullDay;
+		_startDate = startDate;
+		_dueDate = dueDate;
+		_dateCreated = dateCreated;
+		_name = name;
+		_description = description;
+		_id = id;
+		_association_status = association_status;
+		_associations = associations;
+		_associationIDs = associationIDs;
+		_isCompleted = isCompleted;
+		_completionDate = completionDate;
+		_hashtags = hashtags;
+	}
+
 	public int getAssociationState() {
 		return _association_status;
 	}
-	
+
 	public ArrayList<TaskEntity> getAssociations() {
 		return _associations;
 	}
-	
+
 	/**
 	 * Default Mark as done has no offset
 	 */
-	public void markAsDone () {
-	    markAsDone(0);
-	}
-	
-    /**
-     * Mark a task as done and move the completed task into the
-     * completedTaskEntities array. Offset there to keep completion order the
-     * same as the association order when marking entire projects done
-     * 
-     * @param offset - number of milliseconds of offset to mark the task as done 
-     */
-	public void markAsDone (int offset) {
-	    //Skip the whole process if it was already done in the first place
-	    if(_isCompleted) {
-	        return;
-	    }
-	    _isCompleted = true;
-	    
-	    _completionDate = Calendar.getInstance();
-	    _completionDate.setTimeInMillis(_completionDate.getTimeInMillis() + offset);
-
-	    //Mark all tasks associated under the project head once its done
-        if (_association_status == PROJECT_HEAD) {
-            for(int i = 0; i < _associations.size(); i++) {
-                _associations.get(i).markAsDone(i+1);
-            }
-        }
-	}
-	
-	public boolean isCompleted () {
-	    return _isCompleted;
+	public void markAsDone() {
+		markAsDone(0);
 	}
 
-    public Calendar getCompletionDate() {
-        return _completionDate;
-    }
-    
-    /**
-     * Function to initialize associations array if it is null (Used for
-     * overwriting it being set to null by the file loader)
-     */
+	/**
+	 * Mark a task as done and move the completed task into the
+	 * completedTaskEntities array. Offset there to keep completion order the
+	 * same as the association order when marking entire projects done
+	 * 
+	 * @param offset
+	 *            - number of milliseconds of offset to mark the task as done
+	 */
+	public void markAsDone(int offset) {
+		// Skip the whole process if it was already done in the first place
+		if (_isCompleted) {
+			return;
+		}
+		_isCompleted = true;
+
+		_completionDate = Calendar.getInstance();
+		_completionDate.setTimeInMillis(_completionDate.getTimeInMillis() + offset);
+
+		// Mark all tasks associated under the project head once its done
+		if (_association_status == PROJECT_HEAD) {
+			for (int i = 0; i < _associations.size(); i++) {
+				_associations.get(i).markAsDone(i + 1);
+			}
+		}
+	}
+
+	public boolean isCompleted() {
+		return _isCompleted;
+	}
+
+	public Calendar getCompletionDate() {
+		return _completionDate;
+	}
+
+	/**
+	 * Function to initialize associations array if it is null (Used for
+	 * overwriting it being set to null by the file loader)
+	 */
 	public void initAssociations() {
-	    if( _associations == null ){
-	        _associations = new ArrayList<TaskEntity>();
-	    }
+		if (_associations == null) {
+			_associations = new ArrayList<TaskEntity>();
+		}
 	}
 
 	/**
@@ -198,28 +199,29 @@ public class TaskEntity {
 	 */
 	public void buildAssociationsId() {
 		_associationIDs = "";
-		
+
 		assert _associations != null : "Associations is null at build associations when saving task: " + getName();
-		
+
 		for (int i = 0; i < _associations.size(); i++) {
 			_associationIDs += Integer.toString(_associations.get(i).getId()) + ",";
 		}
 		_associations = null;
 	}
-	
-    public TaskEntity clone() {
-        TaskEntity newInstance = new TaskEntity(_isFloating, _isFullDay, _startDate, _dueDate, _dateCreated, _name,
-                _description, _id, _association_status, _associations, _associationIDs, _isCompleted, _completionDate, _hashtags);
-        return newInstance;
+
+	public TaskEntity clone() {
+		TaskEntity newInstance = new TaskEntity(_isFloating, _isFullDay, _startDate, _dueDate, _dateCreated, _name,
+				_description, _id, _association_status, _associations, _associationIDs, _isCompleted, _completionDate,
+				_hashtags);
+		return newInstance;
 	}
 
-    public void addHashtag (String newTag) {
-        if(_hashtags == null) {
-            _hashtags = "";
-        }
-        _hashtags += newTag;
-    }
-    
+	public void addHashtag(String newTag) {
+		if (_hashtags == null) {
+			_hashtags = "";
+		}
+		_hashtags += newTag;
+	}
+
 	/**
 	 * Gets the saved string of IDs for the association list
 	 * 
@@ -249,18 +251,18 @@ public class TaskEntity {
 		}
 	}
 
-    /**
-     * Function to link this object as a task under projectHead. Project heads
-     * are not allowed to be under other tasks
-     * 
-     * @param projectHead
-     *            - Task to be added under
-     */
+	/**
+	 * Function to link this object as a task under projectHead. Project heads
+	 * are not allowed to be under other tasks
+	 * 
+	 * @param projectHead
+	 *            - Task to be added under
+	 */
 	public void setAssociationHead(TaskEntity projectHead) {
-	    if(_association_status == PROJECT_HEAD) {
-	        return;
-	    }
-	    
+		if (_association_status == PROJECT_HEAD) {
+			return;
+		}
+
 		if (_associations == null) {
 			_associations = new ArrayList<TaskEntity>();
 		} else {
@@ -279,23 +281,23 @@ public class TaskEntity {
 	 * 
 	 * @return
 	 */
-	public void disassociateFromDeletedProject () {
-	    _association_status = TaskEntity.NOT_ASSOCIATED;
-	    _associations.clear();
+	public void disassociateFromDeletedProject() {
+		_association_status = TaskEntity.NOT_ASSOCIATED;
+		_associations.clear();
 	}
-	
+
 	public boolean removeSelfFromProject() {
 		if (getAssociationState() == TaskEntity.ASSOCIATED) {
 			TaskEntity prevProjectHead = getAssociations().get(0);
 			prevProjectHead.getAssociations().remove(this);
 			return true;
-		} else if (getAssociationState() == TaskEntity.PROJECT_HEAD){ 
-			for(int i = 0; i < _associations.size(); i++) {
-			    _associations.get(i).disassociateFromDeletedProject();
+		} else if (getAssociationState() == TaskEntity.PROJECT_HEAD) {
+			for (int i = 0; i < _associations.size(); i++) {
+				_associations.get(i).disassociateFromDeletedProject();
 			}
 			return true;
 		} else {
-		    return false;
+			return false;
 		}
 	}
 
@@ -330,43 +332,44 @@ public class TaskEntity {
 			return true;
 		}
 	}
-	
+
 	/**
-     * Gets this TaskEntity's position in its association list
-     * 
-     * @return slot number in the project head's _association array, or -1 if it
-     *         doesn't belong to any projects
-     */
-    public int getAssociationPosition() {
-        if (_association_status == PROJECT_HEAD) {
-            return 0;
-        } else if (_association_status == ASSOCIATED) {
-            ArrayList<TaskEntity> displayedAssociations = getProjectHead().getAssociations();
-            for (int i = 0; i < displayedAssociations.size(); i++) {
-                if (displayedAssociations.get(i) == this) {
-                    // i + 1 because accounting for project head being slotted
-                    // into the first position of the list
-                    return i + 1;
-                }
-            }
-            return -1;
-        } else {
-            return -1;
-        }
-    }
-	
-	public ArrayList<TaskEntity> getDisplayAssociations () {
-	    if( _association_status == PROJECT_HEAD ) {
-	        ArrayList<TaskEntity> displayedAssociations = (ArrayList<TaskEntity>) _associations.clone();
-	        displayedAssociations.add(0, this);
-	        return displayedAssociations;
-	    } else if ( _association_status == ASSOCIATED ) {
-	        ArrayList<TaskEntity> displayedAssociations =  (ArrayList<TaskEntity>) getProjectHead().getAssociations().clone();
-	        displayedAssociations.add(0, getProjectHead());
-            return displayedAssociations;
-	    } else {
-	        return new ArrayList<TaskEntity>();
-	    }
+	 * Gets this TaskEntity's position in its association list
+	 * 
+	 * @return slot number in the project head's _association array, or -1 if it
+	 *         doesn't belong to any projects
+	 */
+	public int getAssociationPosition() {
+		if (_association_status == PROJECT_HEAD) {
+			return 0;
+		} else if (_association_status == ASSOCIATED) {
+			ArrayList<TaskEntity> displayedAssociations = getProjectHead().getAssociations();
+			for (int i = 0; i < displayedAssociations.size(); i++) {
+				if (displayedAssociations.get(i) == this) {
+					// i + 1 because accounting for project head being slotted
+					// into the first position of the list
+					return i + 1;
+				}
+			}
+			return -1;
+		} else {
+			return -1;
+		}
+	}
+
+	public ArrayList<TaskEntity> getDisplayAssociations() {
+		if (_association_status == PROJECT_HEAD) {
+			ArrayList<TaskEntity> displayedAssociations = (ArrayList<TaskEntity>) _associations.clone();
+			displayedAssociations.add(0, this);
+			return displayedAssociations;
+		} else if (_association_status == ASSOCIATED) {
+			ArrayList<TaskEntity> displayedAssociations = (ArrayList<TaskEntity>) getProjectHead().getAssociations()
+					.clone();
+			displayedAssociations.add(0, getProjectHead());
+			return displayedAssociations;
+		} else {
+			return new ArrayList<TaskEntity>();
+		}
 	}
 
 	private int findPositionToInsert(TaskEntity newTask) {
@@ -390,29 +393,29 @@ public class TaskEntity {
 	}
 
 	public Calendar getDueDate() {
-	    assert !_isFloating : "Trying to get due date from a full day task";
+		assert !_isFloating : "Trying to get due date from a full day task";
 		if (!_isFloating) {
 			return _dueDate;
 		} else {
 			return null;
 		}
 	}
-	
+
 	public Calendar getStartDate() {
-        if (!_isFloating) {
-            return _startDate;
-        } else {
-            return null;
-        }
-    }
+		if (!_isFloating) {
+			return _startDate;
+		} else {
+			return null;
+		}
+	}
 
 	public void setDate(Calendar dueDate, boolean isFullDay) {
-        _isFloating = false;
-        _startDate = null;
-        _dueDate = dueDate;
-        _isFullDay = isFullDay;
-    }
-	
+		_isFloating = false;
+		_startDate = null;
+		_dueDate = dueDate;
+		_isFullDay = isFullDay;
+	}
+
 	public void setDate(Calendar startDate, Calendar dueDate, boolean isFullDay) {
 		_isFloating = false;
 		_startDate = startDate;
@@ -425,9 +428,9 @@ public class TaskEntity {
 	}
 
 	public String getDescription() {
-	    if(_description == null) {
-	        _description = "";
-	    }
+		if (_description == null) {
+			_description = "";
+		}
 		return _description;
 	}
 
@@ -450,49 +453,65 @@ public class TaskEntity {
 	/**
 	 * Adds a zero to the string to show time in double digit format
 	 * 
-	 * @param digit - Digit to be padded
-	 * @return String representation of the time passed in in double digit format
+	 * @param digit
+	 *            - Digit to be padded
+	 * @return String representation of the time passed in in double digit
+	 *         format
 	 */
-	private String padZero (int time) {
-	    String displayedTime = "";
-	    if( time < 10 ) {
-	        displayedTime += "0";
-	    }
-	    displayedTime += Integer.toString(time);
-	    return displayedTime;
+	private String padZero(int time) {
+		String displayedTime = "";
+		if (time < 10) {
+			displayedTime += "0";
+		}
+		displayedTime += Integer.toString(time);
+		return displayedTime;
 	}
-	
+
 	public String getTime() {
 		if (_isFloating) {
 			return null;
 		}
-		
+
 		if (_isFullDay) {
 			return "Full Day event";
 		}
-		
-		//Adding start Date to the display string for showing date
+
+		// Adding start Date to the display string for showing date
 		String returnDate = "";
-		if( _startDate != null ) {
-		    returnDate += padZero(_startDate.get(Calendar.HOUR_OF_DAY)) + ":" + padZero(_startDate.get(Calendar.MINUTE)) + " - ";
+		if (_startDate != null) {
+			returnDate += padZero(_startDate.get(Calendar.HOUR_OF_DAY)) + ":"
+					+ padZero(_startDate.get(Calendar.MINUTE));
+			if (_dueDate != null) {
+				if (_dueDate.get(Calendar.YEAR) == _startDate.get(Calendar.YEAR)) {
+					if (_dueDate.get(Calendar.MONTH) == _startDate.get(Calendar.MONTH)) {
+						if (_dueDate.get(Calendar.DATE) == _startDate.get(Calendar.DATE)) {
+							returnDate = returnDate.concat(" - ");
+							returnDate += padZero(_dueDate.get(Calendar.HOUR_OF_DAY)) + ":"
+									+ padZero(_dueDate.get(Calendar.MINUTE));
+							return returnDate;
+						}
+					}
+				}
+			}
+			return returnDate;
+		} else {
+			returnDate = "";
+			// Error catching
+			assert _dueDate != null : "Due date is null when generating display!";
+			if (_dueDate == null) {
+				returnDate += "??:??";
+				return returnDate;
+			}
+			returnDate += padZero(_dueDate.get(Calendar.HOUR_OF_DAY)) + ":" + padZero(_dueDate.get(Calendar.MINUTE));
+			return returnDate;
 		}
-		
-		//Error catching
-		assert _dueDate != null : "Due date is null when generating display!";
-		if(_dueDate == null) {
-		    returnDate += "??:??";
-		    return returnDate;
-		}
-		
-		returnDate += padZero(_dueDate.get(Calendar.HOUR_OF_DAY)) + ":" + padZero(_dueDate.get(Calendar.MINUTE));
-		return returnDate;
 	}
-	
-	public String getHashtags () {
-	    assert _hashtags != null : "Hash tag was set to null";
-	    if(_hashtags == null) {
-	        _hashtags = "";
-	    }
-	    return _hashtags;
+
+	public String getHashtags() {
+		assert _hashtags != null : "Hash tag was set to null";
+		if (_hashtags == null) {
+			_hashtags = "";
+		}
+		return _hashtags;
 	}
 }

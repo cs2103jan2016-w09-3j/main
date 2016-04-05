@@ -384,7 +384,8 @@ public class TaskViewUserInterface implements ViewInterface {
 		timeLabel.setMinWidth(80);
 		timeLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		timeLabel.setFont(FONT_TASK);
-		timeLabel.setAlignment(Pos.CENTER_LEFT);
+		timeLabel.setAlignment(Pos.CENTER_RIGHT);
+		HBox.setMargin(timeLabel, new Insets(0, 5, 0, 0));
 		topBox.getChildren().add(timeLabel);
 
 		if (taskEntity.getAssociationState() == TaskEntity.PROJECT_HEAD) {

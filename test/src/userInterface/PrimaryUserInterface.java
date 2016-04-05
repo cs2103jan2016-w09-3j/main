@@ -29,8 +29,6 @@ public class PrimaryUserInterface extends Application {
 	static final int PREFERED_WINDOW_WIDTH = 600; // change to 1080.
 	static final double PREFERED_WINDOW_SCALE = 0.8;
 
-	private static final boolean SUCCESS = true;
-	private static final boolean FAILURE = false;
 	static final int TYPE_1 = 0;
 	static final int TYPE_2 = 1;
 	static final int TYPE_3 = 2;
