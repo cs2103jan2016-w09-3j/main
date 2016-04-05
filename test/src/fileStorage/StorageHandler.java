@@ -116,8 +116,8 @@ public class StorageHandler {
         }
     }
 
-    private void writeConfigSettings() {
-        writeToFile(tasksFilePath + NEW_LINE + themeName, WRITE_TO_CONFIG_FILE);
+    private boolean writeConfigSettings() {
+        return identifyWriteTo(tasksFilePath + NEW_LINE + themeName, WRITE_TO_CONFIG_FILE);
     }
 
     private void extractConfigSettings() {
@@ -160,13 +160,15 @@ public class StorageHandler {
         }
     }
    
-    private void createNewFile(File file) {
+    private boolean createNewFile(File file) {
+        boolean isCreated = false;
+        
         try {
-            file.createNewFile();
-            System.out.println("Created new file.");
+            isCreated = file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return isCreated;
     }
     
     private boolean makeNewDirectory(File file) {
@@ -193,14 +195,17 @@ public class StorageHandler {
     // ===========================================================================
 
     private BufferedReader identifyReadFrom(int fromFile) throws FileNotFoundException {
-        BufferedReader buffer;
-        if (fromFile == READ_FROM_CONFIG_FILE) {
-            buffer = new BufferedReader(new FileReader(configFilePath));
-        } else if (fromFile == READ_FROM_MAIN_FILE){
-            buffer = new BufferedReader(new FileReader(tasksFilePath));
-        } else {
-            // Read from back up file
-            buffer = new BufferedReader(new FileReader(backUpTasksFilePath));
+        BufferedReader buffer = null;
+        switch (fromFile) {
+            case READ_FROM_MAIN_FILE:
+                buffer = new BufferedReader(new FileReader(tasksFilePath));
+                break;
+            case READ_FROM_BACK_UP_FILE:
+                buffer = new BufferedReader(new FileReader(backUpTasksFilePath));
+                break;
+            case READ_FROM_CONFIG_FILE:
+                buffer = new BufferedReader(new FileReader(configFilePath));
+                break;
         }
         return buffer;
     }
@@ -261,7 +266,7 @@ public class StorageHandler {
 
     public boolean copyToBackUp() {
         allBackUpTasks = readFromExistingFile(READ_FROM_MAIN_FILE);
-        return writeToFile(allBackUpTasks, WRITE_TO_BACK_UP_FILE);
+        return identifyWriteTo(allBackUpTasks, WRITE_TO_BACK_UP_FILE);
     }
 
     //============================================================================
@@ -274,23 +279,35 @@ public class StorageHandler {
      * @param data
      * @return boolean
      */
-    public boolean writeToFile(String data, int toFile) {
-        File file;
-        String filePath; 
-        if (toFile == WRITE_TO_MAIN_FILE) {
-            file = new File(tasksFilePath);
-            filePath = tasksFilePath;
-        } else if (toFile == WRITE_TO_BACK_UP_FILE) {
-            file = backUpTasksFile;
-            filePath = backUpTasksFilePath;
-        } else {
-            // Write to config file
-            file = configFile;
-            filePath = configFilePath;
+    public boolean identifyWriteTo(String data, int toFile) {
+        File file = null;
+        String filePath = null; 
+        switch (toFile) {
+            case WRITE_TO_MAIN_FILE:
+                file = new File(tasksFilePath);
+                filePath = tasksFilePath;
+                break;
+            case WRITE_TO_BACK_UP_FILE:
+                file = backUpTasksFile;
+                filePath = backUpTasksFilePath;
+                break;
+            case WRITE_TO_CONFIG_FILE:
+                file = configFile;
+                filePath = configFilePath;
+                break;
         }
-        FileWriter fileWriter;
+        return isWritten(data, file, filePath);
+    }
+
+    private boolean isWritten(String data, File file, String filePath) {
         long beforeModify = file.lastModified();
         long afterModify = -1;
+        afterModify = writeToFile(data, file, filePath, afterModify);
+        return isModified(beforeModify, afterModify);
+    }
+
+    private long writeToFile(String data, File file, String filePath, long afterModify) {
+        FileWriter fileWriter;
         try {
             fileWriter = new FileWriter(filePath); 
             fileWriter.write(data);
@@ -300,7 +317,7 @@ public class StorageHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return isModified(beforeModify, afterModify);
+        return afterModify;
     }
 
     /**
@@ -375,32 +392,16 @@ public class StorageHandler {
         File newFile = new File(newFilePath);
         
         if (newFile.exists() == false) {
-            if (hasDirectory(newFile) == false) {
-                if (newFile.getParentFile() != null) {
-                    isChanged = newFile.getParentFile().mkdirs();
-                    System.out.println("Creating dir: " + isChanged);
-                }
-            } 
-            try {
-                isChanged = newFile.createNewFile();
-                System.out.println("Create new file: " + isChanged);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            isChanged = makeNewDirectory(newFile);
+            isChanged = createNewFile(newFile);
+            
             String transferData = readFromExistingFile(READ_FROM_MAIN_FILE);
             setMainFilePath(newFile.getAbsolutePath());
             tasksFile = newFile;
             setAllStoredTasks(transferData);
-            writeToFile(transferData, WRITE_TO_MAIN_FILE);
-        } 
-        
-        if (isChanged == false) {
-            // Reset to default
-            setMainFilePath("taskLists.txt");
-            File defaultFile = new File(tasksFilePath);
-            tasksFile = defaultFile;
-        }
-        writeToFile(tasksFile.getAbsolutePath() + '\n' + themeName, WRITE_TO_CONFIG_FILE);
+            identifyWriteTo(transferData, WRITE_TO_MAIN_FILE);
+        }         
+        isChanged = writeConfigSettings();
         return isChanged;
     }
     
@@ -413,9 +414,16 @@ public class StorageHandler {
             setMainFilePath(newFile.getAbsolutePath());
             tasksFile = newFile;
             setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
-            writeToFile(tasksFile.getAbsolutePath() + '\n' + themeName, WRITE_TO_CONFIG_FILE);
+            writeConfigSettings();
         }
         return isLoaded;
+    }
+    
+    public boolean resetToDefaultSettings() {
+        setMainFilePath(MAIN_FILE_NAME);
+        tasksFile = new File(tasksFilePath);
+        initMainFile();
+        return loadFromExistingFile(MAIN_FILE_NAME);
     }
 
     //============================================================================
@@ -424,6 +432,6 @@ public class StorageHandler {
 
     public boolean saveThemeName(String themeName) {
         setThemeName(themeName);
-        return writeToFile(tasksFile.getAbsolutePath() + '\n' + themeName, WRITE_TO_CONFIG_FILE);
+        return writeConfigSettings();
     }
 }

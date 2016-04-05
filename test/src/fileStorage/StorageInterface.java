@@ -62,6 +62,10 @@ public class StorageInterface {
         return sc.loadFromNewFile(newFilePath);
     }
     
+    public boolean resetDefault() {
+        return sc.resetToDefault();
+    }
+    
     public boolean saveThemePreference(String themeName) {
         return sc.saveThemePreference(themeName);
     }

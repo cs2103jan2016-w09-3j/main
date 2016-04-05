@@ -53,7 +53,7 @@ public class StorageController {
         
         String toStore = jsonConverter.javaToJson(allTaskLists);
         
-        boolean isSaved = storageHandler.writeToFile(toStore, WRITE_TO_MAIN_FILE);
+        boolean isSaved = storageHandler.identifyWriteTo(toStore, WRITE_TO_MAIN_FILE);
         assert isSaved == true : "Tasks not stored.";
         
         return isSaved;
@@ -141,6 +141,10 @@ public class StorageController {
     
     public boolean loadFromNewFile(String newFilePath) {
         return storageHandler.loadFromExistingFile(newFilePath);
+    }
+    
+    public boolean resetToDefault() {
+        return storageHandler.resetToDefaultSettings();
     }
     
     //============================================================================
