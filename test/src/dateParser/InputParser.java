@@ -116,9 +116,9 @@ public class InputParser {
 	 * adds xml to date
 	 */
 	private void addXMLDate() {
-		System.out.println("before xml"+ input);
+		//System.out.println("before xml"+ input);
 		input = dateParser.xmlDate(input);
-		System.out.println("after xml2"+ input);
+		//System.out.println("after xml2"+ input);
 	}
 
 	/**
@@ -166,7 +166,9 @@ public class InputParser {
 		if(input.trim().equals("")){
 			//logger.log(Level.WARNING, "Input is empty", new IllegalArgumentException("input is empty"));
 		}else{
+			//System.out.println("TEST"+input);
 			List<Date> dates = dateParser.parseToList(input);
+			//System.out.println("TEST"+input);
 			addXMLDate();
 			addXMLCmd();
 			input = gcParser.xmlHash(input);

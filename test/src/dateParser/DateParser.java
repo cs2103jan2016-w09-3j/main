@@ -56,11 +56,10 @@ public class DateParser {
 				locationQuote.add(i);
 			}
 		}
-		System.out.println("test");
 		for (int i = 0; i < locationQuote.size(); i = i + 2) {
 			if (i + 1 < locationQuote.size()) {
 				inputDate = inputDate.substring(0, locationQuote.get(i))
-						+ inputDate.substring(locationQuote.get(i + 1), inputDate.length() - 1);
+						+ inputDate.substring(locationQuote.get(i + 1));
 			}
 		}
 		inputDate = convertFormalDates(inputDate);
@@ -127,7 +126,7 @@ public class DateParser {
 		for (int i = 0; i < locationQuote.size(); i = i + 2) {
 			if (i + 1 < locationQuote.size()) {
 				workingStr = workingStr.substring(0, locationQuote.get(i))
-						+ workingStr.substring(locationQuote.get(i + 1), workingStr.length() - 1);
+						+ workingStr.substring(locationQuote.get(i + 1)+1, workingStr.length() - 1);
 			} else {
 				workingStr = workingStr.substring(0, locationQuote.get(i));
 			}
