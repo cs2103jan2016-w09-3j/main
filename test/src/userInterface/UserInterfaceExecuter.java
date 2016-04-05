@@ -86,7 +86,7 @@ public class UserInterfaceExecuter {
 	}
 
 	public ResultSet loadFrom(String loadFrom) {
-		return null;
+		return _taskManager.loadFrom(loadFrom);
 	}
 
 	public String loadTheme() {

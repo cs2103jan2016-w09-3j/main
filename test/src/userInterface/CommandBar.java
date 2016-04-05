@@ -749,7 +749,7 @@ public class CommandBar {
 					break;
 				}
 			}
-			setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM));
+			setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM, msg));
 			setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			break;
 		}
