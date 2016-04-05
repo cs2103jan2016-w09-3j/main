@@ -204,6 +204,7 @@ public class SearchUserInterface implements ViewInterface {
 		timeLabel.setMinHeight(LABEL_TASK_HEIGHT);
 		timeLabel.setAlignment(Pos.CENTER);
 		timeLabel.setFont(FONT_TASK);
+		HBox.setMargin(timeLabel, new Insets(0, 10, 0, 0));
 		top.getChildren().add(timeLabel);
 
 		if (task.getAssociationState() == TaskEntity.PROJECT_HEAD) {
@@ -392,6 +393,11 @@ public class SearchUserInterface implements ViewInterface {
 		_stage.getScene().getStylesheets().clear();
 		_styleSheet = styleSheet;
 		_stage.getScene().getStylesheets().add(styleSheet);
+	}
+
+	public void processEnter() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

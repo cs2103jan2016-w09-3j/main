@@ -162,6 +162,7 @@ public class UserInterfaceController {
 
 			_floatingViewInterface.hide();
 			_searchViewInterface.hide();
+			_helpScreen.hide();
 		} else if (_currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
 			_taskViewInterface.show();
 			_descriptionComponent.show();
@@ -170,6 +171,7 @@ public class UserInterfaceController {
 
 			_floatingViewInterface.hide();
 			_searchViewInterface.hide();
+			_helpScreen.hide();
 		} else if (_currentView == FLOATING_VIEW) {
 			_taskViewInterface.hide();
 			_descriptionComponent.hide();
@@ -178,6 +180,7 @@ public class UserInterfaceController {
 
 			_floatingBarComponent.show();
 			_floatingViewInterface.show();
+			_helpScreen.hide();
 		} else if (_currentView == SEARCH_VIEW) {
 			_taskViewInterface.hide();
 			_descriptionComponent.hide();
@@ -187,6 +190,7 @@ public class UserInterfaceController {
 
 			_floatingBarComponent.show();
 			_searchViewInterface.show();
+			_helpScreen.hide();
 		}
 	}
 
@@ -200,6 +204,7 @@ public class UserInterfaceController {
 		_detailComponent.hide();
 		_floatingViewInterface.hide();
 		_searchViewInterface.hide();
+		_helpScreen.hide();
 	}
 
 	/**
@@ -834,5 +839,9 @@ public class UserInterfaceController {
 
 	public String loadTheme() {
 		return _logicFace.loadTheme();
+	}
+
+	public void processEnter() {
+		_searchViewInterface.processEnter();
 	}
 }
