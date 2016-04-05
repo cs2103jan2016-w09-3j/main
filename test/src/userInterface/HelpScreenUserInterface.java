@@ -32,7 +32,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private static final String HELP_DESCRIPTION_MAIN = "Press the left and right arrow keys to scroll through the help and F1 to close the help screen";
 
 	private static final String HELP_DESCRIPTION_DESCRIPTION_COMPONENT_TITLE = "Description Panel";
-	private static final String HELP_DESCRIPTION_DESCRIPTION_COMPONENT = "This panel shows u the range of the week or the dates of the dates.";
+	private static final String HELP_DESCRIPTION_DESCRIPTION_COMPONENT = "This panel shows you range of the date of the tasks in the week.";
 
 	private static final String HELP_DESCRIPTION_TASK_VIEW_TITLE = "Main View";
 	private static final String HELP_DESCRIPTION_TASK_VIEW = "This panel shows you your task in chronological order.";
@@ -41,12 +41,21 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private static final String HELP_DESCRIPTION_DETAIL_COMPONENT = "This panel shows you more description of the selected task.";
 
 	private static final String[][] CHEAT_SHEET_SHORT_CUTS = { { "F1", "Brings up the help manual!" },
-			{ "Up/Down", "Look up previous command entered." },
+			{ "F2", "Switch the application to the compact view" },
+			{ "F3", "Switch the application to the full view." }, { "Up/Down", "Look up previous command entered." },
 			{ "Ctrl + Up/Down", "Scroll through your task in the selected view." },
 			{ "Ctrl + Left/Right", "Change view from the main view to other views." }, { "", "" } };
-	private static final String[][] CHEAT_SHEET_COMMANDS = { { "ADD", "Add a task" }, { "DELETE", "Delete a task." },
-			{ "EDIT", "EDIT <ID-INDEX>" }, { "LINK", "" }, { "SEARCH", "search la" }, { "HIDE", "" }, { "SHOW", "" },
-			{ "FLOAT", "" }, { "MAIN", "" }, { "THEME", "" }, { "SAVETO", "" } };
+	private static final String[][] CHEAT_SHEET_COMMANDS = {
+			{ "ADD", "Add a task into your task list. Task with out dates will be considered floating task." },
+			{ "DELETE", "Delete a task with the specific id." }, { "EDIT", "Edit your task base on the id." },
+			{ "LINK",
+					"Link 2 task together to create associations between the tasks. \neg. Link ID1-ID5, id5 will be the project head of the link." },
+			{ "SEARCH", "Search for any task base on the input." },
+			{ "HIDE", "Switch the applcaition to compact view." }, { "SHOW", "Switch the applciaiton to full view." },
+			{ "FLOAT", "Change view to the floating view." }, { "MAIN", "Change view to the main view." },
+			{ "THEME", "Use to select Theme." },
+			{ "SAVETO", "Change the directory of where the saved file will be stored." },
+			{ "LOADFROM", "Load an existing file." } };
 	private static final String HELP_DESCRIPTION_COMMAND_BAR_TITLE = "Command Bar";
 	private static final String HELP_DESCRIPTION_COMMAND_BAR = "This is where u type your input commands.";
 
