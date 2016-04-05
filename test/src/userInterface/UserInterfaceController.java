@@ -244,6 +244,7 @@ public class UserInterfaceController {
 		_floatingViewInterface.destoryStage();
 		_searchViewInterface.destoryStage();
 		_helpScreen.destory();
+		killFloatingThread();
 		
 	}
 
