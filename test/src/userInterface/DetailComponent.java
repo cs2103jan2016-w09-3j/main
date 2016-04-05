@@ -1,6 +1,7 @@
 //@@author A0125514N
 package userInterface;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -273,7 +274,6 @@ public class DetailComponent implements ViewInterface {
 			return;
 		}
 		TaskEntity task = _targetedTask.getDisplayAssociations().get(index);
-
 		Text description = new Text(task.getDescription());
 		description.getStyleClass().add(CSS_LABEL);
 		description.setWrappingWidth(_individualItemWidth - LEFT_RIGHT_MARGIN_INDIVIDUAL_ITEMS * 2);
@@ -334,7 +334,7 @@ public class DetailComponent implements ViewInterface {
 		VBox dateBox = new VBox();
 		dateBox.setMinHeight(0.0);
 		if (task.isFullDay()) {
-			Label dateTitleLabel = new Label("Full Day Event");
+			Label dateTitleLabel = new Label("Full Day");
 			dateTitleLabel.setMinHeight(LABEL_TASK_HEIGHT);
 			dateTitleLabel.getStyleClass().add(CSS_LABEL);
 			dateBox.getChildren().add(dateTitleLabel);
@@ -342,7 +342,7 @@ public class DetailComponent implements ViewInterface {
 		} else {
 
 			if (task.getStartDate() != null) {
-				Label dateTitleLabelStart = new Label(getStringOfDate(task.getStartDate()));
+				Label dateTitleLabelStart = new Label("Start Date : " + getStringOfDate(task.getStartDate()));
 				dateTitleLabelStart.setMinHeight(LABEL_TASK_HEIGHT);
 				dateTitleLabelStart.getStyleClass().add(CSS_LABEL);
 				dateBox.getChildren().add(dateTitleLabelStart);
@@ -350,7 +350,7 @@ public class DetailComponent implements ViewInterface {
 			}
 
 			if (task.getDueDate() != null) {
-				Label dateTitleLabel = new Label(getStringOfDate(task.getDueDate()));
+				Label dateTitleLabel = new Label("End Date   : " + getStringOfDate(task.getDueDate()));
 				dateTitleLabel.setMinHeight(LABEL_TASK_HEIGHT);
 				dateTitleLabel.getStyleClass().add(CSS_LABEL);
 				dateBox.getChildren().add(dateTitleLabel);
@@ -421,7 +421,7 @@ public class DetailComponent implements ViewInterface {
 		dateBox.setAlignment(Pos.CENTER_LEFT);
 
 		Label dateLabel = new Label();
-		dateLabel.setText(task.getTime());
+		dateLabel.setText(getDate(task.getDueDate()));
 		dateLabel.getStyleClass().add(CSS_LABEL);
 		dateBox.getChildren().add(dateLabel);
 		dateBox.setMinHeight(LABEL_TASK_HEIGHT);
@@ -455,10 +455,9 @@ public class DetailComponent implements ViewInterface {
 
 	public String getDate(Calendar cal) {
 		String date = "";
-		date += cal.get(Calendar.DAY_OF_MONTH) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR)
-				+ " " + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE);
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YY hhmm");
+		date = sdf.format(cal.getTime()).concat("hrs");
 		return date;
-
 	}
 
 	public void update(int value) {
@@ -479,7 +478,7 @@ public class DetailComponent implements ViewInterface {
 	}
 
 	public void destoryStage() {
-		_myInstance =null;
+		_myInstance = null;
 		_stage.close();
 	}
 

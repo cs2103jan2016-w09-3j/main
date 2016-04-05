@@ -501,13 +501,19 @@ public class HelpScreenUserInterface implements ViewInterface {
 
 	}
 
-	public void show() {
+	public boolean toggleHelpView() {
 		if (_stage.isShowing()) {
 			hide();
+			return false;
 		} else {
-			_stage.show();
+			show();
 			updateHelpPrompt();
+			return true;
 		}
+	}
+
+	public void show() {
+		_stage.show();
 	}
 
 	public void hide() {
