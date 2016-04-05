@@ -71,23 +71,32 @@ public class DateParser {
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
 			for (int j = 0; j < dates.size(); j++) {
-				Calendar toCheck = Calendar.getInstance();
-				toCheck.setTime(dates.get(j));
-				toCheck.clear(Calendar.SECOND);
-				toCheck.clear(Calendar.MILLISECOND);
-				Calendar curr = Calendar.getInstance();
-				curr.set(toCheck.get(Calendar.YEAR), toCheck.get(Calendar.MONTH), toCheck.get(Calendar.DATE));
-				curr.clear(Calendar.SECOND);
-				curr.clear(Calendar.MILLISECOND);
-				if (curr.equals(toCheck)) {
-					toCheck.set(Calendar.HOUR_OF_DAY, 0);
-					toCheck.set(Calendar.MINUTE, 0);
-					returnDateList.add(toCheck.getTime());
-					toCheck.set(Calendar.HOUR_OF_DAY, 23);
-					toCheck.set(Calendar.MINUTE, 59);
-					returnDateList.add(toCheck.getTime());
-				} else {
-					returnDateList.add(dates.get(j));
+				if(dates.size() == 1){
+					Calendar toCheck = Calendar.getInstance();
+					toCheck.setTime(dates.get(j));
+					toCheck.clear(Calendar.SECOND);
+					toCheck.clear(Calendar.MILLISECOND);
+					Calendar curr = Calendar.getInstance();
+					curr.set(toCheck.get(Calendar.YEAR), toCheck.get(Calendar.MONTH), toCheck.get(Calendar.DATE));
+					curr.clear(Calendar.SECOND);
+					curr.clear(Calendar.MILLISECOND);
+					if (curr.equals(toCheck)) {
+						toCheck.set(Calendar.HOUR_OF_DAY, 0);
+						toCheck.set(Calendar.MINUTE, 0);
+						returnDateList.add(toCheck.getTime());
+						toCheck.set(Calendar.HOUR_OF_DAY, 23);
+						toCheck.set(Calendar.MINUTE, 59);
+						returnDateList.add(toCheck.getTime());
+					} else {
+						returnDateList.add(dates.get(j));
+					}
+				}else{
+					Calendar addDate = Calendar.getInstance();
+					addDate.setTime(dates.get(j));
+					addDate.clear(Calendar.MINUTE);
+					addDate.clear(Calendar.SECOND);
+					addDate.clear(Calendar.MILLISECOND);
+					returnDateList.add(addDate.getTime());
 				}
 			}
 		}
@@ -110,7 +119,7 @@ public class DateParser {
 		ArrayList<Integer> locationQuote = new ArrayList<Integer>();
 		for (int i = 0; i < workingStr.length(); i++) {
 			char temp = workingStr.charAt(i);
-			if (temp == '\'') {
+			if ((temp == '\'')||(temp=='\"')) {
 				locationQuote.add(i);
 			}
 		}
@@ -125,6 +134,7 @@ public class DateParser {
 		}
 
 		workingStr = workingStr.replace('\'', ' ');
+		workingStr = workingStr.replace('\"', ' ');
 
 		List<DateGroup> dateGroups = nattyParser.parse(workingStr);
 		for (int i = 0; i < dateGroups.size(); i++) {
