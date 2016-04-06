@@ -16,35 +16,21 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.plaf.InputMapUIResource;
 
 public class ReverseParser {
-	private Map<Long, String> dictionary = new HashMap<Long, String>();
+	private Map<Integer, String> dictionary = new HashMap<Integer, String>();
 	private Map<Integer, String> dayWeekStr = new HashMap<Integer, String>();
 
 	public ReverseParser() {
-		try {
-			FileReader fr = new FileReader("../test/src/reverseParserDict.txt");
-			BufferedReader br = new BufferedReader(fr);
-			String line = new String();
-			while (br.ready()) {
-				line = br.readLine();
-				Scanner sc = new Scanner(line);
-				sc.useDelimiter(",");
-				Long index = Long.parseLong(sc.next());
-				String value = sc.next();
-				// System.out.println(index+" "+value);
-				dictionary.put(index, value);
-			}
-			dayWeekStr.put(Calendar.SUNDAY, "Sunday");
-			dayWeekStr.put(Calendar.MONDAY, "Monday");
-			dayWeekStr.put(Calendar.TUESDAY, "Tuesday");
-			dayWeekStr.put(Calendar.WEDNESDAY, "Wednesday");
-			dayWeekStr.put(Calendar.THURSDAY, "Thursday");
-			dayWeekStr.put(Calendar.FRIDAY, "Friday");
-			dayWeekStr.put(Calendar.SATURDAY, "Saturday");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		dictionary.put(0,"Today");
+		dictionary.put(-1,"Yesterday");
+		dictionary.put(1,"Tomorrow");
+		dayWeekStr.put(Calendar.SUNDAY, "Sunday");
+		dayWeekStr.put(Calendar.MONDAY, "Monday");
+		dayWeekStr.put(Calendar.TUESDAY, "Tuesday");
+		dayWeekStr.put(Calendar.WEDNESDAY, "Wednesday");
+		dayWeekStr.put(Calendar.THURSDAY, "Thursday");
+		dayWeekStr.put(Calendar.FRIDAY, "Friday");
+		dayWeekStr.put(Calendar.SATURDAY, "Saturday");
+		
 	}
 
 	public String reParse(Calendar input) {
