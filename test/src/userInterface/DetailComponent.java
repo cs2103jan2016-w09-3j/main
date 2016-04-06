@@ -345,7 +345,7 @@ public class DetailComponent implements ViewInterface {
 			}
 
 			if (task.getDueDate() != null) {
-				Label dateTitleLabel = new Label("End Date   : " + getStringOfDate(task.getDueDate()));
+				Label dateTitleLabel = new Label("End Date : " + getStringOfDate(task.getDueDate()));
 				dateTitleLabel.setMinHeight(LABEL_TASK_HEIGHT);
 				dateTitleLabel.getStyleClass().add(CSS_LABEL);
 				dateBox.getChildren().add(dateTitleLabel);
