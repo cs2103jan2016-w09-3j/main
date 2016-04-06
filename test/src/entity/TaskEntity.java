@@ -1,5 +1,6 @@
 package entity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -507,20 +508,22 @@ public class TaskEntity {
 
 		// Adding start Date to the display string for showing date
 		String returnDate = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM hhmm");
 		if (_startDate != null) {
-			returnDate += padZero(_startDate.get(Calendar.HOUR_OF_DAY)) + ":"
-					+ padZero(_startDate.get(Calendar.MINUTE));
+			returnDate =  sdf.format(_startDate.getTime());
+			returnDate = returnDate.concat(" - ");
 			if (_dueDate != null) {
 				if (_dueDate.get(Calendar.YEAR) == _startDate.get(Calendar.YEAR)) {
 					if (_dueDate.get(Calendar.MONTH) == _startDate.get(Calendar.MONTH)) {
 						if (_dueDate.get(Calendar.DATE) == _startDate.get(Calendar.DATE)) {
-							returnDate = returnDate.concat(" - ");
-							returnDate += padZero(_dueDate.get(Calendar.HOUR_OF_DAY)) + ":"
-									+ padZero(_dueDate.get(Calendar.MINUTE));
+							SimpleDateFormat sdf2 = new SimpleDateFormat("hhmm");
+							returnDate += sdf2.format(_dueDate.getTime());
 							return returnDate;
 						}
 					}
 				}
+				returnDate += sdf.format(_dueDate.getTime());
+				return returnDate;
 			}
 			return returnDate;
 		} else {
@@ -531,7 +534,7 @@ public class TaskEntity {
 				returnDate += "??:??";
 				return returnDate;
 			}
-			returnDate += padZero(_dueDate.get(Calendar.HOUR_OF_DAY)) + ":" + padZero(_dueDate.get(Calendar.MINUTE));
+			returnDate += sdf.format(_dueDate.getTime());
 			return returnDate;
 		}
 	}

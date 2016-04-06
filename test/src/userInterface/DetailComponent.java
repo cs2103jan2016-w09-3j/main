@@ -4,16 +4,11 @@ package userInterface;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Random;
-
-import dateParser.ParserCommons;
-import dateParser.ReverseParser;
 import entity.TaskEntity;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -25,13 +20,13 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+import dateParser.ParserCommons;
 
 public class DetailComponent implements ViewInterface {
 
 	static final int COMPONENT_WIDTH = 300;
 	static final int COMPONENT_LEFT_MARGIN = 2;
 
-	private static final int CALENDAR_VEW = 0;
 	private static final int TASK_VIEW = 1;
 	private static final int EXPANDED_VIEW = 2;
 	private static final int ASSOCIATE_VIEW = 3;
@@ -465,6 +460,11 @@ public class DetailComponent implements ViewInterface {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YY");
 		date = sdf.format(cal.getTime());
 		return date;
+	}
+
+	public String getShortDate() {
+		
+		return null;
 	}
 
 	public void update(int value) {

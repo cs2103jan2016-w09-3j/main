@@ -29,6 +29,7 @@ public class UserInterfaceController {
 	private static UserInterfaceController _instance;
 
 	private static final int ZERO_VALUE = 0;
+	
 	// view indicators
 	final static int CALENDAR_VIEW = 0;
 	final static int TASK_VIEW = 1;

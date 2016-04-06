@@ -57,7 +57,7 @@ public class PrimaryUserInterface extends Application {
 
 	private static String[] styles = { "default.css", "blackandwhite.css", "red.css", "pastel.css" };
 
-	private String _styleSheet = styles[0];
+	private String _styleSheet = styles[ZERO];
 	private double _commandBarWidth;
 	private Rectangle2D _screenBounds;
 	private Stage _primaryStage;
@@ -512,7 +512,7 @@ public class PrimaryUserInterface extends Application {
 		}
 	}
 
-	public boolean isValidTheme(String theme) {
+	private boolean isValidTheme(String theme) {
 		if (theme == null) {
 			return false;
 		}
@@ -524,7 +524,7 @@ public class PrimaryUserInterface extends Application {
 		return false;
 	}
 
-	public String getStyleSheetList() {
+	private String getStyleSheetList() {
 		String styleList = "";
 		for (int i = 0; i < styles.length; i++) {
 			styleList = styleList.concat(styles[i]);
@@ -540,7 +540,7 @@ public class PrimaryUserInterface extends Application {
 	 * called after a success in executing a command.
 	 * 
 	 */
-	public void resetCommandInput() {
+	private void resetCommandInput() {
 		_commandBar.reset();
 		focus();
 	}

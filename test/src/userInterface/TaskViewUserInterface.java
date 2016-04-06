@@ -9,13 +9,11 @@ import dateParser.ReverseParser;
 import entity.DescriptionLabel;
 import entity.TaskEntity;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -409,17 +407,17 @@ public class TaskViewUserInterface implements ViewInterface {
 		midBox.setMinHeight(0);
 
 		String text = taskEntity.getDescription();
-		Label descriptionLabel2 = new Label(text);
-		descriptionLabel2.getStyleClass().add(CSS_LABEL);
-		descriptionLabel2.setMinHeight(0);
-		descriptionLabel2.setMaxWidth(_individualItemWidth - 80);
-		descriptionLabel2.setWrapText(true);
-		descriptionLabel2.setFont(FONT_TASK);
+		Label descriptionLabel = new Label(text);
+		descriptionLabel.getStyleClass().add(CSS_LABEL);
+		descriptionLabel.setMinHeight(0);
+		descriptionLabel.setMaxWidth(_individualItemWidth - 80);
+		descriptionLabel.setWrapText(true);
+		descriptionLabel.setFont(FONT_TASK);
 
-		Text t = new Text(text);
-		t.setWrappingWidth(_individualItemWidth - 80);
+		Text textPlaceHolderDescription = new Text(text);
+		textPlaceHolderDescription.setWrappingWidth(_individualItemWidth - 80);
 
-		midBox.getChildren().add(descriptionLabel2);
+		midBox.getChildren().add(descriptionLabel);
 		grid.add(midBox, 1, 1);
 
 		Label hashTagLabel = new Label(taskEntity.getHashtags());
@@ -430,17 +428,17 @@ public class TaskViewUserInterface implements ViewInterface {
 		hashTagLabel.setWrapText(true);
 		grid.add(hashTagLabel, 1, 2);
 
-		Text t2 = new Text(taskEntity.getHashtags());
-		t2.setWrappingWidth(_individualItemWidth - 80);
+		Text textPlaceHolder = new Text(taskEntity.getHashtags());
+		textPlaceHolder.setWrappingWidth(_individualItemWidth - 80);
 
 		if (_view == UserInterfaceController.TASK_VIEW) {
 			grid.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		} else {
-			grid.setMinHeight(
-					DETAILED_VIEW_ITEM_HEIGHT + t.getBoundsInLocal().getHeight() + t2.getBoundsInLocal().getHeight());
+			grid.setMinHeight(DETAILED_VIEW_ITEM_HEIGHT + textPlaceHolderDescription.getBoundsInLocal().getHeight()
+					+ textPlaceHolder.getBoundsInLocal().getHeight());
 		}
-		grid.setMaxHeight(
-				DETAILED_VIEW_ITEM_HEIGHT + t.getBoundsInLocal().getHeight() + t2.getBoundsInLocal().getHeight());
+		grid.setMaxHeight(DETAILED_VIEW_ITEM_HEIGHT + textPlaceHolderDescription.getBoundsInLocal().getHeight()
+				+ textPlaceHolder.getBoundsInLocal().getHeight());
 
 		return grid;
 	}
@@ -731,7 +729,6 @@ public class TaskViewUserInterface implements ViewInterface {
 		_mainVbox.setTranslateY(itemPosY);
 	}
 
-	// get from logic side
 	public static boolean isSameDay(TaskEntity task1, TaskEntity task2) {
 		if (task1 == null) { // new day
 			return false;
@@ -776,19 +773,8 @@ public class TaskViewUserInterface implements ViewInterface {
 		}
 
 		if (calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)) {
-
-			// display by year week //remove after decided
-			boolean byYearWeek = true;
-			if (byYearWeek) {
-				if (calendar1.get(Calendar.WEEK_OF_YEAR) == calendar2.get(Calendar.WEEK_OF_YEAR)) {
-					return true;
-				}
-			} else {
-				if (calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH)) {
-					if (calendar1.get(Calendar.WEEK_OF_MONTH) == calendar2.get(Calendar.WEEK_OF_MONTH)) {
-						return true;
-					}
-				}
+			if (calendar1.get(Calendar.WEEK_OF_YEAR) == calendar2.get(Calendar.WEEK_OF_YEAR)) {
+				return true;
 			}
 		}
 		return false;
@@ -878,7 +864,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	public void destoryStage() {
-		_myInstance =null;
+		_myInstance = null;
 		_stage.close();
 	}
 
@@ -886,6 +872,12 @@ public class TaskViewUserInterface implements ViewInterface {
 		_view = view;
 	}
 
+	/**
+	 * Animates the current view the the detailed view base on the value.
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public boolean isAtDetailedView(double value) {
 		double totalHeight = 0;
 		int index = _selectedIndex - _startIndex;
@@ -918,6 +910,12 @@ public class TaskViewUserInterface implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Animates the current view the the task view base on the value.
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public boolean isAtTaskView(double value) {
 		double totalHeight = 0;
 		int counterForDoneItems = 0;
