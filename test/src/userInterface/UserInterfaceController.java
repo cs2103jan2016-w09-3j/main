@@ -479,6 +479,7 @@ public class UserInterfaceController {
 
 	public void killFloatingThread() {
 		if (_floatingThread != null) {
+			_floatingBarComponent.clearFloatingBar();
 			_floatingThread.cancel();
 			_floatingThread = null;
 		}
@@ -684,7 +685,6 @@ public class UserInterfaceController {
 			ArrayList<TaskEntity> floatingList = _logicFace.getWorkingList();
 			if (floatingList == null || floatingList.size() == 0) {
 				killFloatingThread();
-				_floatingBarComponent.clearFloatingBar();
 			} else {
 				startFloatingThread();
 			}
@@ -899,9 +899,11 @@ public class UserInterfaceController {
 			if (resultSet.isSuccess()) {
 				setManagerView(TASK_VIEW);
 				_currentView = TASK_VIEW;
+				killFloatingThread();
 				int id = _logicFace.getNextTimeListId();
 				updateChangesToViews(id);
 				showMainView(-1);
+				startFloatingThread();
 			}
 		}
 		return resultSet;
