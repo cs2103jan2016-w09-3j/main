@@ -56,6 +56,8 @@ public class XMLParser {
 	}
 	
 	public static String removeAllAttributes(String input) {
+		String temp = new String(input);
+		temp = removeAllTags(temp);
 		try {
 			Document tempXMLDoc = XMLParser.loadXMLFromString("<XML>" + input + "</XML>");
 			input = removeAttribute(input, tempXMLDoc,TITLE_TAG);
@@ -67,11 +69,12 @@ public class XMLParser {
 			input = removeAttribute(input, tempXMLDoc,HASH_TAG);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return "";
 		}
 		return input;
 	}
 
-	private static String removeOneAttribute(String input, String tag, String value) throws Exception {
+	private static String removeOneAttribute(String input, String tag, String value)  {
 		input = input.replace("<"+tag+">"+value+"</"+tag+">", "");
 		return input;
 	} 
@@ -100,7 +103,7 @@ public class XMLParser {
 		return input;
 	}
 	
-	public static ArrayList<Pair<String, ArrayList<String>>> xmlToArrayList(String input) throws Exception{
+	public static ArrayList<Pair<String, ArrayList<String>>> xmlToArrayList(String input) {
 		ArrayList<Pair<String, ArrayList<String>>> tagStringPair = new ArrayList<Pair<String, ArrayList<String>>>();
 		String prev = "";
 		while(!input.trim().isEmpty()){
