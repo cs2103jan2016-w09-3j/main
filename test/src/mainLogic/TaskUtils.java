@@ -419,4 +419,95 @@ public class TaskUtils {
 	        return false;
 	    }
 	}
+	
+	/**
+     * Checks if the firstDate is on a day before the secondDate in the same year
+     * 
+     * @param firstDate
+     * @param secondDate
+     * @return True if the first date is on a day before the secondDate in the same year
+     *         False otherwise
+     */
+    public static boolean dayBefore (Calendar firstDate, Calendar secondDate) {
+        if( firstDate.get(Calendar.YEAR) == secondDate.get(Calendar.YEAR) ) {
+            if( firstDate.get(Calendar.MONTH) < secondDate.get(Calendar.MONTH) ) {
+                return true;
+            } else if ( firstDate.get(Calendar.MONTH) > secondDate.get(Calendar.MONTH) ) {
+                return false;
+            }else if ( firstDate.get(Calendar.DAY_OF_MONTH) < secondDate.get(Calendar.DAY_OF_MONTH) ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Checks if the firstDate is set at a time before the secondDate on the same day
+     * 
+     * @param firstDate
+     * @param secondDate
+     * @return True if it is
+     *         False otherwise
+     */
+    public static boolean timeBefore (Calendar firstDate, Calendar secondDate) {
+        if( checkSameDate(firstDate, secondDate) ) {
+            if( firstDate.get(Calendar.HOUR_OF_DAY) < secondDate.get(Calendar.HOUR_OF_DAY) ) {
+                return true;
+            } else if( firstDate.get(Calendar.HOUR_OF_DAY) > secondDate.get(Calendar.HOUR_OF_DAY) ) {
+                return false;
+            } else if ( firstDate.get(Calendar.MINUTE) < secondDate.get(Calendar.MINUTE) ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+	
+    /**
+     * Function to ensure that the dueDate of a task is not before the startTime
+     * of it
+     * 
+     * @param taskToBeProcessed
+     * @return same task passed in, but with date correction
+     */
+	public static TaskEntity calculateSecondDate(TaskEntity taskToBeProcessed) {
+	    Calendar firstDate = taskToBeProcessed.getStartDate();
+	    Calendar secondDate = taskToBeProcessed.getDueDate();
+
+        if (firstDate == null || secondDate == null) {
+            return taskToBeProcessed;
+        }
+
+        if (firstDate.compareTo(secondDate) < 0) {
+            return taskToBeProcessed;
+        }
+
+        if (firstDate.get(Calendar.YEAR) < secondDate.get(Calendar.YEAR)) {
+            return taskToBeProcessed;
+        } else if (firstDate.get(Calendar.YEAR) > secondDate.get(Calendar.YEAR)) {
+            secondDate.set(Calendar.YEAR, firstDate.get(Calendar.YEAR));
+            taskToBeProcessed.setDate(firstDate,  secondDate, taskToBeProcessed.isFullDay());
+        }
+
+	    if( dayBefore(secondDate, firstDate) ) {
+	        Calendar newTime = secondDate;
+	        newTime.set(Calendar.YEAR, secondDate.get(Calendar.YEAR) + 1);
+	        taskToBeProcessed.setDate(firstDate, newTime, taskToBeProcessed.isFullDay());
+	        return taskToBeProcessed;
+	    } else if( timeBefore(secondDate, firstDate) && !taskToBeProcessed.isFullDay()) {
+	        Calendar newTime = secondDate;
+            newTime.set(Calendar.DAY_OF_MONTH, newTime.get(Calendar.DAY_OF_MONTH) + 1);
+            taskToBeProcessed.setDate(firstDate, newTime, taskToBeProcessed.isFullDay());
+            return taskToBeProcessed;
+	    } else {
+	        //Same date and hence, remove start time
+	        taskToBeProcessed.setDate(secondDate, taskToBeProcessed.isFullDay());
+	        return taskToBeProcessed;
+	    }
+	}
 }

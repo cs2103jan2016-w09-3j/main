@@ -393,6 +393,26 @@ public class TaskEntity {
 		return _name;
 	}
 
+    public String printStartDate() {
+        String returnDate = "";
+        if(_startDate != null) {
+            returnDate += _startDate.get(Calendar.DAY_OF_MONTH) + "/";
+            returnDate += _startDate.get(Calendar.MONTH) + "/";
+            returnDate += _startDate.get(Calendar.YEAR);
+        }
+        return returnDate;
+    }
+    
+    public String printDueDate() {
+        String returnDate = "";
+        if(_dueDate != null) {
+            returnDate += _dueDate.get(Calendar.DAY_OF_MONTH) + "/";
+            returnDate += _dueDate.get(Calendar.MONTH) + "/";
+            returnDate += _dueDate.get(Calendar.YEAR);
+        }
+        return returnDate;
+    }
+	
 	public Calendar getDueDate() {
 		
 		if (!_isFloating) {

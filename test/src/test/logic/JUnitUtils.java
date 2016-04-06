@@ -9,6 +9,8 @@ package test.logic;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Calendar;
+
 import org.junit.Test;
 
 import entity.TaskEntity;
@@ -73,5 +75,94 @@ public class JUnitUtils {
         assertEquals(true, TaskUtils.checkOverlappingDuration(from0652to1100, from1010to2210 ));
         assertEquals(true, TaskUtils.checkOverlappingDuration(from0300to0500, from0152to0428 ));
         assertEquals(false, TaskUtils.checkOverlappingDuration(from0652to1100, from0152to0428 ));
+    }
+	
+	@Test
+    public void calculateSecondDate_SetNextYear () {
+        Calendar startDate = TaskUtils.createDate(17, 3, 2016);
+        Calendar endDate = TaskUtils.createDate(16, 3, 2016);
+        TaskEntity testTask = new TaskEntity("Testing task", startDate, endDate, true);
+        
+        testTask = TaskUtils.calculateSecondDate(testTask);
+
+        assertEquals("17/3/2016", testTask.printStartDate());
+        assertEquals("16/3/2017", testTask.printDueDate());
+
+        
+        startDate = TaskUtils.createDate(17, 3, 2016, 7, 0);
+        endDate = TaskUtils.createDate(17, 3, 2016, 7, 0);
+    }
+	
+	@Test
+    public void calculateSecondDate_SetToNextDay () {
+        Calendar startDate = TaskUtils.createDate(17, 3, 2016, 7, 0);
+        Calendar endDate = TaskUtils.createDate(17, 3, 2016, 6, 0);
+        TaskEntity testTask = new TaskEntity("Testing task", startDate, endDate, false);
+        
+        testTask = TaskUtils.calculateSecondDate(testTask);
+
+        assertEquals("17/3/2016", testTask.printStartDate());
+        assertEquals("18/3/2016", testTask.printDueDate());
+        
+        
+        startDate = TaskUtils.createDate(30, 3, 2016, 7, 0);
+        endDate = TaskUtils.createDate(30, 3, 2016, 6, 0);
+        testTask.setDate(startDate, endDate, false);
+        testTask = TaskUtils.calculateSecondDate(testTask);
+
+        assertEquals("30/3/2016", testTask.printStartDate());
+        assertEquals("1/4/2016", testTask.printDueDate());
+    }
+	
+	@Test
+    public void calculateSecondDate_RemainSameDay () {
+        Calendar startDate = TaskUtils.createDate(17, 3, 2016, 6, 0);
+        Calendar endDate = TaskUtils.createDate(17, 3, 2016, 7, 0);
+        TaskEntity testTask = new TaskEntity("Testing task", startDate, endDate, false);
+        
+        testTask = TaskUtils.calculateSecondDate(testTask);
+
+        assertEquals("17/3/2016", testTask.printStartDate());
+        assertEquals("17/3/2016", testTask.printDueDate());
+        
+        
+        startDate = TaskUtils.createDate(17, 3, 2016, 7, 0);
+        endDate = TaskUtils.createDate(17, 5, 2016, 6, 0);
+        testTask.setDate(startDate, endDate, false);
+        testTask = TaskUtils.calculateSecondDate(testTask);
+
+        assertEquals("17/3/2016", testTask.printStartDate());
+        assertEquals("17/5/2016", testTask.printDueDate());
+        
+        
+        startDate = TaskUtils.createDate(19, 3, 2016, 10, 0);
+        endDate = TaskUtils.createDate(17, 5, 2016, 6, 0);
+        testTask.setDate(startDate, endDate, false);
+        testTask = TaskUtils.calculateSecondDate(testTask);
+
+        assertEquals("19/3/2016", testTask.printStartDate());
+        assertEquals("17/5/2016", testTask.printDueDate());
+
+	}
+	
+	@Test
+    public void calculateSecondDate_RemoveStartTime () {
+        Calendar startDate = TaskUtils.createDate(17, 3, 2016);
+        Calendar endDate = TaskUtils.createDate(17, 3, 2016);
+        TaskEntity testTask = new TaskEntity("Testing task", startDate, endDate, true);
+        
+        testTask = TaskUtils.calculateSecondDate(testTask);
+
+        assertEquals("", testTask.printStartDate());
+        assertEquals("17/3/2016", testTask.printDueDate());
+        
+        //Full day task, so 7am and 6am irrelevant, counted as exact same day
+        startDate = TaskUtils.createDate(17, 3, 2016, 7, 0);
+        endDate = TaskUtils.createDate(17, 3, 2016, 6, 0);
+        testTask.setDate(startDate, endDate, true);
+        testTask = TaskUtils.calculateSecondDate(testTask);
+
+        assertEquals("", testTask.printStartDate());
+        assertEquals("17/3/2016", testTask.printDueDate());
     }
 }
