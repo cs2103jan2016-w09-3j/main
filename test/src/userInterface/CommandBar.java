@@ -149,7 +149,7 @@ public class CommandBar {
 		_feedbackLabel.setMaxHeight(FEEDBACK_HEIGHT);
 		_feedbackLabel.setMinHeight(FEEDBACK_HEIGHT);
 		_feedbackLabel.setFont(FONT_FEEDBACK);
-		_feedbackLabel.setAlignment(Pos.CENTER_RIGHT);
+		_feedbackLabel.setAlignment(Pos.CENTER_LEFT);
 		_feedbackLabel.setId("cssCommandBarfeedback_normal");
 		_feedbackLabel.setOpacity(0.0);
 		_mainStructure.getChildren().add(_feedbackLabel);
