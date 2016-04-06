@@ -195,8 +195,12 @@ public class InputParser {
 				c2.clear(Calendar.MILLISECOND);
 				
 				if(c2.before(c)){
+					int hour = c2.get(Calendar.HOUR);
+					c2.setTime(c.getTime());
+					c2.set(Calendar.HOUR, hour);
 					c2.add(Calendar.DATE, 1);
 				}
+				
 				//System.out.println("FULL DAY"+checkFullDay(c,c2));
 				TaskEntity toAdd = new TaskEntity(name, c, c2, checkFullDay(c,c2), desc);
 				for(int j=0; j<hashes.size();j++){
