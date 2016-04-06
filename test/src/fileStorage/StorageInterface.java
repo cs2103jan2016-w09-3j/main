@@ -26,6 +26,10 @@ public class StorageInterface {
         return sc.getTaskLists();
     }
     
+    public String getMainFilePath() {
+        return sc.getMainFilePath();
+    }
+    
     public boolean storeTaskLists(AllTaskLists allTaskLists) {
         return sc.storeTaskLists(allTaskLists);
     }
