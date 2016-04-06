@@ -57,6 +57,20 @@ public class TaskUtils {
 	}
 
 	/**
+	 * Checks if the name of a task is a valid name (Non-empty)
+	 * 
+	 * @param taskToCheck
+	 * @return
+	 */
+    public static boolean checkValidName(TaskEntity taskToCheck) {
+        if( taskToCheck.getName() == null ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+	/**
 	 * Converts a string to integer, NumberFormatException returns -1
 	 * 
 	 * @param str

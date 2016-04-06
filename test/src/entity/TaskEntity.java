@@ -6,6 +6,7 @@ import java.util.Calendar;
 import edu.emory.mathcs.backport.java.util.Collections;
 import mainLogic.TaskDateComparator;
 import mainLogic.TaskManager;
+import mainLogic.TaskUtils;
 
 public class TaskEntity {
 	public static final int NOT_ASSOCIATED = 0;
@@ -393,10 +394,11 @@ public class TaskEntity {
 	}
 
 	public Calendar getDueDate() {
-		assert !_isFloating : "Trying to get due date from a full day task";
+		
 		if (!_isFloating) {
 			return _dueDate;
 		} else {
+		    System.out.println("Trying to get due date from a full day task");
 			return null;
 		}
 	}
@@ -473,6 +475,13 @@ public class TaskEntity {
 		}
 
 		if (_isFullDay) {
+		    if(_startDate != null) {
+		        if( TaskUtils.checkSameDate(_startDate, _dueDate) ) {
+		            return "Full Day";
+		        } else {
+		            return "Full Day";
+		        }
+		    }
 			return "Full Day";
 		}
 

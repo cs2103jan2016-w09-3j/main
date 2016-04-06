@@ -564,7 +564,7 @@ public class TaskManager {
 
         ResultSet addResults = new ResultSet();
         
-        if(displayedTasks == null) {
+        if(displayedTasks == null || !TaskUtils.checkValidName(newTask)) {
             addResults.setStatus(ResultSet.STATUS_BAD);
             addResults.setFail();
             return addResults;
