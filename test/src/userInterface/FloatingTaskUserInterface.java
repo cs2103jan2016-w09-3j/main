@@ -191,14 +191,14 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		StackPane.setAlignment(_secondaryVbox, Pos.TOP_LEFT);
 	}
 
-	public void buildContent(ArrayList<TaskEntity> floatingList) {
+	public void buildContent(ArrayList<TaskEntity> floatingList, int index) {
 		_floatingList = floatingList;
 		_floatingBoxes = new ArrayList<HBox>();
 		// when there are no floating task yet
 		if (_floatingList == null || _floatingList.size() == 0) {
 			buildHelpWithFloating();
 		} else {
-			buildFloatingList(_floatingList);
+			buildFloatingList(_floatingList, index);
 		}
 	}
 
@@ -231,10 +231,15 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		_secondaryVbox.getChildren().add(helpLabel);
 	}
 
-	public void buildFloatingList(ArrayList<TaskEntity> floatingList) {
+	public void buildFloatingList(ArrayList<TaskEntity> floatingList, int index) {
 		_secondaryVbox.getChildren().clear();
-		_selectedIndex = 0;
+		if (index < floatingList.size() && index > -1) {
+			_selectedIndex = index;
+		} else {
+			_selectedIndex = 0;
+		}
 		_startIndex = 0;
+
 		if (floatingList.size() < THRESHOLD * 2) {
 			_endIndex = floatingList.size() - 1;
 		} else {

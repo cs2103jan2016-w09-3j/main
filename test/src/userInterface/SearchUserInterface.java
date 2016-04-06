@@ -385,8 +385,6 @@ public class SearchUserInterface implements ViewInterface {
 	}
 
 	public void updateTranslateY(double posY) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void changeTheme(String styleSheet) {

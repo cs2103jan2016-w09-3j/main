@@ -336,7 +336,7 @@ public class UserInterfaceController {
 			break;
 		}
 		case FLOATING_VIEW: {
-			showFloatingView();
+			showFloatingView(0);
 			break;
 		}
 		case SEARCH_VIEW: {
@@ -377,14 +377,14 @@ public class UserInterfaceController {
 		show();
 	}
 
-	public void showFloatingView() {
+	public void showFloatingView(int index) {
 		if (_currentView != FLOATING_VIEW && _currentView != SEARCH_VIEW) {
 			_previousView = _currentView;
 		}
 		_currentView = FLOATING_VIEW;
 		_logicFace.switchView(TaskManager.DISPLAY_FLOATING);
 		ArrayList<TaskEntity> floatingList = _logicFace.getWorkingList();
-		_floatingViewInterface.buildContent(floatingList);
+		_floatingViewInterface.buildContent(floatingList, index);
 		show();
 	}
 
@@ -395,13 +395,13 @@ public class UserInterfaceController {
 				_currentView = _previousView;
 				_taskViewInterface.setView(_currentView);
 				_detailComponent.setView(_currentView);
-				reBuildFrontView(-5);
+				reBuildFrontView(-1);
 			}
 		} else {
 			_currentView = ASSOCIATE_VIEW;
 			_taskViewInterface.setView(_currentView);
 			_detailComponent.setView(_currentView);
-			reBuildFrontView(-5);
+			reBuildFrontView(-1);
 		}
 		show();
 	}
@@ -411,6 +411,8 @@ public class UserInterfaceController {
 	 * after a command is executed.
 	 * 
 	 * @param index
+	 *            - if index is less then zero. rebuild views base on last
+	 *            selected index. - else build with the index as selected.
 	 */
 	public void reBuildFrontView(int index) {
 		int selelcted = 0;
@@ -674,6 +676,8 @@ public class UserInterfaceController {
 	 * 
 	 * @param index
 	 *            - determines if the command executed is in the selected view.
+	 *            - if index is -1, the task current targeted task is at another
+	 *            view.
 	 */
 	public void updateChangesToViews(int index) {
 		if (_currentView == TASK_VIEW || _currentView == EXPANDED_VIEW || _currentView == ASSOCIATE_VIEW) {
@@ -688,7 +692,7 @@ public class UserInterfaceController {
 			} else {
 				startFloatingThread();
 			}
-			_floatingViewInterface.buildContent(floatingList);
+			_floatingViewInterface.buildContent(floatingList, index);
 		} else if (_currentView == SEARCH_VIEW) {
 			showSearchView();
 		}
@@ -699,7 +703,6 @@ public class UserInterfaceController {
 		if (toPopulate != null) {
 			String toSet = " " + toPopulate.getName();
 			if ((toPopulate.getDescription() != null) && (toPopulate.getDescription().trim().length() > 0)) {
-				// System.out.println("desc"+toPopulate.getDescription());
 				toSet += " : " + toPopulate.getDescription();
 			}
 			if (toPopulate.getStartDate() != null) {
@@ -859,6 +862,9 @@ public class UserInterfaceController {
 
 		if (commandsToRun.size() == 0) {
 			setView(TASK_VIEW);
+			_currentView = TASK_VIEW;
+			updateChangesToViews(-1);
+			showMainView(-1);
 			return resultSet;
 		}
 		int view = -1;
@@ -909,22 +915,41 @@ public class UserInterfaceController {
 		return resultSet;
 	}
 
+	/**
+	 * This method is called when an Enter key is pressed without zero key
+	 * inputs from the user. this indicates a selection has been called.
+	 * 
+	 * @return
+	 */
 	public boolean processEnter() {
 		if (_currentView == SEARCH_VIEW) {
 			TaskEntity task = _searchViewInterface.processEnter();
 			if (task != null) {
-				setManagerView(TASK_VIEW);
-				_currentView = TASK_VIEW;
-				ArrayList<TaskEntity> tasks = _logicFace.getWorkingList();
+				if (!task.isFloating()) {
+					setManagerView(TASK_VIEW);
+					_currentView = TASK_VIEW;
+					ArrayList<TaskEntity> tasks = _logicFace.getWorkingList();
 
-				for (int i = 0; i < tasks.size(); i++) {
-					if (task.getId() == tasks.get(i).getId()) {
-						updateChangesToViews(i);
-						showMainView(-1);
-						break;
+					for (int i = 0; i < tasks.size(); i++) {
+						if (task.getId() == tasks.get(i).getId()) {
+							updateChangesToViews(i);
+							showMainView(-1);
+							break;
+						}
 					}
+					return true;
+				} else {
+					setManagerView(FLOATING_VIEW);
+					_currentView = FLOATING_VIEW;
+					ArrayList<TaskEntity> tasks = _logicFace.getWorkingList();
+					for (int i = 0; i < tasks.size(); i++) {
+						if (task.getId() == tasks.get(i).getId()) {
+							showFloatingView(i);
+							break;
+						}
+					}
+					return true;
 				}
-				return true;
 			}
 		} else if (_currentView == ASSOCIATE_VIEW) {
 			TaskEntity task = _detailComponent.processEnter();

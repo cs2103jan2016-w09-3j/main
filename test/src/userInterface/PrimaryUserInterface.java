@@ -29,6 +29,17 @@ public class PrimaryUserInterface extends Application {
 	static final int PREFERED_WINDOW_WIDTH = 600; // change to 1080.
 	static final double PREFERED_WINDOW_SCALE = 0.8;
 
+	private static final int SAME = 0;
+	private static final int ZERO = 0;
+	
+	// Controls
+	static final int UP_ARROW_KEY = -1;
+	static final int DOWN_ARROW_KEY = 1;
+	static final int CTRL_UP_ARROW_KEY = -1;
+	static final int CTRL_DOWN_ARROW_KEY = 1;
+	static final int CTRL_LEFT_ARROW_KEY = -1;
+	static final int CTRL_RIGHT_ARROW_KEY = 1;
+
 	static final int TYPE_1 = 0;
 	static final int TYPE_2 = 1;
 	static final int TYPE_3 = 2;
@@ -69,17 +80,17 @@ public class PrimaryUserInterface extends Application {
 
 	/**
 	 * initialize stage and components, this is the first method JavaFx calls.
-	 * Initialize commandBar and components in commandBar as primary UI
+	 * Initialize commandBar and components in commandBar as primary UI.
 	 * 
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		InputParser parser = new InputParser("");
 		_primaryStage = primaryStage;
 		_commandBar = CommandBar.getInstance(COMMAND_BAR_HEIGTH, _commandBarWidth);
 		initializeControls();
 		initializePrimaryStage(primaryStage);
 		initializeUiController(primaryStage);
-		InputParser parser = new InputParser("");
 		focus();
 	}
 
@@ -152,7 +163,7 @@ public class PrimaryUserInterface extends Application {
 
 	private void processKeyRelease(TextField textField, KeyEvent event) {
 		_commandBar.release();
-		if (event.getCode().compareTo(KeyCode.TAB) == 0) {
+		if (event.getCode().compareTo(KeyCode.TAB) == SAME) {
 			_commandBar.changeSelector();
 		}
 	}
@@ -167,9 +178,9 @@ public class PrimaryUserInterface extends Application {
 	 */
 	private void processKeyPress(TextField textField, KeyEvent event) {
 
-		if (event.getCode().compareTo(KeyCode.BACK_SPACE) == 0) {
+		if (event.getCode().compareTo(KeyCode.BACK_SPACE) == SAME) {
 			_commandBar.deleteKey();
-		} else if (event.getCode().compareTo(KeyCode.ENTER) == 0) {
+		} else if (event.getCode().compareTo(KeyCode.ENTER) == SAME) {
 			COMMAND cmd = _commandBar.onEnter();
 
 			if (cmd.equals(COMMAND.EXIT)) {
@@ -196,7 +207,7 @@ public class PrimaryUserInterface extends Application {
 				resetCommandInput();
 				return;
 			} else if (cmd.equals(COMMAND.FLOAT)) {
-				uiController.showFloatingView();
+				uiController.showFloatingView(ZERO);
 				resetCommandInput();
 			} else if (cmd.equals(COMMAND.JUMP)) {
 				executeJump();
@@ -232,48 +243,48 @@ public class PrimaryUserInterface extends Application {
 	// @@author A0125514N
 	private void processControls(KeyEvent event) {
 
-		if (event.getCode().compareTo(KeyCode.UP) == 0 && !event.isControlDown() && !event.isShiftDown()) {
+		if (event.getCode().compareTo(KeyCode.UP) == SAME && !event.isControlDown() && !event.isShiftDown()) {
 			_commandBar.getPrevCommand();
 		}
 
-		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && !event.isControlDown() && !event.isShiftDown()) {
+		if (event.getCode().compareTo(KeyCode.DOWN) == SAME && !event.isControlDown() && !event.isShiftDown()) {
 			_commandBar.getNextCommand();
 		}
 
-		if (event.getCode().compareTo(KeyCode.DOWN) == 0 && event.isControlDown() && !event.isShiftDown()) {
+		if (event.getCode().compareTo(KeyCode.DOWN) == SAME && event.isControlDown() && !event.isShiftDown()) {
 			uiController.stopScrollingAnimation();
-			uiController.updateComponents(1);
+			uiController.updateComponents(CTRL_DOWN_ARROW_KEY);
 		}
-		if (event.getCode().compareTo(KeyCode.UP) == 0 && event.isControlDown() && !event.isShiftDown()) {
+		if (event.getCode().compareTo(KeyCode.UP) == SAME && event.isControlDown() && !event.isShiftDown()) {
 			uiController.stopScrollingAnimation();
-			uiController.updateComponents(-1);
+			uiController.updateComponents(CTRL_UP_ARROW_KEY);
 		}
 
-		if (event.getCode().compareTo(KeyCode.RIGHT) == 0 && event.isControlDown() && !event.isShiftDown()) {
-			uiController.changeView(1);
+		if (event.getCode().compareTo(KeyCode.RIGHT) == SAME && event.isControlDown() && !event.isShiftDown()) {
+			uiController.changeView(CTRL_RIGHT_ARROW_KEY);
 		}
-		if (event.getCode().compareTo(KeyCode.LEFT) == 0 && event.isControlDown() && !event.isShiftDown()) {
-			uiController.changeView(-1);
+		if (event.getCode().compareTo(KeyCode.LEFT) == SAME && event.isControlDown() && !event.isShiftDown()) {
+			uiController.changeView(CTRL_LEFT_ARROW_KEY);
 		}
 
 		if (event.getCode().isFunctionKey()) {
-			if (event.getCode().compareTo(KeyCode.F1) == 0) {
+			if (event.getCode().compareTo(KeyCode.F1) == SAME) {
 				uiController.showHelpView();
-			} else if (event.getCode().compareTo(KeyCode.F2) == 0) {
+			} else if (event.getCode().compareTo(KeyCode.F2) == SAME) {
 				uiController.hide();
-			} else if (event.getCode().compareTo(KeyCode.F3) == 0) {
+			} else if (event.getCode().compareTo(KeyCode.F3) == SAME) {
 				uiController.show();
-			} else if (event.getCode().compareTo(KeyCode.F4) == 0) {
+			} else if (event.getCode().compareTo(KeyCode.F4) == SAME) {
 				uiController.destory();
 				uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet, _mainEventHandler);
 				resetCommandInput();
 			}
 		}
 
-		if (event.getCode().compareTo(KeyCode.LEFT) == 0) {
-			uiController.updateHelpView(-1);
-		} else if (event.getCode().compareTo(KeyCode.RIGHT) == 0) {
-			uiController.updateHelpView(1);
+		if (event.getCode().compareTo(KeyCode.LEFT) == SAME) {
+			uiController.updateHelpView(CTRL_LEFT_ARROW_KEY);
+		} else if (event.getCode().compareTo(KeyCode.RIGHT) == SAME) {
+			uiController.updateHelpView(CTRL_RIGHT_ARROW_KEY);
 		}
 	}
 
