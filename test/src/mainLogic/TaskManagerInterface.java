@@ -125,6 +125,10 @@ public class TaskManagerInterface {
     public ResultSet loadFrom (String newDirectory) {
         return manager.loadFrom(newDirectory);
     }
+
+    public String getMainFilePath() {
+        return manager.getMainFilePath();
+    }
     
     public ResultSet link (TaskEntity projectHeadId, TaskEntity taskUnderId, String command) {
         ResultSet executionResults = manager.link(projectHeadId, taskUnderId);

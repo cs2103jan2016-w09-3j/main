@@ -889,6 +889,10 @@ public class TaskManager {
         return loadResult;
     }
     
+    public String getMainFilePath () {
+        return  dataLoader.getMainFilePath();
+    }
+    
     public ResultSet link(String projectHeadId, String taskUnderId) {
         return link(TaskUtils.convertStringToInteger(projectHeadId), TaskUtils.convertStringToInteger(taskUnderId));
     }
