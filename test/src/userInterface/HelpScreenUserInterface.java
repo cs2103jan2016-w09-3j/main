@@ -26,38 +26,38 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private static HelpScreenUserInterface _myInstance;
 
 	private static final String HELP_DESCRIPTION_FLOATING_BAR_TITLE = "Floating Panel";
-	private static final String HELP_DESCRIPTION_FLOATING_BAR = "This panel shows you a task that does not has a date assigned to it. It changes every 10 seconds.";
+	private static final String HELP_DESCRIPTION_FLOATING_BAR = "This panel shows you tasks without deadlines assigned to them. It changes every 10 seconds.";
 
-	private static final String HELP_DESCRIPTION_MAIN_TITLE = "Welcome to PCNM help manual!";
-	private static final String HELP_DESCRIPTION_MAIN = "Press the left and right arrow keys to scroll through the help and F1 to close the help screen";
+	private static final String HELP_DESCRIPTION_MAIN_TITLE = "Welcome to PCNM Help Manual!";
+	private static final String HELP_DESCRIPTION_MAIN = "Press the left and right arrow keys to scroll through and F1 to close the Help Screen";
 
 	private static final String HELP_DESCRIPTION_DESCRIPTION_COMPONENT_TITLE = "Description Panel";
-	private static final String HELP_DESCRIPTION_DESCRIPTION_COMPONENT = "This panel shows you range of the date of the tasks in the week.";
+	private static final String HELP_DESCRIPTION_DESCRIPTION_COMPONENT = "This panel shows you a range of dates of the tasks in the week.";
 
 	private static final String HELP_DESCRIPTION_TASK_VIEW_TITLE = "Main View";
-	private static final String HELP_DESCRIPTION_TASK_VIEW = "This panel shows you your task in chronological order.";
+	private static final String HELP_DESCRIPTION_TASK_VIEW = "This panel shows your tasks in chronological order.";
 
 	private static final String HELP_DESCRIPTION_DETAIL_COMPONENT_TITLE = "Details Panel";
-	private static final String HELP_DESCRIPTION_DETAIL_COMPONENT = "This panel shows you more description of the selected task.";
+	private static final String HELP_DESCRIPTION_DETAIL_COMPONENT = "This panel shows you more descriptions and links of the selected task.";
 
-	private static final String[][] CHEAT_SHEET_SHORT_CUTS = { { "F1", "Brings up the help manual!" },
-			{ "F2", "Switch the application to the compact view" },
-			{ "F3", "Switch the application to the full view." }, { "Up/Down", "Look up previous command entered." },
-			{ "Ctrl + Up/Down", "Scroll through your task in the selected view." },
-			{ "Ctrl + Left/Right", "Change view from the main view to other views." }, { "", "" } };
+	private static final String[][] CHEAT_SHEET_SHORT_CUTS = { { "F1", "Brings up the Help Manual!" },
+			{ "F2", "Collapses application into Compact View" },
+			{ "F3", "Displays application in Full View" }, { "Up/Down", "Retrieves previous commands entered" },
+			{ "Ctrl + Up/Down", "Scrolls through task list" },
+			{ "Ctrl + Left/Right", "Switches from Main to Floating to Search View" }, { "", "" } };
 	private static final String[][] CHEAT_SHEET_COMMANDS = {
-			{ "ADD", "Add a task into your task list. Task with out dates will be considered floating task." },
-			{ "DELETE", "Delete a task with the specific id." }, { "EDIT", "Edit your task base on the id." },
+			{ "ADD", "Adds a task into your task list, tasks without dates will be added to the Floating View" },
+			{ "DELETE", "Deletes a task with a specific ID" }, { "EDIT", "Edits your task based on ID" },
 			{ "LINK",
-					"Link 2 task together to create associations between the tasks. \neg. Link ID1-ID5, id5 will be the project head of the link." },
-			{ "SEARCH", "Search for any task base on the input." },
-			{ "HIDE", "Switch the applcaition to compact view." }, { "SHOW", "Switch the applciaiton to full view." },
-			{ "FLOAT", "Change view to the floating view." }, { "MAIN", "Change view to the main view." },
-			{ "THEME", "Use to select Theme." },
-			{ "SAVETO", "Change the directory of where the saved file will be stored." },
-			{ "LOADFROM", "Load an existing file." } };
+					"Links two tasks together to create associations between the tasks, eg. LINK ID1-ID5 (ID1 will be project head)" },
+			{ "SEARCH", "Searches for any task based on keywords or hashtags" },
+			{ "HIDE", "Collapses the application into Compact View" }, { "SHOW", "Displays the application in Full View" },
+			{ "FLOAT", "Switches to Floating View" }, { "MAIN", "Switches to Main View" },
+			{ "THEME", "Changes application theme" },
+			{ "SAVETO", "Changes the directory of the saved task file" },
+			{ "LOADFROM", "Loads an existing task file" } };
 	private static final String HELP_DESCRIPTION_COMMAND_BAR_TITLE = "Command Bar";
-	private static final String HELP_DESCRIPTION_COMMAND_BAR = "This is where u type your input commands.";
+	private static final String HELP_DESCRIPTION_COMMAND_BAR = "This is where you input your commands. Start with a command word, followed by the necessary fields.";
 
 	// font
 	private static final int FONT_SIZE_LABEL_TITLE = 18;
