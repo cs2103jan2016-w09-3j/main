@@ -166,4 +166,8 @@ public class StorageController {
     public String getThemePreference() {
         return storageHandler.getThemeName();
     }
+    
+    public String getMainFilePath() {
+        return storageHandler.getMainFilePath();
+    }
 }
