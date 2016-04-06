@@ -876,7 +876,6 @@ public class TaskManager {
         boolean loadSuccess = dataLoader.loadFrom(newDirectory);
         if (loadSuccess == true) {
             reloadFile();
-            resetUndo();
             loadResult.setSuccess();
             loadResult.setStatus(ResultSet.STATUS_GOOD);
         } else {
@@ -1113,7 +1112,7 @@ public class TaskManager {
     public ArrayList<String> undo() {
         System.out.println("undolist size: " + undoList.size() + " undoPointer : " + undoPointer);
         if(undoList.size() > 0 && undoPointer >= 0) {
-            reloadFile();
+            reloadBackUpFile();
             _undoing = true;
             dataLoader.clearCommandFile();
             undoPointer--;
@@ -1136,7 +1135,7 @@ public class TaskManager {
     }
 
     
-    public void reloadFile() {
+    public void reloadBackUpFile() {
         AllTaskLists taskdata = dataLoader.getBackUpTaskLists();
 
         mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
@@ -1148,6 +1147,21 @@ public class TaskManager {
         buildCompletedTasks();
         displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
         currentDisplayedList = DISPLAY_MAIN;
+    }
+    
+    public void reloadFile() {
+        AllTaskLists taskdata = dataLoader.getTaskLists();
+
+        mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
+        floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
+
+        initializeAssociations();
+
+        updateTaskEntityCurrentId();
+        buildCompletedTasks();
+        displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
+        currentDisplayedList = DISPLAY_MAIN;
+        resetUndo();
     }
     
     public ResultSet saveTheme(String theme) {

@@ -89,7 +89,7 @@ public class SearchModule {
                 String[] itemHashes = currentItemSearched.getHashtags().split("#");
 
                 for (int i = 0; i < itemHashes.length; i++) {
-                    if (itemHashes[i].equals(hashTerm)) {
+                    if (itemHashes[i].equalsIgnoreCase(hashTerm)) {
                         return true;
                     }
                 }
