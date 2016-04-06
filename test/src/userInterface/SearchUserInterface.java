@@ -234,9 +234,23 @@ public class SearchUserInterface implements ViewInterface {
 		mid.getChildren().add(description);
 		mid.setMinHeight(description.getBoundsInLocal().getHeight() + 10);
 
+		HBox btm = new HBox();
+		Label indexPlaceHolder2 = new Label();
+		indexPlaceHolder2.getStyleClass().add(CSS_LABEL);
+		indexPlaceHolder2.setMinWidth(50);
+		btm.getChildren().add(indexPlaceHolder2);
+
+		Text hashtags = new Text();
+		hashtags.getStyleClass().add(CSS_LABEL);
+		hashtags.setText(task.getHashtags());
+		hashtags.setWrappingWidth(_stageWidth - 50);
+		btm.getChildren().add(hashtags);
+		btm.setMinHeight(hashtags.getBoundsInLocal().getHeight() + 10);
+		
 		parentBoxChild.getChildren().add(top);
 		parentBoxChild.getChildren().add(mid);
-		parentBoxChild.setMinHeight(top.getMinHeight() + mid.getMinHeight());
+		parentBoxChild.getChildren().add(btm);
+		parentBoxChild.setMinHeight(top.getMinHeight() + mid.getMinHeight()+btm.getMinHeight());
 		parentBox.getChildren().add(parentBoxChild);
 		parentBox.setMinHeight(parentBoxChild.getMinHeight());
 		return parentBox;
