@@ -29,26 +29,28 @@ public class CommandBar {
 	private static final int FEEDBACK_STATUS_CONFLICT_PAST = 4;
 
 	private static final String MESSAGE_FAILURE_INVALID = "you have entered an invalid command";
-	private static final String MESSAGE_SUCCESS_ADD_TYPE1 = "Successfully added %1$s to list.";
-	private static final String MESSAGE_SUCCESS_ADD_TYPE2 = "Successfully added %1$s to task list.";
-	private static final String MESSAGE_SUCCESS_ADD_TYPE3 = "Successfully added %1$s to floating task list.";
-	private static final String MESSAGE_FAILURE_ADD = "Fail to add.";
+	private static final String MESSAGE_SUCCESS_ADD_TYPE_1 = "Successfully added %1$s to list.";
+	private static final String MESSAGE_SUCCESS_ADD_TYPE_2 = "Successfully added %1$s to task list.";
+	private static final String MESSAGE_SUCCESS_ADD_TYPE_3 = "Successfully added %1$s to floating task list.";
+	private static final String MESSAGE_FAILURE_ADD_TYPE_1 = "Fail to add.";
+	private static final String MESSAGE_FAILURE_ADD_TYPE_2 = "Fail to add task, task requires a name.";
 
 	private static final String MESSAGE_SUCCESS_DELETE = "Successfully deleted %1$s.";
 	private static final String MESSAGE_FAILURE_DELETE_TYPE_1 = "Task id required to delete.";
 	private static final String MESSAGE_FAILURE_DELETE_TYPE_2 = "Fail to delete %1$s.";
 
 	private static final String MESSAGE_SUCCESS_EDIT = "Successfully edited %1$s.";
-	private static final String MESSAGE_FAILURE_EDIT_TYPE1 = "Fail to edit %1$s.";
-	private static final String MESSAGE_FAILURE_EDIT_TYPE2 = "Fail to retrieve task.";
+	private static final String MESSAGE_FAILURE_EDIT_TYPE_1 = "Fail to edit %1$s.";
+	private static final String MESSAGE_FAILURE_EDIT_TYPE_2 = "Fail to retrieve task.";
+	private static final String MESSAGE_FAILURE_EDIT_TYPE_3 = "Fail to edit task, task name is required.";
 
 	private static final String MESSAGE_SUCCESS_MARK = "Successfully mark %1$s as completed.";
 	private static final String MESSAGE_FAILURE_MARK_TYPE_1 = "Fail to mark %1$s as completed.";
 	private static final String MESSAGE_FAILURE_MARK_TYPE_2 = "Invalid task ID";
 	private static final String MESSAGE_SUCCESS_SEARCH_TYPE_1 = "Search compelete with %1$s results.";
 	private static final String MESSAGE_SUCCESS_SEARCH_TYPE_2 = "No results found.";
-	private static final String MESSAGE_FAILURE_SEARCH_TYPE1 = "No results found.";
-	private static final String MESSAGE_FAILURE_SEARCH_TYPE2 = "Search failed.";
+	private static final String MESSAGE_FAILURE_SEARCH_TYPE_1 = "No results found.";
+	private static final String MESSAGE_FAILURE_SEARCH_TYPE_2 = "Search failed.";
 	private static final String MESSAGE_FAILURE_JUMP_TYPE_1 = "No index to jump to.";
 	private static final String MESSAGE_FAILURE_JUMP_TYPE_2 = "Task id required to jump to.";
 
@@ -296,6 +298,9 @@ public class CommandBar {
 		_mainPane.getChildren().clear();
 		labels.clear();
 		_numberOfItems = 0;
+		if (itemsToAdd.size() == 0) {
+			_selected = -1;
+		}
 		if (_selected == -1) {
 			itemsToAdd.add(_textField);
 		} else {
@@ -593,14 +598,14 @@ public class CommandBar {
 				String feedBackMsg = "";
 				if (resultSet.isSuccess()) {
 					if (resultSet.getIndex() > -1) {
-						feedBackMsg = feedBackMsg.concat(String.format(MESSAGE_SUCCESS_ADD_TYPE1, msg));
+						feedBackMsg = feedBackMsg.concat(String.format(MESSAGE_SUCCESS_ADD_TYPE_1, msg));
 					} else {
 						if (resultSet.getView() == ResultSet.ASSOCIATE_VIEW
 								|| resultSet.getView() == ResultSet.EXPANDED_VIEW
 								|| resultSet.getView() == ResultSet.TASK_VIEW) {
-							feedBackMsg = feedBackMsg.concat(String.format(MESSAGE_SUCCESS_ADD_TYPE2, msg));
+							feedBackMsg = feedBackMsg.concat(String.format(MESSAGE_SUCCESS_ADD_TYPE_2, msg));
 						} else if (resultSet.getView() == ResultSet.FLOATING_VIEW) {
-							feedBackMsg = feedBackMsg.concat(String.format(MESSAGE_SUCCESS_ADD_TYPE3, msg));
+							feedBackMsg = feedBackMsg.concat(String.format(MESSAGE_SUCCESS_ADD_TYPE_3, msg));
 						}
 					}
 
@@ -610,7 +615,11 @@ public class CommandBar {
 					}
 					setFeedBackMessage(feedBackMsg);
 				} else {
-					setFeedBackMessage(MESSAGE_FAILURE_ADD);
+					if (resultSet.getStatus() == ResultSet.STATUS_INVALID_NAME) {
+						setFeedBackMessage(MESSAGE_FAILURE_ADD_TYPE_2);
+					} else {
+						setFeedBackMessage(MESSAGE_FAILURE_ADD_TYPE_1);
+					}
 					setFeedBackColor(FEEDBACK_STATUS_ERROR);
 				}
 			}
@@ -633,7 +642,7 @@ public class CommandBar {
 		}
 		case EDIT: {
 			if (resultSet == null) {
-				setFeedBackMessage(MESSAGE_FAILURE_EDIT_TYPE2);
+				setFeedBackMessage(MESSAGE_FAILURE_EDIT_TYPE_2);
 				setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			} else {
 				if (resultSet.isSuccess()) {
@@ -644,7 +653,12 @@ public class CommandBar {
 					}
 					setFeedBackMessage(feedBackMsg);
 				} else {
-					setFeedBackMessage(String.format(MESSAGE_FAILURE_EDIT_TYPE1, msg));
+					
+					if (resultSet.getStatus() == ResultSet.STATUS_INVALID_NAME) {
+						setFeedBackMessage(MESSAGE_FAILURE_EDIT_TYPE_3);
+					} else {
+						setFeedBackMessage(String.format(MESSAGE_FAILURE_EDIT_TYPE_1, msg));
+					}
 					setFeedBackColor(FEEDBACK_STATUS_ERROR);
 				}
 			}
@@ -676,7 +690,7 @@ public class CommandBar {
 					}
 					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 				} else {
-					setFeedBackMessage(MESSAGE_FAILURE_SEARCH_TYPE1);
+					setFeedBackMessage(MESSAGE_FAILURE_SEARCH_TYPE_1);
 					setFeedBackColor(FEEDBACK_STATUS_ERROR);
 				}
 			}
