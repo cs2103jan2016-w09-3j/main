@@ -456,7 +456,7 @@ public class TaskManager {
      */
     public ResultSet modify(int index, TaskEntity modifiedTask) {
         ResultSet modificationResults = new ResultSet();
-        if (index > displayedTasks.size() - 1) {
+        if (index > displayedTasks.size() - 1 || !TaskUtils.checkValidName(modifiedTask)) {
             modificationResults.setStatus(ResultSet.STATUS_BAD);
             modificationResults.setFail();
             return modificationResults;

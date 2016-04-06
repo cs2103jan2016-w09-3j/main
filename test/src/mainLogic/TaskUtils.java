@@ -57,13 +57,16 @@ public class TaskUtils {
 	}
 
 	/**
-	 * Checks if the name of a task is a valid name (Non-empty)
-	 * 
-	 * @param taskToCheck
-	 * @return
-	 */
+     * Checks if the name of a task is a valid name (Non-empty)
+     * 
+     * @param taskToCheck
+     * @return true if the name is not null or just whitespaces character or empty
+     *          false otherwise
+     */
     public static boolean checkValidName(TaskEntity taskToCheck) {
-        if( taskToCheck.getName() == null ) {
+        if (taskToCheck.getName() == null) {
+            return false;
+        } else if (taskToCheck.getName().trim() == "") {
             return false;
         } else {
             return true;
