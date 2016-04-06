@@ -195,9 +195,9 @@ public class InputParser {
 				c2.clear(Calendar.MILLISECOND);
 				
 				if(c2.before(c)){
-					int hour = c2.get(Calendar.HOUR);
+					int hour = c2.get(Calendar.HOUR_OF_DAY);
 					c2.setTime(c.getTime());
-					c2.set(Calendar.HOUR, hour);
+					c2.set(Calendar.HOUR_OF_DAY, hour);
 					c2.add(Calendar.DATE, 1);
 				}
 				
