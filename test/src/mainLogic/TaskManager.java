@@ -457,7 +457,11 @@ public class TaskManager {
     public ResultSet modify(int index, TaskEntity modifiedTask) {
         ResultSet modificationResults = new ResultSet();
         if (index > displayedTasks.size() - 1 || !TaskUtils.checkValidName(modifiedTask)) {
-            modificationResults.setStatus(ResultSet.STATUS_BAD);
+            if(!TaskUtils.checkValidName(modifiedTask)) {
+                modificationResults.setStatus(ResultSet.STATUS_INVALID_NAME);
+            } else {
+                modificationResults.setStatus(ResultSet.STATUS_BAD);
+            }
             modificationResults.setFail();
             return modificationResults;
         }
@@ -565,7 +569,11 @@ public class TaskManager {
         ResultSet addResults = new ResultSet();
         
         if(displayedTasks == null || !TaskUtils.checkValidName(newTask)) {
-            addResults.setStatus(ResultSet.STATUS_BAD);
+            if(!TaskUtils.checkValidName(newTask)) {
+                addResults.setStatus(ResultSet.STATUS_INVALID_NAME);
+            } else {
+                addResults.setStatus(ResultSet.STATUS_BAD);
+            }
             addResults.setFail();
             return addResults;
         }
