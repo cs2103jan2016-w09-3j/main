@@ -569,7 +569,7 @@ public class TaskManager {
         ResultSet addResults = new ResultSet();
         
         if(displayedTasks == null || !TaskUtils.checkValidName(newTask)) {
-            if(!TaskUtils.checkValidName(newTask3)) {
+            if(!TaskUtils.checkValidName(newTask)) {
                 addResults.setStatus(ResultSet.STATUS_INVALID_NAME);
             } else {
                 addResults.setStatus(ResultSet.STATUS_BAD);
