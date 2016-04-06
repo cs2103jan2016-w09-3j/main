@@ -334,7 +334,7 @@ public class DetailComponent implements ViewInterface {
 		VBox dateBox = new VBox();
 		dateBox.setMinHeight(0.0);
 		if (task.isFullDay()) {
-			Label dateTitleLabel = new Label("Full Day");
+			Label dateTitleLabel = new Label("Full Day : " + getFullDate(task.getDueDate()));
 			dateTitleLabel.setMinHeight(LABEL_TASK_HEIGHT);
 			dateTitleLabel.getStyleClass().add(CSS_LABEL);
 			dateBox.getChildren().add(dateTitleLabel);
@@ -457,6 +457,13 @@ public class DetailComponent implements ViewInterface {
 		String date = "";
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YY hhmm");
 		date = sdf.format(cal.getTime()).concat("hrs");
+		return date;
+	}
+
+	public String getFullDate(Calendar cal) {
+		String date = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YY");
+		date = sdf.format(cal.getTime());
 		return date;
 	}
 

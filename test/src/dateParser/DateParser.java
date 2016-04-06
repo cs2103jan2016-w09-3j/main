@@ -92,7 +92,6 @@ public class DateParser {
 				}else{
 					Calendar addDate = Calendar.getInstance();
 					addDate.setTime(dates.get(j));
-					addDate.clear(Calendar.MINUTE);
 					addDate.clear(Calendar.SECOND);
 					addDate.clear(Calendar.MILLISECOND);
 					returnDateList.add(addDate.getTime());

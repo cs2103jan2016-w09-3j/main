@@ -1,6 +1,6 @@
 /* @@A0126357A */
 .cssLabels,.cssLabelsDescription,.cssLabelsDetails,.cssLabelsFloatingBar,.cssLabelsFloatingTaskInterface,
-.cssLabelsSearchView, .cssLabelsCommandBar{
+.cssLabelsSearchView, .cssLabelsCommandBar {
 	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
 	-fx-fill:rgba(0.0,0.0,0.0,1.0);
 }
@@ -15,35 +15,34 @@
 }
 
 /* Help Screen */
-
-#cssHelpScreenRoot{
+#cssHelpScreenRoot {
 	-fx-background-color: rgba(255.0,255.0,255.0,0.5);
 }
 
-#cssHelpComponentHighLighter{
+#cssHelpComponentHighLighter {
 	-fx-background-color: rgba(0.0,0.0,0.0,0.1);
 	-fx-border-width: 1.0; 
 	-fx-border-color: black;
 }
 
-#cssHelpComponentLinker{
+#cssHelpComponentLinker {
 	-fx-background-color: rgba(0.0,0.0,0.0,1.0);
 }
 
-#cssHelpComponentDescriptionBox{
+#cssHelpComponentDescriptionBox {
 	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
 	-fx-border-width: 1.0; 
 	-fx-border-color: black;
 }
 
-#cssHelpTitle{
+#cssHelpTitle {
 	-fx-text-fill: rgba(240.0,180.0,50.0,1.0);
 	-fx-border-width: 0.0 0.0 1.0 0.0; 
 	-fx-border-color: black;
 }
 
 
-#rootPane{
+#rootPane {
 	-fx-border-color: #d3d3d3;
     -fx-border-width: 2.0px;
 }
@@ -54,308 +53,311 @@
 }
 
 /* css Task view  */
-#cssTaskViewMainBackground{
+#cssTaskViewMainBackground {
 	-fx-background-color: rgba(255.0,255.0,255.0,0.9);
 }
 
-#cssTaskViewWeekSelected{
+#cssTaskViewWeekSelected {
 	-fx-background-color: rgba(219.0,190.0,248.0,0.95);
 }
 
-#cssTaskViewWeekUnSelected{
-	-fx-background-color: rgba(248.0,190.0,248.0,0.9);
+#cssTaskViewWeekUnSelected {
+	-fx-background-color: rgba(248.0,190.0,248.0,0.5);
 }
 
-#cssTaskViewDayBoxSelected{
+#cssTaskViewDayBoxSelected {
 }
 
-#cssTaskViewDayBoxUnSelected{	
+#cssTaskViewDayBoxUnSelected {	
 }
 
-#cssTaskViewSelectedTask{
+#cssTaskViewSelectedTask {
 	-fx-background-radius: 20.0; 
 	-fx-background-color:  rgba(255.0, 255.0, 255.0, 1.0);
 	-fx-background-insets: 1.0 5.0 1.0 5.0;
 }
 
-#cssTaskViewUnSelectedTask{
+#cssTaskViewUnSelectedTask {
 }
 
-#cssTaskViewDayLabel{
+#cssTaskViewDayLabel {
 	-fx-border-width: 0.0 0.0 1.0 0.0; 
 	-fx-border-color: black;
 }
 
 /* css expanded panel */
-#cssExpandedViewVBox{
+#cssExpandedViewVBox {
 	-fx-background-color: rgba(255.0,255.0,255.0,0.9);
 	-fx-background-radius: 7.0;
 	-fx-background-insets: 0.0 5.0 0.0 5.0;
 }
 
-#cssExpandedViewVBoxSelected{
-	-fx-background-color: rgba(255.0,230.0,255.0,1.0);
+#cssExpandedViewVBoxSelected {
+	-fx-background-color: rgba(248.0,190.0,248.0,0.9);
 	-fx-background-radius: 7.0;
 	-fx-background-insets: 0.0 5.0 0.0 5.0;
 }
 
 /* css description panel */
-
-#cssRootDescriptionViewMainBackground{
+#cssRootDescriptionViewMainBackground {
 	-fx-background-color: rgba(255.0,255.0,255.0,0.9);
 }
 
-#cssDescriptionLabelSelected{
-	-fx-background-color:rgba(255.0,178.5,127.5,1.0);
+#cssDescriptionLabelSelected {
+	-fx-background-color: rgba(255, 122, 137, 1.0);
 }
 
-#cssDescriptionLabelUnSelected{
-	-fx-background-color:rgba(255.0,255.0,255.0,0.3);
+#cssDescriptionLabelUnSelected {
+	-fx-background-color: rgba(255.0,255.0,255.0,0.3);
 }
 
 /* Detail Componenet CSS */
-
-#cssDetailComponentRoot{
-	-fx-background-color: rgba(255.0,255.0,255.0,0.7),rgba(193.0,230.0,255.0,0.95);
+#cssDetailComponentRoot {
+	-fx-background-color: rgba(122.0,137.0,255.0,0.7),rgba(255.0,255.0,255.0,0.95);
 }
 
-#cssDetailComponentRootAssociation{
-	-fx-background-color: rgba(255.0,178.5,127.5,1),rgba(255.0,255.0,255.0,0.7),rgba(193.0,230.0,255.0,0.95);
+#cssDetailComponentRootAssociation {
+	-fx-background-color: rgba(203.0,203,250,1),rgba(255.0,255.0,255.0,0.7),rgba(193.0,230.0,255.0,0.95);
 	-fx-background-insets: 0,2,2;
 }
 
 #cssDetailComponentEmptyTitle {
-	-fx-background-color: rgba(255.0,178.5,127.5,1.0);	
+	-fx-background-color: rgba(255, 122, 137, 1.0);
 }
 
-#cssDetailComponentProjectHeadBox{
+#cssDetailComponentProjectHeadBox {
 	-fx-background-color: rgba(255.0,255.0,255.0,0.95);
 }
 
-#cssDetailAssociationListBox{
+#cssDetailAssociationListBox {
 	-fx-background-color: rgba(255.0,255.0,255.0,0.0);
 	-fx-background-insets: 0.0 0.0 0.0 0.0;
 }
 
 
 /* Floating Bar CSS */
-
-#cssRootFloatingBar{
-	-fx-background-color: rgba(255.0,178.5,127.5,1.0), rgba(255.0,255.0,255.0,0.7);
+#cssRootFloatingBar {
+	-fx-background-color: rgba(213, 21, 117, 0.4), rgba(255.0,255.0,255.0,0.7);
 	-fx-background-insets: 0.0,0.0 10.0 0.0 10.0;
 }
 
-#cssFloatingBarContentArea{
-	-fx-border-width:  0.0 0.0 0.0 1.0; 
+#cssFloatingBarContentArea {
+	-fx-border-width: 0.0 0.0 0.0 1.0; 
 	-fx-border-color: black;
 }
 
-#cssFloatingBarTitleLabel{
-
+#cssFloatingBarTitleLabel {
 }
 
 /* Floating Task View CSS */
-
-#cssRootFloatingTaskView{
-	-fx-background-color: rgba(255.0,178.5,127.5,1.0),rgba(255.0,255.0,255.0,1.0);
+#cssRootFloatingTaskView {
+	-fx-background-color: rgba(213, 21, 117, 0.4),rgba(255.0,255.0,255.0,1.0);
 	-fx-background-insets: 0.0,5.0;
 }
 
-#cssFloatingTaskViewTitle{
-	-fx-background-color: rgba(255.0,178.5,127.5,1.0);
+#cssFloatingTaskViewTitle {
+	-fx-background-color: rgba(255, 122, 137, 1.0);
 }
 
-#cssFloatingTaskViewSelected{
+#cssFloatingTaskViewSelected {
 	-fx-background-radius: 20.0; 
 	-fx-background-color:  rgba(255.0,178.5,127.5,0.3);
 	-fx-background-insets: 1.0 7.0 1.0 7.0;
 }
 
 /* Search View CSS */
-#cssRootSearchView{
-	-fx-background-color: rgba(191.0, 80.0, 191.0,1.0,1.0),rgba(255.0,255.0,255.0,1.0);
+#cssRootSearchView {
+	-fx-background-color: rgba(21, 213, 213, 0.4),rgba(255.0,255.0,255.0,1.0);
 	-fx-background-insets: 0.0,5.0;
 }
 
-#cssSearchTitle{
-	-fx-background-color: rgba(191.0, 80.0, 191.0,1.0);
+#cssSearchTitle {
+	-fx-background-color: rgba(21, 213, 213, 0.4);
 }
 
-#cssSearchSelected{
+#cssSearchSelected {
 	-fx-background-color: rgba(191.0, 80.0, 191.0,0.3);
 	-fx-background-radius: 20.0; 
 	-fx-background-insets: 1.0 7.0 1.0 7.0;
 }
 
 /* CommandsBar CSS */
-
-#cssCommandBarMainStructure{
+#cssCommandBarMainStructure {
 	-fx-background-color: rgba(255.0,255.0,255.0,0.8);
 }
 
-#cssCommandBarContentZone{
+#cssCommandBarContentZone {
 	-fx-border-width: 1.0 0.0 1.0 0.0; 
 	-fx-border-color: black;
 }
 
 
-#cssCommandBarfeedback_normal{
+#cssCommandBarfeedback_normal {
 	-fx-background-color: rgba(179.0, 255.0, 153.0, 1.0);
 }
 
-#cssCommandBarfeedback_conflict{
+#cssCommandBarfeedback_conflict {
 	-fx-background-color: rgba(249.0, 186.0, 122.0, 1.0);
 }
 
-#cssCommandBarfeedback_past{
+#cssCommandBarfeedback_past {
 	-fx-background-color: rgba(246.0, 246.0, 39.0, 1.0);
 }
 
-#cssCommandBarfeedback_conflict_past{
+#cssCommandBarfeedback_conflict_past {
 	-fx-background-color: rgba(180.0, 251.0, 212.0, 1.0);
 }
 
-#cssCommandBarfeedback_error{
+#cssCommandBarfeedback_error {
 	-fx-background-color: rgba(249.0, 122.0, 122.0,1.0);
 }
 
 /* Commands CSS */
-
 #cssCommandBarAdd {
 	-fx-background-color: rgba(72.0, 238.0, 56.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
 
-#cssCommandBarInvalid{
-	-fx-text-fill:rgba(255.0,0.0,0.0,1.0);
+#cssCommandBarInvalid {
+	-fx-text-fill: rgba(255.0,0.0,0.0,1.0);
 }
 
 #cssCommandBarDelete {
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(56.0, 238.0, 223.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarEdit {
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(56.0, 163.0, 238.0, 0.5);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarLink {
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(163.0, 238.0, 56.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandBarDone {
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(238.0, 132.0, 56.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandTitle {
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(202.0, 247.0, 140.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
+
 #cssCommandDate {
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(247.0, 140.0, 149.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
-#cssCommandHashTag{
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+
+#cssCommandHashTag {
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(247.0, 238.0, 140.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandID {
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(247.0, 184.0, 140.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 #cssCommandDescription {
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(140.0, 202.0, 247.0, 1.0);
 	-fx-background-radius: 7.0; 
 }
 
 #cssCommandJump {
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(238.0, 56.0, 163.0, 1.0);
-	-fx-font-weight:bold;
-	-fx-background-radius: 7.0; 
-}
-#cssCommandSearch{
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
-	-fx-background-color: rgba(132.0, 56.0, 238.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
 
-#cssCommandExit{
-	-fx-text-fill:white;
+#cssCommandSearch {
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
+	-fx-background-color: rgba(132.0, 56.0, 238.0, 1.0);
+	-fx-font-weight: bold;
+	-fx-background-radius: 7.0; 
+}
+
+#cssCommandExit {
+	-fx-text-fill: white;
 	-fx-background-color: rgba(238.0, 56.0, 72.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	 -fx-font: 20.0px "Arial";
 }
 
-#cssCommandFloat{
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+#cssCommandFloat {
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(238.0, 132.0, 56.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
-#cssCommandShow{
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+
+#cssCommandShow {
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(223.0, 56.0, 238.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
-#cssCommandHide{
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+
+#cssCommandHide {
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(223.0, 56.0, 238.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
-#cssCommandMain{
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+
+#cssCommandMain {
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(238.0, 56.0, 163.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
+
 }
-#cssCommandSaveDir{
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+ 
+#cssCommandSaveDir {
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(183.0, 220.0, 40.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
-#cssCommandUndo{
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+
+#cssCommandUndo {
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(240.0, 180.0, 20.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
 
-#cssCommandOther{
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+#cssCommandOther {
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 }
 
-#cssCommandTheme{
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+#cssCommandTheme {
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(238.0, 120.0, 163.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
-#cssCommandLoadFrom{
-	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+
+#cssCommandLoadFrom {
+	-fx-text-fill: rgba(0.0,0.0,0.0,1.0);
 	-fx-background-color: rgba(183.0, 220.0, 40.0, 1.0);
-	-fx-font-weight:bold;
+	-fx-font-weight: bold;
 	-fx-background-radius: 7.0; 
 }
