@@ -508,7 +508,7 @@ public class TaskEntity {
 
 		// Adding start Date to the display string for showing date
 		String returnDate = "";
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM hhmm");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM HHmm");
 		if (_startDate != null) {
 			returnDate =  sdf.format(_startDate.getTime());
 			returnDate = returnDate.concat(" - ");
