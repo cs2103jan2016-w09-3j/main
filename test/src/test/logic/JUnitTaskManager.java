@@ -21,8 +21,58 @@ import mainLogic.TaskUtils;
 public class JUnitTaskManager {
     TaskManager manager = TaskManager.getInstance();
     
-	@Test
-	public void testAddDeleteModifyLink() {	    
+    @Test
+    public void Add_AddedToFloatingInOrder () {
+        manager.unloadFile();
+        manager.add(new TaskEntity("Task floating 1"));
+        manager.add(new TaskEntity("Task floating 2"));
+        manager.add(new TaskEntity("Task floating 3"));
+        manager.add(new TaskEntity("Task floating 4"));
+        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_FLOATING),
+                "Task floating 1, Task floating 2, Task floating 3, Task floating 4, ");
+        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_MAIN), "");
+    }
+    
+    @Test
+    public void Add_AddedToMainChronologicallyByDate () {
+        manager.unloadFile();
+        manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016), true));
+        manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(17, 1, 2016), true));
+        manager.add(new TaskEntity("Task 3", null, TaskUtils.createDate(15, 1, 2016), true));
+        manager.add(new TaskEntity("Task 4", null, TaskUtils.createDate(18, 1, 2016), true));
+        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_MAIN),
+                "Task 3, Task 1, Task 2, Task 4, ");
+        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_FLOATING), "");
+    }
+    
+    @Test
+    public void Add_AddedToMainChronologicallyByTime () {
+        manager.unloadFile();
+        manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016, 22, 0), false));
+        manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(17, 1, 2016, 7, 0), false));
+        manager.add(new TaskEntity("Task 3", null, TaskUtils.createDate(15, 1, 2016, 8, 0), false));
+        manager.add(new TaskEntity("Task 4", null, TaskUtils.createDate(17, 1, 2016, 6, 0), false));
+        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_MAIN),
+                "Task 3, Task 1, Task 4, Task 2, ");
+        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_FLOATING), "");
+    }
+    
+    @Test
+    public void Add_AddedToMainChronologicallyByFullDayBefore () {
+        manager.unloadFile();
+        manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016, 6, 0), false));
+        manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(16, 1, 2016, 7, 0), true));
+        manager.add(new TaskEntity("Task 3", null, TaskUtils.createDate(16, 1, 2016, 9, 0), false));
+        manager.add(new TaskEntity("Task 4", null, TaskUtils.createDate(16, 1, 2016, 8, 0), false));
+        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_MAIN),
+                "Task 2, Task 1, Task 4, Task 3, ");
+        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_FLOATING), "");
+        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_OTHERS),
+                "Task 2, Task 1, Task 4, Task 3, ");
+    }
+
+    @Test
+    public void testAddDeleteModifyLink() {	    
         manager.unloadFile();
 
         System.out.println("Started test");
@@ -40,10 +90,7 @@ public class JUnitTaskManager {
         manager.add(new TaskEntity("Task floating 2"));
         manager.add(new TaskEntity("Task floating 3"));
         manager.add(new TaskEntity("Task floating 4"));
-        
-
-        System.out.println(manager.printArrayContentsToString(manager.DISPLAY_FLOATING) + "omg");
-       
+               
         TaskEntity headTask = new TaskEntity("2016/2/5", null, TaskUtils.createDate(5, 2, 2016), true);
         manager.modify(1, headTask);
 
