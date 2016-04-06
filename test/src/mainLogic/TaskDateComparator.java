@@ -48,8 +48,8 @@ public class TaskDateComparator implements Comparator<TaskEntity> {
         if (task1.isFloating() || task2.isFloating()) {
             return compareFloating(task1, task2);
         } else {        
-            Calendar date1 = task1.getDueDate();
-            Calendar date2 = task2.getDueDate();
+            Calendar date1 = chooseDateToCompare(task1);
+            Calendar date2 = chooseDateToCompare(task2);
     
             // 0 being returned means both tasks have the same date on the calendar.
             // Terminate if different days, carry on sorting them if they are the
