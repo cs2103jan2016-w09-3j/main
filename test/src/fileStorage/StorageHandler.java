@@ -441,14 +441,7 @@ public class StorageHandler {
         File newFile = new File(newFilePath);
 
         if (newFile.exists() == false) {
-            isChanged = makeNewDirectory(newFile);
-            isChanged = createNewFile(newFile);
-
-            String transferData = readFromExistingFile(READ_FROM_MAIN_FILE);
-            setMainFilePath(newFile.getAbsolutePath());
-            tasksFile = newFile;
-            setAllStoredTasks(transferData);
-            identifyWriteTo(transferData, WRITE_TO_MAIN_FILE);
+            isChanged = transferToNewFile(newFile);
         } else {
             resultSet.setIndex(FILE_DOES_NOT_EXIST);
         }
@@ -457,6 +450,19 @@ public class StorageHandler {
         }
         resultSetChecker(resultSet, isChanged);
         return resultSet;
+    }
+
+    private boolean transferToNewFile(File newFile) {
+        boolean isChanged;
+        isChanged = makeNewDirectory(newFile);
+        isChanged = createNewFile(newFile);
+
+        String transferData = readFromExistingFile(READ_FROM_MAIN_FILE);
+        setMainFilePath(newFile.getAbsolutePath());
+        tasksFile = newFile;
+        setAllStoredTasks(transferData);
+        identifyWriteTo(transferData, WRITE_TO_MAIN_FILE);
+        return isChanged;
     }
 
     private void resultSetChecker(ResultSet resultSet, boolean isChanged) {
@@ -482,6 +488,7 @@ public class StorageHandler {
             setMainFilePath(newFile.getAbsolutePath());
             tasksFile = newFile;
             setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
+            copyToBackUp();
             writeConfigSettings();
         }
         return isLoaded;
