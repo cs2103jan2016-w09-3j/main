@@ -55,6 +55,8 @@ public class JUnitTaskManager {
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_MAIN),
                 "Task 3, Task 1, Task 4, Task 2, ");
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_FLOATING), "");
+        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_OTHERS),
+                "Task 3, Task 1, Task 4, Task 2, ");
     }
     
     @Test
@@ -69,6 +71,18 @@ public class JUnitTaskManager {
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_FLOATING), "");
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_OTHERS),
                 "Task 2, Task 1, Task 4, Task 3, ");
+    }
+    
+    @Test
+    public void Delete_Task2Deleted () {
+        manager.unloadFile();
+        manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016, 6, 0), false));
+        manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(16, 1, 2016, 7, 0), false));
+        manager.add(new TaskEntity("Task 3", null, TaskUtils.createDate(16, 1, 2016, 8, 0), false));
+        manager.add(new TaskEntity("Task 4", null, TaskUtils.createDate(16, 1, 2016, 9, 0), false));
+        manager.delete("1");
+        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_MAIN),
+                "Task 1, Task 3, Task 4, ");
     }
 
     @Test
