@@ -130,6 +130,10 @@ public class TaskManagerInterface {
         return manager.getMainFilePath();
     }
     
+    public boolean checkLoad() {
+        return manager.checkLoad();
+    }
+    
     public ResultSet link (TaskEntity projectHeadId, TaskEntity taskUnderId, String command) {
         ResultSet executionResults = manager.link(projectHeadId, taskUnderId);
         if(executionResults.isSuccess()) {

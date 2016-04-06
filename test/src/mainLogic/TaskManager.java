@@ -70,6 +70,15 @@ public class TaskManager {
         undoPointer = -1;
         _undoing = false;
     }
+
+    public boolean checkLoad() {
+        if (mainTaskEntities.size() == 0 && floatingTaskEntities.size() == 0
+                && completedTaskEntities.size() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     
     /**
      * Prints out all the names of the tasks in the main array
@@ -877,10 +886,13 @@ public class TaskManager {
         
         boolean loadSuccess = dataLoader.loadFrom(newDirectory);
         if (loadSuccess == true) {
-            reloadFile();
+            if(reloadFile()) {
+                loadResult.setStatus(ResultSet.STATUS_GOOD);
+            } else {
+                loadResult.setStatus(ResultSet.STATUS_NOFILE);
+            }
             dataLoader.clearCommandFile();
             loadResult.setSuccess();
-            loadResult.setStatus(ResultSet.STATUS_GOOD);
         } else {
             loadResult.setFail();
             loadResult.setStatus(ResultSet.STATUS_BAD);
@@ -1156,12 +1168,18 @@ public class TaskManager {
         currentDisplayedList = DISPLAY_MAIN;
     }
     
-    public void reloadFile() {
+    public boolean reloadFile() {
         AllTaskLists taskdata = dataLoader.getTaskLists();
 
         mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
         floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
 
+        if(mainTaskEntities.size() == 0 && floatingTaskEntities.size() == 0) {
+            displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
+            currentDisplayedList = DISPLAY_MAIN;
+            resetUndo();
+            return false;
+        }
         initializeAssociations();
 
         updateTaskEntityCurrentId();
@@ -1169,6 +1187,7 @@ public class TaskManager {
         displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
         currentDisplayedList = DISPLAY_MAIN;
         resetUndo();
+        return true;
     }
     
     public ResultSet saveTheme(String theme) {

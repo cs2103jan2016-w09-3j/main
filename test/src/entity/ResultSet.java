@@ -17,6 +17,7 @@ public class ResultSet {
     public final static int STATUS_PAST = 4;
     public final static int STATUS_CONFLICT_AND_PAST = 5;
     public final static int STATUS_INVALID_NAME = 6;
+    public final static int STATUS_NOFILE = 7;
 
     private int _index;
     private int _view;
