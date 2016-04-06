@@ -57,7 +57,6 @@ public class XMLParser {
 	
 	public static String removeAllAttributes(String input) {
 		String temp = new String(input);
-		temp = removeAllTags(temp);
 		try {
 			Document tempXMLDoc = XMLParser.loadXMLFromString("<XML>" + input + "</XML>");
 			input = removeAttribute(input, tempXMLDoc,TITLE_TAG);
@@ -69,7 +68,7 @@ public class XMLParser {
 			input = removeAttribute(input, tempXMLDoc,HASH_TAG);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "";
+			return temp;
 		}
 		return input;
 	}
