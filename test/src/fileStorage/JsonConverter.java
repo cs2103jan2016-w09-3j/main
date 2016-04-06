@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import entity.AllTaskLists;
@@ -55,26 +56,37 @@ public class JsonConverter {
      */
     public AllTaskLists jsonToJava(String input) {
         Gson gson = new Gson();
-        AllTaskLists allLists;
-        
-        // Load JSON string into custom object using TypeToken
-        ArrayList<TaskEntity> allTasks = gson.fromJson(input, new TypeToken<ArrayList<TaskEntity>>(){}.getType());
+        AllTaskLists allLists = new AllTaskLists();
 
+        try {
+            // Load JSON string into custom object using TypeToken
+            ArrayList<TaskEntity> allTasks = gson.fromJson(input, new TypeToken<ArrayList<TaskEntity>>(){}.getType());
+            allLists = extractJsonFields(allLists, allTasks); 
+        } catch (JsonParseException e) {
+            System.out.println("Cannot convert from Json to Java.");
+        }
+        return allLists;
+    }
+
+    private AllTaskLists extractJsonFields(AllTaskLists allLists, ArrayList<TaskEntity> allTasks) {
         if (allTasks != null) {
             ArrayList<TaskEntity> mainTaskList = new ArrayList<TaskEntity>();
             ArrayList<TaskEntity> floatingTaskList = new ArrayList<TaskEntity>();
 
-            for (int i = 0; i < allTasks.size(); i++) {
-                if(allTasks.get(i).isFloating() == true) {
-                    floatingTaskList.add(allTasks.get(i));
-                } else {
-                    mainTaskList.add(allTasks.get(i));
-                }
-            }
+            separateMainAndFloating(allTasks, mainTaskList, floatingTaskList);
             allLists = new AllTaskLists(mainTaskList, floatingTaskList);
-        } else {
-            allLists = new AllTaskLists();
         }
         return allLists;
+    }
+
+    private void separateMainAndFloating(ArrayList<TaskEntity> allTasks, ArrayList<TaskEntity> mainTaskList,
+            ArrayList<TaskEntity> floatingTaskList) {
+        for (int i = 0; i < allTasks.size(); i++) {
+            if(allTasks.get(i).isFloating() == true) {
+                floatingTaskList.add(allTasks.get(i));
+            } else {
+                mainTaskList.add(allTasks.get(i));
+            }
+        }
     }
 }
