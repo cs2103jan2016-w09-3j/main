@@ -873,9 +873,12 @@ public class TaskManager {
     public ResultSet loadFrom (String newDirectory) {
         ResultSet loadResult = new ResultSet();
         
+        commitFullSave();
+        
         boolean loadSuccess = dataLoader.loadFrom(newDirectory);
         if (loadSuccess == true) {
             reloadFile();
+            dataLoader.clearCommandFile();
             loadResult.setSuccess();
             loadResult.setStatus(ResultSet.STATUS_GOOD);
         } else {
