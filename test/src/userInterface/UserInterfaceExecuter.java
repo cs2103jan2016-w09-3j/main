@@ -100,4 +100,8 @@ public class UserInterfaceExecuter {
 	public boolean isFileLoadedSuccess() {
 		return _taskManager.checkLoad();
 	}
+
+	public int getCurrentManagerView() {
+		return _taskManager.getView();
+	}
 }

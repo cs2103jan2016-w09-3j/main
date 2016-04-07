@@ -444,6 +444,10 @@ public class TaskManager {
                 break;
         }
     }
+    
+    public int getView() {
+    	return currentDisplayedList;
+    }
 
     /**
      * UI Interface function Gets the currently displayed list of tasks

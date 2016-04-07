@@ -69,6 +69,10 @@ public class TaskManagerInterface {
         manager.switchView(newView);
     }
     
+    public int getView() {
+    	return manager.getView();
+    }
+    
     public ResultSet modify (String taskId, TaskEntity modifiedTask, String command) {
         ResultSet executionResult = manager.modify(taskId, modifiedTask);
         if(executionResult.isSuccess()) {
