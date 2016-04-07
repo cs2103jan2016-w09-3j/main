@@ -885,6 +885,7 @@ public class UserInterfaceController {
 			view = runCommands(commandsToRun.get(i));
 		}
 		if (view != -1) {
+			setManagerView(view);
 			setView(view);
 		}
 		_logicFace.undoComplete();
