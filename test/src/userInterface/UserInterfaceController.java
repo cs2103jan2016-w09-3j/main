@@ -534,34 +534,7 @@ public class UserInterfaceController {
 	 * @return
 	 */
 	public ResultSet addTask(TaskEntity task, String rawInput, boolean toUpdateView) {
-		System.out.println("list before add");
-		for (int i = 0; i < _logicFace.getWorkingList().size(); i++) {
-			System.out.print(_logicFace.getWorkingList().get(i).getName());
-			if (task.getStartDate() != null) {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM yyyy hh mm");
-				System.out.print("start date : " + sdf.format(task.getStartDate().getTime()));
-			}
-			if (task.getDueDate() != null) {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM yyyy hh mm");
-				System.out.print("end date : " + sdf.format(task.getDueDate().getTime()));
-			}
-			System.out.println();
-		}
 		ResultSet resultSet = _logicFace.addTask(task, buildRawCommand(rawInput));
-		System.out.println("list after add");
-		for (int i = 0; i < _logicFace.getWorkingList().size(); i++) {
-			System.out.print(_logicFace.getWorkingList().get(i).getName());
-			if (_logicFace.getWorkingList().get(i).getStartDate() != null) {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM yyyy hh mm");
-				System.out.print(
-						"start date : " + sdf.format(_logicFace.getWorkingList().get(i).getStartDate().getTime()));
-			}
-			if (_logicFace.getWorkingList().get(i).getDueDate() != null) {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM yyyy hh mm");
-				System.out.print("end date : " + sdf.format(_logicFace.getWorkingList().get(i).getDueDate().getTime()));
-			}
-			System.out.println();
-		}
 		if (resultSet.isSuccess()) {
 			if (toUpdateView) {
 				updateChangesToViews(resultSet.getIndex());
@@ -896,12 +869,13 @@ public class UserInterfaceController {
 		resultSet.setSuccess();
 
 		if (commandsToRun.size() == 0) {
-			setView(TASK_VIEW);
+			setManagerView(TaskManager.DISPLAY_MAIN);
 			_currentView = TASK_VIEW;
 			updateChangesToViews(-1);
 			showMainView(-1);
 			return resultSet;
 		}
+		
 		int view = -1;
 		for (int i = 0; i < commandsToRun.size(); i++) {
 			view = runCommands(commandsToRun.get(i));
