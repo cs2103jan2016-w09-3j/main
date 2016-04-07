@@ -64,6 +64,7 @@ public class JsonConverter {
             allLists = extractJsonFields(allLists, allTasks); 
         } catch (JsonParseException e) {
             System.out.println("Cannot convert from Json to Java.");
+            return null;
         }
         return allLists;
     }
