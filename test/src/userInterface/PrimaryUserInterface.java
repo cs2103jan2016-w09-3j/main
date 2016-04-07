@@ -31,7 +31,7 @@ public class PrimaryUserInterface extends Application {
 
 	private static final int SAME = 0;
 	private static final int ZERO = 0;
-	
+
 	// Controls
 	static final int UP_ARROW_KEY = -1;
 	static final int DOWN_ARROW_KEY = 1;
@@ -91,6 +91,12 @@ public class PrimaryUserInterface extends Application {
 		initializeControls();
 		initializePrimaryStage(primaryStage);
 		initializeUiController(primaryStage);
+		if (!uiController.isFileLoadedProper()) {
+			ResultSet rs = new ResultSet();
+			rs.setFail();
+			rs.setStatus(ResultSet.STATUS_BAD);
+			_commandBar.showFeedBackMessage(COMMAND.LOADFROM, rs, null);
+		}
 		focus();
 	}
 

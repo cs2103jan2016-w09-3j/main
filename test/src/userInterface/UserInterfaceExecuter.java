@@ -96,4 +96,8 @@ public class UserInterfaceExecuter {
 	public String getLoadFromFilePath() {
 		return _taskManager.getMainFilePath();
 	}
+
+	public boolean isFileLoadedSuccess() {
+		return _taskManager.checkLoad();
+	}
 }

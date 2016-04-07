@@ -67,6 +67,7 @@ public class UserInterfaceController {
 
 	// Main logic class to interact
 	private UserInterfaceExecuter _logicFace;
+	private boolean _isLoaded;
 
 	// Debug purpose
 	private static Logger logger = Logger.getLogger("UserInterfaceController");
@@ -102,8 +103,11 @@ public class UserInterfaceController {
 
 		_parentStage = primaryStage;
 		_logicFace = new UserInterfaceExecuter();
-		recoverLostCommands();
-		logger.log(Level.INFO, "Recovery done.");
+		_isLoaded = _logicFace.isFileLoadedSuccess();
+		if (_isLoaded) {
+			recoverLostCommands();
+			logger.log(Level.INFO, "Recovery done.");
+		}
 
 	}
 
@@ -999,5 +1003,9 @@ public class UserInterfaceController {
 			}
 		}
 		return false;
+	}
+
+	public boolean isFileLoadedProper() {
+		return _isLoaded;
 	}
 }

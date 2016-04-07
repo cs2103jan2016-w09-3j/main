@@ -74,6 +74,7 @@ public class CommandBar {
 	private static final String MESSAGE_SUCCESS_LOADFROM = "Loaded from %1$s file successfully.";
 	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_1 = "Unable to find %1$s. Please check that the file is available for reading.";
 	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_2 = "%1$s does not exist!";
+	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_3 = "Failed to load file.";
 
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
@@ -764,11 +765,12 @@ public class CommandBar {
 				} else {
 					if (resultSet.getStatus() == ResultSet.STATUS_NOFILE) {
 						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_2, msg));
-						setFeedBackColor(FEEDBACK_STATUS_ERROR);
+					} else if (resultSet.getStatus() == ResultSet.STATUS_BAD) {
+						setFeedBackMessage(MESSAGE_FAILURE_LOADFROM_TYPE_3);
 					} else {
 						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_1, msg));
-						setFeedBackColor(FEEDBACK_STATUS_ERROR);
 					}
+					setFeedBackColor(FEEDBACK_STATUS_ERROR);
 				}
 			} else {
 				setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_1, msg));
