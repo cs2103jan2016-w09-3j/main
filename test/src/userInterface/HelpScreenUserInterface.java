@@ -27,7 +27,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 
 	private static final String HELP_DESCRIPTION_FLOATING_BAR_TITLE = "Floating Panel";
 	private static final String HELP_DESCRIPTION_FLOATING_BAR = "This panel shows you tasks without deadlines assigned to them. It changes every 10 seconds.";
-	private static final String FILE_PATH_MESSAGE = "Your file has loaded from";
+	private static final String FILE_PATH_MESSAGE = "Your file is currently saved to";
 
 	private static final String HELP_DESCRIPTION_MAIN_TITLE = "Welcome to PCNM Help Manual!";
 	private static final String HELP_DESCRIPTION_MAIN = "Press the left and right arrow keys to scroll through and F1 to close the Help Screen";
