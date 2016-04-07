@@ -760,12 +760,16 @@ public class CommandBar {
 		case LOADFROM: {
 			if (resultSet != null) {
 				if (resultSet.isSuccess()) {
-					setFeedBackMessage(String.format(MESSAGE_SUCCESS_LOADFROM, msg));
-					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
-				} else {
+
 					if (resultSet.getStatus() == ResultSet.STATUS_NOFILE) {
 						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_2, msg));
-					} else if (resultSet.getStatus() == ResultSet.STATUS_BAD) {
+					} else {
+						setFeedBackMessage(String.format(MESSAGE_SUCCESS_LOADFROM, msg));
+						setFeedBackColor(FEEDBACK_STATUS_NORMAL);
+					}
+					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
+				} else {
+					if (resultSet.getStatus() == ResultSet.STATUS_BAD) {
 						setFeedBackMessage(MESSAGE_FAILURE_LOADFROM_TYPE_3);
 					} else {
 						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_1, msg));
