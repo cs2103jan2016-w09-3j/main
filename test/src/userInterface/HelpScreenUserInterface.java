@@ -27,6 +27,7 @@ public class HelpScreenUserInterface implements ViewInterface {
 
 	private static final String HELP_DESCRIPTION_FLOATING_BAR_TITLE = "Floating Panel";
 	private static final String HELP_DESCRIPTION_FLOATING_BAR = "This panel shows you tasks without deadlines assigned to them. It changes every 10 seconds.";
+	private static final String FILE_PATH_MESSAGE = "Your file has loaded from";
 
 	private static final String HELP_DESCRIPTION_MAIN_TITLE = "Welcome to PCNM Help Manual!";
 	private static final String HELP_DESCRIPTION_MAIN = "Press the left and right arrow keys to scroll through and F1 to close the Help Screen";
@@ -41,9 +42,8 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private static final String HELP_DESCRIPTION_DETAIL_COMPONENT = "This panel shows you more descriptions and links of the selected task.";
 
 	private static final String[][] CHEAT_SHEET_SHORT_CUTS = { { "F1", "Brings up the Help Manual!" },
-			{ "F2", "Collapses application into Compact View" },
-			{ "F3", "Displays application in Full View" }, { "Up/Down", "Retrieves previous commands entered" },
-			{ "Ctrl + Up/Down", "Scrolls through task list" },
+			{ "F2", "Collapses application into Compact View" }, { "F3", "Displays application in Full View" },
+			{ "Up/Down", "Retrieves previous commands entered" }, { "Ctrl + Up/Down", "Scrolls through task list" },
 			{ "Ctrl + Left/Right", "Switches from Main to Floating to Search View" }, { "", "" } };
 	private static final String[][] CHEAT_SHEET_COMMANDS = {
 			{ "ADD", "Adds a task into your task list, tasks without dates will be added to the Floating View" },
@@ -51,9 +51,9 @@ public class HelpScreenUserInterface implements ViewInterface {
 			{ "LINK",
 					"Links two tasks together to create associations between the tasks, eg. LINK ID1-ID5 (ID1 will be project head)" },
 			{ "SEARCH", "Searches for any task based on keywords or hashtags" },
-			{ "HIDE", "Collapses the application into Compact View" }, { "SHOW", "Displays the application in Full View" },
-			{ "FLOAT", "Switches to Floating View" }, { "MAIN", "Switches to Main View" },
-			{ "THEME", "Changes application theme" },
+			{ "HIDE", "Collapses the application into Compact View" },
+			{ "SHOW", "Displays the application in Full View" }, { "FLOAT", "Switches to Floating View" },
+			{ "MAIN", "Switches to Main View" }, { "THEME", "Changes application theme" },
 			{ "SAVETO", "Changes the directory of the saved task file" },
 			{ "LOADFROM", "Loads an existing task file" } };
 	private static final String HELP_DESCRIPTION_COMMAND_BAR_TITLE = "Command Bar";
@@ -75,6 +75,8 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private static final int LINE_LENGTH = 20;
 
 	private String _styleSheet;
+	private String _filePathLoadFrom;
+	private Label _filePathLabel;
 
 	private Stage _stage;
 	private int _stageWidth;
@@ -91,20 +93,22 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private int _selector = 0;
 
 	public static HelpScreenUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
-			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
+			String styleSheet, EventHandler<MouseEvent> mouseEvent, String filePathLoadFrom) {
 		if (_myInstance == null) {
 			if (primaryStage == null || screenBounds == null) {
 				return null;
 			}
-			_myInstance = new HelpScreenUserInterface(primaryStage, screenBounds, fixedSize, styleSheet, mouseEvent);
+			_myInstance = new HelpScreenUserInterface(primaryStage, screenBounds, fixedSize, styleSheet, mouseEvent,
+					filePathLoadFrom);
 			return _myInstance;
 		}
 		return null;
 	}
 
 	public HelpScreenUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
-			EventHandler<MouseEvent> mouseEvent) {
+			EventHandler<MouseEvent> mouseEvent, String filePathLoadFrom) {
 		_styleSheet = styleSheet;
+		_filePathLoadFrom = filePathLoadFrom;
 		initializeVaribles(screenBounds, fixedSize);
 		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
 	}
@@ -158,6 +162,11 @@ public class HelpScreenUserInterface implements ViewInterface {
 		_items[4] = buildDetailComponentHelp();
 		_items[5] = buildCommandBarHelp();
 		_mainPanel.getChildren().add(_items[0]);
+	}
+
+	public void changeFilePath(String filePath) {
+		_filePathLoadFrom = filePath;
+		_filePathLabel.setText(FILE_PATH_MESSAGE.concat(" ").concat(_filePathLoadFrom));
 	}
 
 	public VBox buildMainHelp() {
@@ -232,6 +241,11 @@ public class HelpScreenUserInterface implements ViewInterface {
 
 		VBox.setMargin(gp, new Insets(MARGIN, MARGIN, MARGIN, MARGIN));
 		descriptionBox.getChildren().add(gp);
+
+		_filePathLabel = new Label(FILE_PATH_MESSAGE.concat(" ").concat(_filePathLoadFrom));
+		_filePathLabel.setFont(FONT_LABEL);
+		VBox.setMargin(_filePathLabel, new Insets(0, MARGIN, 0, MARGIN));
+		descriptionBox.getChildren().add(_filePathLabel);
 
 		main.getChildren().add(descriptionBox);
 		return main;

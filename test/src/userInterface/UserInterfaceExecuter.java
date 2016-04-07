@@ -92,4 +92,8 @@ public class UserInterfaceExecuter {
 	public String loadTheme() {
 		return _taskManager.loadTheme();
 	}
+
+	public String getLoadFromFilePath() {
+		return _taskManager.getMainFilePath();
+	}
 }

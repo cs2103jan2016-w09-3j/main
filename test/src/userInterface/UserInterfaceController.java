@@ -2,6 +2,7 @@
 package userInterface;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Queue;
@@ -29,7 +30,7 @@ public class UserInterfaceController {
 	private static UserInterfaceController _instance;
 
 	private static final int ZERO_VALUE = 0;
-	
+
 	// view indicators
 	final static int CALENDAR_VIEW = 0;
 	final static int TASK_VIEW = 1;
@@ -136,8 +137,10 @@ public class UserInterfaceController {
 
 	private void initializeHelpScreen() {
 		logger.log(Level.INFO, "initializing help view.");
+
+		String loadFromFilePath = _logicFace.getLoadFromFilePath();
 		_helpScreen = HelpScreenUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
-				_mouseEvent);
+				_mouseEvent, loadFromFilePath);
 	}
 
 	private void initializeTaskView() {
@@ -527,7 +530,34 @@ public class UserInterfaceController {
 	 * @return
 	 */
 	public ResultSet addTask(TaskEntity task, String rawInput, boolean toUpdateView) {
+		System.out.println("list before add");
+		for (int i = 0; i < _logicFace.getWorkingList().size(); i++) {
+			System.out.print(_logicFace.getWorkingList().get(i).getName());
+			if (task.getStartDate() != null) {
+				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM yyyy hh mm");
+				System.out.print("start date : " + sdf.format(task.getStartDate().getTime()));
+			}
+			if (task.getDueDate() != null) {
+				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM yyyy hh mm");
+				System.out.print("end date : " + sdf.format(task.getDueDate().getTime()));
+			}
+			System.out.println();
+		}
 		ResultSet resultSet = _logicFace.addTask(task, buildRawCommand(rawInput));
+		System.out.println("list after add");
+		for (int i = 0; i < _logicFace.getWorkingList().size(); i++) {
+			System.out.print(_logicFace.getWorkingList().get(i).getName());
+			if (_logicFace.getWorkingList().get(i).getStartDate() != null) {
+				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM yyyy hh mm");
+				System.out.print(
+						"start date : " + sdf.format(_logicFace.getWorkingList().get(i).getStartDate().getTime()));
+			}
+			if (_logicFace.getWorkingList().get(i).getDueDate() != null) {
+				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM yyyy hh mm");
+				System.out.print("end date : " + sdf.format(_logicFace.getWorkingList().get(i).getDueDate().getTime()));
+			}
+			System.out.println();
+		}
 		if (resultSet.isSuccess()) {
 			if (toUpdateView) {
 				updateChangesToViews(resultSet.getIndex());
@@ -904,6 +934,7 @@ public class UserInterfaceController {
 		ResultSet resultSet = _logicFace.loadFrom(loadFrom);
 		if (resultSet != null) {
 			if (resultSet.isSuccess()) {
+				_helpScreen.changeFilePath(_logicFace.getLoadFromFilePath());
 				setManagerView(TASK_VIEW);
 				_currentView = TASK_VIEW;
 				killFloatingThread();
