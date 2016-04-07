@@ -40,14 +40,15 @@ public class SearchUserInterface implements ViewInterface {
 	private static final String CSS_LABEL = "cssLabelsSearchView";
 
 	// font
-	static final int FONT_SIZE_LABEL = 20;
-	static final int FONT_SIZE_LABEL_DATE = 10;
-	static final int FONT_SIZE_TASK = 12;
-	static final int FONT_SIZE_INDEX = 8;
+	static double scaleS= 1.5;
+	static final int FONT_SIZE_LABEL = (int) (20* scaleS);
+	static final int FONT_SIZE_LABEL_DATE = (int) (10 * scaleS);
+	static final int FONT_SIZE_TASK = (int) (12* scaleS);
+	static final int FONT_SIZE_INDEX = (int) (8* scaleS);
 	private static final Font FONT_LABEL = new Font(PrimaryUserInterface.FONT_TITLE_LABLES, FONT_SIZE_LABEL);
 	private static final Font FONT_TASK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TASK);
 
-	static final int LABEL_TITLE_HEIGHT = 35;
+	static final int LABEL_TITLE_HEIGHT = 40;
 	static final int LABEL_TASK_HEIGHT = 30;
 	private static final int THRESHOLD = 20;
 
@@ -193,7 +194,7 @@ public class SearchUserInterface implements ViewInterface {
 		Label indexLabel = new Label("ID" + Integer.toString(index));
 		indexLabel.getStyleClass().add(CSS_LABEL);
 		indexLabel.setMinHeight(LABEL_TASK_HEIGHT);
-		indexLabel.setMinWidth(50);
+		indexLabel.setMinWidth(60);
 		indexLabel.setAlignment(Pos.CENTER);
 		indexLabel.setFont(Font.font(PrimaryUserInterface.FONT_DEFAULT, FontWeight.BOLD, FONT_SIZE_TASK));
 		top.getChildren().add(indexLabel);
