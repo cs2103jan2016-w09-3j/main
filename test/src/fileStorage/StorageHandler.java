@@ -441,16 +441,21 @@ public class StorageHandler {
         
         File newFile = new File(newFilePath);
 
-        if (newFile.exists() == false) {
-            isChanged = transferToNewFile(newFile);
-        } else {
-            resultSet.setIndex(FILE_DOES_NOT_EXIST);
-        }
+        isChanged = newFileExistsChecker(resultSet, isChanged, newFile);
         if (isChanged == true) {
             isChanged = writeConfigSettings();
         }
         resultSetChecker(resultSet, isChanged);
         return resultSet;
+    }
+
+    private boolean newFileExistsChecker(ResultSet resultSet, boolean isChanged, File newFile) {
+        if (newFile.exists() == false) {
+            isChanged = transferToNewFile(newFile);
+        } else {
+            resultSet.setIndex(FILE_DOES_NOT_EXIST);
+        }
+        return isChanged;
     }
 
     private boolean transferToNewFile(File newFile) {
