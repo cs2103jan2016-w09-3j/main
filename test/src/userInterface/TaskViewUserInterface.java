@@ -37,15 +37,14 @@ public class TaskViewUserInterface implements ViewInterface {
 	private static final int THRESHOLD = 50;
 
 	static final int TASK_VIEW_LABEL_HEIGHT = 50;
-	static final int TASK_VIEW_ITEM_HEIGHT = 40;
-	static final int DETAILED_VIEW_ITEM_HEIGHT = 75;
+	static final int TASK_VIEW_ITEM_HEIGHT = 30;
+	static final int DETAILED_VIEW_ITEM_HEIGHT = 50;
 	static final int SELECTOR_POSITION_Y = TASK_VIEW_LABEL_HEIGHT + TASK_VIEW_ITEM_HEIGHT * 2;
 
 	// font
-	static double scaleS= 1.5;
-	static final int FONT_SIZE_LABEL_DATE = (int) (24 );
-	static final int FONT_SIZE_TASK = (int) (12*scaleS);
-	static final int FONT_SIZE_INDEX = (int) (8*scaleS);
+	static final int FONT_SIZE_LABEL_DATE = 24;
+	static final int FONT_SIZE_TASK = 12;
+	static final int FONT_SIZE_INDEX = 8;
 	private static final Font FONT_LABEL = new Font(PrimaryUserInterface.FONT_TITLE_LABLES, FONT_SIZE_LABEL_DATE);
 	private static final Font FONT_TASK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TASK);
 

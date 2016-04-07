@@ -24,7 +24,7 @@ import dateParser.ParserCommons;
 
 public class DetailComponent implements ViewInterface {
 
-	static final int COMPONENT_WIDTH = 400;
+	static final int COMPONENT_WIDTH = 300;
 	static final int COMPONENT_LEFT_MARGIN = 2;
 
 	private static final int TASK_VIEW = 1;
