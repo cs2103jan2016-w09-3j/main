@@ -34,6 +34,7 @@ public class CommandBar {
 	private static final String MESSAGE_SUCCESS_ADD_TYPE_3 = "Successfully added %1$s to floating task list.";
 	private static final String MESSAGE_FAILURE_ADD_TYPE_1 = "Fail to add.";
 	private static final String MESSAGE_FAILURE_ADD_TYPE_2 = "Fail to add task, task requires a name.";
+	private static final String MESSAGE_FAILURE_ADD_TYPE_3 = "Fail to add task, Due date is before start date.";
 
 	private static final String MESSAGE_SUCCESS_DELETE = "Successfully deleted %1$s.";
 	private static final String MESSAGE_FAILURE_DELETE_TYPE_1 = "Task id required to delete.";
@@ -43,6 +44,7 @@ public class CommandBar {
 	private static final String MESSAGE_FAILURE_EDIT_TYPE_1 = "Fail to edit %1$s.";
 	private static final String MESSAGE_FAILURE_EDIT_TYPE_2 = "Fail to retrieve task.";
 	private static final String MESSAGE_FAILURE_EDIT_TYPE_3 = "Fail to edit task, task name is required.";
+	private static final String MESSAGE_FAILURE_EDIT_TYPE_4 = "Fail to add task, Due date is before start date.";
 
 	private static final String MESSAGE_SUCCESS_MARK = "Successfully mark %1$s as completed.";
 	private static final String MESSAGE_FAILURE_MARK_TYPE_1 = "Fail to mark %1$s as completed.";
@@ -619,6 +621,8 @@ public class CommandBar {
 				} else {
 					if (resultSet.getStatus() == ResultSet.STATUS_INVALID_NAME) {
 						setFeedBackMessage(MESSAGE_FAILURE_ADD_TYPE_2);
+					} else if (resultSet.getStatus() == ResultSet.STATUS_INVALID_DATE) {
+						setFeedBackMessage(MESSAGE_FAILURE_ADD_TYPE_3);
 					} else {
 						setFeedBackMessage(MESSAGE_FAILURE_ADD_TYPE_1);
 					}
@@ -658,6 +662,8 @@ public class CommandBar {
 
 					if (resultSet.getStatus() == ResultSet.STATUS_INVALID_NAME) {
 						setFeedBackMessage(MESSAGE_FAILURE_EDIT_TYPE_3);
+					} else if (resultSet.getStatus() == ResultSet.STATUS_INVALID_DATE) {
+						setFeedBackMessage(MESSAGE_FAILURE_EDIT_TYPE_4);
 					} else {
 						setFeedBackMessage(String.format(MESSAGE_FAILURE_EDIT_TYPE_1, msg));
 					}
