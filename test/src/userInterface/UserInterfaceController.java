@@ -856,7 +856,11 @@ public class UserInterfaceController {
 	}
 
 	public ResultSet changeSaveDir(String dirPath) {
-		return _logicFace.changeSaveDir(dirPath);
+		ResultSet resultSet = _logicFace.changeSaveDir(dirPath);
+		if (resultSet.isSuccess()) {
+			_helpScreen.changeFilePath(_logicFace.getLoadFromFilePath());
+		}
+		return resultSet;
 	}
 
 	public ResultSet undoLastCommand() {
@@ -875,7 +879,7 @@ public class UserInterfaceController {
 			showMainView(-1);
 			return resultSet;
 		}
-		
+
 		int view = -1;
 		for (int i = 0; i < commandsToRun.size(); i++) {
 			view = runCommands(commandsToRun.get(i));
