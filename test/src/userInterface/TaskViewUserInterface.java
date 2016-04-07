@@ -37,14 +37,15 @@ public class TaskViewUserInterface implements ViewInterface {
 	private static final int THRESHOLD = 50;
 
 	static final int TASK_VIEW_LABEL_HEIGHT = 50;
-	static final int TASK_VIEW_ITEM_HEIGHT = 30;
-	static final int DETAILED_VIEW_ITEM_HEIGHT = 40;
+	static final int TASK_VIEW_ITEM_HEIGHT = 40;
+	static final int DETAILED_VIEW_ITEM_HEIGHT = 75;
 	static final int SELECTOR_POSITION_Y = TASK_VIEW_LABEL_HEIGHT + TASK_VIEW_ITEM_HEIGHT * 2;
 
 	// font
-	static final int FONT_SIZE_LABEL_DATE = 24;
-	static final int FONT_SIZE_TASK = 12;
-	static final int FONT_SIZE_INDEX = 8;
+	static double scaleS= 1.5;
+	static final int FONT_SIZE_LABEL_DATE = (int) (24 );
+	static final int FONT_SIZE_TASK = (int) (12*scaleS);
+	static final int FONT_SIZE_INDEX = (int) (8*scaleS);
 	private static final Font FONT_LABEL = new Font(PrimaryUserInterface.FONT_TITLE_LABLES, FONT_SIZE_LABEL_DATE);
 	private static final Font FONT_TASK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_TASK);
 
@@ -377,7 +378,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		indexLabel.getStyleClass().add(CSS_LABEL);
 		indexLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
 		indexLabel.setFont(Font.font(PrimaryUserInterface.FONT_DEFAULT, FontWeight.BOLD, FONT_SIZE_TASK));
-		indexLabel.setMinWidth(40);
+		indexLabel.setMinWidth(60);
 		indexLabel.setAlignment(Pos.CENTER_RIGHT);
 		grid.add(indexLabel, 0, 0);
 
