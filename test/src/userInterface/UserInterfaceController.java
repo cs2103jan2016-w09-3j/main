@@ -864,6 +864,7 @@ public class UserInterfaceController {
 	}
 
 	public ResultSet undoLastCommand() {
+		int managerView = _logicFace.getCurrentManagerView();
 		ArrayList<String> commandsToRun = _logicFace.getCommandsToRun();
 		ResultSet resultSet = new ResultSet();
 		if (commandsToRun == null) {
@@ -871,12 +872,8 @@ public class UserInterfaceController {
 			return resultSet;
 		}
 		resultSet.setSuccess();
-
 		if (commandsToRun.size() == 0) {
-			setManagerView(TaskManager.DISPLAY_MAIN);
-			_currentView = TASK_VIEW;
 			updateChangesToViews(-1);
-			showMainView(-1);
 			return resultSet;
 		}
 
@@ -884,10 +881,8 @@ public class UserInterfaceController {
 		for (int i = 0; i < commandsToRun.size(); i++) {
 			view = runCommands(commandsToRun.get(i));
 		}
-		if (view != -1) {
-			setManagerView(view);
-			setView(view);
-		}
+		_logicFace.switchView(managerView);
+		updateChangesToViews(-1);
 		_logicFace.undoComplete();
 		return resultSet;
 	}
