@@ -58,6 +58,7 @@ public class PrimaryUserInterface extends Application {
 	private static String[] styles = { "default.css", "blackandwhite.css", "red.css", "pastel.css" };
 
 	private String _styleSheet = styles[ZERO];
+	private int _styleSheetSelector = ZERO;
 	private double _commandBarWidth;
 	private Rectangle2D _screenBounds;
 	private Stage _primaryStage;
@@ -281,6 +282,8 @@ public class PrimaryUserInterface extends Application {
 			} else if (event.getCode().compareTo(KeyCode.F3) == SAME) {
 				uiController.show();
 			} else if (event.getCode().compareTo(KeyCode.F4) == SAME) {
+				executeChangeTheme();
+			} else if (event.getCode().compareTo(KeyCode.F5) == SAME) {
 				uiController.destory();
 				uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet, _mainEventHandler);
 				resetCommandInput();
@@ -503,6 +506,18 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	// @@author A0125514N
+
+	private void executeChangeTheme() {
+		_styleSheetSelector++;
+		if (_styleSheetSelector >= styles.length) {
+			_styleSheetSelector = ZERO;
+		}
+		_styleSheet = styles[_styleSheetSelector];
+		_primaryStage.getScene().getStylesheets().clear();
+		_primaryStage.getScene().getStylesheets().add(_styleSheet);
+		uiController.changeTheme(_styleSheet);
+	}
+
 	private void executeChangeTheme(String themeChange) {
 		if (isValidTheme(themeChange)) {
 			_styleSheet = themeChange;
@@ -524,6 +539,7 @@ public class PrimaryUserInterface extends Application {
 		}
 		for (int i = 0; i < styles.length; i++) {
 			if (styles[i].equals(theme)) {
+				_styleSheetSelector = i;
 				return true;
 			}
 		}
