@@ -194,8 +194,9 @@ public class InputParser {
 				c2.setTime(dates.get(1));
 				c2.clear(Calendar.SECOND);
 				c2.clear(Calendar.MILLISECOND);
-				//System.out.println("START"+c.getTime());
-				//System.out.println(c2.getTime());
+				/*
+				System.out.println("START"+c.getTime());
+				System.out.println(c2.getTime());
 				
 				if(c2.before(c)){
 					int hour = c2.get(Calendar.HOUR_OF_DAY);
@@ -209,9 +210,10 @@ public class InputParser {
 				}
 				
 				//System.out.println("FULL DAY"+checkFullDay(c,c2));
-
-				//System.out.println(c.getTime());
-				//System.out.println(c2.getTime());
+	
+				System.out.println(c.getTime());
+				System.out.println(c2.getTime());
+				*/
 				TaskEntity toAdd = new TaskEntity(name, c, c2, checkFullDay(c,c2), desc);
 				for(int j=0; j<hashes.size();j++){
 					toAdd.addHashtag(hashes.get(j));
