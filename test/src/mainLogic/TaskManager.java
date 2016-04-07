@@ -475,6 +475,15 @@ public class TaskManager {
             return modificationResults;
         }
         
+        // Check for invalid date ranges
+        if (modifiedTask.getStartDate() != null && modifiedTask.getDueDate() != null) {
+            if (modifiedTask.getStartDate().compareTo(modifiedTask.getDueDate()) > 0) {
+                modificationResults.setStatus(ResultSet.STATUS_INVALID_DATE);
+                modificationResults.setFail();
+                return modificationResults;
+            }
+        }
+        
         int associationState = displayedTasks.get(index).getAssociationState();
         TaskEntity projectHead = displayedTasks.get(index).getProjectHead();
         ArrayList<TaskEntity> childTasks = displayedTasks.get(index).getAssociations();
@@ -577,14 +586,23 @@ public class TaskManager {
 
         ResultSet addResults = new ResultSet();
         
-        if(displayedTasks == null || !TaskUtils.checkValidName(newTask)) {
-            if(!TaskUtils.checkValidName(newTask)) {
+        if (displayedTasks == null || !TaskUtils.checkValidName(newTask)) {
+            if (!TaskUtils.checkValidName(newTask)) {
                 addResults.setStatus(ResultSet.STATUS_INVALID_NAME);
             } else {
                 addResults.setStatus(ResultSet.STATUS_BAD);
             }
             addResults.setFail();
             return addResults;
+        }
+
+        // Check for invalid date ranges
+        if (newTask.getStartDate() != null && newTask.getDueDate() != null) {
+            if (newTask.getStartDate().compareTo(newTask.getDueDate()) > 0) {
+                addResults.setStatus(ResultSet.STATUS_INVALID_DATE);
+                addResults.setFail();
+                return addResults;
+            }
         }
 
         if (newTask.isFloating()) {
@@ -602,7 +620,7 @@ public class TaskManager {
             addResults.setStatus(ResultSet.STATUS_GOOD);
             return addResults;
         } else {
-            if(mainTaskEntities == null) {
+            if (mainTaskEntities == null) {
                 addResults.setStatus(ResultSet.STATUS_BAD);
                 addResults.setFail();
                 return addResults;

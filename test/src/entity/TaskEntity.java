@@ -500,7 +500,19 @@ public class TaskEntity {
 		        if( TaskUtils.checkSameDate(_startDate, _dueDate) ) {
 		            return "Full Day";
 		        } else {
-		            return "Full Day";
+		            String returnDate = "";
+		            SimpleDateFormat sdf;
+		            if( _startDate.get(Calendar.YEAR) == _dueDate.get(Calendar.YEAR) ) {
+		                sdf = new SimpleDateFormat("dd/MMM");
+		            } else {
+		                sdf = new SimpleDateFormat("dd/MMM/YYYY");
+		            }
+		            returnDate += sdf.format(_startDate.getTime());
+		            returnDate += "-";
+		            if(_dueDate != null) {
+		                returnDate += sdf.format(_dueDate.getTime());
+		            }
+		            return returnDate;
 		        }
 		    }
 			return "Full Day";
