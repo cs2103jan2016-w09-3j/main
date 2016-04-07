@@ -50,6 +50,8 @@ public class TaskManager {
     public final static int DISPLAY_SEARCH = 2;
     public final static int DISPLAY_COMPLETED = 3;
     public final static int DISPLAY_OTHERS = 4;
+    
+    private boolean isJsonSuccess = true;
 
     /**
      * TEST FUNCTION Function for manually testing functions(First
@@ -72,12 +74,7 @@ public class TaskManager {
     }
 
     public boolean checkLoad() {
-        if (mainTaskEntities.size() == 0 && floatingTaskEntities.size() == 0
-                && completedTaskEntities.size() == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return isJsonSuccess;
     }
     
     /**
@@ -151,6 +148,14 @@ public class TaskManager {
 
         dataLoader = new StorageInterface();
         AllTaskLists taskdata = dataLoader.getTaskLists();
+        
+        if(taskdata == null) {
+            mainTaskEntities = new ArrayList<TaskEntity>();
+            floatingTaskEntities = new ArrayList<TaskEntity>();
+            displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
+            currentDisplayedList = DISPLAY_MAIN;
+            isJsonSuccess = false;
+        }
 
         mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
         floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
@@ -904,13 +909,14 @@ public class TaskManager {
         
         boolean loadSuccess = dataLoader.loadFrom(newDirectory);
         if (loadSuccess == true) {
-            if(reloadFile()) {
+            if (reloadFile()) {
+                dataLoader.clearCommandFile();
+                loadResult.setSuccess();
                 loadResult.setStatus(ResultSet.STATUS_GOOD);
             } else {
-                loadResult.setStatus(ResultSet.STATUS_NOFILE);
+                loadResult.setStatus(ResultSet.STATUS_JSON_ERROR);
+                loadResult.setFail();
             }
-            dataLoader.clearCommandFile();
-            loadResult.setSuccess();
         } else {
             loadResult.setFail();
             loadResult.setStatus(ResultSet.STATUS_BAD);
@@ -1188,16 +1194,13 @@ public class TaskManager {
     
     public boolean reloadFile() {
         AllTaskLists taskdata = dataLoader.getTaskLists();
+        if(taskdata == null) {
+            return false;
+        }
 
         mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
         floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
 
-        if(mainTaskEntities.size() == 0 && floatingTaskEntities.size() == 0) {
-            displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
-            currentDisplayedList = DISPLAY_MAIN;
-            resetUndo();
-            return false;
-        }
         initializeAssociations();
 
         updateTaskEntityCurrentId();
