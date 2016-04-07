@@ -23,7 +23,7 @@ import javafx.stage.Window;
 
 public class DescriptionComponent implements ViewInterface {
 
-	static final int CONPONENT_WIDTH = 50;
+	static final int CONPONENT_WIDTH = 80;
 	static final int CONPONENT_RIGHT_MARGIN = 0;
 	private static final int POSITION_ZERO = 0;
 
