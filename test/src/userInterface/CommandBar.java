@@ -72,7 +72,8 @@ public class CommandBar {
 	private static final String MESSAGE_CONFLICT_PAST = "Conflict detected and task has past deadline.";
 
 	private static final String MESSAGE_SUCCESS_LOADFROM = "Loaded from %1$s file successfully.";
-	private static final String MESSAGE_FAILURE_LOADFROM = "Unable to find %1$s. Please check that the file is available for reading.";
+	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_1 = "Unable to find %1$s. Please check that the file is available for reading.";
+	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_2 = "%1$s does not exist!";
 
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
@@ -653,7 +654,7 @@ public class CommandBar {
 					}
 					setFeedBackMessage(feedBackMsg);
 				} else {
-					
+
 					if (resultSet.getStatus() == ResultSet.STATUS_INVALID_NAME) {
 						setFeedBackMessage(MESSAGE_FAILURE_EDIT_TYPE_3);
 					} else {
@@ -760,11 +761,19 @@ public class CommandBar {
 				if (resultSet.isSuccess()) {
 					setFeedBackMessage(String.format(MESSAGE_SUCCESS_LOADFROM, msg));
 					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
-					break;
+				} else {
+					if (resultSet.getStatus() == ResultSet.STATUS_NOFILE) {
+						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_2, msg));
+						setFeedBackColor(FEEDBACK_STATUS_ERROR);
+					} else {
+						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_1, msg));
+						setFeedBackColor(FEEDBACK_STATUS_ERROR);
+					}
 				}
+			} else {
+				setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_1, msg));
+				setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			}
-			setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM, msg));
-			setFeedBackColor(FEEDBACK_STATUS_ERROR);
 			break;
 		}
 		case THEME: {
