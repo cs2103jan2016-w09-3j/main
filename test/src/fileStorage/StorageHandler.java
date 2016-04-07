@@ -150,6 +150,7 @@ public class StorageHandler {
         } else {
             makeNewDirectory(tasksFile);
             createNewFile(tasksFile);
+            setMainFilePath(tasksFile.getAbsolutePath());
         }
     }
 
