@@ -3,7 +3,6 @@ package userInterface;
 
 import userInterface.CommandBar;
 import userInterface.UserInterfaceController;
-
 import java.util.ArrayList;
 import dateParser.CommandParser.COMMAND;
 import dateParser.InputParser;
@@ -33,16 +32,13 @@ public class PrimaryUserInterface extends Application {
 	private static final int ZERO = 0;
 
 	// Controls
-	static final int UP_ARROW_KEY = -1;
-	static final int DOWN_ARROW_KEY = 1;
-	static final int CTRL_UP_ARROW_KEY = -1;
-	static final int CTRL_DOWN_ARROW_KEY = 1;
-	static final int CTRL_LEFT_ARROW_KEY = -1;
-	static final int CTRL_RIGHT_ARROW_KEY = 1;
+	private static final int CTRL_UP_ARROW_KEY = -1;
+	private static final int CTRL_DOWN_ARROW_KEY = 1;
+	private static final int CTRL_LEFT_ARROW_KEY = -1;
+	private static final int CTRL_RIGHT_ARROW_KEY = 1;
 
 	static final int TYPE_1 = 0;
 	static final int TYPE_2 = 1;
-	static final int TYPE_3 = 2;
 
 	// CommandBar dimensions.
 	static final int COMMAND_BAR_HEIGTH = 70;
@@ -55,10 +51,10 @@ public class PrimaryUserInterface extends Application {
 	static final String FONT_TITLE_LABLES = "lucida sans";
 	static final int DEFAULT_FONT_SIZE = 24;
 
-	private static String[] styles = { "default.css", "blackandwhite.css", "red.css", "pastel.css" };
-
-	private String _styleSheet = styles[ZERO];
+	private static final String[] STYLES = { "default.css", "blackandwhite.css", "red.css", "pastel.css" };
+	private String _styleSheet = STYLES[ZERO];
 	private int _styleSheetSelector = ZERO;
+
 	private double _commandBarWidth;
 	private Rectangle2D _screenBounds;
 	private Stage _primaryStage;
@@ -88,15 +84,13 @@ public class PrimaryUserInterface extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		InputParser parser = new InputParser("");
 		_primaryStage = primaryStage;
-		_commandBar = CommandBar.getInstance(COMMAND_BAR_HEIGTH, _commandBarWidth);
+		_commandBar = CommandBar.getInstance(_commandBarWidth, COMMAND_BAR_HEIGTH);
 		initializeControls();
 		initializePrimaryStage(primaryStage);
 		initializeUiController(primaryStage);
-		if (!uiController.isFileLoadedProper()) {
-			ResultSet rs = new ResultSet();
-			rs.setFail();
-			rs.setStatus(ResultSet.STATUS_BAD);
-			_commandBar.showFeedBackMessage(COMMAND.LOADFROM, rs, null);
+		ResultSet resultSet = uiController.isFileLoadedProper();
+		if (resultSet != null) {
+			_commandBar.showFeedBackMessage(COMMAND.LOADFROM, resultSet, null);
 		}
 		focus();
 	}
@@ -118,8 +112,7 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	/**
-	 * initialize the content inside the primary stage, BorderPane used as
-	 * rootLayout
+	 * initialize the content inside the primary stage, VBox used as rootLayout
 	 * 
 	 * @return mainLayout.
 	 */
@@ -134,12 +127,6 @@ public class PrimaryUserInterface extends Application {
 	 * @param primaryStage.
 	 */
 	private void initializeUiController(Stage primaryStage) {
-		_mainEventHandler = new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent arg0) {
-				focus();
-			}
-		};
-
 		uiController = UserInterfaceController.getInstance(primaryStage);
 		String theme = uiController.loadTheme();
 		if (isValidTheme(theme)) {
@@ -151,11 +138,19 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	/**
-	 * initialize the main controls for the application.
+	 * initialize the main controls for the application. _mainEventHandler is
+	 * the event thats get mouse click on any panel of the application and set
+	 * focus to the command bar.
+	 * 
 	 * 
 	 */
 	private void initializeControls() {
-		EventHandler<KeyEvent> mainEventHandler = new EventHandler<KeyEvent>() {
+		_mainEventHandler = new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent arg0) {
+				focus();
+			}
+		};
+		EventHandler<KeyEvent> commandBarMainEventHandler = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				processKeyPress(_commandBar.getTextField(), event);
 			}
@@ -165,7 +160,7 @@ public class PrimaryUserInterface extends Application {
 				processKeyRelease(_commandBar.getTextField(), event);
 			}
 		};
-		_commandBar.setTextFieldHandler(mainEventHandler, releaseEventHandler);
+		_commandBar.setTextFieldHandler(commandBarMainEventHandler, releaseEventHandler);
 	}
 
 	private void processKeyRelease(TextField textField, KeyEvent event) {
@@ -248,55 +243,67 @@ public class PrimaryUserInterface extends Application {
 	}
 
 	// @@author A0125514N
+	/**
+	 * Process the event receive to and execute the next action.
+	 * @param event
+	 */
 	private void processControls(KeyEvent event) {
-
-		if (event.getCode().compareTo(KeyCode.UP) == SAME && !event.isControlDown() && !event.isShiftDown()) {
-			_commandBar.getPrevCommand();
+		KeyCode keyCode = event.getCode();
+		if (keyCode.isFunctionKey()) {
+			processFunctionKeys(keyCode);
+		} else if (!event.isControlDown()) {
+			processControlKeyNotPressed(keyCode);
+		} else if (event.isControlDown()) {
+			processControlKeyPressed(keyCode);
 		}
+	}
 
-		if (event.getCode().compareTo(KeyCode.DOWN) == SAME && !event.isControlDown() && !event.isShiftDown()) {
-			_commandBar.getNextCommand();
+	private void processFunctionKeys(KeyCode keyCode) {
+		if (keyCode.compareTo(KeyCode.F1) == SAME) {
+			uiController.showHelpView();
+		} else if (keyCode.compareTo(KeyCode.F2) == SAME) {
+			uiController.hide();
+		} else if (keyCode.compareTo(KeyCode.F3) == SAME) {
+			uiController.show();
+		} else if (keyCode.compareTo(KeyCode.F4) == SAME) {
+			executeChangeTheme();
+		} else if (keyCode.compareTo(KeyCode.F5) == SAME) {
+			uiController.destory();
+			uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet, _mainEventHandler);
+			resetCommandInput();
 		}
+	}
 
-		if (event.getCode().compareTo(KeyCode.DOWN) == SAME && event.isControlDown() && !event.isShiftDown()) {
+	private void processControlKeyPressed(KeyCode keyCode) {
+		if (keyCode.compareTo(KeyCode.DOWN) == SAME) {
 			uiController.stopScrollingAnimation();
 			uiController.updateComponents(CTRL_DOWN_ARROW_KEY);
-		}
-		if (event.getCode().compareTo(KeyCode.UP) == SAME && event.isControlDown() && !event.isShiftDown()) {
+		} else if (keyCode.compareTo(KeyCode.UP) == SAME) {
 			uiController.stopScrollingAnimation();
 			uiController.updateComponents(CTRL_UP_ARROW_KEY);
-		}
-
-		if (event.getCode().compareTo(KeyCode.RIGHT) == SAME && event.isControlDown() && !event.isShiftDown()) {
+		} else if (keyCode.compareTo(KeyCode.RIGHT) == SAME) {
 			uiController.changeView(CTRL_RIGHT_ARROW_KEY);
-		}
-		if (event.getCode().compareTo(KeyCode.LEFT) == SAME && event.isControlDown() && !event.isShiftDown()) {
+		} else if (keyCode.compareTo(KeyCode.LEFT) == SAME) {
 			uiController.changeView(CTRL_LEFT_ARROW_KEY);
 		}
+	}
 
-		if (event.getCode().isFunctionKey()) {
-			if (event.getCode().compareTo(KeyCode.F1) == SAME) {
-				uiController.showHelpView();
-			} else if (event.getCode().compareTo(KeyCode.F2) == SAME) {
-				uiController.hide();
-			} else if (event.getCode().compareTo(KeyCode.F3) == SAME) {
-				uiController.show();
-			} else if (event.getCode().compareTo(KeyCode.F4) == SAME) {
-				executeChangeTheme();
-			} else if (event.getCode().compareTo(KeyCode.F5) == SAME) {
-				uiController.destory();
-				uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet, _mainEventHandler);
-				resetCommandInput();
-			}
-		}
-
-		if (event.getCode().compareTo(KeyCode.LEFT) == SAME) {
+	private void processControlKeyNotPressed(KeyCode keyCode) {
+		if (keyCode.compareTo(KeyCode.UP) == SAME) {
+			_commandBar.getPrevCommand();
+		} else if (keyCode.compareTo(KeyCode.DOWN) == SAME) {
+			_commandBar.getNextCommand();
+		} else if (keyCode.compareTo(KeyCode.LEFT) == SAME) {
 			uiController.updateHelpView(CTRL_LEFT_ARROW_KEY);
-		} else if (event.getCode().compareTo(KeyCode.RIGHT) == SAME) {
+		} else if (keyCode.compareTo(KeyCode.RIGHT) == SAME) {
 			uiController.updateHelpView(CTRL_RIGHT_ARROW_KEY);
 		}
 	}
 
+	/**
+	 * This method set the focus back on to the commandBar.
+	 * 
+	 */
 	private void focus() {
 		_primaryStage.requestFocus();
 		_commandBar.focus();
@@ -509,10 +516,10 @@ public class PrimaryUserInterface extends Application {
 
 	private void executeChangeTheme() {
 		_styleSheetSelector++;
-		if (_styleSheetSelector >= styles.length) {
+		if (_styleSheetSelector >= STYLES.length) {
 			_styleSheetSelector = ZERO;
 		}
-		_styleSheet = styles[_styleSheetSelector];
+		_styleSheet = STYLES[_styleSheetSelector];
 		_primaryStage.getScene().getStylesheets().clear();
 		_primaryStage.getScene().getStylesheets().add(_styleSheet);
 		uiController.changeTheme(_styleSheet);
@@ -537,8 +544,8 @@ public class PrimaryUserInterface extends Application {
 		if (theme == null) {
 			return false;
 		}
-		for (int i = 0; i < styles.length; i++) {
-			if (styles[i].equals(theme)) {
+		for (int i = 0; i < STYLES.length; i++) {
+			if (STYLES[i].equals(theme)) {
 				_styleSheetSelector = i;
 				return true;
 			}
@@ -548,9 +555,9 @@ public class PrimaryUserInterface extends Application {
 
 	private String getStyleSheetList() {
 		String styleList = "";
-		for (int i = 0; i < styles.length; i++) {
-			styleList = styleList.concat(styles[i]);
-			if (i < styles.length - 1) {
+		for (int i = 0; i < STYLES.length; i++) {
+			styleList = styleList.concat(STYLES[i]);
+			if (i < STYLES.length - 1) {
 				styleList = styleList.concat(", ");
 			}
 		}
