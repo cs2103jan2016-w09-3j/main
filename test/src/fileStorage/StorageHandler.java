@@ -141,6 +141,7 @@ public class StorageHandler {
             createNewFile(configFile);
             tasksFilePath = MAIN_FILE_NAME;
             tasksFile = new File(tasksFilePath);
+            setMainFilePath(tasksFile.getAbsolutePath());
             themeName = DEFAULT_THEME;
             writeConfigSettings();
         }
