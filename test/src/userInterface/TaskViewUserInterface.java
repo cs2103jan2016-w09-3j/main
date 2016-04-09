@@ -25,7 +25,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -416,7 +415,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		topBox.getChildren().add(timeLabel);
 
 		if (taskEntity.getAssociationState() == TaskEntity.PROJECT_HEAD) {
-			topBox.getChildren().add(createStar(TASK_VIEW_ITEM_HEIGHT));
+			topBox.getChildren().add(StarPane.createStar(TASK_VIEW_ITEM_HEIGHT));
 		}
 
 		Label titleLabel = new Label(taskEntity.getName());
@@ -468,50 +467,6 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	/**
-	 * Creates the wrapper for star.
-	 * 
-	 * @param size
-	 * @return StackPane
-	 */
-	private StackPane createStar(double size) {
-		StackPane stackPane = new StackPane();
-		stackPane.setMinHeight(size);
-		stackPane.setMaxHeight(size);
-		stackPane.setMinWidth(size);
-		stackPane.setMaxWidth(size);
-		stackPane.setAlignment(Pos.CENTER);
-		stackPane.getChildren().add(buildStar(0.5 * (size / 2)));
-		return stackPane;
-	}
-
-	/**
-	 * Creates the star base on the size.
-	 * 
-	 * @param size
-	 * @return Polygon
-	 */
-	public Polygon buildStar(double size) {
-		int arms = 5;
-		double rOuter = 1 * size;
-		double rInner = 0.5 * size;
-		double angle = Math.PI / arms;
-		int c = 0;
-		Double[] starCoor = new Double[20];
-		for (int i = 0; i < arms * 2; i++) {
-			double r = (i & 1) == 0 ? rOuter : rInner;
-			double x = Math.cos(i * angle) * r;
-			double y = Math.sin(i * angle) * r;
-			starCoor[c++] = x;
-			starCoor[c++] = y;
-		}
-		Polygon polygon = new Polygon();
-		polygon.getPoints().addAll(starCoor);
-		polygon.setFill(Color.WHITE);
-		polygon.setStroke(Color.BLACK);
-		return polygon;
-	}
-
-	/**
 	 * Check if the index is between the _startIndex and _endIndex, inclusive.
 	 * 
 	 * @param index.
@@ -527,7 +482,6 @@ public class TaskViewUserInterface implements ViewInterface {
 	/**
 	 * Updates the selector index by the amount of value. Items are added and
 	 * removed to maintain THRESHOLD.
-	 * 
 	 */
 	public void update(int value) {
 		for (int i = 0; i < Math.abs(value); i++) {
