@@ -496,58 +496,31 @@ public class TaskEntity {
 		}
 
 		if (_isFullDay) {
-		    if(_startDate != null) {
-		        if( TaskUtils.checkSameDate(_startDate, _dueDate) ) {
-		            return "Full Day";
-		        } else {
-		            String returnDate = "";
-		            SimpleDateFormat sdf;
-		            if( _startDate.get(Calendar.YEAR) == _dueDate.get(Calendar.YEAR) ) {
-		                sdf = new SimpleDateFormat("dd/MMM");
-		            } else {
-		                sdf = new SimpleDateFormat("dd/MMM/YYYY");
-		            }
-		            returnDate += sdf.format(_startDate.getTime());
-		            returnDate += "-";
-		            if(_dueDate != null) {
-		                returnDate += sdf.format(_dueDate.getTime());
-		            }
-		            return returnDate;
-		        }
-		    }
-			return "Full Day";
+			return "[Full Day Task]";
 		}
-
-		// Adding start Date to the display string for showing date
-		String returnDate = "";
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM HHmm");
-		if (_startDate != null) {
-			returnDate =  sdf.format(_startDate.getTime());
-			returnDate = returnDate.concat(" - ");
-			if (_dueDate != null) {
-				if (_dueDate.get(Calendar.YEAR) == _startDate.get(Calendar.YEAR)) {
-					if (_dueDate.get(Calendar.MONTH) == _startDate.get(Calendar.MONTH)) {
-						if (_dueDate.get(Calendar.DATE) == _startDate.get(Calendar.DATE)) {
-							SimpleDateFormat sdf2 = new SimpleDateFormat("hhmm");
-							returnDate += sdf2.format(_dueDate.getTime());
-							return returnDate;
-						}
-					}
-				}
-				returnDate += sdf.format(_dueDate.getTime());
-				return returnDate;
-			}
-			return returnDate;
+		
+		if(_dueDate == null) {
+		    return "[Full Day Task]";
+		} else if(_startDate == null) {
+		    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm          ");
+		    return sdf.format(_dueDate.getTime());
 		} else {
-			returnDate = "";
-			// Error catching
-			assert _dueDate != null : "Due date is null when generating display!";
-			if (_dueDate == null) {
-				returnDate += "??:??";
-				return returnDate;
-			}
-			returnDate += sdf.format(_dueDate.getTime());
-			return returnDate;
+		    String returnDate = "";
+            SimpleDateFormat sdf;
+            
+		    if( _startDate.get(Calendar.YEAR) != _dueDate.get(Calendar.YEAR) ) {
+                sdf = new SimpleDateFormat("[dd/MM/YY]");
+                
+            } else if(TaskUtils.checkSameDate(_startDate, _dueDate)){
+    		    sdf = new SimpleDateFormat(" HH:mm ");
+		    } else {
+		        sdf = new SimpleDateFormat("[dd/MM]");
+		    }
+		    returnDate += sdf.format(_startDate.getTime());
+            returnDate += "-";
+            returnDate += sdf.format(_dueDate.getTime());
+            
+            return returnDate;
 		}
 	}
 

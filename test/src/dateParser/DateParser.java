@@ -16,12 +16,13 @@ import com.joestelmach.natty.*;
 
 public class DateParser {
 
+	private static final char DOUBLE_QUOTE = '\"';
+	private static final char SINGLE_QUOTE = '\'';
 	private static final int CONVERSION_FROM_GREGORIAN_CAL = 1;
 	private static final char CHAR_ZERO = '0';
 	private static final String SPACE_DELIM = " ";
 	private static final char FWD_SLASH = '/';
 	private static final char DASH = '-';
-	private static final char DOT = '.';
 
 	private final String DATE_REGEX_2DAY_2MONTH = "\\d{2}[\\/-]\\d{2}(\\/|-|)(?:\\d{4}|\\d{2}|\\d{0})";
 	private final String DATE_REGEX_1DAY_2MONTH = "\\d{1}[\\/-]\\d{2}(\\/|-|)(?:\\d{4}|\\d{2}|\\d{0})";
@@ -45,6 +46,8 @@ public class DateParser {
 	}
 
 	/**
+	 * Gets the dates from a string and returns it in a Date object
+	 * 
 	 * @param input
 	 * @return List of all possible dates
 	 */
@@ -63,76 +66,68 @@ public class DateParser {
 			}
 		}
 		inputDate = convertFormalDates(inputDate);
-		List<Date> returnDateList = new ArrayList<Date>();
+		List<Date> returnDates = new ArrayList<Date>();
 		hideErr();
 		List<DateGroup> dateGroups = nattyParser.parse(inputDate);
 		showErr();
 		for (int i = 0; i < dateGroups.size(); i++) {
 			List<Date> dates = dateGroups.get(i).getDates();
 			for (int j = 0; j < dates.size(); j++) {
-				if(dates.size() == 1){
-					Calendar toCheck = Calendar.getInstance();
-					toCheck.setTime(dates.get(j));
-					toCheck.clear(Calendar.SECOND);
-					toCheck.clear(Calendar.MILLISECOND);
+				if (dates.size() == 1) {
+					Calendar toCheck = setDateClearSecondMili(dates.get(j));
 					Calendar curr = Calendar.getInstance();
 					curr.set(toCheck.get(Calendar.YEAR), toCheck.get(Calendar.MONTH), toCheck.get(Calendar.DATE));
 					curr.clear(Calendar.SECOND);
 					curr.clear(Calendar.MILLISECOND);
 					if (curr.equals(toCheck)) {
+						// creates two dates one at 0000 another 2359
 						toCheck.set(Calendar.HOUR_OF_DAY, 0);
 						toCheck.set(Calendar.MINUTE, 0);
-						returnDateList.add(toCheck.getTime());
+						returnDates.add(toCheck.getTime());
 						toCheck.set(Calendar.HOUR_OF_DAY, 23);
 						toCheck.set(Calendar.MINUTE, 59);
-						returnDateList.add(toCheck.getTime());
+						returnDates.add(toCheck.getTime());
 					} else {
-						returnDateList.add(dates.get(j));
+						returnDates.add(dates.get(j));
 					}
-				}else{
-					Calendar addDate = Calendar.getInstance();
-					addDate.setTime(dates.get(j));
-					addDate.clear(Calendar.SECOND);
-					addDate.clear(Calendar.MILLISECOND);
-					returnDateList.add(addDate.getTime());
+				} else {
+					Calendar addDate = setDateClearSecondMili(dates.get(j));
+					returnDates.add(addDate.getTime());
 				}
 			}
 		}
 
-		return returnDateList;
+		return returnDates;
 	}
 
-	/**takes in a string with date and adds XML to the date portions
+	/**
+	 * creates a calendar object from a date
 	 * 
-	 * @param input String with date in it
+	 * @param date
+	 * @return calendar with date wtihout second and millisecond
+	 */
+	private Calendar setDateClearSecondMili(Date d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		c.clear(Calendar.SECOND);
+		c.clear(Calendar.MILLISECOND);
+		return c;
+	}
+
+	/**
+	 * takes in a string with date and adds XML to the date portions
+	 * 
+	 * @param input
 	 * @return String of xmlDate
 	 */
 	public String xmlDate(String input) {
 		hideErr();
-		input = convertFormalDates(input);
-		String workingStr = "";
-
-		workingStr += input;
 		String returnVal = new String(input);
-		ArrayList<Integer> locationQuote = new ArrayList<Integer>();
-		for (int i = 0; i < workingStr.length(); i++) {
-			char temp = workingStr.charAt(i);
-			if ((temp == '\'')||(temp=='\"')) {
-				locationQuote.add(i);
-			}
-		}
+		input = convertFormalDates(input);
+		String workingStr = removeQuotes(input);
 
-		for (int i = 0; i < locationQuote.size(); i = i + 2) {
-			if (i + 1 < locationQuote.size()) {
-				workingStr = workingStr.substring(0, locationQuote.get(i))
-						+ workingStr.substring(locationQuote.get(i + 1)+1, workingStr.length() - 1);
-			} else {
-				workingStr = workingStr.substring(0, locationQuote.get(i));
-			}
-		}
-
-		workingStr = workingStr.replace('\'', ' ');
-		workingStr = workingStr.replace('\"', ' ');
+		workingStr = workingStr.replace(SINGLE_QUOTE, ' ');
+		workingStr = workingStr.replace(DOUBLE_QUOTE, ' ');
 
 		List<DateGroup> dateGroups = nattyParser.parse(workingStr);
 		for (int i = 0; i < dateGroups.size(); i++) {
@@ -146,7 +141,35 @@ public class DateParser {
 		return returnVal;
 	}
 
-	/**Convert all formal dates from SG to US
+	/**
+	 * remove any substring within quotes
+	 * 
+	 * @param input
+	 * @return input with substring within quotes removed
+	 */
+	private String removeQuotes(String input) {
+		String workingStr = input;
+		ArrayList<Integer> locationQuote = new ArrayList<Integer>();
+		for (int i = 0; i < workingStr.length(); i++) {
+			char temp = workingStr.charAt(i);
+			if ((temp == SINGLE_QUOTE) || (temp == DOUBLE_QUOTE)) {
+				locationQuote.add(i);
+			}
+		}
+
+		for (int i = 0; i < locationQuote.size(); i = i + 2) {
+			if (i + 1 < locationQuote.size()) {
+				workingStr = workingStr.substring(0, locationQuote.get(i))
+						+ workingStr.substring(locationQuote.get(i + 1) + 1, workingStr.length() - 1);
+			} else {
+				workingStr = workingStr.substring(0, locationQuote.get(i));
+			}
+		}
+		return workingStr;
+	}
+
+	/**
+	 * Convert all formal dates from SG to US
 	 * 
 	 * @param input
 	 * @return String formal date in a US format
@@ -162,7 +185,8 @@ public class DateParser {
 		return convertedFormalDates;
 	}
 
-	/**convert a single date from SG to US
+	/**
+	 * convert a single date from SG to US
 	 * 
 	 * @param sgDate
 	 *            a String in US dates
@@ -269,7 +293,7 @@ public class DateParser {
 	}
 
 	/**
-	 * Hide error messages
+	 * Hide error messages, used to remove the uneccessary messages from natty
 	 */
 	private void hideErr() {
 		System.setErr(new PrintStream(new OutputStream() {

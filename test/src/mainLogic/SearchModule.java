@@ -36,7 +36,7 @@ public class SearchModule {
             
             boolean searchTermFound = false;
 
-            searchTermFound = searchAllTerms(listToSearch, searchTerms, i);
+            searchTermFound = searchAllTerms(listToSearch.get(i), searchTerms);
 
             if (searchTermFound) {
                 searchResults.add(listToSearch.get(i));
@@ -44,17 +44,26 @@ public class SearchModule {
         }
     }
 
-    private static boolean searchAllTerms(ArrayList<TaskEntity> listToSearch, String[] searchTerms, int i) {
+    /**
+     * Searches to ensure all terms seperated by a spacing are ALL located
+     * within the task that is being searched before adding it as a result
+     * 
+     * @param listToSearch
+     * @param searchTerms - Each term that is seperated by a spacing
+     * @param i
+     * @return
+     */
+    private static boolean searchAllTerms(TaskEntity taskToSearch, String[] searchTerms) {
         boolean searchTermFound = false;
         
         for (int j = 0; j < searchTerms.length; j++) {
             searchTermFound = false;
             
-            if (listToSearch.get(i).getName().toLowerCase().contains(searchTerms[j])
-                    || listToSearch.get(i).getDescription().toLowerCase().contains(searchTerms[j])) {
+            if (taskToSearch.getName().toLowerCase().contains(searchTerms[j])
+                    || taskToSearch.getDescription().toLowerCase().contains(searchTerms[j])) {
                 searchTermFound = true;
-            } else if (listToSearch.get(i).getHashtags().toLowerCase().contains(searchTerms[j])) {
-                if (checkHashMatch(searchTerms[j], listToSearch.get(i))) {
+            } else if (taskToSearch.getHashtags().toLowerCase().contains(searchTerms[j])) {
+                if (checkHashMatch(searchTerms[j], taskToSearch)) {
                     searchTermFound = true;
                 } else {
                     // Hashtag not found. Conclude as not added by breaking the
