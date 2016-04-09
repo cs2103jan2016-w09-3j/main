@@ -979,7 +979,13 @@ public class UserInterfaceController {
 		return false;
 	}
 
-	public boolean isFileLoadedProper() {
-		return _isLoaded;
+	public ResultSet isFileLoadedProper() {
+		if (!_isLoaded) {
+			ResultSet rs = new ResultSet();
+			rs.setFail();
+			rs.setStatus(ResultSet.STATUS_BAD);
+			return rs;
+		}
+		return null;
 	}
 }

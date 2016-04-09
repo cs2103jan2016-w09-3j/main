@@ -22,13 +22,16 @@ import javafx.scene.Node;
 
 public class CommandBar {
 
+	// Feedback status
 	private static final int FEEDBACK_STATUS_ERROR = 0;
 	private static final int FEEDBACK_STATUS_NORMAL = 1;
 	private static final int FEEDBACK_STATUS_CONFLICT = 2;
 	private static final int FEEDBACK_STATUS_PAST = 3;
 	private static final int FEEDBACK_STATUS_CONFLICT_PAST = 4;
 
+	// Feedback messages
 	private static final String MESSAGE_FAILURE_INVALID = "you have entered an invalid command";
+
 	private static final String MESSAGE_SUCCESS_ADD_TYPE_1 = "Successfully added %1$s to list.";
 	private static final String MESSAGE_SUCCESS_ADD_TYPE_2 = "Successfully added %1$s to task list.";
 	private static final String MESSAGE_SUCCESS_ADD_TYPE_3 = "Successfully added %1$s to floating task list.";
@@ -49,10 +52,12 @@ public class CommandBar {
 	private static final String MESSAGE_SUCCESS_MARK = "Successfully mark %1$s as completed.";
 	private static final String MESSAGE_FAILURE_MARK_TYPE_1 = "Fail to mark %1$s as completed.";
 	private static final String MESSAGE_FAILURE_MARK_TYPE_2 = "Invalid task ID";
+
 	private static final String MESSAGE_SUCCESS_SEARCH_TYPE_1 = "Search compelete with %1$s results.";
 	private static final String MESSAGE_SUCCESS_SEARCH_TYPE_2 = "No results found.";
 	private static final String MESSAGE_FAILURE_SEARCH_TYPE_1 = "No results found.";
 	private static final String MESSAGE_FAILURE_SEARCH_TYPE_2 = "Search failed.";
+
 	private static final String MESSAGE_FAILURE_JUMP_TYPE_1 = "No index to jump to.";
 	private static final String MESSAGE_FAILURE_JUMP_TYPE_2 = "Task id required to jump to.";
 
@@ -78,10 +83,14 @@ public class CommandBar {
 	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_2 = "%1$s does not exist!";
 	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_3 = "File empty or Json can't read.";
 
+	// UserInterface values
 	private static final int GAP_SIZE = 0;
 	private static final double FEEDBACK_HEIGHT = 20;
 	private static final int MAIN_PANE_LEFT_RIGHT_MARGIN = 0;
 	private static final int TEXT_FIELD_WIDTH = 10;
+	private static final int TWO = 2;
+	private static final int ZERO = 0;
+	private static final int NOTHING_SELECTED = -1;
 
 	private static final String CSS_LABEL = "cssLabelsCommandBar";
 
@@ -100,7 +109,7 @@ public class CommandBar {
 
 	private GridPane _mainPane;
 	private TextField _textField;
-	private int _numberOfItems = 0;
+	private int _numberOfItems = ZERO;
 	private int _selected;
 	private ArrayList<Label> labels = new ArrayList<Label>();
 	private ArrayList<String> preCommands = new ArrayList<String>();
@@ -108,32 +117,27 @@ public class CommandBar {
 
 	private ArrayList<String> _allSessionCmds = new ArrayList<String>();
 	private String fullInput = "";
-
 	private int _feedBackCounter;
 
-	public static CommandBar getInstance(int commandBarHeigth, double _commandBarWidth) {
+	public static CommandBar getInstance(double _commandBarWidth, int commandBarHeigth) {
 		if (_myInstance == null) {
-			_myInstance = new CommandBar(commandBarHeigth, _commandBarWidth);
+			_myInstance = new CommandBar(_commandBarWidth, commandBarHeigth);
 			return _myInstance;
 		}
 		return null;
 	}
 
-	public void reDraw() {
-
-	}
-
-	private CommandBar(double preHeight, double preWidth) {
-		this._prefHeight = preHeight;
-		this._prefWidth = preWidth;
+	private CommandBar(double preWidth, double preHeight) {
+		_prefHeight = preHeight;
+		_prefWidth = preWidth;
 		_mainPaneHeight = _prefHeight - FEEDBACK_HEIGHT;
-		_commandLabelHeight = _mainPaneHeight / 2;
-		_selected = -1;
+		_commandLabelHeight = _mainPaneHeight / TWO;
+		_selected = NOTHING_SELECTED;
 		initilizeMainStructure();
 		initilizeFeedbackBar();
 		initializeMainPane();
 		initializeTextBox();
-		_mainPane.add(_textField, _numberOfItems++, 0);
+		_mainPane.add(_textField, _numberOfItems++, ZERO);
 	}
 
 	public void initilizeMainStructure() {
@@ -155,7 +159,7 @@ public class CommandBar {
 		_feedbackLabel.setFont(FONT_FEEDBACK);
 		_feedbackLabel.setAlignment(Pos.CENTER_LEFT);
 		_feedbackLabel.setId("cssCommandBarfeedback_normal");
-		_feedbackLabel.setOpacity(0.0);
+		_feedbackLabel.setOpacity(ZERO);
 		_mainStructure.getChildren().add(_feedbackLabel);
 	}
 
@@ -166,7 +170,7 @@ public class CommandBar {
 		_mainPane.setMaxHeight(_mainPaneHeight);
 		_mainPane.setAlignment(Pos.CENTER_LEFT);
 		_mainPane.setHgap(GAP_SIZE);
-		VBox.setMargin(_mainPane, new Insets(0, MAIN_PANE_LEFT_RIGHT_MARGIN, 0, MAIN_PANE_LEFT_RIGHT_MARGIN));
+		VBox.setMargin(_mainPane, new Insets(ZERO, MAIN_PANE_LEFT_RIGHT_MARGIN, ZERO, MAIN_PANE_LEFT_RIGHT_MARGIN));
 		_mainStructure.getChildren().add(_mainPane);
 	}
 
@@ -176,14 +180,14 @@ public class CommandBar {
 		_textField.setMaxWidth(TEXT_FIELD_WIDTH);
 		_textField.setAlignment(Pos.CENTER_LEFT);
 		_textField.setPrefHeight(_commandLabelHeight);
-		_textField.setPadding(new Insets(0, 0, 0, 0));
+		_textField.setPadding(new Insets(ZERO, ZERO, ZERO, ZERO));
 		_textField.setBorder(null);
 	}
 
 	public void concatToFullString() {
 		String input = _textField.getText();
 		if (!input.equals("")) {
-			if (_selected == -1) {
+			if (_selected == NOTHING_SELECTED) {
 				fullInput = fullInput.concat(input);
 			} else {
 				String front = getFrontString();
@@ -200,19 +204,22 @@ public class CommandBar {
 		fullInput = "";
 	}
 
+	/**
+	 * This method is called upon a backspace is entered.
+	 */
 	public void deleteKey() {
-		if (_selected != -1) {
+		if (_selected != NOTHING_SELECTED) {
 			String front = getFrontString();
 			String current = currentString();
 			String back = getBackString();
 			current = current.substring(0, current.length() - 1);
-			if (current.length() == 0) {
+			if (current.length() == ZERO) {
 				_selected--;
 			}
 			fullInput = rebuildString(front, current, back);
 			onKeyReleased();
 		} else {
-			if (fullInput.length() > 0) {
+			if (fullInput.length() > ZERO) {
 				fullInput = fullInput.substring(0, fullInput.length() - 1);
 			}
 			onKeyReleased();
@@ -303,9 +310,9 @@ public class CommandBar {
 		labels.clear();
 		_numberOfItems = 0;
 		if (itemsToAdd.size() == 0) {
-			_selected = -1;
+			_selected = NOTHING_SELECTED;
 		}
-		if (_selected == -1) {
+		if (_selected == NOTHING_SELECTED) {
 			itemsToAdd.add(_textField);
 		} else {
 			itemsToAdd.add(_selected + 1, _textField);
@@ -315,7 +322,7 @@ public class CommandBar {
 			_mainPane.add(itemsToAdd.get(i), _numberOfItems++, 1);
 			if (itemsToAdd.get(i) instanceof Label) {
 				Label l = (Label) itemsToAdd.get(i);
-				GridPane.setMargin(l, new Insets(0, 0, 0, 2));
+				GridPane.setMargin(l, new Insets(ZERO, ZERO, ZERO, TWO));
 				labels.add(l);
 			}
 		}
