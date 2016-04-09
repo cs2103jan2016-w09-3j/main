@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GarbageCollectorParser {
+	private static final String ID_CONST = "ID";
+	private static final char HEXCHAR = '#';
 	private ArrayList<String> hashes= new ArrayList<String>();
 	public GarbageCollectorParser(){
 	}
@@ -20,8 +22,8 @@ public class GarbageCollectorParser {
 		Scanner sc = new Scanner(toReplace);
 		while(sc.hasNext()){
 			String temp = sc.next();
-			if((temp.length()!=1)&&(!temp.contains("ID"))){
-				if(temp.charAt(0)=='#'){
+			if((temp.length()!=1)&&(!temp.contains(ID_CONST))){
+				if(temp.charAt(0)==HEXCHAR){
 					hashes.add(temp);
 					input = input.replace(temp, "<"+XMLParser.HASH_TAG+">"+temp+"</"+XMLParser.HASH_TAG+">");
 				}	
@@ -48,14 +50,14 @@ public class GarbageCollectorParser {
 		Scanner sc = new Scanner(toReplace);
 		while(sc.hasNext()){
 			String temp = sc.next();
-			if((temp.length()!=1)&&(!temp.contains("ID"))){
+			if((temp.length()!=1)&&(!temp.contains(ID_CONST))){
 					input = input.replace(temp, "<"+XMLParser.OTHERS_TAG+">"+temp+"</"+XMLParser.OTHERS_TAG+">");
 					
 			}
 		}
 		String lastWord = ParserCommons.getLastWord(input);
 		String firstWord = ParserCommons.getFirstWord(XMLParser.removeAllTags(input));
-		if((lastWord.length()==1)&&(!firstWord.equals(lastWord))&&(!lastWord.contains("ID"))){
+		if((lastWord.length()==1)&&(!firstWord.equals(lastWord))&&(!lastWord.contains(ID_CONST))){
 			input = input.substring(0, input.length()-2)+"<"+XMLParser.OTHERS_TAG+">"+lastWord+"</"+XMLParser.OTHERS_TAG+">";
 		}
 		return input;
