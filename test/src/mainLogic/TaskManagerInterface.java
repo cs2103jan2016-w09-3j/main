@@ -278,7 +278,12 @@ public class TaskManagerInterface {
      * Results operation result in the form of a ResultSet
      * 
      * @param newDirectory - pathfile INCLUDING file name of the new loaded file
-     * @return operation results
+     * @return ResultSet:
+     *          ResultSet.getStatus - STATUS_GOOD if success
+     *                                STATUS_JSON_ERROR if file found but corrupted
+     *                                STATUS_BAD if file not found
+     *          ResultSet.isSuccess - true if success
+     *                                false if either file not found or corrupted
      */
     public ResultSet loadFrom(String newDirectory) {
         return manager.loadFrom(newDirectory);
@@ -303,7 +308,7 @@ public class TaskManagerInterface {
     }
 
     /**
-     * Takes in 2 IDs and make the second task an association under the first
+     * Takes in tasks and make the second task an association under the first
      * task. Also stores the raw command. Returns a ResultSet for the operation
      * 
      * @param projectHeadId - Task that takes in other task as associations
@@ -325,9 +330,9 @@ public class TaskManagerInterface {
      * Takes in 2 IDs and make the second task an association under the first
      * task. Also stores the raw command. Returns a ResultSet for the operation
      * 
-     * @param projectHeadId - Task that takes in other task as associations.
+     * @param projectHeadId - Id of task that takes in other task as associations.
      *            String representing an int
-     * @param taskUnderId - Task to be associated under the first task. String
+     * @param taskUnderId - Id of task to be associated under the first task. String
      *            representing an int
      * @param command - Raw command prefixed with a int representing the view in
      *            which this command is carried out in
@@ -391,8 +396,9 @@ public class TaskManagerInterface {
     }
 
     /**
-     * Gets a random floating task
-     * @return a random taskentity that is from floatingTaskEntities
+     * Gets a random floating task. Returns null if there are no floating tasks
+     * 
+     * @return a random TaskEntity that is from floatingTaskEntities
      */
     public TaskEntity getRandomFloating() {
         return manager.getRandomFloating();
@@ -427,7 +433,7 @@ public class TaskManagerInterface {
      *            which this command is carried out in
      * @return true and STATUS_GOOD for success, false and STATUS_BAD for
      *         failure in ResultSet.isSuccess() and ResultSet.getStatus()
-     *         respecitively. ResultSet.searchCount() indicates how many search
+     *         respectively. ResultSet.searchCount() indicates how many search
      *         results were found
      */
     public ResultSet searchString(String searchTerm, String command) {
