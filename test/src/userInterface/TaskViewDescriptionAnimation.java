@@ -1,4 +1,9 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *			This is the animation class that provides a service.
+ */
 package userInterface;
 
 import javafx.application.Platform;
@@ -23,7 +28,8 @@ public class TaskViewDescriptionAnimation extends Service<Integer> {
 	 * period.
 	 * 
 	 * @param userInterfaceInstance
-	 * @param direction - animate to TaskView or ExpandedView
+	 * @param direction
+	 *            - animate to TaskView or ExpandedView
 	 * 
 	 * @return instance
 	 */
