@@ -6,6 +6,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class StarPane {
+	/**
+	 * Creates the wrapper and builds the star.
+	 * 
+	 * @param size
+	 * @return StackPane
+	 */
 	static StackPane createStar(double size) {
 		StackPane stackPane = new StackPane();
 		stackPane.setMinHeight(size);
@@ -17,6 +23,12 @@ public class StarPane {
 		return stackPane;
 	}
 
+	/**
+	 * Creates the star base on the size.
+	 * 
+	 * @param size
+	 * @return
+	 */
 	static Polygon buildStar(double size) {
 		int arms = 5;
 		double rOuter = 1 * size;
