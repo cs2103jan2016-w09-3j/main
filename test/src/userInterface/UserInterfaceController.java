@@ -466,7 +466,7 @@ public class UserInterfaceController {
 	 *            indicates TaskView to ExpandedView.
 	 */
 	public void startExpandAnimation(int direction) {
-		TaskViewDescriptionAnimation.getInstance(this, direction).start();
+		TaskViewAnimation.getInstance(this, direction).start();
 	}
 
 	/**

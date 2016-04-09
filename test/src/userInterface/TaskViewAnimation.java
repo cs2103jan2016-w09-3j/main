@@ -10,10 +10,10 @@ import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class TaskViewDescriptionAnimation extends Service<Integer> {
+public class TaskViewAnimation extends Service<Integer> {
 
 	// This variable to keep track if the animation is already in process
-	private static TaskViewDescriptionAnimation _myInstances;
+	private static TaskViewAnimation _myInstances;
 
 	private static final int DIRECTION_TO_TASK_VIEW = 1;
 	private static final int DIRECTION_TO_EXPANED_VIEW = -1;
@@ -33,17 +33,17 @@ public class TaskViewDescriptionAnimation extends Service<Integer> {
 	 * 
 	 * @return instance
 	 */
-	public static TaskViewDescriptionAnimation getInstance(UserInterfaceController ui, int direction) {
+	public static TaskViewAnimation getInstance(UserInterfaceController ui, int direction) {
 		if (_myInstances != null) {
 			if (_myInstances.isRunning()) {
 				_myInstances.cancel();
 			}
 		}
-		_myInstances = new TaskViewDescriptionAnimation(ui, direction);
+		_myInstances = new TaskViewAnimation(ui, direction);
 		return _myInstances;
 	}
 
-	private TaskViewDescriptionAnimation(UserInterfaceController userInterfaceController, int direction) {
+	private TaskViewAnimation(UserInterfaceController userInterfaceController, int direction) {
 		ui = userInterfaceController;
 		_isDoneTranslatingToOtherView = false;
 		_direction = direction;
