@@ -1,4 +1,9 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *			This is the animation class that provides the service to animate the fading of the feedback message.
+ */
 package userInterface;
 
 import javafx.application.Platform;
@@ -28,7 +33,7 @@ public class CommandBarAnimation extends Service<Void> {
 
 	private CommandBarAnimation(CommandBar commandBar, int count) {
 		_commandBar = commandBar;
-		individualCount= count;
+		individualCount = count;
 		commandBar.resetFeedBack(individualCount);
 	}
 
