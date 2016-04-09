@@ -1,4 +1,9 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *  This class handles the building of the command bar and the feedback messgaes.
+ */
 package userInterface;
 
 import java.util.ArrayList;
@@ -56,7 +61,6 @@ public class CommandBar {
 	private static final String MESSAGE_SUCCESS_SEARCH_TYPE_1 = "Search compelete with %1$s results.";
 	private static final String MESSAGE_SUCCESS_SEARCH_TYPE_2 = "No results found.";
 	private static final String MESSAGE_FAILURE_SEARCH_TYPE_1 = "No results found.";
-	private static final String MESSAGE_FAILURE_SEARCH_TYPE_2 = "Search failed.";
 
 	private static final String MESSAGE_FAILURE_JUMP_TYPE_1 = "No index to jump to.";
 	private static final String MESSAGE_FAILURE_JUMP_TYPE_2 = "Task id required to jump to.";
@@ -80,8 +84,7 @@ public class CommandBar {
 
 	private static final String MESSAGE_SUCCESS_LOADFROM = "Loaded from %1$s file successfully.";
 	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_1 = "Unable to find %1$s. Please check that the file is available for reading.";
-	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_2 = "%1$s does not exist!";
-	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_3 = "File empty or Json can't read.";
+	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_2 = "File empty or Json can't read.";
 
 	// UserInterface values
 	private static final int GAP_SIZE = 0;
@@ -94,7 +97,7 @@ public class CommandBar {
 
 	private static final String CSS_LABEL = "cssLabelsCommandBar";
 
-	// font
+	// Font
 	static final int FONT_SIZE_FEEDBACK = 12;
 	private static final Font FONT_FEEDBACK = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_FEEDBACK);
 
@@ -119,6 +122,14 @@ public class CommandBar {
 	private String fullInput = "";
 	private int _feedBackCounter;
 
+	/**
+	 * Create an instance of the CommandBar only if there isn't an instance
+	 * already.
+	 * 
+	 * @param _commandBarWidth
+	 * @param commandBarHeigth
+	 * @return CommandBar
+	 */
 	public static CommandBar getInstance(double _commandBarWidth, int commandBarHeigth) {
 		if (_myInstance == null) {
 			_myInstance = new CommandBar(_commandBarWidth, commandBarHeigth);
@@ -127,6 +138,12 @@ public class CommandBar {
 		return null;
 	}
 
+	/**
+	 * Builds the CommandBar and all the main components.
+	 * 
+	 * @param preWidth
+	 * @param preHeight
+	 */
 	private CommandBar(double preWidth, double preHeight) {
 		_prefHeight = preHeight;
 		_prefWidth = preWidth;
@@ -184,6 +201,9 @@ public class CommandBar {
 		_textField.setBorder(null);
 	}
 
+	/**
+	 * Gets the input from the user and concatenate to the full String.
+	 */
 	public void concatToFullString() {
 		String input = _textField.getText();
 		if (!input.equals("")) {
@@ -205,7 +225,7 @@ public class CommandBar {
 	}
 
 	/**
-	 * This method is called upon a backspace is entered.
+	 * Deletes a character in the fullString base on where the selector is.
 	 */
 	public void deleteKey() {
 		if (_selected != NOTHING_SELECTED) {
@@ -277,15 +297,17 @@ public class CommandBar {
 		}
 	}
 
+	/**
+	 * Gets the user input and concatenate to the fullString and run through the
+	 * parser. Rebuilds the command bar base on the parser.
+	 */
 	public void onKeyReleased() {
 		concatToFullString();
 		ArrayList<Node> itemsToAdd = new ArrayList<Node>();
 		InputParser parser = new InputParser(fullInput);
 		try {
 			parser.addXML();
-			// System.out.println(parser.getInput());
 			ArrayList<Pair<String, ArrayList<String>>> items = XMLParser.xmlToArrayList(parser.getInput());
-			// System.out.println(items.size());
 			for (int i = 0; i < items.size(); i++) {
 				Label label = buildItem(items.get(i));
 				if (label != null) {
@@ -305,6 +327,11 @@ public class CommandBar {
 		addItemsToBar(temp);
 	}
 
+	/**
+	 * Creates the new labels and place them inside the commandBar.
+	 * 
+	 * @param itemsToAdd
+	 */
 	private void addItemsToBar(ArrayList<Node> itemsToAdd) {
 		_mainPane.getChildren().clear();
 		labels.clear();
@@ -328,6 +355,12 @@ public class CommandBar {
 		}
 	}
 
+	/**
+	 * Build the individual label base on the XML tag.
+	 * 
+	 * @param item
+	 * @return Label
+	 */
 	public Label buildItem(Pair<String, ArrayList<String>> item) {
 		String type = item.getFirst();
 		if (type.equals(XMLParser.CMD_TAG)) {
@@ -348,6 +381,11 @@ public class CommandBar {
 		return null;
 	}
 
+	/**
+	 * Builds a basic structure that all labels share.
+	 * 
+	 * @return
+	 */
 	public Label buildLabelSkeleton() {
 		Label label = new Label();
 		label.setMinHeight(_commandLabelHeight);
@@ -487,7 +525,7 @@ public class CommandBar {
 		}
 		return null;
 	}
-
+	
 	public COMMAND onEnter() {
 		onKeyReleased();
 		preCommands.add(fullInput);
@@ -497,17 +535,32 @@ public class CommandBar {
 		return cmd;
 	}
 
+	/**
+	 * Gets the tasks that the parser has build from the user input.
+	 * 
+	 * @return lists of TaskEntity
+	 */
 	public ArrayList<TaskEntity> getTasks() {
 		InputParser parser = new InputParser(fullInput);
 		return parser.getTask();
 	}
 
+	/**
+	 * Gets the partial input that the parser has identified.
+	 * 
+	 * @return list of TaskEntity
+	 */
 	public ArrayList<TaskEntity> getTasksPartialInput() {
 		InputParser parser = new InputParser(fullInput);
 		parser.removeId();
 		return parser.getTask();
 	}
 
+	/**
+	 * Gets the ID that the parser has identified.
+	 * 
+	 * @return id
+	 */
 	public String getId() {
 		String returnVal = null;
 		InputParser parser = new InputParser(fullInput);
@@ -515,11 +568,21 @@ public class CommandBar {
 		return returnVal;
 	}
 
+	/**
+	 * Gets the String that the parser has identified as the search String.
+	 * 
+	 * @return search string
+	 */
 	public String getSearchStr() {
 		InputParser parser = new InputParser(fullInput);
 		return parser.getSearchString();
 	}
 
+	/**
+	 * Gets the ids of the two task that needs to be link which the parser has identified.
+	 * 
+	 * @return Pair
+	 */
 	public Pair<String, String> getLinkId() {
 		Pair<String, String> returnVal = null;
 		InputParser parser = new InputParser(fullInput);
@@ -527,6 +590,12 @@ public class CommandBar {
 		return returnVal;
 	}
 
+	/**
+	 * Sets the main textField handler to the given eventHandler.
+	 * 
+	 * @param mainEventHandler
+	 * @param secondaryEventHandler
+	 */
 	public void setTextFieldHandler(EventHandler<KeyEvent> mainEventHandler,
 			EventHandler<KeyEvent> secondaryEventHandler) {
 		_textField.setOnKeyPressed(mainEventHandler);
@@ -546,10 +615,6 @@ public class CommandBar {
 		return _mainStructure;
 	}
 
-	public ArrayList<String> get_allSessionCmds() {
-		return _allSessionCmds;
-	}
-
 	public String getFullInput() {
 		return fullInput;
 	}
@@ -563,8 +628,7 @@ public class CommandBar {
 	}
 
 	/**
-	 * method is called when "TAB" is executed, increase the selector index by
-	 * 1, if index is over total no of labels, jumps to -1.
+	 * Change the selector and underline the label that is being selected.
 	 */
 	public void changeSelector() {
 		if (labels.size() > 0) {
@@ -590,6 +654,9 @@ public class CommandBar {
 		_feedbackLabel.setText(feedback);
 	}
 
+	/**
+	 * Resets the commandBar to get ready for new command.
+	 */
 	public void reset() {
 		_selected = -1;
 		setFullInput("");
@@ -597,6 +664,13 @@ public class CommandBar {
 		addItemsToBar(temp);
 	}
 
+	/**
+	 * Shows the feedback message.
+	 * 
+	 * @param cmdType
+	 * @param resultSet
+	 * @param msg
+	 */
 	public void showFeedBackMessage(COMMAND cmdType, ResultSet resultSet, String msg) {
 		switch (cmdType) {
 		case INVALID: {
@@ -774,7 +848,7 @@ public class CommandBar {
 			if (resultSet != null) {
 				if (resultSet.isSuccess()) {
 					if (resultSet.getStatus() == ResultSet.STATUS_NOFILE) {
-						setFeedBackMessage(MESSAGE_FAILURE_LOADFROM_TYPE_3);
+						setFeedBackMessage(MESSAGE_FAILURE_LOADFROM_TYPE_2);
 						setFeedBackColor(FEEDBACK_STATUS_CONFLICT);
 					} else {
 						setFeedBackMessage(String.format(MESSAGE_SUCCESS_LOADFROM, msg));
@@ -782,7 +856,7 @@ public class CommandBar {
 					}
 				} else {
 					if (resultSet.getStatus() == ResultSet.STATUS_BAD) {
-						setFeedBackMessage(MESSAGE_FAILURE_LOADFROM_TYPE_3);
+						setFeedBackMessage(MESSAGE_FAILURE_LOADFROM_TYPE_2);
 						setFeedBackColor(FEEDBACK_STATUS_CONFLICT);
 					} else {
 						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_1, msg));
@@ -815,6 +889,12 @@ public class CommandBar {
 
 	}
 
+	/**
+	 * Process the feedback color base on the status.
+	 * 
+	 * @param status
+	 * @return condition (conflict, past, conflict and past)
+	 */
 	public String processFeedBackColor(int status) {
 		if (status == ResultSet.STATUS_GOOD) {
 			setFeedBackColor(FEEDBACK_STATUS_NORMAL);
@@ -832,6 +912,9 @@ public class CommandBar {
 		return null;
 	}
 
+	/**
+	 * Gets the previous command that was executed, builds the labels and place them in the commandbar.
+	 */
 	public void getPrevCommand() {
 		int index = _commandSelector - 1;
 		if (index < preCommands.size() && index > -1) {
@@ -842,6 +925,9 @@ public class CommandBar {
 		}
 	}
 
+	/**
+	 * Gets the next command that was executed, builds the labels and place them in the commandbar.
+	 */
 	public void getNextCommand() {
 		int index = _commandSelector + 1;
 		if (index < preCommands.size() && index > -1) {
@@ -852,6 +938,11 @@ public class CommandBar {
 		}
 	}
 
+	/**
+	 * Sets the feed back area color base on the feedBackStatus.
+	 * 
+	 * @param feedBackStatus
+	 */
 	public void setFeedBackColor(int feedBackStatus) {
 		switch (feedBackStatus) {
 		case FEEDBACK_STATUS_NORMAL: {
@@ -881,12 +972,25 @@ public class CommandBar {
 		}
 		CommandBarAnimation.start(this);
 	}
-
+	
+	/**
+	 * Reset the feedback to the default color and opacity.
+	 * 
+	 * @param feedCounter
+	 */
 	public void resetFeedBack(int feedCounter) {
 		_feedBackCounter = feedCounter;
 		_feedbackLabel.setOpacity(1.0);
 	}
 
+	/**
+	 * Reduces the opacity of the feedBack component.
+	 * 
+	 * @param _percentageDone
+	 * @param count
+	 * 
+	 * @return true only if opacity is 0s
+	 */
 	public boolean updateCommandStatus(double _percentageDone, int count) {
 		if (_feedBackCounter == count) {
 			double opacity = _feedbackLabel.getOpacity();
