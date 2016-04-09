@@ -16,6 +16,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import entity.ResultSet;
 
@@ -36,6 +39,9 @@ public class StorageHandler {
     private Queue<String> allCommandsQueue = new LinkedList<String>();
 
     private String themeName;
+    
+    private Logger logger;
+    private FileHandler fileHandler;
 
     private static final int READ_FROM_CONFIG_FILE = 1;
     private static final int READ_FROM_MAIN_FILE = 2;
@@ -44,7 +50,7 @@ public class StorageHandler {
     private static final int WRITE_TO_MAIN_FILE = 2;
     private static final int WRITE_TO_BACK_UP_FILE = 3;
 
-    private static final int FILE_DOES_NOT_EXIST = -1;
+    private static final int FILE_ALREADY_EXISTS = -1;
 
     private static final String CONFIG_FILE_NAME = "configFile.txt";
     private static final String MAIN_FILE_NAME = "mainTasksFile.txt";
@@ -54,6 +60,7 @@ public class StorageHandler {
     private static final String NEW_LINE = "\n";
 
     public StorageHandler() {
+        initLogger();
         processFile();
     }
 
@@ -102,9 +109,10 @@ public class StorageHandler {
     // ===========================================================================
 
     /**
-     * Initialises all four files required
+     * Init all four files required
      */
-    public void processFile() {
+    private void processFile() {
+        logger.log(Level.INFO, "Processing file...");
         initConfigFile();
         initMainFile();
         initBackUpFile();
@@ -112,7 +120,7 @@ public class StorageHandler {
     }
     
     /**
-     * Initialises config file which contains settings of the file path and theme
+     * Init config file which contains settings: file path and theme
      */
     private void initConfigFile() {
         configFilePath = CONFIG_FILE_NAME;
@@ -122,6 +130,7 @@ public class StorageHandler {
             extractConfigSettings();
             tasksFile = new File(tasksFilePath);
         } else {
+            logger.log(Level.INFO, "Creating new config file...");
             createNewFile(configFile);
             tasksFilePath = MAIN_FILE_NAME;
             tasksFile = new File(tasksFilePath);
@@ -142,12 +151,13 @@ public class StorageHandler {
     }
 
     /**
-     * Initialises main file which consists of all tasks
+     * Init main file which consists of all user's tasks
      */
     private void initMainFile() {
         if (isExists(tasksFile)) {
             setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
         } else {
+            logger.log(Level.INFO, "Creating new main file...");
             makeNewDirectory(tasksFile);
             createNewFile(tasksFile);
             setMainFilePath(tasksFile.getAbsolutePath());
@@ -155,7 +165,7 @@ public class StorageHandler {
     }
 
     /**
-     * Initialises back up file for undo purposes
+     * Init back up file for undo function
      */
     private void initBackUpFile() {
         backUpTasksFilePath = BACK_UP_FILE_NAME;
@@ -165,13 +175,13 @@ public class StorageHandler {
         if (isExists(backUpTasksFile) == true) {
             deleteBackUpFile();
         }
-
+        logger.log(Level.INFO, "Creating new back up file...");
         createNewFile(backUpTasksFile);
         copyToBackUp();
     }
 
     /**
-     * Initialises command file for data recovery
+     * Init command file for data recovery
      */
     private void initCommandFile() {
         commandsFilePath = COMMAND_FILE_NAME;
@@ -180,6 +190,7 @@ public class StorageHandler {
         if (isExists(commandsFile)) {
             setAllCommandsQueue(readFromExistingCommandFile());
         } else {
+            logger.log(Level.INFO, "Creating new command file...");
             createNewFile(commandsFile);
         }
     }
@@ -190,6 +201,7 @@ public class StorageHandler {
         try {
             isCreated = file.createNewFile();
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "Creating new file failed.");
             e.printStackTrace();
         }
         return isCreated;
@@ -203,6 +215,7 @@ public class StorageHandler {
                 isCreated = file.getParentFile().mkdirs();
             }
         }
+        logger.log(Level.WARNING, "New directory is created: " + isCreated);
         return isCreated;
     }
 
@@ -222,12 +235,15 @@ public class StorageHandler {
         BufferedReader buffer = null;
         switch (fromFile) {
             case READ_FROM_MAIN_FILE :
+                logger.log(Level.INFO, "Reading from main file...");
                 buffer = new BufferedReader(new FileReader(tasksFilePath));
                 break;
             case READ_FROM_BACK_UP_FILE :
+                logger.log(Level.INFO, "Reading from back up file...");
                 buffer = new BufferedReader(new FileReader(backUpTasksFilePath));
                 break;
             case READ_FROM_CONFIG_FILE :
+                logger.log(Level.INFO, "Reading from config file...");
                 buffer = new BufferedReader(new FileReader(configFilePath));
                 break;
         }
@@ -247,8 +263,10 @@ public class StorageHandler {
             readData = readString(buffer, readData);
             buffer.close();
         } catch (FileNotFoundException e) {
+            logger.log(Level.SEVERE, "FileNotFoundException: " + fromFile);
             e.printStackTrace();
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "IOException: " + fromFile);
             e.printStackTrace();
         }
         return readData.trim();
@@ -257,7 +275,7 @@ public class StorageHandler {
     private String readString(BufferedReader buffer, String readData) throws IOException {
         String currentLine;
         while ((currentLine = buffer.readLine()) != null) {
-            readData = readData + currentLine + "\n";
+            readData = readData + currentLine + NEW_LINE;
         }
         return readData;
     }
@@ -271,12 +289,15 @@ public class StorageHandler {
         Queue<String> readCommands = new LinkedList<String>();
         BufferedReader buffer;
         try {
+            logger.log(Level.INFO, "Reading from command file...");
             buffer = new BufferedReader(new FileReader(commandsFilePath));
             readQueue(readCommands, buffer);
             buffer.close();
         } catch (FileNotFoundException e) {
+            logger.log(Level.SEVERE, "FileNotFoundException for command file.");
             e.printStackTrace();
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "IOException for command file.");
             e.printStackTrace();
         }
         return readCommands;
@@ -314,14 +335,17 @@ public class StorageHandler {
         String filePath = null;
         switch (toFile) {
             case WRITE_TO_MAIN_FILE :
+                logger.log(Level.INFO, "Writing to main file...");
                 file = new File(tasksFilePath);
                 filePath = tasksFilePath;
                 break;
             case WRITE_TO_BACK_UP_FILE :
+                logger.log(Level.INFO, "Writing to back up file...");
                 file = backUpTasksFile;
                 filePath = backUpTasksFilePath;
                 break;
             case WRITE_TO_CONFIG_FILE :
+                logger.log(Level.INFO, "Writing to config file...");
                 file = configFile;
                 filePath = configFilePath;
                 break;
@@ -351,6 +375,7 @@ public class StorageHandler {
             fileWriter.close();
             afterModify = file.lastModified();
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "IOException when writing.");
             e.printStackTrace();
         }
         return afterModify;
@@ -369,12 +394,14 @@ public class StorageHandler {
         long beforeModify = commandsFile.lastModified();
         long afterModify = -1;
         try {
-            fileWriter = new FileWriter(commandsFilePath, true); // True to append to file
+         // True to append to file
+            fileWriter = new FileWriter(commandsFilePath, true); 
             fileWriter.write(command + NEW_LINE);
             fileWriter.flush();
             fileWriter.close();
             afterModify = commandsFile.lastModified();
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "IOException when writing.");
             e.printStackTrace();
         }
         return isModified(beforeModify, afterModify);
@@ -407,6 +434,7 @@ public class StorageHandler {
      * Clears command file upon committing
      */
     public void clearCommandFile() {
+        logger.log(Level.INFO, "Clearing command file...");
         FileWriter fileWriter;
         try {
             fileWriter = new FileWriter(commandsFilePath);
@@ -414,6 +442,7 @@ public class StorageHandler {
             fileWriter.flush();
             fileWriter.close();
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "IOException when clearing.");
             e.printStackTrace();
         }
     }
@@ -439,6 +468,7 @@ public class StorageHandler {
         resultSet.setIndex(0);
         boolean isChanged = false;
         
+        logger.log(Level.INFO, "Setting new file path...");
         File newFile = new File(newFilePath);
 
         isChanged = newFileExistsChecker(resultSet, isChanged, newFile);
@@ -453,7 +483,8 @@ public class StorageHandler {
         if (newFile.exists() == false) {
             isChanged = transferToNewFile(newFile);
         } else {
-            resultSet.setIndex(FILE_DOES_NOT_EXIST);
+            logger.log(Level.WARNING, "File already exists. Saving failed.");
+            resultSet.setIndex(FILE_ALREADY_EXISTS);
         }
         return isChanged;
     }
@@ -473,6 +504,7 @@ public class StorageHandler {
 
     private void resultSetChecker(ResultSet resultSet, boolean isChanged) {
         if (isChanged) {
+            logger.log(Level.INFO, "File path changed successfully.");
             resultSet.setSuccess();
         } else {
             resultSet.setFail();
@@ -490,12 +522,15 @@ public class StorageHandler {
         File newFile = new File(newFilePath);
 
         if (isExists(newFile)) {
+            logger.log(Level.INFO, "Loading from existing file...");
             isLoaded = true;
             setMainFilePath(newFile.getAbsolutePath());
             tasksFile = newFile;
             setAllStoredTasks(readFromExistingFile(READ_FROM_MAIN_FILE));
             copyToBackUp();
             writeConfigSettings();
+        } else {
+            logger.log(Level.WARNING, "File does not exist. Loading failed.");
         }
         return isLoaded;
     }
@@ -507,5 +542,29 @@ public class StorageHandler {
     public boolean saveThemeName(String themeName) {
         setThemeName(themeName);
         return writeConfigSettings();
+    }
+    
+    // ============================================================================
+    // Logger files
+    // ===========================================================================
+    
+    private void initLogger() {
+        logger = Logger.getLogger("StorageHandler");
+        initFileHandler();
+        logger.addHandler(fileHandler);
+        fileHandler.setLevel(Level.ALL);
+        logger.setLevel(Level.ALL);
+        logger.config("Logger initialised.");
+        logger.info("Logger name: " + logger.getName());
+    }
+
+    private void initFileHandler() {
+        try {
+            fileHandler = new FileHandler("StorageLogFile.log");
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
