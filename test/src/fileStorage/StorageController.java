@@ -36,7 +36,7 @@ public class StorageController {
     /**
      * Retrieves all tasks previously saved in the Main Task File.
      * 
-     * @return retrievedList Returns an AllTaskLists containing both main and
+     * @return retrievedList returns an AllTaskLists containing both main and
      *         floating ArrayLists.
      */
     public AllTaskLists getTaskLists() {
@@ -52,7 +52,7 @@ public class StorageController {
      * Returns true if tasks are written to Main Task File, false otherwise.
      * This method stores all working tasks into the Main Task File.
      * 
-     * @param allTaskLists Takes in an AllTaskLists containing both main and
+     * @param allTaskLists takes in an AllTaskLists containing both main and
      *            floating ArrayLists.
      * @return isSaved returns true if written to file, false otherwise.
      */
@@ -91,7 +91,7 @@ public class StorageController {
     /**
      * Retrieves user's tasks from the Back Up File.
      * 
-     * @return retrievedList Returns an AllTaskLists containing both main and
+     * @return retrievedList returns an AllTaskLists containing both main and
      *         floating ArrayLists.
      */
     public AllTaskLists getBackUpTaskLists() {
@@ -119,7 +119,7 @@ public class StorageController {
      * UI_SEARCH_VIEW = 4, false otherwise.
      * This method also offers the new command to the existing command queue.
      * 
-     * @param command Takes in and stores user's input.
+     * @param command takes in and stores user's input.
      * @return isFullQueue
      */
     public boolean saveUponFullQueue(String command) {
@@ -166,7 +166,7 @@ public class StorageController {
      * Checks if UI is in Search View.
      * This method returns true if UI is in search view, false otherwise.
      * 
-     * @param splitCommand Takes in first int of command.
+     * @param splitCommand takes in first int of command.
      * @return isSearchView returns true if UI is in Search View, false
      *         otherwise.
      */
@@ -177,7 +177,7 @@ public class StorageController {
     /**
      * Checks if the command has been written to Command File.
      * 
-     * @param command Takes in one line of user's input command.
+     * @param command takes in one line of user's input command.
      */
     private void singleCommandSavedChecker(String command) {
         boolean isSaved = storeCommandLine(command);
