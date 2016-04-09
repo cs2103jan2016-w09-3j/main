@@ -1,9 +1,13 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *         This class is the only class that interacts with Logic component.
+ */
 package userInterface;
 
 import java.util.ArrayList;
 import java.util.Queue;
-
 import entity.ResultSet;
 import entity.TaskEntity;
 import mainLogic.TaskManagerInterface;

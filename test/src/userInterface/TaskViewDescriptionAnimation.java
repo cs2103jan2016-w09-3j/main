@@ -56,9 +56,9 @@ public class TaskViewDescriptionAnimation extends Service<Integer> {
 				Platform.runLater(new Runnable() {
 					public void run() {
 						if (_direction == DIRECTION_TO_EXPANED_VIEW) {
-							_isDoneTranslatingToOtherView = ui.animateToExpanedView();
+							_isDoneTranslatingToOtherView = ui.isAtExpanedView();
 						} else if (_direction == DIRECTION_TO_TASK_VIEW) {
-							_isDoneTranslatingToOtherView = ui.animateToTaskView();
+							_isDoneTranslatingToOtherView = ui.isAtTaskView();
 						}
 					}
 				});

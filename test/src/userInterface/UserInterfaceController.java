@@ -63,7 +63,7 @@ public class UserInterfaceController {
 	private EventHandler<MouseEvent> _mouseEvent;
 
 	private Rectangle2D _screenBounds;
-	private boolean _fixedSize;
+	private boolean _isFixedSize;
 
 	// variables for animation and changing views;
 	private int _currentView = TASK_VIEW;
@@ -121,15 +121,15 @@ public class UserInterfaceController {
 	 * Initialize the other views.
 	 * 
 	 * @param screenBounds
-	 * @param fixedSize
+	 * @param isFixedSize
 	 * @param styleSheet
 	 * @param mouseEvent
 	 */
-	public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
+	public void initializeInterface(Rectangle2D screenBounds, boolean isFixedSize, String styleSheet,
 			EventHandler<MouseEvent> mouseEvent) {
 		this._styleSheet = styleSheet;
 		this._screenBounds = screenBounds;
-		this._fixedSize = fixedSize;
+		this._isFixedSize = isFixedSize;
 		this._mouseEvent = mouseEvent;
 		initializeViews();
 		show();
@@ -157,26 +157,26 @@ public class UserInterfaceController {
 	private void initializeHelpScreen() {
 		logger.log(Level.INFO, "initializing help view.");
 		String loadFromFilePath = _logicFace.getLoadFromFilePath();
-		_helpScreen = HelpScreenUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+		_helpScreen = HelpScreenUserInterface.getInstance(_parentStage, _screenBounds, _isFixedSize, _styleSheet,
 				_mouseEvent, loadFromFilePath);
 	}
 
 	private void initializeTaskView() {
 		logger.log(Level.INFO, "initializing task view.");
-		_taskViewInterface = TaskViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+		_taskViewInterface = TaskViewUserInterface.getInstance(_parentStage, _screenBounds, _isFixedSize, _styleSheet,
 				_mouseEvent);
 		_taskViewInterface.buildComponent(_logicFace.getWorkingList(), _logicFace.getNextTimeListId());
 	}
 
 	private void initializeFloatingView() {
 		logger.log(Level.INFO, "initializing floating view.");
-		_floatingViewInterface = FloatingTaskUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize,
+		_floatingViewInterface = FloatingTaskUserInterface.getInstance(_parentStage, _screenBounds, _isFixedSize,
 				_styleSheet, _mouseEvent);
 	}
 
 	private void initializeFloatingBar() {
 		logger.log(Level.INFO, "initializing floating bar component.");
-		_floatingBarComponent = FloatingBarViewUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize,
+		_floatingBarComponent = FloatingBarViewUserInterface.getInstance(_parentStage, _screenBounds, _isFixedSize,
 				_styleSheet, _mouseEvent);
 		TaskEntity floatingTask = _logicFace.getRandomFloating();
 		if (floatingTask != null) {
@@ -186,19 +186,19 @@ public class UserInterfaceController {
 
 	private void initializeSearchView() {
 		logger.log(Level.INFO, "initializing search view.");
-		_searchViewInterface = SearchUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+		_searchViewInterface = SearchUserInterface.getInstance(_parentStage, _screenBounds, _isFixedSize, _styleSheet,
 				_mouseEvent);
 	}
 
 	private void initializeDetailComponent() {
 		logger.log(Level.INFO, "initializing detail component.");
-		_detailComponent = DetailComponent.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+		_detailComponent = DetailComponent.getInstance(_parentStage, _screenBounds, _isFixedSize, _styleSheet,
 				_mouseEvent);
 	}
 
 	private void initializeDescriptionComponent() {
 		logger.log(Level.INFO, "initializing description component.");
-		_descriptionComponent = DescriptionComponent.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
+		_descriptionComponent = DescriptionComponent.getInstance(_parentStage, _screenBounds, _isFixedSize, _styleSheet,
 				_mouseEvent);
 	}
 
@@ -474,7 +474,7 @@ public class UserInterfaceController {
 	 * 
 	 * @return - true only when animation is done.
 	 */
-	public boolean animateToExpanedView() {
+	public boolean isAtExpanedView() {
 		boolean isDoneTranslating = _taskViewInterface.isAtDetailedView(1);
 		_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(), EXPANDED_VIEW);
 		translateComponentsY(_taskViewInterface.getTranslationY());
@@ -486,7 +486,7 @@ public class UserInterfaceController {
 	 * 
 	 * @return - true only when animation is done.
 	 */
-	public boolean animateToTaskView() {
+	public boolean isAtTaskView() {
 		boolean isDoneTranslating = _taskViewInterface.isAtTaskView(-1);
 		_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForWeek(), TASK_VIEW);
 		translateComponentsY(_taskViewInterface.getTranslationY());
@@ -553,14 +553,14 @@ public class UserInterfaceController {
 	 * 
 	 * @param task
 	 * @param rawInput
-	 * @param toUpdateView
+	 * @param shouldUpdateView
 	 *            (false only when recovering lost commands and testing)
 	 * @return ResultSet
 	 */
-	public ResultSet addTask(TaskEntity task, String rawInput, boolean toUpdateView) {
+	public ResultSet addTask(TaskEntity task, String rawInput, boolean shouldUpdateView) {
 		ResultSet resultSet = _logicFace.addTask(task, buildRawCommand(rawInput));
 		if (resultSet.isSuccess()) {
-			if (toUpdateView) {
+			if (shouldUpdateView) {
 				updateChangesToViews(resultSet.getIndex());
 			}
 		}
@@ -568,11 +568,11 @@ public class UserInterfaceController {
 		return resultSet;
 	}
 
-	public ResultSet deleteTask(String id, String rawInput, boolean toUpdateView) {
+	public ResultSet deleteTask(String id, String rawInput, boolean shouldUpdateView) {
 		ResultSet resultSet = _logicFace.delete(id, buildRawCommand(rawInput));
 		if (resultSet != null) {
 			if (resultSet.isSuccess()) {
-				if (toUpdateView) {
+				if (shouldUpdateView) {
 					updateChangesToViews(resultSet.getIndex());
 				}
 			}
@@ -626,13 +626,13 @@ public class UserInterfaceController {
 	 * @param idToModify
 	 * @param task
 	 * @param rawInput
-	 * @param toUpdateView
+	 * @param shouldUpdateView
 	 * @return ResultSet
 	 */
-	public ResultSet modifyTask(int idToModify, TaskEntity task, String rawInput, boolean toUpdateView) {
+	public ResultSet modifyTask(int idToModify, TaskEntity task, String rawInput, boolean shouldUpdateView) {
 		ResultSet resultSet = _logicFace.modify(idToModify, task, buildRawCommand(rawInput));
 		if (resultSet.isSuccess()) {
-			if (toUpdateView) {
+			if (shouldUpdateView) {
 				updateChangesToViews(resultSet.getIndex());
 			}
 		}
@@ -657,24 +657,24 @@ public class UserInterfaceController {
 		}
 	}
 
-	public ResultSet executeSearch(String stringToSearch, String rawString, boolean toUpdateView) {
+	public ResultSet executeSearch(String stringToSearch, String rawString, boolean shouldUpdateView) {
 		ResultSet resultSet = _logicFace.searchString(stringToSearch, buildRawCommand(rawString));
 		if (resultSet.getSearchCount() > 0) {
-			if (toUpdateView) {
+			if (shouldUpdateView) {
 				showSearchView();
 			}
 		}
 		return resultSet;
 	}
 
-	public ResultSet markAsCompleted(String indexZZ, String rawString, boolean toUpdateview) {
+	public ResultSet markAsCompleted(String indexZZ, String rawString, boolean shouldUpdateView) {
 		int indexInt = TaskUtils.convertStringToInteger(indexZZ);
 		if (indexInt == -1) {
 			return null;
 		}
 		ResultSet resultSet = _logicFace.markAsDone(indexInt, buildRawCommand(rawString));
 		if (resultSet.isSuccess()) {
-			if (toUpdateview) {
+			if (shouldUpdateView) {
 				updateChangesToViews(resultSet.getIndex());
 			}
 		}
@@ -696,10 +696,10 @@ public class UserInterfaceController {
 	 * @param indexZZ1
 	 * @param indexZZ2
 	 * @param rawString
-	 * @param toUpdateView
+	 * @param shouldUpdateView
 	 * @return ResultSet
 	 */
-	public ResultSet link(String indexZZ1, String indexZZ2, String rawString, boolean toUpdateView) {
+	public ResultSet link(String indexZZ1, String indexZZ2, String rawString, boolean shouldUpdateView) {
 		int index1 = TaskUtils.convertStringToInteger(indexZZ1);
 		int index2 = TaskUtils.convertStringToInteger(indexZZ2);
 		if (index1 != -1 && index2 != -1) {
@@ -709,7 +709,7 @@ public class UserInterfaceController {
 				ResultSet resultSet = _logicFace.link(_logicFace.getWorkingList().get(index1),
 						_logicFace.getWorkingList().get(index2), buildRawCommand(rawString));
 				if (resultSet.isSuccess()) {
-					if (toUpdateView) {
+					if (shouldUpdateView) {
 						updateChangesToViews(resultSet.getIndex());
 					}
 				}
