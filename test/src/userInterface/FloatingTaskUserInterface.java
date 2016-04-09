@@ -1,4 +1,9 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *         This class build and manage the floating panel where it shows the floating task.
+ */
 package userInterface;
 
 import java.util.ArrayList;
@@ -58,6 +63,17 @@ public class FloatingTaskUserInterface implements ViewInterface {
 	private ArrayList<TaskEntity> _floatingList;
 	private ArrayList<HBox> _floatingBoxes = new ArrayList<HBox>();
 
+	/**
+	 * Create an instance of FloatingTaskUserInterface.
+	 * 
+	 * @param primaryStage
+	 * @param screenBounds
+	 * @param fixedSize
+	 * @param styleSheet
+	 * @param mouseEvent
+	 * @return Instance of FloatingTaskUserInterface only if there isn't an
+	 *         instance already.
+	 */
 	public static FloatingTaskUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
 			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
 		if (_myInstance == null) {
@@ -78,6 +94,9 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		buildComponent();
 	}
 
+	/**
+	 * Initialize view dimensions and position.
+	 */
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
 		if (fixedSize) {
 			_stageWidth = (int) screenBounds.getWidth();
@@ -101,6 +120,9 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Initialize the stage and the components in the stage.
+	 */
 	public void initializeStage(Window owner, int applicationX, int applicationY, int stageWidth, int stageHeight,
 			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
@@ -120,6 +142,10 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		_stage.setScene(scene);
 	}
 
+	/**
+	 * Updates the selector index by the amount of value. Items are added and
+	 * removed to maintain THRESHOLD.
+	 */
 	public void update(int value) {
 		if (value > 0)// ctrl down
 		{
@@ -176,6 +202,9 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		_stage.hide();
 	}
 
+	/**
+	 * Build the main structure of the component.
+	 */
 	public void buildComponent() {
 
 		_mainVbox.getChildren().clear();
@@ -190,6 +219,13 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		StackPane.setAlignment(_secondaryVbox, Pos.TOP_LEFT);
 	}
 
+	/**
+	 * Check if there are any floating task and build the components base on
+	 * floatingList size.
+	 * 
+	 * @param floatingList
+	 * @param index
+	 */
 	public void buildContent(ArrayList<TaskEntity> floatingList, int index) {
 		_floatingList = floatingList;
 		_floatingBoxes = new ArrayList<HBox>();
@@ -220,6 +256,9 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		return titleLableBox;
 	}
 
+	/**
+	 * Builds the component when there are no floating task.
+	 */
 	public void buildHelpWithFloating() {
 		_secondaryVbox.getChildren().clear();
 		Label helpLabel = new Label("You do not have any floating task yet.");
@@ -253,6 +292,13 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		setSelected(0);
 	}
 
+	/**
+	 * Build the individual component for each floating task.
+	 * 
+	 * @param task
+	 * @param index
+	 * @return HBox
+	 */
 	public HBox buildIndividualFloating(TaskEntity task, int index) {
 		HBox parentBox = new HBox();
 		VBox parentBoxChild = new VBox();
@@ -325,6 +371,11 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		return parentBox;
 	}
 
+	/**
+	 * Sets the selected item base on value.
+	 * 
+	 * @param value
+	 */
 	public void setSelected(int value) {
 		int temp = _selectedIndex + value;
 		if (isBetweenRange(temp)) {
@@ -333,11 +384,17 @@ public class FloatingTaskUserInterface implements ViewInterface {
 			_selectedIndex = temp;
 			HBox item = _floatingBoxes.get(_selectedIndex - _startIndex);
 			item.setId("cssFloatingTaskViewSelected");
-			translateY(getTopHeight(_selectedIndex - _startIndex));
+			translateY(calculateTopHeight(_selectedIndex - _startIndex));
 		}
 	}
 
-	public double getTopHeight(int index) {
+	/**
+	 * Calculates the height above the selected component.
+	 * 
+	 * @param index
+	 * @return height
+	 */
+	public double calculateTopHeight(int index) {
 		double posY = 0;
 		for (int i = 0; i <= index; i++) {
 			posY += _floatingBoxes.get(i).getMinHeight();
@@ -356,6 +413,12 @@ public class FloatingTaskUserInterface implements ViewInterface {
 		_secondaryVbox.setTranslateY(-posY);
 	}
 
+	/**
+	 * Check if the index is between _startIndex and _endIndex.
+	 * 
+	 * @param index
+	 * @return true only if index is bewteen the range
+	 */
 	public boolean isBetweenRange(int index) {
 		if (index >= _startIndex && index <= _endIndex) {
 			return true;
