@@ -1,4 +1,9 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *         This class builds the components on the left panel.
+ */
 package userInterface;
 
 import java.util.ArrayList;
@@ -26,14 +31,13 @@ public class DescriptionComponent implements ViewInterface {
 	static final int CONPONENT_WIDTH = 50;
 	static final int CONPONENT_RIGHT_MARGIN = 0;
 	private static final int POSITION_ZERO = 0;
+	private static final String CSS_LABEL = "cssLabelsDescription";
 
 	private static DescriptionComponent _myInstance;
-	private static final String CSS_LABEL = "cssLabelsDescription";
 	private String _styleSheet;
 
 	private final double LABEL_SIZE_LARGE = 200;
 	private final double LABEL_SIZE_MEDIUM = 100;
-	private final double LABEL_SIZE_SMALL = 24;
 
 	private Stage _stage;
 	private int _stageWidth;
@@ -45,6 +49,17 @@ public class DescriptionComponent implements ViewInterface {
 	private double _translationY = 0;
 	private int _currentView;
 
+	/**
+	 * Create an instance of DescriptionComponent.
+	 * 
+	 * @param parentStage
+	 * @param screenBounds
+	 * @param fixedSize
+	 * @param styleSheet
+	 * @param mouseEvent
+	 * @return Instance of DescriptionComponent only if there isn't an instance
+	 *         already.
+	 */
 	public static DescriptionComponent getInstance(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize,
 			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
 		if (_myInstance == null) {
@@ -61,6 +76,9 @@ public class DescriptionComponent implements ViewInterface {
 		initializeStage(parentStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
 	}
 
+	/**
+	 * Initialize view dimensions and position.
+	 */
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
 		if (fixedSize) {
 			_stageWidth = CONPONENT_WIDTH;
@@ -83,7 +101,10 @@ public class DescriptionComponent implements ViewInterface {
 					- PrimaryUserInterface.COMMAND_BAR_TOP_MARGIN - PrimaryUserInterface.COMMAND_BAR_BOTTOM_MARGIN;
 		}
 	}
-
+	
+	/**
+	 * Initialize the stage and the components in the stage.
+	 */
 	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight,
 			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
@@ -106,6 +127,12 @@ public class DescriptionComponent implements ViewInterface {
 		_stage.setScene(scene);
 	}
 
+	/**
+	 * Rebuilds the component with a list of DescriptionLabels.
+	 * 
+	 * @param descriptionLabels
+	 * @param view
+	 */
 	public void buildComponent(ArrayList<DescriptionLabel> descriptionLabels, int view) {
 		_currentView = view;
 		_mainVbox.getChildren().clear();
@@ -118,13 +145,19 @@ public class DescriptionComponent implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Builds the individual label.
+	 * (returns a stackPane because, before it has a Rectangle background. Rectangle is unused.)
+	 * 
+	 * @param dLabel
+	 * @param totalBuildedHeight
+	 * @return StackPane
+	 */
 	public StackPane buildIndividualLabel(DescriptionLabel dLabel, double totalBuildedHeight) {
 		StackPane s = new StackPane();
 		s.setMinHeight(dLabel.getHeight());
 		s.setMinWidth(CONPONENT_WIDTH);
 		VBox labelBox = buildLabel(dLabel, totalBuildedHeight, dLabel.isSelected());
-		// s.getChildren().add(buildGradientRec(CONPONENT_WIDTH,
-		// dLabel.getHeight(), dLabel.isSelected()));
 		s.getChildren().add(labelBox);
 		return s;
 	}
@@ -163,6 +196,14 @@ public class DescriptionComponent implements ViewInterface {
 	}
 
 	// @@author A0125514N
+	/**
+	 * Creates the label base on the height and position.
+	 * 
+	 * @param posYStart
+	 * @param posYEnd
+	 * @param vbox
+	 * @param dLabel
+	 */
 	public void createLabelBaseOnHeight(double posYStart, double posYEnd, VBox vbox, DescriptionLabel dLabel) {
 		Label main = new Label();
 		main.getStyleClass().add(CSS_LABEL);
