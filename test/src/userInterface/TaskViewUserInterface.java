@@ -1,10 +1,14 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *         This class builds the interface in the main view.
+ */
 package userInterface;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import dateParser.ReverseParser;
 import entity.DescriptionLabel;
 import entity.TaskEntity;
@@ -41,7 +45,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	static final int DETAILED_VIEW_ITEM_HEIGHT = 50;
 	static final int SELECTOR_POSITION_Y = TASK_VIEW_LABEL_HEIGHT + TASK_VIEW_ITEM_HEIGHT * 2;
 
-	// font
+	// Font
 	static final int FONT_SIZE_LABEL_DATE = 24;
 	static final int FONT_SIZE_TASK = 12;
 	static final int FONT_SIZE_INDEX = 8;
@@ -75,30 +79,41 @@ public class TaskViewUserInterface implements ViewInterface {
 	private ArrayList<GridPane> _gridPanes = new ArrayList<GridPane>();
 	private ArrayList<TaskEntity> workingList;
 
-	public static TaskViewUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
+	/**
+	 * Create an instance of TaskViewUserInterface.
+	 * 
+	 * @param primaryStage
+	 * @param screenBounds
+	 * @param isFixedSize
+	 * @param styleSheet
+	 * @param mouseEvent
+	 * @return Instance of TaskViewUserInterface only if there isn't an instance
+	 *         already.
+	 */
+	public static TaskViewUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean isFixedSize,
 			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
 		if (_myInstance == null) {
 			if (primaryStage == null || screenBounds == null) {
 				return null;
 			}
-			_myInstance = new TaskViewUserInterface(primaryStage, screenBounds, fixedSize, styleSheet, mouseEvent);
+			_myInstance = new TaskViewUserInterface(primaryStage, screenBounds, isFixedSize, styleSheet, mouseEvent);
 			return _myInstance;
 		}
 		return null;
 	}
 
-	private TaskViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
+	private TaskViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean isFixedSize, String styleSheet,
 			EventHandler<MouseEvent> mouseEvent) {
 		_styleSheet = styleSheet;
-		initializeVaribles(screenBounds, fixedSize);
+		initializeVaribles(screenBounds, isFixedSize);
 		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
 	}
 
 	/**
-	 * Initialize view dimensions and position base.
+	 * Initialize view dimensions and position.
 	 */
-	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
-		if (fixedSize) {
+	public void initializeVaribles(Rectangle2D screenBounds, boolean isFixedSize) {
+		if (isFixedSize) {
 			_stageWidth = (int) screenBounds.getWidth() - DescriptionComponent.CONPONENT_WIDTH
 					- DescriptionComponent.CONPONENT_RIGHT_MARGIN - DetailComponent.COMPONENT_WIDTH
 					- DetailComponent.COMPONENT_LEFT_MARGIN;
@@ -126,6 +141,9 @@ public class TaskViewUserInterface implements ViewInterface {
 		_individualItemWidth = _stageWidth;
 	}
 
+	/**
+	 * Initialize the stage and the components in the stage.
+	 */
 	public void initializeStage(Window owner, int applicationX, int applicationY, int stageWidth, int stageHeight,
 			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
@@ -146,9 +164,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		scene.getStylesheets().add(_styleSheet);
 		scene.setFill(Color.TRANSPARENT);
 		_stage.setScene(scene);
-
 		scene.setOnMousePressed(mouseEvent);
-
 	}
 
 	public void show() {
@@ -295,7 +311,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	/**
-	 * Creates the warper for week.
+	 * Creates the warper box for week.
 	 * 
 	 * @return VBox.
 	 */
@@ -308,7 +324,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	/**
-	 * Creates the warper for day with the label.
+	 * Creates the warper for day with the title label.
 	 * 
 	 * @return VBox.
 	 */
@@ -353,7 +369,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	/**
-	 * Creates UI for the taskEntity.
+	 * Builds the wrapper for the components for each task.
 	 * 
 	 * @return VBox.
 	 */
@@ -367,6 +383,13 @@ public class TaskViewUserInterface implements ViewInterface {
 		return hbox;
 	}
 
+	/**
+	 * Build the individual components for each task.
+	 * 
+	 * @param taskEntity
+	 * @param index
+	 * @return
+	 */
 	private GridPane createGridPaneForTask(TaskEntity taskEntity, int index) {
 		GridPane grid = new GridPane();
 		grid.setId("cssTaskViewUnSelectedTask");
@@ -395,6 +418,7 @@ public class TaskViewUserInterface implements ViewInterface {
 		if (taskEntity.getAssociationState() == TaskEntity.PROJECT_HEAD) {
 			topBox.getChildren().add(createStar(TASK_VIEW_ITEM_HEIGHT));
 		}
+
 		Label titleLabel = new Label(taskEntity.getName());
 		titleLabel.getStyleClass().add(CSS_LABEL);
 		titleLabel.setMinHeight(TASK_VIEW_ITEM_HEIGHT);
@@ -443,6 +467,12 @@ public class TaskViewUserInterface implements ViewInterface {
 		return grid;
 	}
 
+	/**
+	 * Creates the wrapper for star.
+	 * 
+	 * @param size
+	 * @return StackPane
+	 */
 	private StackPane createStar(double size) {
 		StackPane stackPane = new StackPane();
 		stackPane.setMinHeight(size);
@@ -454,6 +484,12 @@ public class TaskViewUserInterface implements ViewInterface {
 		return stackPane;
 	}
 
+	/**
+	 * Creates the star base on the size.
+	 * 
+	 * @param size
+	 * @return Polygon
+	 */
 	public Polygon buildStar(double size) {
 		int arms = 5;
 		double rOuter = 1 * size;
@@ -489,8 +525,8 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	/**
-	 * This method updates the selector index by the amount of value. Items are
-	 * added and removed to maintain THRESHOLD.
+	 * Updates the selector index by the amount of value. Items are added and
+	 * removed to maintain THRESHOLD.
 	 * 
 	 */
 	public void update(int value) {
@@ -518,6 +554,9 @@ public class TaskViewUserInterface implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Removes the first item in the main component.
+	 */
 	private void removeFirstTask() {
 		try {
 			GridPane gp = _gridPanes.get(0);
@@ -544,6 +583,9 @@ public class TaskViewUserInterface implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Removes the last item in the main component.
+	 */
 	private void removeLastTask() {
 		try {
 			GridPane gp = _gridPanes.get(_gridPanes.size() - 1);
@@ -567,6 +609,9 @@ public class TaskViewUserInterface implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Adds an item to the last position in the main component.
+	 */
 	private void addLastItem() {
 		GridPane gp = _gridPanes.get(_gridPanes.size() - 1);
 		VBox gpDayParent = (VBox) gp.getParent().getParent();
@@ -594,6 +639,9 @@ public class TaskViewUserInterface implements ViewInterface {
 		_endIndex = _endIndex + 1;
 	}
 
+	/**
+	 * Adds an item to the first position in the main component.
+	 */
 	private void addFirstItem() {
 		GridPane gp = _gridPanes.get(0);
 		VBox gpDayParent = (VBox) gp.getParent().getParent();
@@ -624,6 +672,12 @@ public class TaskViewUserInterface implements ViewInterface {
 		_startIndex = _startIndex - 1;
 	}
 
+	/**
+	 * Set the item as selected base on the value.
+	 * 
+	 * @param value
+	 * @return TaskEntity
+	 */
 	public TaskEntity setItemSelected(int value) {
 		int index = value + _selectedIndex;
 		if (_gridPanes.size() > 0) {
@@ -659,6 +713,11 @@ public class TaskViewUserInterface implements ViewInterface {
 		return null;
 	}
 
+	/**
+	 * Set the item CSS to be Selected.
+	 * 
+	 * @param selectedGp
+	 */
 	public void setItemAsSelected(GridPane selectedGp) {
 		selectedGp.setId("cssTaskViewSelectedTask");
 		VBox selectedParent = (VBox) selectedGp.getParent().getParent();
@@ -667,6 +726,11 @@ public class TaskViewUserInterface implements ViewInterface {
 		weekParentSelected.setId("cssTaskViewWeekSelected");
 	}
 
+	/**
+	 * Set the item CSS to be unSelected.
+	 * 
+	 * @param gpPrevious
+	 */
 	public void setItemAsDeSelected(GridPane gpPrevious) {
 		gpPrevious.setId("cssTaskViewUnSelectedTask");
 		VBox previousParent = (VBox) gpPrevious.getParent().getParent();
@@ -675,8 +739,10 @@ public class TaskViewUserInterface implements ViewInterface {
 		weekParent.setId("cssTaskViewWeekUnSelected");
 	}
 
-	// set transLationY to be desired tranlationY, which is current selected
-	// item position + threshold
+	/**
+	 * Updates the transLationY to be current selected item position addition
+	 * with threshold.
+	 */
 	public void updateTranslationY() {
 		if ((_selectedIndex - _startIndex) >= _gridPanes.size()) {
 			return;
@@ -704,6 +770,11 @@ public class TaskViewUserInterface implements ViewInterface {
 		transLationY = heightAboveItem;
 	}
 
+	/**
+	 * Calculates the height above the selected item.
+	 * 
+	 * @return height
+	 */
 	public double getTranslationY() {
 		double totalHeight = 0;
 		for (int i = 0; i < _mainVbox.getChildren().size(); i++) {
@@ -721,7 +792,6 @@ public class TaskViewUserInterface implements ViewInterface {
 			}
 			return itemPosY;
 		}
-
 		return 0;
 	}
 
@@ -729,6 +799,13 @@ public class TaskViewUserInterface implements ViewInterface {
 		_mainVbox.setTranslateY(itemPosY);
 	}
 
+	/**
+	 * Checks if task1 and task2 belong in the same day.
+	 * 
+	 * @param task1
+	 * @param task2
+	 * @return true only if task belong in the same day
+	 */
 	public static boolean isSameDay(TaskEntity task1, TaskEntity task2) {
 		if (task1 == null) { // new day
 			return false;
@@ -755,6 +832,13 @@ public class TaskViewUserInterface implements ViewInterface {
 		return false;
 	}
 
+	/**
+	 * Check if task1 and task2 belong in the same week.
+	 * 
+	 * @param task1
+	 * @param task2
+	 * @return true only if task1 and task2 belong in the same week.
+	 */
 	public static boolean isSameWeek(TaskEntity task1, TaskEntity task2) {
 		if (task1 == null) {
 			return false;
@@ -780,6 +864,12 @@ public class TaskViewUserInterface implements ViewInterface {
 		return false;
 	}
 
+	/**
+	 * Builds a list of DescriptionLabels base on the position and items in the
+	 * TaskView.
+	 * 
+	 * @return list of DescriptionLabel
+	 */
 	public ArrayList<DescriptionLabel> rebuildDescriptionLabelsForWeek() {
 		ArrayList<DescriptionLabel> descriptionLables = new ArrayList<DescriptionLabel>();
 		GridPane gp = getSelectedGridPane();
@@ -808,6 +898,12 @@ public class TaskViewUserInterface implements ViewInterface {
 		return descriptionLables;
 	}
 
+	/**
+	 * Builds a list of DescriptionLabels base on the position and items in the
+	 * ExpendedView.
+	 * 
+	 * @return list of DescriptionLabels
+	 */
 	public ArrayList<DescriptionLabel> rebuildDescriptionLabelsForDay() {
 		ArrayList<DescriptionLabel> descriptionLables = new ArrayList<DescriptionLabel>();
 		GridPane gp = getSelectedGridPane();
@@ -834,6 +930,12 @@ public class TaskViewUserInterface implements ViewInterface {
 		return descriptionLables;
 	}
 
+	/**
+	 * Calculates the of items in the week.
+	 * 
+	 * @param weekBox
+	 * @return number of items
+	 */
 	public int countNumberOfTaskInWeek(VBox weekBox) {
 		int noOfTask = 0;
 		for (int i = 0; i < weekBox.getChildren().size(); i++) {
@@ -843,18 +945,21 @@ public class TaskViewUserInterface implements ViewInterface {
 		return noOfTask;
 	}
 
+	/**
+	 * Calculates the of items in the day.
+	 * 
+	 * @param dayBox
+	 * @return number of items
+	 */
 	public int countNumberOfTaskInDay(VBox dayBox) {
 		return dayBox.getChildren().size() - 1;
 	}
 
-	public int getSelectedGridPaneIndex(VBox vbox) {
-		VBox parentDay = (VBox) vbox.getChildren().get(0);
-		HBox parentHbox = (HBox) parentDay.getChildren().get(1);
-		GridPane gp = (GridPane) parentHbox.getChildren().get(0);
-		String id = gp.getId();
-		return Integer.parseInt(id.substring(4));
-	}
-
+	/**
+	 * Gets the item that is selected.
+	 * 
+	 * @return GridPane
+	 */
 	public GridPane getSelectedGridPane() {
 		if (_gridPanes.size() <= (_selectedIndex - _startIndex)) {
 			return null;
@@ -873,10 +978,10 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	/**
-	 * Animates the current view the the detailed view base on the value.
+	 * Animates the current view to the detailed view base on the value.
 	 * 
 	 * @param value
-	 * @return
+	 * @return true only if animation is done
 	 */
 	public boolean isAtDetailedView(double value) {
 		double totalHeight = 0;
@@ -911,10 +1016,10 @@ public class TaskViewUserInterface implements ViewInterface {
 	}
 
 	/**
-	 * Animates the current view the the task view base on the value.
+	 * Animates the current view to the task view base on the value.
 	 * 
 	 * @param value
-	 * @return
+	 * @return true only if the animation is done
 	 */
 	public boolean isAtTaskView(double value) {
 		double totalHeight = 0;
