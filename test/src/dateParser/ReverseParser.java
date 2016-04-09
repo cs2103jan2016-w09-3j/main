@@ -33,6 +33,11 @@ public class ReverseParser {
 		
 	}
 
+	/**
+	 * returns a string in the format "upcoming/previous" day_of_week DDth MMMMM YYYY
+	 * @param input
+	 * @return
+	 */
 	public String reParse(Calendar input) {
 		String output = null;
 		Calendar curr = Calendar.getInstance();
@@ -65,6 +70,11 @@ public class ReverseParser {
 		return output;
 	}
 	
+	/**
+	 * Re-parsing dates for detailed view
+	 * @param input
+	 * @return
+	 */
 	public String detailedReParse(Calendar input) {
 		String output = null;
 		int dayOfWeek = input.get(Calendar.DAY_OF_WEEK);
@@ -80,6 +90,11 @@ public class ReverseParser {
 		return output;
 	}
 
+	/**
+	 * adds the "th" for the date
+	 * @param date
+	 * @return
+	 */
 	private String getFormattedDate(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
