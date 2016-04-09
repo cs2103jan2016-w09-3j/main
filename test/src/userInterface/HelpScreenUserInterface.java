@@ -1,4 +1,9 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *         This class build a panel over the entire application to show information.
+ */
 package userInterface;
 
 import javafx.event.EventHandler;
@@ -8,7 +13,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -16,7 +20,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -43,7 +46,8 @@ public class HelpScreenUserInterface implements ViewInterface {
 
 	private static final String[][] CHEAT_SHEET_SHORT_CUTS = { { "F1", "Brings up the Help Manual!" },
 			{ "F2", "Collapses application into Compact View" }, { "F3", "Displays application in Full View" },
-			{ "Up/Down", "Retrieves previous commands entered" }, { "Ctrl + Up/Down", "Scrolls through task list" },
+			{ "F4", "Shuffle through the themes" }, { "Up/Down", "Retrieves previous commands entered" },
+			{ "Ctrl + Up/Down", "Scrolls through task list" },
 			{ "Ctrl + Left/Right", "Switches from Main to Floating to Search View" }, { "", "" } };
 	private static final String[][] CHEAT_SHEET_COMMANDS = {
 			{ "ADD", "Adds a task into your task list, tasks without dates will be added to the Floating View" },
@@ -59,10 +63,10 @@ public class HelpScreenUserInterface implements ViewInterface {
 	private static final String HELP_DESCRIPTION_COMMAND_BAR_TITLE = "Command Bar";
 	private static final String HELP_DESCRIPTION_COMMAND_BAR = "This is where you input your commands. Start with a command word, followed by the necessary fields.";
 
-	// font
+	// Font
 	private static final int FONT_SIZE_LABEL_TITLE = 18;
 	private static final Font FONT_LABEL_TITLE = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_LABEL_TITLE);
-	private static final int FONT_SIZE_LABEL = 14;
+	private static final int FONT_SIZE_LABEL = 12;
 	private static final Font FONT_LABEL = new Font(PrimaryUserInterface.FONT_DEFAULT, FONT_SIZE_LABEL);
 
 	private static final int MARGIN = 10;
@@ -92,6 +96,18 @@ public class HelpScreenUserInterface implements ViewInterface {
 
 	private int _selector = 0;
 
+	/**
+	 * Create an instance of HelpScreenUserInterface.
+	 * 
+	 * @param primaryStage
+	 * @param screenBounds
+	 * @param fixedSize
+	 * @param styleSheet
+	 * @param mouseEvent
+	 * @param filePathLoadFrom
+	 * @return Instance of HelpScreenUserInterface only if there isn't an
+	 *         instance already.
+	 */
 	public static HelpScreenUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
 			String styleSheet, EventHandler<MouseEvent> mouseEvent, String filePathLoadFrom) {
 		if (_myInstance == null) {
@@ -113,6 +129,9 @@ public class HelpScreenUserInterface implements ViewInterface {
 		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
 	}
 
+	/**
+	 * Initialize view dimensions and position.
+	 */
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
 		_isFixed = fixedSize;
 		_screenBounds = screenBounds;
@@ -132,6 +151,9 @@ public class HelpScreenUserInterface implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Initialize the stage and the components in the stage.
+	 */
 	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight,
 			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
@@ -494,6 +516,9 @@ public class HelpScreenUserInterface implements ViewInterface {
 		return main;
 	}
 
+	/**
+	 * Updates the selector by the value and changes the userInterface.
+	 */
 	public void update(int value) {
 		if (_stage.isShowing()) {
 			int index = _selector + value;
