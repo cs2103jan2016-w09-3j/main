@@ -51,6 +51,12 @@ public class ResultSet {
         return _status;
     }
 
+    /**
+     * Sets the status of ResultSet, keeping both warnings of CONFLICT and PAST
+     * when set accordingly
+     * 
+     * @param status to set to
+     */
     public void setStatus(int status) {
         // Statuses are added on rather than overwritten for warning messages
         if (status == STATUS_CONFLICT && _status == STATUS_PAST) {
