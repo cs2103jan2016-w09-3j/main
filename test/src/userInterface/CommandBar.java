@@ -84,7 +84,7 @@ public class CommandBar {
 
 	private static final String MESSAGE_SUCCESS_LOADFROM = "Loaded from %1$s file successfully.";
 	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_1 = "Unable to find %1$s. Please check that the file is available for reading.";
-	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_2 = "File empty or Json can't read.";
+	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_3 = "File not in json format.";
 
 	// UserInterface values
 	private static final int GAP_SIZE = 0;
@@ -525,7 +525,7 @@ public class CommandBar {
 		}
 		return null;
 	}
-	
+
 	public COMMAND onEnter() {
 		onKeyReleased();
 		preCommands.add(fullInput);
@@ -579,7 +579,8 @@ public class CommandBar {
 	}
 
 	/**
-	 * Gets the ids of the two task that needs to be link which the parser has identified.
+	 * Gets the ids of the two task that needs to be link which the parser has
+	 * identified.
 	 * 
 	 * @return Pair
 	 */
@@ -847,17 +848,12 @@ public class CommandBar {
 		case LOADFROM: {
 			if (resultSet != null) {
 				if (resultSet.isSuccess()) {
-					if (resultSet.getStatus() == ResultSet.STATUS_NOFILE) {
-						setFeedBackMessage(MESSAGE_FAILURE_LOADFROM_TYPE_2);
-						setFeedBackColor(FEEDBACK_STATUS_CONFLICT);
-					} else {
-						setFeedBackMessage(String.format(MESSAGE_SUCCESS_LOADFROM, msg));
-						setFeedBackColor(FEEDBACK_STATUS_NORMAL);
-					}
+					setFeedBackMessage(String.format(MESSAGE_SUCCESS_LOADFROM, msg));
+					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 				} else {
-					if (resultSet.getStatus() == ResultSet.STATUS_BAD) {
-						setFeedBackMessage(MESSAGE_FAILURE_LOADFROM_TYPE_2);
-						setFeedBackColor(FEEDBACK_STATUS_CONFLICT);
+					if (resultSet.getStatus() == ResultSet.STATUS_JSON_ERROR) {
+						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_3, msg));
+						setFeedBackColor(FEEDBACK_STATUS_ERROR);
 					} else {
 						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_1, msg));
 						setFeedBackColor(FEEDBACK_STATUS_ERROR);
@@ -913,7 +909,8 @@ public class CommandBar {
 	}
 
 	/**
-	 * Gets the previous command that was executed, builds the labels and place them in the commandbar.
+	 * Gets the previous command that was executed, builds the labels and place
+	 * them in the commandbar.
 	 */
 	public void getPrevCommand() {
 		int index = _commandSelector - 1;
@@ -926,7 +923,8 @@ public class CommandBar {
 	}
 
 	/**
-	 * Gets the next command that was executed, builds the labels and place them in the commandbar.
+	 * Gets the next command that was executed, builds the labels and place them
+	 * in the commandbar.
 	 */
 	public void getNextCommand() {
 		int index = _commandSelector + 1;
@@ -972,7 +970,7 @@ public class CommandBar {
 		}
 		CommandBarAnimation.start(this);
 	}
-	
+
 	/**
 	 * Reset the feedback to the default color and opacity.
 	 * 
