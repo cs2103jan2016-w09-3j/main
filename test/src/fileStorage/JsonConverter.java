@@ -1,5 +1,5 @@
 /**
- * @author angie
+ * @author Angie A0126357A
  * @@author A0126357A
  * 
  *         JsonConverter converts Java to JSON and from JSON to Java via GSON.
@@ -25,11 +25,11 @@ public class JsonConverter {
     }
 
     /**
-     * Converts Java Object to Json format via the Gson builder
-     * String returned will include nulls for empty fields 
+     * Converts Java Object to JSON format via the GSON builder.
+     * String returned will include nulls for empty fields. 
      * 
-     * @param allLists
-     * @return String in Json format
+     * @param allLists takes in a working AllTaskLists.
+     * @return appendedToJson returns String in JSON format.
      */
     public String javaToJson(AllTaskLists allLists) {
         ArrayList<TaskEntity> mainTaskList = allLists.getMainTaskList();
@@ -49,10 +49,11 @@ public class JsonConverter {
     }
 
     /**
-     * Converts Json format to Java Object via the Gson library
+     * Converts JSON format to Java Object via the GSON library.
+     * This method returns a null AllTaskLists if the String input is not in JSON format. 
      * 
-     * @param input
-     * @return AllTaskLists
+     * @param input Takes in String read from file.
+     * @return allLists returns an AllTaskLists containing two ArrayLists of main and floating tasks.
      */
     public AllTaskLists jsonToJava(String input) {
         Gson gson = new Gson();
