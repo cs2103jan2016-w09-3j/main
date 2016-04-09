@@ -1,4 +1,9 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *         This is the animation class that provides the service to animate the scrolling of task.
+ */
 package userInterface;
 
 import javafx.application.Platform;
@@ -78,6 +83,10 @@ public class ScrollTaskAnimation extends Service<Integer> {
 		}
 	}
 
+	/**
+	 * Checks if the direction to move will exceed the position required, if so,
+	 * set direction to be the difference.
+	 */
 	public void checkExceed() {
 		if (direction > 0) {
 			if (currentIndex + direction > indexToGo) {
@@ -103,6 +112,12 @@ public class ScrollTaskAnimation extends Service<Integer> {
 		return false;
 	}
 
+	/**
+	 * Check the time pass since the animation stars. if its over the time, increase speed of animation.
+	 * 
+	 * @param startTime
+	 * @return time of change
+	 */
 	private long checkTime(long startTime) {
 		long currTime = System.currentTimeMillis();
 		if (currTime - startTime > numberOfMilliSecondsBeforeIncreaseSpeed) {
