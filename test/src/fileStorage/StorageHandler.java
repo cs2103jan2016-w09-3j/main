@@ -1,6 +1,6 @@
 /**
  * @author Angie A0126357A
- * @@author A0126357A
+ * @@author Angie A0126357A
  * 
  *          StorageHandler to handle reading, writing and changing directory of
  *          files. Four files involved: Configuration File, Main Task File, Back

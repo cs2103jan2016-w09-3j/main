@@ -71,7 +71,7 @@ public class StorageInterface {
     }
     
     public boolean loadFrom(String newFilePath) {
-        return sc.loadFromNewFile(newFilePath);
+        return sc.loadFromSpecifiedFile(newFilePath);
     }
     
     public boolean saveThemePreference(String themeName) {

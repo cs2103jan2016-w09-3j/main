@@ -1,6 +1,6 @@
 /**
  * @author Angie A0126357A
- * @@author A0126357A
+ * @@author Angie A0126357A
  * 
  *         JsonConverter converts Java to JSON and from JSON to Java via GSON.
  *         This is to facilitate easy saving and retrieving of data.

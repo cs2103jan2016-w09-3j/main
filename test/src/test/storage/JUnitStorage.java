@@ -27,7 +27,6 @@ public class JUnitStorage {
     public void testReadAndWriteCommand() {
         assertEquals(sh.writeToCommandFile("HELLO"), true);
         assertEquals(sh.writeToCommandFile("IT'S ME"), true); // Check if append
-        sh.processFile();
         assertEquals(sh.getAllCommandsQueue().size(), 2);
     }
     
