@@ -1,4 +1,7 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ */
 package userInterface;
 
 import userInterface.CommandBar;
@@ -268,7 +271,7 @@ public class PrimaryUserInterface extends Application {
 		} else if (keyCode.compareTo(KeyCode.F4) == SAME) {
 			executeChangeTheme();
 		} else if (keyCode.compareTo(KeyCode.F5) == SAME) {
-			uiController.destory();
+			uiController.destroy();
 			uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet, _mainEventHandler);
 			resetCommandInput();
 		}

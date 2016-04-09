@@ -1,4 +1,7 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ */
 package userInterface;
 
 import java.io.IOException;
@@ -73,10 +76,11 @@ public class UserInterfaceController {
 	private static Logger logger = Logger.getLogger("UserInterfaceController");
 
 	/**
-	 * Only 1 instance of UserInterfaceController can be initialize.
+	 * Create an instance of UserInterfaceController.
 	 * 
-	 * @param primaryStage
-	 * @return instance of UserInterfaceController
+	 * @param PrimaryStage
+	 * @return Instance of UserInterfaceController only if there isn't an
+	 *         instance already.
 	 */
 	public static UserInterfaceController getInstance(Stage primaryStage) {
 		if (_instance == null) {
@@ -88,7 +92,7 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * Initialize logic components and try to recover any lost data.
+	 * Initialize logic components and recover any lost data.
 	 * 
 	 * @param primaryStage
 	 */
@@ -111,6 +115,14 @@ public class UserInterfaceController {
 
 	}
 
+	/**
+	 * Initialize the other views.
+	 * 
+	 * @param screenBounds
+	 * @param fixedSize
+	 * @param styleSheet
+	 * @param mouseEvent
+	 */
 	public void initializeInterface(Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
 			EventHandler<MouseEvent> mouseEvent) {
 		this._styleSheet = styleSheet;
@@ -122,8 +134,9 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * Initialize floatingBar Component, TaskViewUserInterface,
-	 * DescriptionComponent, DetailsComponent
+	 * Initialize an instance of FloatingBarViewUserInterface,
+	 * TaskViewUserInterface, DescriptionComponent, DetailsComponent,
+	 * FloatingTaskUserInterface, SearchUserInterface, HelpScreenUserInterface.
 	 */
 	public void initializeViews() {
 		_currentView = TASK_VIEW;
@@ -141,7 +154,6 @@ public class UserInterfaceController {
 
 	private void initializeHelpScreen() {
 		logger.log(Level.INFO, "initializing help view.");
-
 		String loadFromFilePath = _logicFace.getLoadFromFilePath();
 		_helpScreen = HelpScreenUserInterface.getInstance(_parentStage, _screenBounds, _fixedSize, _styleSheet,
 				_mouseEvent, loadFromFilePath);
@@ -189,7 +201,7 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * Show the various components depending on _currentView
+	 * Show the various components depending on _currentView.
 	 */
 	public void show() {
 		if (_currentView == TASK_VIEW) {
@@ -242,9 +254,9 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * unused method for now
+	 * De-initialize the components and kills the floating thread.
 	 */
-	public void destory() {
+	public void destroy() {
 		_taskViewInterface.destoryStage();
 		_descriptionComponent.destoryStage();
 		_detailComponent.destoryStage();
@@ -253,12 +265,11 @@ public class UserInterfaceController {
 		_searchViewInterface.destoryStage();
 		_helpScreen.destory();
 		killFloatingThread();
-
 	}
 
 	/**
-	 * This method update the taskViewInterface, DetailComponent,
-	 * DescriptionComponet according to the selected value;
+	 * Updates the TaskViewInterface, DetailComponent, DescriptionComponet
+	 * according to the selected value;
 	 * 
 	 * @param value
 	 */
@@ -281,7 +292,7 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * Update the description panel to reflect the updates on the task view.
+	 * Updates the description panel to reflect the updates on the task view.
 	 */
 	public void updateDescriptionComponent() {
 		if (_currentView == TASK_VIEW) {
@@ -293,7 +304,7 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * translate the views base on the user controls.
+	 * Translates the views base on the user controls.
 	 * 
 	 * @param value
 	 */
@@ -303,9 +314,7 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * Change the view to when Ctrl left/right is entered. Ctrl + left -
-	 * increment the _currentView by 1. Ctrl _right - decrement the _currentView
-	 * by 1.
+	 * Changes the view according by the value.
 	 * 
 	 * @param value
 	 */
@@ -362,6 +371,10 @@ public class UserInterfaceController {
 		}
 	}
 
+	/**
+	 * Switches the view to the task view and brings up the help screen. If help
+	 * screen is already shown, hides the help screen.
+	 */
 	public void showHelpView() {
 		boolean isShown = _helpScreen.toggleHelpView();
 		if (isShown) {
@@ -415,12 +428,12 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * rebuilds task view, expanded view, associate view and their components
-	 * after a command is executed.
+	 * Rebuilds the content of TaskViewUserInterface, DetailComponent,
+	 * DescriptionComponent after a command is executed.
 	 * 
 	 * @param index
-	 *            - if index is less then zero. rebuild views base on last
-	 *            selected index. - else build with the index as selected.
+	 *            - if index is less then zero. rebuild views base on last, else
+	 *            build with the index as selected.
 	 */
 	public void reBuildFrontView(int index) {
 		int selelcted = 0;
@@ -444,18 +457,20 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * This method will start the service to animate the current view to the
-	 * selected view.
+	 * Starts the service to animate the current view to the selected view.
+	 * 
+	 * @param direction
+	 *            - direction -1 indicates ExpandedView to TaskView, direction 1
+	 *            indicates TaskView to ExpandedView.
 	 */
 	public void startExpandAnimation(int direction) {
 		TaskViewDescriptionAnimation.getInstance(this, direction).start();
 	}
 
 	/**
-	 * This method is only called by the animator thread to animation the view
-	 * to the Expanded view.
+	 * Increase the sizes of all components in the TaskView.
 	 * 
-	 * @return - boolean true when animation is done.
+	 * @return - true only when animation is done.
 	 */
 	public boolean animateToExpanedView() {
 		boolean isDoneTranslating = _taskViewInterface.isAtDetailedView(1);
@@ -465,10 +480,9 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * This method is only called by the animator thread to animation the view
-	 * to the Main view.
+	 * Decrease the sizes of all components in the TaskView.
 	 * 
-	 * @return - boolean true when animation is done.
+	 * @return - true only when animation is done.
 	 */
 	public boolean animateToTaskView() {
 		boolean isDoneTranslating = _taskViewInterface.isAtTaskView(-1);
@@ -477,6 +491,10 @@ public class UserInterfaceController {
 		return isDoneTranslating;
 	}
 
+	/**
+	 * Starts the thread to load a new floating task into the
+	 * FloatingBarUserInterface.
+	 */
 	private void startFloatingThread() {
 		if (_floatingThread == null) {
 			if (_logicFace.getRandomFloating() != null) {
@@ -487,6 +505,10 @@ public class UserInterfaceController {
 		}
 	}
 
+	/**
+	 * Kills the thread that loads a new floating task into the
+	 * FloatingBarUserInterface.
+	 */
 	public void killFloatingThread() {
 		if (_floatingThread != null) {
 			_floatingBarComponent.clearFloatingBar();
@@ -496,8 +518,7 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * This method is called to add a random task into the floating bar. It
-	 * starts the floating bar thread if it is not started.
+	 * Gets a random floating tasks and adds it to the FloatingBarUserInterface.
 	 */
 	public void addRandomTaskToDisplay() {
 		TaskEntity task = _logicFace.getRandomFloating();
@@ -514,11 +535,11 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * This method is used only by FloatingTaskAnimation to update the floating
-	 * bar view.
+	 * Translate the component in FloatingBarAnimation according to the
+	 * percentageDone.
 	 * 
 	 * @param percentageDone
-	 * @return
+	 * @return - true only if animation is done.
 	 */
 	public boolean updateFloatingBar(double percentageDone) {
 		boolean isDoneAnimating = _floatingBarComponent.animateView(percentageDone);
@@ -529,9 +550,10 @@ public class UserInterfaceController {
 	 * Add the task into the list.
 	 * 
 	 * @param task
+	 * @param rawInput
 	 * @param toUpdateView
 	 *            (false only when recovering lost commands and testing)
-	 * @return
+	 * @return ResultSet
 	 */
 	public ResultSet addTask(TaskEntity task, String rawInput, boolean toUpdateView) {
 		ResultSet resultSet = _logicFace.addTask(task, buildRawCommand(rawInput));
@@ -542,15 +564,6 @@ public class UserInterfaceController {
 		}
 
 		return resultSet;
-	}
-
-	public int addBatchTask(ArrayList<TaskEntity> task, String rawInput, boolean toUpdateView) {
-		/*
-		 * int insertedTo = _logicFace.addBatch(task,
-		 * buildRawCommand(rawInput)); if (insertedTo == -1) { return -2; } else
-		 * { if (toUpdateView) { updateChangesToViews(insertedTo); } return 1; }
-		 */
-		return -2;
 	}
 
 	public ResultSet deleteTask(String id, String rawInput, boolean toUpdateView) {
@@ -566,6 +579,12 @@ public class UserInterfaceController {
 		return null;
 	}
 
+	/**
+	 * Gets the task base on the id.
+	 * 
+	 * @param id
+	 * @return TaskEntity
+	 */
 	public TaskEntity getTaskByID(int id) {
 		ArrayList<TaskEntity> tasks = _logicFace.getWorkingList();
 		if (id < tasks.size()) {
@@ -576,7 +595,7 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * unused already.
+	 * Unused.
 	 * 
 	 * @param taskToCheck
 	 * @return
@@ -599,6 +618,15 @@ public class UserInterfaceController {
 		return index;
 	}
 
+	/**
+	 * Calls the logic component to modify the task.
+	 * 
+	 * @param idToModify
+	 * @param task
+	 * @param rawInput
+	 * @param toUpdateView
+	 * @return ResultSet
+	 */
 	public ResultSet modifyTask(int idToModify, TaskEntity task, String rawInput, boolean toUpdateView) {
 		ResultSet resultSet = _logicFace.modify(idToModify, task, buildRawCommand(rawInput));
 		if (resultSet.isSuccess()) {
@@ -609,6 +637,12 @@ public class UserInterfaceController {
 		return resultSet;
 	}
 
+	/**
+	 * Starts the scrolling animation to auto scroll to the selected index.
+	 * 
+	 * @param indexToJump
+	 * @return true only if index is valid
+	 */
 	public boolean jumpToIndex(String indexToJump) {
 		int selected = _taskViewInterface.getSelectIndex();
 		if (selected != -1) {
@@ -654,6 +688,15 @@ public class UserInterfaceController {
 		_scorllAnimation = null;
 	}
 
+	/**
+	 * Calls the logic component to link the two task together.
+	 * 
+	 * @param indexZZ1
+	 * @param indexZZ2
+	 * @param rawString
+	 * @param toUpdateView
+	 * @return ResultSet
+	 */
 	public ResultSet link(String indexZZ1, String indexZZ2, String rawString, boolean toUpdateView) {
 		int index1 = TaskUtils.convertStringToInteger(indexZZ1);
 		int index2 = TaskUtils.convertStringToInteger(indexZZ2);
@@ -680,7 +723,8 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * This method is called upon a command execution to update the views.
+	 * Updates the UserInterface Components to reflect the changes upon command
+	 * execution.
 	 * 
 	 * @param index
 	 *            - determines if the command executed is in the selected view.
@@ -706,6 +750,12 @@ public class UserInterfaceController {
 		}
 	}
 
+	/**
+	 * Builds the String command base on the index of the task.
+	 * 
+	 * @param indexToModify
+	 * @return command.
+	 */
 	public String getTaskToEditString(int indexToModify) {
 		TaskEntity toPopulate = getTaskByID(indexToModify);
 		if (toPopulate != null) {
@@ -747,11 +797,23 @@ public class UserInterfaceController {
 		_logicFace.closeTaskManager();
 	}
 
+	/**
+	 * Append the index of the view in-front of the raw command.
+	 * 
+	 * @param rawWithView
+	 * @return actual raw command.
+	 */
 	public String buildRawCommand(String raw) {
 		String full = Integer.toString(_currentView).concat(" ").concat(raw);
 		return full;
 	}
 
+	/**
+	 * Breaks the String into the view index and the actual raw command.
+	 * 
+	 * @param rawWithView
+	 * @return actual raw command.
+	 */
 	public String deStructToRawCommand(String rawWithView) {
 		if (rawWithView.split(" ").length > 0) {
 			int index = rawWithView.indexOf(" ");
@@ -762,6 +824,12 @@ public class UserInterfaceController {
 		return null;
 	}
 
+	/**
+	 * Breaks the String into the view index and the actual raw command.
+	 * 
+	 * @param rawWithView
+	 * @return index of view.
+	 */
 	public String deStructToView(String rawWithView) {
 		if (rawWithView.split(" ").length > 1) {
 			String[] spilt = rawWithView.split(" ");
@@ -771,7 +839,7 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * Set TaskManger view, serves only for recovering commands.
+	 * Sets TaskManger view, serves only for recovering commands.
 	 * 
 	 * @param view
 	 */
@@ -789,6 +857,10 @@ public class UserInterfaceController {
 		}
 	}
 
+	/**
+	 * Gets the list of commands that has been saves and has not been executed.
+	 * Execute those commands.
+	 */
 	public void recoverLostCommands() {
 		Queue<String> qCommands = _logicFace.getBackedupCommands();
 		while (!qCommands.isEmpty()) {
@@ -798,6 +870,13 @@ public class UserInterfaceController {
 		_logicFace.switchView(TaskManager.DISPLAY_MAIN);
 	}
 
+	/**
+	 * Process the rawCommand and execute the command. This method is only
+	 * called during an undo command or during recovery.
+	 * 
+	 * @param rawCommandWithView
+	 * @return the view the command was previously executed in.
+	 */
 	private int runCommands(String rawCommandWithView) {
 		String rawCommand = deStructToRawCommand(rawCommandWithView);
 		String view = deStructToView(rawCommandWithView);
@@ -813,8 +892,6 @@ public class UserInterfaceController {
 				ArrayList<TaskEntity> tasks = parser.getTask();
 				if (tasks.size() == 1) {
 					addTask(tasks.get(0), rawCommand, false);
-				} else {
-					addBatchTask(tasks, rawCommand, false);
 				}
 				break;
 			}
@@ -863,6 +940,11 @@ public class UserInterfaceController {
 		return resultSet;
 	}
 
+	/**
+	 * Gets the list of commands to run on the file start state.
+	 * 
+	 * @return ResultSet
+	 */
 	public ResultSet undoLastCommand() {
 		int managerView = _logicFace.getCurrentManagerView();
 		ArrayList<String> commandsToRun = _logicFace.getCommandsToRun();
@@ -877,9 +959,8 @@ public class UserInterfaceController {
 			return resultSet;
 		}
 
-		int view = -1;
 		for (int i = 0; i < commandsToRun.size(); i++) {
-			view = runCommands(commandsToRun.get(i));
+			runCommands(commandsToRun.get(i));
 		}
 		_logicFace.switchView(managerView);
 		updateChangesToViews(-1);
@@ -887,11 +968,12 @@ public class UserInterfaceController {
 		return resultSet;
 	}
 
-	private void setView(int view) {
-		_currentView = view;
-		updateChangesToViews(-1);
-	}
-
+	/**
+	 * Change the theme of all components.
+	 * 
+	 * @param styleSheet
+	 * @return ResultSet
+	 */
 	public ResultSet changeTheme(String styleSheet) {
 		_taskViewInterface.changeTheme(styleSheet);
 		_descriptionComponent.changeTheme(styleSheet);
@@ -908,6 +990,13 @@ public class UserInterfaceController {
 		return _logicFace.loadTheme();
 	}
 
+	/**
+	 * Calls the logic component to load the new file. Kills all threads and
+	 * rebuild interface if loads returns true.
+	 * 
+	 * @param loadFrom
+	 * @return ResultSet
+	 */
 	public ResultSet processLoadFrom(String loadFrom) {
 		ResultSet resultSet = _logicFace.loadFrom(loadFrom);
 		if (resultSet != null) {
@@ -926,10 +1015,9 @@ public class UserInterfaceController {
 	}
 
 	/**
-	 * This method is called when an Enter key is pressed without zero key
-	 * inputs from the user. this indicates a selection has been called.
+	 * Process the enter command.
 	 * 
-	 * @return
+	 * @return true only if selection is valid.
 	 */
 	public boolean processEnter() {
 		if (_currentView == SEARCH_VIEW) {
@@ -979,6 +1067,11 @@ public class UserInterfaceController {
 		return false;
 	}
 
+	/**
+	 * Checks if the file given has loaded properly.
+	 * 
+	 * @return ResultSet
+	 */
 	public ResultSet isFileLoadedProper() {
 		if (!_isLoaded) {
 			ResultSet rs = new ResultSet();
