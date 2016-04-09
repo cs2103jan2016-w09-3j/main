@@ -1,6 +1,8 @@
 /**
  * @author Chan Yuan Shan
  * @@author A0125514N
+ * 
+ *  This class is the main UserInterface class, handles the inputs from user and relays them to the other components.
  */
 package userInterface;
 
@@ -248,6 +250,7 @@ public class PrimaryUserInterface extends Application {
 	// @@author A0125514N
 	/**
 	 * Process the event receive to and execute the next action.
+	 * 
 	 * @param event
 	 */
 	private void processControls(KeyEvent event) {

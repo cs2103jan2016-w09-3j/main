@@ -1,6 +1,8 @@
 /**
  * @author Chan Yuan Shan
  * @@author A0125514N
+ * 
+ *         This class controls all the other components except the command bar.
  */
 package userInterface;
 
