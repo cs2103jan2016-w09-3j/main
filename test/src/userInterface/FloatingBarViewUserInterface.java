@@ -1,4 +1,9 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *          This class builds the components and structure on the top.
+ */
 package userInterface;
 
 import javafx.event.EventHandler;
@@ -43,8 +48,19 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 	private HBox _mainHBox;
 	private VBox _mainfloatingTaskArea;
 
-	public static FloatingBarViewUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
-			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
+	/**
+	 * Create an instance of FloatingBarViewUserInterface.
+	 * 
+	 * @param primaryStage
+	 * @param screenBounds
+	 * @param isFixedSize
+	 * @param styleSheet
+	 * @param mouseEvent
+	 * @return Instance of FloatingBarViewUserInterface only if there isn't an
+	 *         instance already.
+	 */
+	public static FloatingBarViewUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds,
+			boolean fixedSize, String styleSheet, EventHandler<MouseEvent> mouseEvent) {
 		if (_myInstance == null) {
 			_myInstance = new FloatingBarViewUserInterface(primaryStage, screenBounds, fixedSize, styleSheet,
 					mouseEvent);
@@ -60,6 +76,9 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
 	}
 
+	/**
+	 * Initialize view dimensions and position.
+	 */
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
 		if (fixedSize) {
 			_stageWidth = (int) screenBounds.getWidth();
@@ -75,6 +94,9 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Initialize the stage and the components in the stage.
+	 */
 	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight,
 			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
@@ -114,6 +136,11 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		_mainHBox.getChildren().add(_mainfloatingTaskArea);
 	}
 
+	/**
+	 * Adds a task at the bottom of the current task.
+	 * 
+	 * @param taskDesc
+	 */
 	public void addTask(String taskDesc) {
 		Label floatTask = new Label(taskDesc);
 		floatTask.getStyleClass().add(CSS_LABEL);
@@ -125,6 +152,9 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 		_mainfloatingTaskArea.getChildren().add(floatTask);
 	}
 
+	/**
+	 * Removes the first item in the _mianFloatingTaskArea.
+	 */
 	private void removeTopItem() {
 		if (_mainfloatingTaskArea.getChildren().size() > 1) {
 			_mainfloatingTaskArea.getChildren().remove(0);
@@ -152,6 +182,13 @@ public class FloatingBarViewUserInterface implements ViewInterface {
 
 	}
 
+	/**
+	 * Translate the position of the _mainFloatingTaskArea base on
+	 * percentageDone
+	 * 
+	 * @param percentageDone
+	 * @return true only if animation is done
+	 */
 	public boolean animateView(double percentageDone) {
 		double posY = percentageDone * (double) _stageHeight;
 		if (posY < _stageHeight) {

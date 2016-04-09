@@ -1,10 +1,12 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *         This class build and manage the search panel where it shows the search results.
+ */
 package userInterface;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-
-import dateParser.ParserCommons;
 import entity.TaskEntity;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -13,19 +15,16 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import mainLogic.TaskUtils;
 
 public class SearchUserInterface implements ViewInterface {
 
@@ -39,7 +38,7 @@ public class SearchUserInterface implements ViewInterface {
 
 	private static final String CSS_LABEL = "cssLabelsSearchView";
 
-	// font
+	// Font
 	static final int FONT_SIZE_LABEL = 20;
 	static final int FONT_SIZE_LABEL_DATE = 10;
 	static final int FONT_SIZE_TASK = 12;
@@ -64,6 +63,17 @@ public class SearchUserInterface implements ViewInterface {
 	private ArrayList<TaskEntity> _searchList;
 	private ArrayList<HBox> _searchBoxes = new ArrayList<HBox>();
 
+	/**
+	 * Create an instance of SearchUserInterface.
+	 * 
+	 * @param primaryStage
+	 * @param screenBounds
+	 * @param fixedSize
+	 * @param styleSheet
+	 * @param mouseEvent
+	 * @return Instance of SearchUserInterface only if there isn't an instance
+	 *         already.
+	 */
 	public static SearchUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
 			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
 		if (_myInstance == null) {
@@ -84,6 +94,9 @@ public class SearchUserInterface implements ViewInterface {
 		buildComponent();
 	}
 
+	/**
+	 * Initialize view dimensions and position.
+	 */
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
 		if (fixedSize) {
 			_stageWidth = (int) screenBounds.getWidth();
@@ -107,6 +120,9 @@ public class SearchUserInterface implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Initialize the stage and the components in the stage.
+	 */
 	public void initializeStage(Window owner, int applicationX, int applicationY, int stageWidth, int stageHeight,
 			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
@@ -126,6 +142,9 @@ public class SearchUserInterface implements ViewInterface {
 		_stage.setScene(scene);
 	}
 
+	/**
+	 * Builds the main skeleton structure, no items added to the structure yet.
+	 */
 	private void buildComponent() {
 		_mainVbox.getChildren().clear();
 		_secondaryVbox = new VBox();
@@ -140,6 +159,12 @@ public class SearchUserInterface implements ViewInterface {
 		StackPane.setAlignment(_secondaryVbox, Pos.TOP_LEFT);
 	}
 
+	/**
+	 * Check if there are items in the search list and build component
+	 * accordingly.
+	 * 
+	 * @param searchList
+	 */
 	public void buildContent(ArrayList<TaskEntity> searchList) {
 		_searchList = searchList;
 		_searchBoxes = new ArrayList<HBox>();
@@ -151,6 +176,12 @@ public class SearchUserInterface implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Builds the individual items in the search list and add them to the
+	 * skeleton component.
+	 * 
+	 * @param searchList
+	 */
 	private void buildSearchList(ArrayList<TaskEntity> searchList) {
 		_secondaryVbox.getChildren().clear();
 		_selectedIndex = 0;
@@ -169,6 +200,9 @@ public class SearchUserInterface implements ViewInterface {
 		setSelected(0);
 	}
 
+	/**
+	 * Build a help message whent there are no search results.
+	 */
 	private void buildHelpWithSearch() {
 		_secondaryVbox.getChildren().clear();
 		Label helpLabel = new Label("Start searching by typing search in the command bar");
@@ -179,6 +213,13 @@ public class SearchUserInterface implements ViewInterface {
 		_secondaryVbox.getChildren().add(helpLabel);
 	}
 
+	/**
+	 * Builds the individual item base on the input TaskEntity.
+	 * 
+	 * @param task
+	 * @param index
+	 * @return HBox
+	 */
 	private HBox buildIndividualSearchItem(TaskEntity task, int index) {
 		HBox parentBox = new HBox();
 
@@ -208,7 +249,7 @@ public class SearchUserInterface implements ViewInterface {
 		top.getChildren().add(timeLabel);
 
 		if (task.getAssociationState() == TaskEntity.PROJECT_HEAD) {
-			top.getChildren().add(createStar(LABEL_TASK_HEIGHT));
+			top.getChildren().add(StarPane.createStar(LABEL_TASK_HEIGHT));
 		}
 
 		Label nameLabel = new Label();
@@ -256,38 +297,6 @@ public class SearchUserInterface implements ViewInterface {
 		return parentBox;
 	}
 
-	private StackPane createStar(double size) {
-		StackPane stackPane = new StackPane();
-		stackPane.setMinHeight(size);
-		stackPane.setMaxHeight(size);
-		stackPane.setMinWidth(size);
-		stackPane.setMaxWidth(size);
-		stackPane.setAlignment(Pos.CENTER);
-		stackPane.getChildren().add(buildStar(0.5 * (size / 2)));
-		return stackPane;
-	}
-
-	public Polygon buildStar(double size) {
-		int arms = 5;
-		double rOuter = 1 * size;
-		double rInner = 0.5 * size;
-		double angle = Math.PI / arms;
-		int c = 0;
-		Double[] starCoor = new Double[20];
-		for (int i = 0; i < arms * 2; i++) {
-			double r = (i & 1) == 0 ? rOuter : rInner;
-			double x = Math.cos(i * angle) * r;
-			double y = Math.sin(i * angle) * r;
-			starCoor[c++] = x;
-			starCoor[c++] = y;
-		}
-		Polygon polygon = new Polygon();
-		polygon.getPoints().addAll(starCoor);
-		polygon.setFill(Color.WHITE);
-		polygon.setStroke(Color.BLACK);
-		return polygon;
-	}
-
 	public HBox buildTilteLabel() {
 		HBox titleLableBox = new HBox();
 		titleLableBox.setId("cssSearchTitle");
@@ -307,6 +316,10 @@ public class SearchUserInterface implements ViewInterface {
 		return titleLableBox;
 	}
 
+	/**
+	 * Updates the selector index by the amount of value. Items are added and
+	 * removed to maintain THRESHOLD.
+	 */
 	public void update(int value) {
 		if (value > 0)// ctrl down
 		{
@@ -326,6 +339,9 @@ public class SearchUserInterface implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Adds a new search item in the beginning of the list.
+	 */
 	private void addFirstItem() {
 		_startIndex--;
 		HBox item = buildIndividualSearchItem(_searchList.get(_startIndex), _startIndex);
@@ -333,12 +349,18 @@ public class SearchUserInterface implements ViewInterface {
 		_secondaryVbox.getChildren().add(0, item);
 	}
 
+	/**
+	 * Removes the last component in the search list.
+	 */
 	private void removeLastTask() {
 		_endIndex--;
 		HBox itemToRemove = _searchBoxes.remove(_searchBoxes.size() - 1);
 		_secondaryVbox.getChildren().remove(itemToRemove);
 	}
 
+	/**
+	 * Adds a new search item in the end of the list.
+	 */
 	private void addLastItem() {
 		_endIndex++;
 		HBox item = buildIndividualSearchItem(_searchList.get(_endIndex), _endIndex);
@@ -346,12 +368,20 @@ public class SearchUserInterface implements ViewInterface {
 		_secondaryVbox.getChildren().add(item);
 	}
 
+	/**
+	 * Removes the first component in the search list.
+	 */
 	private void removeFirstTask() {
 		_startIndex++;
 		HBox item = _searchBoxes.remove(0);
 		_secondaryVbox.getChildren().remove(item);
 	}
 
+	/**
+	 * Sets the selected item base on value.
+	 * 
+	 * @param value
+	 */
 	public void setSelected(int value) {
 		int temp = _selectedIndex + value;
 		if (isBetweenRange(temp)) {
@@ -360,11 +390,17 @@ public class SearchUserInterface implements ViewInterface {
 			_selectedIndex = temp;
 			HBox item = _searchBoxes.get(_selectedIndex - _startIndex);
 			item.setId("cssSearchSelected");
-			translateY(getTopHeight(_selectedIndex - _startIndex));
+			translateY(calculateTopHeight(_selectedIndex - _startIndex));
 		}
 	}
 
-	public double getTopHeight(int index) {
+	/**
+	 * Calculates the height above the selected component.
+	 * 
+	 * @param index
+	 * @return height
+	 */
+	public double calculateTopHeight(int index) {
 		double posY = 0;
 		for (int i = 0; i <= index; i++) {
 			posY += _searchBoxes.get(i).getMinHeight();
@@ -383,6 +419,12 @@ public class SearchUserInterface implements ViewInterface {
 		_secondaryVbox.setTranslateY(posY);
 	}
 
+	/**
+	 * Check if the index is between _startIndex and _endIndex.
+	 * 
+	 * @param index
+	 * @return true only if index is bewteen the range
+	 */
 	public boolean isBetweenRange(int index) {
 		if (index >= _startIndex && index <= _endIndex) {
 			return true;
@@ -407,6 +449,11 @@ public class SearchUserInterface implements ViewInterface {
 		_stage.getScene().getStylesheets().add(styleSheet);
 	}
 
+	/**
+	 * Gets the task that is current selected.
+	 * 
+	 * @return TaskEntity
+	 */
 	public TaskEntity processEnter() {
 		if (_selectedIndex > -1 && _selectedIndex < _searchList.size()) {
 			return _searchList.get(_selectedIndex);

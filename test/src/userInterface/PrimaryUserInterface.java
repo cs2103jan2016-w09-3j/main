@@ -1,4 +1,9 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *  This class is the main UserInterface class, handles the inputs from user and relays them to the other components.
+ */
 package userInterface;
 
 import userInterface.CommandBar;
@@ -59,7 +64,7 @@ public class PrimaryUserInterface extends Application {
 	private Rectangle2D _screenBounds;
 	private Stage _primaryStage;
 	private CommandBar _commandBar;
-	private boolean _fixedSize = false;
+	private boolean _isFixedSize = false;
 	private UserInterfaceController uiController;
 	private EventHandler<MouseEvent> _mainEventHandler;
 
@@ -71,7 +76,7 @@ public class PrimaryUserInterface extends Application {
 		_screenBounds = Screen.getPrimary().getVisualBounds();
 		_commandBarWidth = _screenBounds.getWidth() * PREFERED_WINDOW_SCALE;
 		if (_screenBounds.getWidth() * PREFERED_WINDOW_SCALE <= PREFERED_WINDOW_WIDTH) {
-			_fixedSize = true;
+			_isFixedSize = true;
 		}
 	}
 
@@ -134,7 +139,7 @@ public class PrimaryUserInterface extends Application {
 			_primaryStage.getScene().getStylesheets().clear();
 			_primaryStage.getScene().getStylesheets().add(theme);
 		}
-		uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet, _mainEventHandler);
+		uiController.initializeInterface(_screenBounds, _isFixedSize, _styleSheet, _mainEventHandler);
 	}
 
 	/**
@@ -245,6 +250,7 @@ public class PrimaryUserInterface extends Application {
 	// @@author A0125514N
 	/**
 	 * Process the event receive to and execute the next action.
+	 * 
 	 * @param event
 	 */
 	private void processControls(KeyEvent event) {
@@ -268,8 +274,8 @@ public class PrimaryUserInterface extends Application {
 		} else if (keyCode.compareTo(KeyCode.F4) == SAME) {
 			executeChangeTheme();
 		} else if (keyCode.compareTo(KeyCode.F5) == SAME) {
-			uiController.destory();
-			uiController.initializeInterface(_screenBounds, _fixedSize, _styleSheet, _mainEventHandler);
+			uiController.destroy();
+			uiController.initializeInterface(_screenBounds, _isFixedSize, _styleSheet, _mainEventHandler);
 			resetCommandInput();
 		}
 	}
@@ -326,7 +332,6 @@ public class PrimaryUserInterface extends Application {
 	 * add a task into the system and display the changes in the selected view.
 	 * 
 	 * @param task
-	 * @return boolean, true for successful and false for unsuccessful.
 	 */
 	private void executeAdd(ArrayList<TaskEntity> tasks, String rawInput) {
 		ResultSet resultSet;
@@ -346,7 +351,6 @@ public class PrimaryUserInterface extends Application {
 	 * delete task from the system.
 	 * 
 	 * @param taskToCheck.
-	 * @return boolean, true for successful and false for unsuccessful.
 	 */
 	private void executeDelete(String id, String rawString) {
 		ResultSet resultSet = null;
@@ -366,7 +370,6 @@ public class PrimaryUserInterface extends Application {
 	 * modify.
 	 * 
 	 * @param taskToCheck
-	 * @return boolean, true for successful and false for unsuccessful.
 	 */
 	private void executeModify(String id) {
 		if (id != null) {
