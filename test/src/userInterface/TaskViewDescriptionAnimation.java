@@ -2,7 +2,7 @@
  * @author Chan Yuan Shan
  * @@author A0125514N
  * 
- *			This is the animation class that provides a service.
+ *			This is the animation class that provides the service to animate the TaskView to the ExpandedView.
  */
 package userInterface;
 
