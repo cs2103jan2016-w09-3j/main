@@ -20,7 +20,7 @@ public class StorageController {
     public StorageHandler storageHandler;
     private static final int STORAGE_WRITE_TO_MAIN_FILE = 2;
     private static final int UI_SEARCH_VIEW = 4;
-    public static final int STORAGE_COMMAND_QUEUE_SIZE = 5;
+    private static final int STORAGE_COMMAND_QUEUE_SIZE = 5;
 
     /**
      * Class constructor.
