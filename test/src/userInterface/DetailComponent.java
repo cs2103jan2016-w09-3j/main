@@ -1,4 +1,9 @@
-//@@author A0125514N
+/**
+ * @author Chan Yuan Shan
+ * @@author A0125514N
+ * 
+ *          This class controls the items in the detail view.
+ */
 package userInterface;
 
 import java.text.SimpleDateFormat;
@@ -61,6 +66,17 @@ public class DetailComponent implements ViewInterface {
 	private boolean _haveAssociation;
 	private TaskEntity _targetedTask;
 
+	/**
+	 * Create an instance of DetailComponent.
+	 * 
+	 * @param primaryStage
+	 * @param screenBounds
+	 * @param isFixedSize
+	 * @param styleSheet
+	 * @param mouseEvent
+	 * @return Instance of DetailComponent only if there isn't an instance
+	 *         already.
+	 */
 	public static DetailComponent getInstance(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize,
 			String styleSheet, EventHandler<MouseEvent> mouseEvent) {
 		if (_myInstance == null) {
@@ -93,6 +109,9 @@ public class DetailComponent implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Initialize view dimensions and position.
+	 */
 	public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
 		if (fixedSize) {
 			_stageWidth = COMPONENT_WIDTH;
@@ -118,6 +137,9 @@ public class DetailComponent implements ViewInterface {
 		_individualItemWidth = _stageWidth - ITEM_MARGIN;
 	}
 
+	/**
+	 * Initialize the stage and the components in the stage.
+	 */
 	public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth, int windowHeight,
 			EventHandler<MouseEvent> mouseEvent) {
 		_stage = new Stage();
@@ -128,6 +150,11 @@ public class DetailComponent implements ViewInterface {
 		_stage.setScene(_scenes[_currentSelectView]);
 	}
 
+	/**
+	 * Builds the component base on the selectedView.
+	 * 
+	 * @param task
+	 */
 	public void buildComponent(TaskEntity task) {
 		if (_currentSelectView == TASK_VIEW) {
 			buildUIForTaskView(task);
@@ -194,8 +221,10 @@ public class DetailComponent implements ViewInterface {
 	}
 
 	/**
-	 * This method is used when the current view is in the ASSOCIATE_VIEW. it
-	 * sets the selected item to the index.
+	 * Sets the selectedIndex, used when in ASSOCIATE_VIEW. Remove the
+	 * description component in the previous selected item and add the
+	 * description component in the selected component.
+	 * 
 	 * 
 	 * @param index
 	 */
@@ -233,6 +262,12 @@ public class DetailComponent implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Checks if the index is valid.
+	 * 
+	 * @param index
+	 * @return true only if the index is valid
+	 */
 	public boolean isValidIndex(int index) {
 		if (!_haveAssociation) {
 			return false;
@@ -250,6 +285,11 @@ public class DetailComponent implements ViewInterface {
 		return false;
 	}
 
+	/**
+	 * Build the label to indicate if there are no task.
+	 * 
+	 * @return Label
+	 */
 	public Label buildEmptyLabel() {
 		Label label = new Label(LABEL_MESSAGE_NO_TASK);
 		label.getStyleClass().add(CSS_LABEL);
@@ -259,11 +299,21 @@ public class DetailComponent implements ViewInterface {
 		return label;
 	}
 
+	/**
+	 * Removes the description component in the component.
+	 * 
+	 * @param curr
+	 */
 	private void removeDescription(VBox curr) {
 		int indexToRemove = curr.getChildren().size() - 1;
 		curr.getChildren().remove(indexToRemove);
 	}
 
+	/**
+	 * Adds the description component in the selected item.
+	 * 
+	 * @param curr
+	 */
 	private void addDescription(VBox curr, int index) {
 		if (_targetedTask.getDisplayAssociations().size() < index || index < 0) {
 			return;
@@ -320,9 +370,14 @@ public class DetailComponent implements ViewInterface {
 		return itemMain;
 	}
 
-	private String getStringOfDate(Calendar c) {
-		return ParserCommons.detailedDateTime((Calendar) c.clone());
-		// return _reverseParser.reParse((Calendar) c.clone());
+	/**
+	 * Get the date string in a readable form.
+	 * 
+	 * @param calendar
+	 * @return date string
+	 */
+	private String getStringOfDate(Calendar calendar) {
+		return ParserCommons.detailedDateTime((Calendar) calendar.clone());
 	}
 
 	public VBox buildComponentToShowDate(TaskEntity task) {
@@ -436,7 +491,7 @@ public class DetailComponent implements ViewInterface {
 	}
 
 	/**
-	 * Append child into parent space and increase parent MaxSize.
+	 * Adds child into parent component and increase parent MaxSize.
 	 * 
 	 * @param child
 	 * @param parent
@@ -460,11 +515,6 @@ public class DetailComponent implements ViewInterface {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YY");
 		date = sdf.format(cal.getTime());
 		return date;
-	}
-
-	public String getShortDate() {
-		
-		return null;
 	}
 
 	public void update(int value) {
@@ -497,6 +547,11 @@ public class DetailComponent implements ViewInterface {
 		}
 	}
 
+	/**
+	 * Process the enter command.
+	 * 
+	 * @return the selected task.
+	 */
 	public TaskEntity processEnter() {
 		if (_currentSelectView == ASSOCIATE_VIEW) {
 			if (_targetedTask != null) {
