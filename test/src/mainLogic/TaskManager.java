@@ -160,23 +160,23 @@ public class TaskManager {
         dataLoader = new StorageInterface();
         AllTaskLists taskdata = dataLoader.getTaskLists();
 
-        //Json load failure
+        // Json load failure
         if (taskdata == null) {
             mainTaskEntities = new ArrayList<TaskEntity>();
             floatingTaskEntities = new ArrayList<TaskEntity>();
             isJsonSuccess = false;
-        } else {                
+        } else {
             mainTaskEntities = (ArrayList<TaskEntity>) taskdata.getMainTaskList().clone();
             floatingTaskEntities = (ArrayList<TaskEntity>) taskdata.getFloatingTaskList().clone();
-    
+
             initializeAssociations();
-    
+
             updateTaskEntityCurrentId();
             buildCompletedTasks();
         }
         displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
         currentDisplayedList = DISPLAY_MAIN;
-        
+
     }
 
     /**
@@ -263,9 +263,9 @@ public class TaskManager {
                             + arrayToInit.get(i).getName();
 
             String[] associationIdList = arrayToInit.get(i).getSavedAssociations().split(",");
-            
+
             if (!associationIdList[0].equals("")) {
-                for (int j = 0; j < associationIdList.length; j++) {                
+                for (int j = 0; j < associationIdList.length; j++) {
                     int taskIDToAdd = Integer.parseInt(associationIdList[j]);
 
                     loadAssociationFromID(arrayToInit.get(i), taskIDToAdd);
@@ -299,7 +299,7 @@ public class TaskManager {
             }
         }
     }
-    
+
     /**
      * Returns a list of raw command strings to run in the event of a crash. If
      * there was no crash, this queue is expected to be empty
@@ -309,7 +309,7 @@ public class TaskManager {
     public Queue<String> getBackedupCommands() {
         Queue<String> reloadedCommands = dataLoader.getCommandsQueue();
         dataLoader.clearCommandFile();
-        //Return cloned copy as same arraylist will cause infinite loop
+        // Return cloned copy as same arraylist will cause infinite loop
         return new LinkedList(reloadedCommands);
     }
 
@@ -326,7 +326,15 @@ public class TaskManager {
             commitFullSave();
         }
 
-        // For undo
+        updateUndoStack(command);
+    }
+
+    /**
+     * Updates the list of commands to run for undo
+     * 
+     * @param command - Command to add for undo
+     */
+    private void updateUndoStack(String command) {
         if (!_undoing) {
             if (undoPointer == undoList.size() - 1) {
                 undoList.add(command);
@@ -409,16 +417,17 @@ public class TaskManager {
         buildMainSaveTasks(savedMainTaskEntities);
         buildFloatingSaveTasks(savedFloatingTaskEntities);
         buildCompletedSaveTasks(savedMainTaskEntities, savedFloatingTaskEntities);
-        
+
         AllTaskLists newList = new AllTaskLists();
         newList.setFloatingTaskList(savedFloatingTaskEntities);
         newList.setMainTaskList(savedMainTaskEntities);
-        
+
         return newList;
     }
 
     /**
      * Function for generateSavedTaskArray
+     * 
      * @param savedMainTaskEntities - Array to put generated saved task into
      */
     private void buildMainSaveTasks(ArrayList<TaskEntity> savedMainTaskEntities) {
@@ -429,9 +438,9 @@ public class TaskManager {
         }
     }
 
-
     /**
      * Function for generateSavedTaskArray
+     * 
      * @param savedFloatingTaskEntities - Array to put generated saved task into
      */
     private void buildFloatingSaveTasks(ArrayList<TaskEntity> savedFloatingTaskEntities) {
@@ -442,9 +451,9 @@ public class TaskManager {
         }
     }
 
-
     /**
      * Function for generateSavedTaskArray
+     * 
      * @param savedMainTaskEntities - Array to put generated saved task into
      * @param savedFloatingTaskEntities - Array to put generated saved task into
      */
@@ -569,7 +578,7 @@ public class TaskManager {
         if (!modificationResults.isSuccess()) {
             return modificationResults;
         }
-        
+
         int associationState = displayedTasks.get(index).getAssociationState();
         TaskEntity projectHead = displayedTasks.get(index).getProjectHead();
         ArrayList<TaskEntity> childTasks = displayedTasks.get(index).getAssociations();
@@ -618,7 +627,7 @@ public class TaskManager {
                 return modificationResults;
             }
         }
-        
+
         return modificationResults;
     }
 
@@ -646,7 +655,7 @@ public class TaskManager {
 
     /**
      * UI Interface function Modifies the selected task, effectively deleting it
-     * and adding a new task.  Will relink all the task's 
+     * and adding a new task. Will relink all the task's
      * 
      * @param index - int index of task to be modified represented by a string
      * @param modifiedTask - New data of the task
@@ -737,8 +746,8 @@ public class TaskManager {
         assert displayedTasks != null : "no view set in displayedTasks, probably not initialised!";
 
         ResultSet addResults = new ResultSet();
-        
-        //Temporarily set success to check for failure
+
+        // Temporarily set success to check for failure
         addResults.setSuccess();
         addResults = checkAddFailure(newTask, addResults);
         if (!addResults.isSuccess()) {
@@ -771,8 +780,8 @@ public class TaskManager {
                 return addResults;
             }
         }
-        
-        //Return the results as it is if no failure detected
+
+        // Return the results as it is if no failure detected
         return addResults;
     }
 
@@ -780,11 +789,12 @@ public class TaskManager {
      * Adds the task into mainTaskEntities. For add function
      * 
      * @param newTask - Task to be added
-     * @return ResultSet containing results matching the details in add(TaskEntity)
+     * @return ResultSet containing results matching the details in
+     *         add(TaskEntity)
      */
     private ResultSet addMainTask(TaskEntity newTask) {
         ResultSet addResults = new ResultSet();
-        
+
         if (mainTaskEntities == null) {
             addResults.setStatus(ResultSet.STATUS_BAD);
             addResults.setFail();
@@ -798,7 +808,7 @@ public class TaskManager {
         if (TaskUtils.isDateBeforeNow(newTask.getDueDate())) {
             addResults.setStatus(ResultSet.STATUS_PAST);
         }
-        
+
         return setResultAndInsertMain(newTask, addResults);
     }
 
@@ -827,17 +837,18 @@ public class TaskManager {
      * Adds the task into floatingTaskEntities. For add function
      * 
      * @param newTask - Task to be added
-     * @return ResultSet containing results matching the details in add(TaskEntity)
+     * @return ResultSet containing results matching the details in
+     *         add(TaskEntity)
      */
     private ResultSet addFloatingTask(TaskEntity newTask) {
         ResultSet addResults = new ResultSet();
-        
+
         if (floatingTaskEntities == null) {
             addResults.setStatus(ResultSet.STATUS_BAD);
             addResults.setFail();
             return addResults;
         }
-        
+
         return setResultAndInsertFloating(newTask, addResults);
     }
 
@@ -846,13 +857,14 @@ public class TaskManager {
      * floatingTaskEntities
      * 
      * @param newTask - Task to be added
-     * @return ResultSet containing results matching the details in add(TaskEntity)
+     * @return ResultSet containing results matching the details in
+     *         add(TaskEntity)
      */
     private ResultSet setResultAndInsertFloating(TaskEntity newTask, ResultSet addResults) {
         boolean addSuccess = floatingTaskEntities.add(newTask);
         assert addSuccess == true : "Failed to add to non-null floatingTaskEntities list";
         System.out.println(floatingTaskEntities.size());
-        
+
         addResults.setView(ResultSet.FLOATING_VIEW);
         addResults.setIndex(updateFloatingDisplay(newTask));
         addResults.setSuccess();
@@ -864,13 +876,14 @@ public class TaskManager {
      * Marks a task as done
      * 
      * @param index - Array slot in displayedTasks to be marked as done
-     * * @return true and STATUS_GOOD for success, false and STATUS_BAD for
-     *         failure in ResultSet.isSuccess() and ResultSet.getStatus()
-     *         respectively
+     *            * @return true and STATUS_GOOD for success, false and
+     *            STATUS_BAD for
+     *            failure in ResultSet.isSuccess() and ResultSet.getStatus()
+     *            respectively
      */
     public ResultSet markAsDone(int index) {
         ResultSet markingResults = new ResultSet();
-        
+
         if ((index > displayedTasks.size() - 1) || (currentDisplayedList == DISPLAY_COMPLETED) || index < 0) {
             markingResults.setFail();
             markingResults.setStatus(ResultSet.STATUS_BAD);
@@ -1128,11 +1141,11 @@ public class TaskManager {
      * 
      * @param newDirectory - Directory to load from
      * @return ResultSet:
-     *          ResultSet.getStatus - STATUS_GOOD if success
-     *                                STATUS_JSON_ERROR if file found but corrupted
-     *                                STATUS_BAD if file not found
-     *          ResultSet.isSuccess - true if success
-     *                                false if either file not found or corrupted
+     *         ResultSet.getStatus - STATUS_GOOD if success
+     *         STATUS_JSON_ERROR if file found but corrupted
+     *         STATUS_BAD if file not found
+     *         ResultSet.isSuccess - true if success
+     *         false if either file not found or corrupted
      */
     public ResultSet loadFrom(String newDirectory) {
         ResultSet loadResult = new ResultSet();
@@ -1277,7 +1290,7 @@ public class TaskManager {
     }
 
     /**
-     *Gets the ID number of the upcoming task
+     * Gets the ID number of the upcoming task
      * 
      * @return ID of the task that is next, counting from the current time
      */
@@ -1389,7 +1402,7 @@ public class TaskManager {
      */
     private ResultSet populateResultSet() {
         ResultSet searchResults = new ResultSet();
-        
+
         if (searchedTasks.size() > 0) {
             searchResults.setSuccess();
             searchResults.setStatus(ResultSet.STATUS_GOOD);
@@ -1423,15 +1436,15 @@ public class TaskManager {
         System.out.println("undolist size: " + undoList.size() + " undoPointer : " + undoPointer);
         if (undoList.size() > 0 && undoPointer >= 0) {
             startUndo();
-            
+
             if (undoPointer == -1) {
                 System.out.println("Running 0 commands for undo");
-                
+
                 _undoing = false;
                 return new ArrayList<String>();
             } else {
                 System.out.println("Running " + (undoPointer + 1) + " commands for undo");
-                
+
                 ArrayList<String> commandsToRun = new ArrayList<String>(undoList.subList(0, undoPointer + 1));
                 return commandsToRun;
             }
@@ -1473,7 +1486,7 @@ public class TaskManager {
         displayedTasks = (ArrayList<TaskEntity>) mainTaskEntities.clone();
         currentDisplayedList = DISPLAY_MAIN;
     }
-    
+
     /**
      * Loads task data from file. For use when doing loadfrom to load new file
      * data
@@ -1501,9 +1514,9 @@ public class TaskManager {
     }
 
     /**
-     * Saves the user's  theme preference
+     * Saves the user's theme preference
      * 
-      * @return true and STATUS_GOOD for success, false and STATUS_BAD for
+     * @return true and STATUS_GOOD for success, false and STATUS_BAD for
      *         failure in ResultSet.isSuccess() and ResultSet.getStatus()
      *         respectively
      */

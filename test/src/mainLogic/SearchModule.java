@@ -11,29 +11,31 @@ import java.util.ArrayList;
 import entity.TaskEntity;
 
 public class SearchModule {
-    
+
     /**
      * Searches the hashtag, description and name of TaskEntity for a search
      * term and append it to search results
      * 
-     * @param searchTerm - Sub string to locate within each items's description, name and hashtag 
+     * @param searchTerm - Sub string to locate within each items's description,
+     *            name and hashtag
      * @param listToSearch - ArrayList to carry out the search on
      * @param searchResults - ArrayList to place results into
      */
-    public static void searchStringAddToResults (String searchTerm, ArrayList<TaskEntity> listToSearch, ArrayList<TaskEntity> searchResults) {
+    public static void searchStringAddToResults(String searchTerm, ArrayList<TaskEntity> listToSearch,
+            ArrayList<TaskEntity> searchResults) {
         String lowerCaseSearchTerm = searchTerm.toLowerCase();
-        
+
         String[] searchTerms = lowerCaseSearchTerm.split(" ");
-        
+
         for (int i = 0; i < listToSearch.size(); i++) {
-            
+
             if (listToSearch.get(i).getName() == null || listToSearch.get(i).getDescription() == null
                     || listToSearch.get(i).getHashtags() == null) {
                 System.out.println("ERROR in searchModule: Certain search fields null");
-                //Skip searching this faulty task
+                // Skip searching this faulty task
                 continue;
             }
-            
+
             boolean searchTermFound = false;
 
             searchTermFound = searchAllTerms(listToSearch.get(i), searchTerms);
@@ -55,10 +57,10 @@ public class SearchModule {
      */
     private static boolean searchAllTerms(TaskEntity taskToSearch, String[] searchTerms) {
         boolean searchTermFound = false;
-        
+
         for (int j = 0; j < searchTerms.length; j++) {
             searchTermFound = false;
-            
+
             if (taskToSearch.getName().toLowerCase().contains(searchTerms[j])
                     || taskToSearch.getDescription().toLowerCase().contains(searchTerms[j])) {
                 searchTermFound = true;
@@ -72,14 +74,15 @@ public class SearchModule {
                 }
             } else {
                 // One of the words/terms not found. Conclude as not added
-                // by breaking the loop, effectively leaving searchTermFound as false
+                // by breaking the loop, effectively leaving searchTermFound as
+                // false
                 break;
             }
         }
-        
+
         return searchTermFound;
     }
-    
+
     /**
      * If the term searched is a hashtag, check if it matches exactly
      * 
@@ -90,10 +93,11 @@ public class SearchModule {
      *         false otherwise
      */
     public static boolean checkHashMatch(String searchTerm, TaskEntity currentItemSearched) {
-        //Length set as 2 as minimum hash is a # with one character. No empty hashtags allowed
+        // Length set as 2 as minimum hash is a # with one character. No empty
+        // hashtags allowed
         if (searchTerm.length() >= 2) {
-            //Checks if current search term is a hashtag
-            if(searchTerm.charAt(0) == '#') {
+            // Checks if current search term is a hashtag
+            if (searchTerm.charAt(0) == '#') {
                 String hashTerm = searchTerm.substring(1);
                 String[] itemHashes = currentItemSearched.getHashtags().split("#");
 
@@ -111,6 +115,5 @@ public class SearchModule {
             return false;
         }
     }
-    
-}
 
+}

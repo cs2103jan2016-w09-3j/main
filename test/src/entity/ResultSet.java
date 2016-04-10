@@ -27,10 +27,10 @@ public class ResultSet {
     private boolean _isSuccess;
     private int _searchCount;
 
-    public ResultSet () {
+    public ResultSet() {
         _index = -1;
     }
-    
+
     public int getIndex() {
         return _index;
     }
@@ -65,7 +65,8 @@ public class ResultSet {
             _status = STATUS_CONFLICT_AND_PAST;
         } else if (status == STATUS_GOOD && (_status == STATUS_CONFLICT || _status == STATUS_PAST
                 || _status == STATUS_CONFLICT_AND_PAST)) {
-            // Do nothing - Keeps the warning messages not overwritten by good outcomes
+            // Do nothing - Keeps the warning messages not overwritten by good
+            // outcomes
         } else {
             _status = status;
         }
@@ -78,15 +79,15 @@ public class ResultSet {
     public void setSuccess() {
         _isSuccess = SUCCESS;
     }
-    
+
     public void setFail() {
         _isSuccess = FAILURE;
     }
-    
-    public void setSearchCount (int searchCount) {
+
+    public void setSearchCount(int searchCount) {
         _searchCount = searchCount;
     }
-    
+
     public int getSearchCount() {
         return _searchCount;
     }
