@@ -44,7 +44,7 @@ public class UserInterfaceExecuter {
 	}
 
 	/**
-	 * Switch the view in logic to switch all working list to the selected list.
+	 * Switches the view in logic to switch all working lists to the selected list.
 	 * 
 	 * @param displaySearch
 	 */
@@ -66,7 +66,7 @@ public class UserInterfaceExecuter {
 	}
 
 	/**
-	 * Deletes task base on _currentView and id.
+	 * Deletes task based on _currentView and id.
 	 * 
 	 * @param id
 	 * @param rawCommandWithView
@@ -92,7 +92,7 @@ public class UserInterfaceExecuter {
 	}
 
 	/**
-	 * Search for the task that is similar to the search string.
+	 * Searches for the task that is similar to the search string.
 	 * 
 	 * @param stringToSearch
 	 * @param rawCommandWithView
@@ -103,7 +103,7 @@ public class UserInterfaceExecuter {
 	}
 
 	/**
-	 * Marks the given task base on id and the current workingList as completed.
+	 * Marks the given task based on id and the current workingList as completed.
 	 * 
 	 * @param indexInt
 	 * @param rawCommandWithView
@@ -126,7 +126,7 @@ public class UserInterfaceExecuter {
 	}
 
 	/**
-	 * Change the saving directory.
+	 * Changes the saving directory.
 	 * 
 	 * @param dirPath
 	 * @return ResultSet
@@ -136,14 +136,14 @@ public class UserInterfaceExecuter {
 	}
 
 	/**
-	 * Close the manager and trigger saving of file.
+	 * Closes the manager and triggers saving of file.
 	 */
 	public void closeTaskManager() {
 		_taskManager.closeTaskManager();
 	}
 
 	/**
-	 * Get all commands that have not been saved to file. 
+	 * Gets all commands that have not been saved to file. 
 	 * 
 	 * @return Queue<String>
 	 */
@@ -152,7 +152,7 @@ public class UserInterfaceExecuter {
 	}
 
 	/**
-	 * Get all commands to run after an undo is executed.
+	 * Gets all commands to run after an undo is executed.
 	 * 
 	 * @return ArrayList<String>
 	 */
@@ -168,7 +168,7 @@ public class UserInterfaceExecuter {
 	}
 
 	/**
-	 * Change the theme, saved preference in config file.
+	 * Changes the theme, saves theme preference in Configuration File.
 	 * 
 	 * @param styleSheet
 	 * @return ResultSet
@@ -178,7 +178,7 @@ public class UserInterfaceExecuter {
 	}
 
 	/**
-	 * Tries to load the file given.
+	 * Loads file specified by user.
 	 * 
 	 * @param loadFrom
 	 * @return ResultSet
@@ -188,7 +188,7 @@ public class UserInterfaceExecuter {
 	}
 
 	/**
-	 * Tries to get theme saved in config file.
+	 * Retrieves theme saved in Configuration File.
 	 * 
 	 * @return String
 	 */
@@ -197,7 +197,7 @@ public class UserInterfaceExecuter {
 	}
 
 	/**
-	 * Get filePath where file was loaded from.
+	 * Gets filePath where file was loaded from.
 	 * 
 	 * @return String
 	 */
@@ -206,7 +206,7 @@ public class UserInterfaceExecuter {
 	}
 
 	/**
-	 * Check if the file has loaded successfully.
+	 * Checks if the file has loaded successfully.
 	 * 
 	 * @return true only if the file has loaded successfully
 	 */
