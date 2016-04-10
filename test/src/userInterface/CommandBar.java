@@ -854,7 +854,7 @@ public class CommandBar {
 					if (resultSet.getStatus() == ResultSet.STATUS_JSON_ERROR) {
 						setFeedBackMessage(MESSAGE_FAILURE_LOADFROM_TYPE_2);
 					} else if (resultSet.getStatus() == ResultSet.STATUS_BAD) {
-						setFeedBackMessage(MESSAGE_FAILURE_LOADFROM_TYPE_1);
+						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_1, msg));
 					} else {
 						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_1, msg));
 					}
