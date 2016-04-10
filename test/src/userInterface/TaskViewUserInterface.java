@@ -937,7 +937,7 @@ public class TaskViewUserInterface implements ViewInterface {
 	 * @param value
 	 * @return true only if animation is done
 	 */
-	public boolean isAtDetailedView(double value) {
+	public boolean isAtExpandedView(double value) {
 		double totalHeight = 0;
 		int index = _selectedIndex - _startIndex;
 		int counterForDoneItems = 0;
