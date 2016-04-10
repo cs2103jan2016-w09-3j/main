@@ -184,7 +184,6 @@ public class PrimaryUserInterface extends Application {
 	 *            event
 	 */
 	private void processKeyPress(TextField textField, KeyEvent event) {
-
 		if (event.getCode().compareTo(KeyCode.BACK_SPACE) == SAME) {
 			_commandBar.deleteKey();
 		} else if (event.getCode().compareTo(KeyCode.ENTER) == SAME) {
