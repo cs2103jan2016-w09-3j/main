@@ -36,6 +36,7 @@ public class JUnitStorage {
     public void init() {
         mainTasks = new ArrayList<TaskEntity>();
         floatingTasks = new ArrayList<TaskEntity>();
+        sh = new StorageHandler();
     }
     
     @Test
@@ -83,8 +84,6 @@ public class JUnitStorage {
     
     @Test
     public void testStorage_readConfigFile_defaultFilePathAndThemeExpected() {
-        sh = new StorageHandler();
-        
         String setting = sh.readFromExistingFile(READ_FROM_CONFIG_FILE);
         String[] settingSplit = setting.split("\n");
         String mainFilePathConfig = settingSplit[0];
@@ -99,8 +98,6 @@ public class JUnitStorage {
     
     @Test
     public void testStorage_readAndWriteMainFile_successful() {
-        sh = new StorageHandler();
-        
         String toBeWritten = "Write a random string.";
         boolean isWritten = sh.identifyWriteTo(toBeWritten, WRITE_TO_MAIN_FILE);
         assertEquals(isWritten, true);
@@ -110,9 +107,7 @@ public class JUnitStorage {
     }
     
     @Test
-    public void testStorage_readAndWriteCommandFile_successfullyAppended() {
-        sh = new StorageHandler();
-        
+    public void testStorage_readAndWriteCommandFile_successfullyAppended() {        
         String commandOne = "Add commandOne";
         boolean isWritten = sh.writeToCommandFile(commandOne);
         assertEquals(isWritten, true);
@@ -127,8 +122,6 @@ public class JUnitStorage {
     
     @Test
     public void testStorage_saveToNewDirectory_successful() {
-        sh = new StorageHandler();
-        
         sh.changeDirectory("newMainTasksFile.txt");
         File newFile = new File("newMainTasksFile.txt");
         
@@ -148,8 +141,6 @@ public class JUnitStorage {
     
     @Test
     public void testStorage_loadFromExistingFile_fileDoesNotExist_unsuccessful() {
-        sh = new StorageHandler();
-        
         boolean isLoaded = sh.loadFromExistingFile("invalidFile.txt");
         File newFile = new File("invalidFile.txt");
         
