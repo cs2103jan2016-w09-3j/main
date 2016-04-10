@@ -475,7 +475,7 @@ public class UserInterfaceController {
 	 * @return - true only when animation is done.
 	 */
 	public boolean isAtExpanedView() {
-		boolean isDoneTranslating = _taskViewInterface.isAtDetailedView(1);
+		boolean isDoneTranslating = _taskViewInterface.isAtExpandedView(1);
 		_descriptionComponent.buildComponent(_taskViewInterface.rebuildDescriptionLabelsForDay(), EXPANDED_VIEW);
 		translateComponentsY(_taskViewInterface.getTranslationY());
 		return isDoneTranslating;

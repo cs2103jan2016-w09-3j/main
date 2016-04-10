@@ -84,8 +84,7 @@ public class CommandBar {
 
 	private static final String MESSAGE_SUCCESS_LOADFROM = "Loaded from %1$s file successfully.";
 	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_1 = "Unable to find %1$s. Please check that the file is available for reading.";
-	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_2 = "Json corrupted";
-	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_3 = "File not in json format.";
+	private static final String MESSAGE_FAILURE_LOADFROM_TYPE_2 = "File not in json format.";
 
 	// UserInterface values
 	private static final int GAP_SIZE = 0;
@@ -853,9 +852,9 @@ public class CommandBar {
 					setFeedBackColor(FEEDBACK_STATUS_NORMAL);
 				} else {
 					if (resultSet.getStatus() == ResultSet.STATUS_JSON_ERROR) {
-						setFeedBackMessage(MESSAGE_FAILURE_LOADFROM_TYPE_3);
-					} else if (resultSet.getStatus() == ResultSet.STATUS_BAD) {
 						setFeedBackMessage(MESSAGE_FAILURE_LOADFROM_TYPE_2);
+					} else if (resultSet.getStatus() == ResultSet.STATUS_BAD) {
+						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_1, msg));
 					} else {
 						setFeedBackMessage(String.format(MESSAGE_FAILURE_LOADFROM_TYPE_1, msg));
 					}

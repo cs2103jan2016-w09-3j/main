@@ -23,6 +23,12 @@ public class XMLParser {
 	public static final String ID_TAG = "IdXmL";
 	public static final String HASH_TAG = "HaShXmL";
 	
+	/**
+	 * creates a document from a string of xml
+	 * @param xml
+	 * @return
+	 * @throws Exception
+	 */
 	public static Document loadXMLFromString(String xml) throws Exception{
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    DocumentBuilder builder = factory.newDocumentBuilder();
@@ -30,6 +36,12 @@ public class XMLParser {
 	    return builder.parse(is);
 	}
 	
+	/**
+	 * creates a map from a string of xml
+	 * @param xml
+	 * @return map with the xml tag as the key and the date in an array list
+	 * @throws Exception
+	 */
 	public static Map<String, ArrayList<String>> loadMapFromXML (String xml) throws Exception{
 		xml = "<xml>"+xml +"</xml>";
 		//System.out.println(xml);
@@ -55,6 +67,11 @@ public class XMLParser {
 		return returnVal;
 	}
 	
+	/**
+	 * removes all text in a string between xml tags
+	 * @param input
+	 * @return string without xml
+	 */
 	public static String removeAllAttributes(String input) {
 		String temp = new String(input);
 		try {
@@ -73,10 +90,25 @@ public class XMLParser {
 		return input;
 	}
 
+	/**
+	 * removes a specific xml tag and its contents from a string
+	 * @param input
+	 * @param tag
+	 * @param value
+	 * @return String
+	 */
 	private static String removeOneAttribute(String input, String tag, String value)  {
 		input = input.replace("<"+tag+">"+value+"</"+tag+">", "");
 		return input;
 	} 
+	
+	/**
+	 * removes a specific xml tag and its contents from a document
+	 * @param input
+	 * @param tempXMLDoc
+	 * @param tag
+	 * @return String
+	 */
 	private static String removeAttribute(String input, Document tempXMLDoc, String tag) {
 		NodeList titles = tempXMLDoc.getElementsByTagName(tag);
 		for (int i = 0; i < titles.getLength(); i++) {
@@ -85,6 +117,11 @@ public class XMLParser {
 		return input;
 	}
 	
+	/**
+	 * remove all tags without removing the contents
+	 * @param input
+	 * @return String
+	 */
 	public static String removeAllTags(String input) {
 		input = removeTags(input, CMD_TAG);
 		input = removeTags(input, TITLE_TAG);
@@ -96,12 +133,23 @@ public class XMLParser {
 		return input;
 	}
 	
+	/**
+	 * removes specific tags from string
+	 * @param input
+	 * @param tag
+	 * @return
+	 */
 	private static String removeTags(String input, String tag) {
 		input = input.replace("<"+tag+">", "");
 		input = input.replace("</"+tag+">", "");
 		return input;
 	}
 	
+	/**
+	 * creates a list of tags and their contents, retaining order
+	 * @param input
+	 * @return ArrayList of Pairs, containing the tag followed by the contents
+	 */
 	public static ArrayList<Pair<String, ArrayList<String>>> xmlToArrayList(String input) {
 		ArrayList<Pair<String, ArrayList<String>>> tagStringPair = new ArrayList<Pair<String, ArrayList<String>>>();
 		String prev = "";
@@ -129,6 +177,11 @@ public class XMLParser {
 		return tagStringPair;
 	}
 	
+	/**
+	 * Get the next tag in the string
+	 * @param input
+	 * @return String
+	 */
 	private static String findNextTag(String input){
 		String tag = "";
 		boolean isInTag = false;
@@ -149,6 +202,12 @@ public class XMLParser {
 		return tag;
 	}
 	
+	/**
+	 * Finds the next part of the input given tag
+	 * @param tag
+	 * @param input
+	 * @returnString with input
+	 */
 	private static String findNextInput(String tag, String input){
 		input = input.trim();
 		//System.out.println(tag+","+ input);

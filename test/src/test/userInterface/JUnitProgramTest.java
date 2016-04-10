@@ -55,8 +55,6 @@ public class JUnitProgramTest {
 			ArrayList<TaskEntity> tasks = parser.getTask();
 			if (tasks.size() == 1) {
 				return ex.addTask(tasks.get(0), rawString);
-			} else {
-				return ex.addBatch(tasks, rawString);
 			}
 		}
 		case DELETE: {

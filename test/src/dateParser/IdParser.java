@@ -6,6 +6,7 @@ import java.util.Scanner;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 
 public class IdParser {
+	private static final String ID_CONST = "ID";
 	private String id;
 	private String id2;
 	private final String TWO_ID_REGEX = "[I][D][0-9a-zA-Z]+[-][I][D][0-9a-zA-Z]+";
@@ -34,27 +35,29 @@ public class IdParser {
 
 	private void setID1And2(String test) {
 		String[] temp = test.split("-");
-		id=  temp[0].substring(2, temp[0].length());
-		id2=  temp[1].substring(2, temp[1].length());
+		id = temp[0].substring(2, temp[0].length());
+		id2 = temp[1].substring(2, temp[1].length());
 	}
 
-	public Pair<String,String> getLinkID(String input){
+	public Pair<String, String> getLinkID(String input) {
 		getID(input);
-		return new Pair<String,String>(id,id2);
+		return new Pair<String, String>(id, id2);
 	}
+
 	public String xmlID(String input) {
 		getID(input);
 		if (id2 != null) {
-			input = input.replace("ID" + id+"-ID"+id2, "<"+XMLParser.ID_TAG+">ID" + id +"-ID"+id2+ "</"+XMLParser.ID_TAG+">");
+			input = input.replace(ID_CONST + id + "-" + ID_CONST + id2, "<" + XMLParser.ID_TAG + ">" + ID_CONST + id
+					+ "-" + ID_CONST + id2 + "</" + XMLParser.ID_TAG + ">");
 		} else if (id != null) {
-			input = input.replace("ID" + id, "<"+XMLParser.ID_TAG+">ID" + id + "</"+XMLParser.ID_TAG+">");
+			input = input.replace(ID_CONST + id, "<" + XMLParser.ID_TAG + ">ID" + id + "</" + XMLParser.ID_TAG + ">");
 		}
 
 		return input;
 	}
 
 	private boolean hasIDKey(String input) {
-		if (input.contains("ID")) {
+		if (input.contains(ID_CONST)) {
 			return true;
 		} else {
 			return false;
