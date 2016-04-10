@@ -25,30 +25,138 @@ public class JUnitTaskManagerInterface {
     TaskManager taskmanager = TaskManager.getInstance();
 
     @Test
-    public void testAdd() {
-        taskmanager.unloadFile();
-
-        ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
-        for (int i = 0; i < 5; i++) {
-            newList.add(new TaskEntity("Task " + Integer.toString(i + 1), null,
-                    TaskUtils.createDate(1, 4, 2016, 12 + i, 0), false, "some desc"));
-        }
-        manager.add(newList, "PLACEHOLDER");
-        assertEquals("Task 1, Task 2, Task 3, Task 4, Task 5, ",
-                taskmanager.printArrayContentsToString(taskmanager.DISPLAY_MAIN));
-
-        newList = new ArrayList<TaskEntity>();
-        for (int i = 0; i < 5; i++) {
-            newList.add(new TaskEntity("Task " + Integer.toString(i + 6), null,
-                    TaskUtils.createDate(2, 4, 2016, 12 + i, 0), false, "some desc"));
-        }
-        manager.add(newList, "PLACEHOLDER");
-        assertEquals("Task 1, Task 2, Task 3, Task 4, Task 5, Task 6, Task 7, Task 8, Task 9, Task 10, ",
-                taskmanager.printArrayContentsToString(taskmanager.DISPLAY_MAIN));
+    public void testTaskManagerInterface_SwitchView_SwitchedToFloating() {
+        manager.switchView(manager.DISPLAY_FLOATING);
+        assertEquals(manager.DISPLAY_FLOATING, manager.getView());
     }
 
     @Test
-    public void testAddDeleteModifyLink() {
+    public void testTaskManagerInterface_AddFloatingTask_AddedToFloatingInOrder() {
+        taskmanager.unloadFile();
+        manager.add(new TaskEntity("Task floating 1"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task floating 2"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task floating 3"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task floating 4"), "PLACEHOLDER_SAVE_COMMAND");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING),
+                "Task floating 1, Task floating 2, Task floating 3, Task floating 4, ");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN), "");
+    }
+
+    @Test
+    public void testTaskManagerInterface_AddTimedTask_AddedToMainChronologicallyByDate() {
+        taskmanager.unloadFile();
+        manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016), true),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(17, 1, 2016), true),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 3", null, TaskUtils.createDate(15, 1, 2016), true),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 4", null, TaskUtils.createDate(18, 1, 2016), true),
+                "PLACEHOLDER_SAVE_COMMAND");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN),
+                "Task 3, Task 1, Task 2, Task 4, ");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING), "");
+    }
+
+    @Test
+    public void testTaskManagerInterface_AddTimedTask_AddedToMainChronologicallyByTime() {
+        taskmanager.unloadFile();
+        manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016, 22, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(17, 1, 2016, 7, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 3", null, TaskUtils.createDate(15, 1, 2016, 8, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 4", null, TaskUtils.createDate(17, 1, 2016, 6, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN),
+                "Task 3, Task 1, Task 4, Task 2, ");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING), "");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_OTHERS),
+                "Task 3, Task 1, Task 4, Task 2, ");
+    }
+
+    @Test
+    public void testTaskManagerInterface_AddTimedTask_AddedToMainChronologicallyFullDayBeforeOtherTasks() {
+        taskmanager.unloadFile();
+        manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016, 6, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(16, 1, 2016, 7, 0), true),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 3", null, TaskUtils.createDate(16, 1, 2016, 9, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 4", null, TaskUtils.createDate(16, 1, 2016, 8, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN),
+                "Task 2, Task 1, Task 4, Task 3, ");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING), "");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_OTHERS),
+                "Task 2, Task 1, Task 4, Task 3, ");
+    }
+
+    @Test
+    public void testTaskManagerInterface_DeleteTimedTask_MainTask3Deleted() {
+        taskmanager.unloadFile();
+        manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016, 6, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(16, 1, 2016, 8, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 3", null, TaskUtils.createDate(16, 1, 2016, 7, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 4", null, TaskUtils.createDate(16, 1, 2016, 9, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.delete("1", "PLACEHOLDER_SAVE_COMMAND");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN),
+                "Task 1, Task 2, Task 4, ");
+    }
+
+    @Test
+    public void testTaskManagerInterface_DeleteFloatingTask_FloatingTask2Deleted() {
+        taskmanager.unloadFile();
+        manager.add(new TaskEntity("Task 1"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 2"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 3"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 4"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.switchView(manager.DISPLAY_FLOATING);
+        manager.delete("1", "PLACEHOLDER_SAVE_COMMAND");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING),
+                "Task 1, Task 3, Task 4, ");
+    }
+
+    @Test
+    public void testTaskManagerInterface_ModifyTimedTask_Task3ModifiedToTask0() {
+        taskmanager.unloadFile();
+        manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016, 6, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(16, 1, 2016, 8, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 3", null, TaskUtils.createDate(16, 1, 2016, 7, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 4", null, TaskUtils.createDate(16, 1, 2016, 9, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.modify("1", new TaskEntity("Task 0", null, TaskUtils.createDate(16, 1, 2016, 5, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN),
+                "Task 0, Task 1, Task 2, Task 4, ");
+    }
+
+    @Test
+    public void testTaskManagerInterface_ModifyFloatingTask_FloatingTaskMoveToMainTask() {
+        taskmanager.unloadFile();
+        manager.add(new TaskEntity("Task 1"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 2"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 3"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task 4"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.switchView(manager.DISPLAY_FLOATING);
+        manager.modify("0", new TaskEntity("Task 0", null, TaskUtils.createDate(16, 1, 2016, 5, 0), false),
+                "PLACEHOLDER_SAVE_COMMAND");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING),
+                "Task 2, Task 3, Task 4, ");
+        assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN), "Task 0, ");
+    }
+
+    @Test
+    public void testTaskManagerInterface_AddModifyDeleteCompiled_PrintoutMatchesTestPrintout() {
         taskmanager.unloadFile();
 
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
@@ -57,135 +165,193 @@ public class JUnitTaskManagerInterface {
             newDate.set(Calendar.MINUTE, newDate.get(Calendar.MINUTE) + i);
             newList.add(new TaskEntity("Task " + Integer.toString(i + 1), null, newDate, false, "some desc"));
         }
-        manager.add(newList, "PLACEHOLDER");
+        manager.add(newList, "PLACEHOLDER_SAVE_COMMAND");
 
+        System.out.println(taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN));
         TaskEntity firstFloating = new TaskEntity("Task floating 1");
-        manager.add(firstFloating, "PLACEHOLDER");
-        manager.add(new TaskEntity("Task floating 2"), "PLACEHOLDER");
-        manager.add(new TaskEntity("Task floating 3"), "PLACEHOLDER");
-        manager.add(new TaskEntity("Task floating 4"), "PLACEHOLDER");
+        assertEquals(true, manager.add(firstFloating, "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+        manager.add(new TaskEntity("Task floating 2"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task floating 3"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Task floating 4"), "PLACEHOLDER_SAVE_COMMAND");
+        manager.switchView(manager.DISPLAY_FLOATING);
+        manager.delete("0", "PLACEHOLDER_SAVE_COMMAND");
+        manager.switchView(manager.DISPLAY_MAIN);
 
-        Calendar newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 2, 5);
-        TaskEntity headTask = new TaskEntity("2016/2/5", null, newDate, true);
-        manager.modify(1, headTask, "PLACEHOLDER");
+        TaskEntity headTask = new TaskEntity("2016/2/5", null, TaskUtils.createDate(5, 2, 2016), true);
+        manager.modify(1, headTask, "PLACEHOLDER_SAVE_COMMAND");
 
-        newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 2, 3);
-        TaskEntity childTask = new TaskEntity("2016/2/3", null, newDate, true);
-        manager.modify(3, childTask, "PLACEHOLDER");
+        TaskEntity childTask = new TaskEntity("2016/2/3", null, TaskUtils.createDate(3, 2, 2016), true);
+        manager.modify(3, childTask, "PLACEHOLDER_SAVE_COMMAND");
 
-        assertEquals(manager.link(headTask, childTask, "PLACEHOLDER").isSuccess(), true);
+        assertEquals(manager.link(headTask, childTask, "PLACEHOLDER_SAVE_COMMAND").isSuccess(), true);
 
-        newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 3, 16);
-        childTask = new TaskEntity("2016/3/16", null, newDate, true);
-        manager.add(childTask, "PLACEHOLDER");
-        manager.link(headTask, childTask, "PLACEHOLDER");
+        childTask = new TaskEntity("2016/3/16", null, TaskUtils.createDate(16, 3, 2016), true);
+        manager.add(childTask, "PLACEHOLDER_SAVE_COMMAND");
+        manager.link(headTask, childTask, "PLACEHOLDER_SAVE_COMMAND");
 
-        assertEquals(manager.link(childTask, headTask, "PLACEHOLDER").isSuccess(), false);
+        assertEquals(manager.link(childTask, headTask, "PLACEHOLDER_SAVE_COMMAND").isSuccess(), false);
 
-        newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 3, 15);
-        manager.add(new TaskEntity("2016/3/15", null, newDate, true), "PLACEHOLDER");
+        manager.add(new TaskEntity("2016/3/15", null, TaskUtils.createDate(15, 3, 2016), true),
+                "PLACEHOLDER_SAVE_COMMAND");
 
-        manager.link(firstFloating, childTask, "PLACEHOLDER");
+        manager.link(firstFloating, childTask, "PLACEHOLDER_SAVE_COMMAND");
 
-        newDate = Calendar.getInstance();
-        newDate.clear();
-        newDate.set(2016, 3, 15);
-        manager.modify(6, new TaskEntity("Modified task", null, newDate, true), "PLACEHOLDER");
+        manager.modify(6, new TaskEntity("Modified task", null, TaskUtils.createDate(15, 3, 2016), true),
+                "PLACEHOLDER_SAVE_COMMAND");
 
         assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_OTHERS),
                 "2016/2/3, 2016/2/5, Task 1, Task 3, Task 5, 2016/3/15, Modified task, ");
         assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING),
-                "Task floating 1, Task floating 2, Task floating 3, Task floating 4, ");
+                "Task floating 2, Task floating 3, Task floating 4, ");
         assertEquals(taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN),
                 "2016/2/3, 2016/2/5, Task 1, Task 3, Task 5, 2016/3/15, Modified task, ");
-
     }
 
     @Test
-    public void testMarkAsDone() {
+    public void testTaskManagerInterface_markTimedDone_TaskMovedToCompleteAndIsComplete() {
         taskmanager.unloadFile();
 
-        ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
-        for (int i = 0; i < 9; i++) {
-            Calendar newDate = Calendar.getInstance();
-            newDate.setTimeInMillis(newDate.getTimeInMillis() + i * 3000);
-            newList.add(new TaskEntity("Task " + Integer.toString(i + 1), null, newDate, false, "some desc"));
-        }
-        for (int i = 0; i < 9; i++) {
-            newList.add(new TaskEntity("Floating Task " + Integer.toString(i + 1)));
-        }
+        TaskEntity nextTaskToAdd = new TaskEntity("Assignment", null, TaskUtils.createDate(16, 1, 2016, 6, 0),
+                false);
+        manager.add(nextTaskToAdd, "PLACEHOLDER_SAVE_COMMAND");
 
-        manager.add(newList, "PLACEHOLDER");
-
+        assertEquals("Assignment, ", taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN));
         manager.switchView(manager.DISPLAY_MAIN);
+        manager.markAsDone(0, "PLACEHOLDER_SAVE_COMMAND");
+        assertEquals("", taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN));
+        assertEquals("Assignment, ", taskmanager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
+        assertEquals(true, nextTaskToAdd.isCompleted());
+    }
 
-        assertEquals(0, manager.markAsDone(0, "PLACEHOLDER"));
-        assertEquals(6, manager.markAsDone(7, "PLACEHOLDER"));
+    @Test
+    public void testTaskManagerInterface_markFloatingDone_TaskMovedToCompleteAndIsComplete() {
+        taskmanager.unloadFile();
 
-        assertEquals("Task 2, Task 3, Task 4, Task 5, Task 6, Task 7, Task 8, ",
-                taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN));
-        assertEquals("Task 1, Task 9, ", taskmanager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
+        TaskEntity nextTaskToAdd = new TaskEntity("Assignment");
+        manager.add(nextTaskToAdd, "PLACEHOLDER_SAVE_COMMAND");
+
+        assertEquals("Assignment, ", taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING));
+        manager.switchView(manager.DISPLAY_FLOATING);
+        manager.markAsDone(0, "PLACEHOLDER_SAVE_COMMAND");
+        assertEquals("", taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING));
+        assertEquals("Assignment, ", taskmanager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
+        assertEquals(true, nextTaskToAdd.isCompleted());
+    }
+
+    @Test
+    public void testTaskManagerInterface_link3Task_BothLinkSuccessful() {
+        taskmanager.unloadFile();
+
+        TaskEntity firstTask = new TaskEntity("Task 1");
+        manager.add(firstTask, "PLACEHOLDER_SAVE_COMMAND");
+        TaskEntity secondTask = new TaskEntity("Task 2");
+        manager.add(secondTask, "PLACEHOLDER_SAVE_COMMAND");
+        TaskEntity thirdTask = new TaskEntity("Task 3");
+        manager.add(thirdTask, "PLACEHOLDER_SAVE_COMMAND");
 
         manager.switchView(manager.DISPLAY_FLOATING);
-        assertEquals(0, manager.markAsDone(0, "PLACEHOLDER"));
-
-        assertEquals("Task 1, Task 9, Floating Task 1, ",
-                taskmanager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
-
+        assertEquals(true, manager.link("0", "1", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+        assertEquals(true, manager.link("0", "2", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
     }
 
     @Test
-    public void testSearchString() {
+    public void testTaskManagerInterface_link3Task_LinkProjectHeadAsTaskUnderFails() {
         taskmanager.unloadFile();
 
-        manager.add(new TaskEntity("Groom Cat", "Remember to bring cat to grooming salon"), "PLACEHOLDER");
-        manager.add(new TaskEntity("Groom Dog", "Remember to bring dog to grooming salon"), "PLACEHOLDER");
-        manager.add(new TaskEntity("Groom Bird", "Remember bring bird grooming salon"), "PLACEHOLDER");
+        TaskEntity firstTask = new TaskEntity("Task 1");
+        manager.add(firstTask, "PLACEHOLDER_SAVE_COMMAND");
+        TaskEntity secondTask = new TaskEntity("Task 2");
+        manager.add(secondTask, "PLACEHOLDER_SAVE_COMMAND");
+        TaskEntity thirdTask = new TaskEntity("Task 3");
+        manager.add(thirdTask, "PLACEHOLDER_SAVE_COMMAND");
+
+        manager.switchView(manager.DISPLAY_FLOATING);
+        assertEquals(true, manager.link("0", "1", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+        assertEquals(false, manager.link("2", "0", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+    }
+
+    @Test
+    public void testTaskManagerInterface_link3Task_MakeAssociatedTaskProjectHeadFails() {
+        taskmanager.unloadFile();
+
+        TaskEntity firstTask = new TaskEntity("Task 1");
+        manager.add(firstTask, "PLACEHOLDER_SAVE_COMMAND");
+        TaskEntity secondTask = new TaskEntity("Task 2");
+        manager.add(secondTask, "PLACEHOLDER_SAVE_COMMAND");
+        TaskEntity thirdTask = new TaskEntity("Task 3");
+        manager.add(thirdTask, "PLACEHOLDER_SAVE_COMMAND");
+
+        manager.switchView(manager.DISPLAY_FLOATING);
+        assertEquals(true, manager.link("0", "1", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+        assertEquals(false, manager.link("1", "2", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+    }
+
+    @Test
+    public void testTaskManagerInterface_searchStringSingleWord_AllDescriptionAndNameMatchesAddedToSearchView() {
+        taskmanager.unloadFile();
+
+        manager.add(new TaskEntity("Groom Cat", "Remember to bring cat to grooming salon"),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Groom Dog", "Remember to bring dog to grooming salon"),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Groom Bird", "Remember bring bird grooming salon"),
+                "PLACEHOLDER_SAVE_COMMAND");
         manager.add(new TaskEntity("Groom Rabbit", "Remember to bring rabbit to grooming salon"),
-                "PLACEHOLDER");
-        manager.searchString("to", "PLACEHOLDER");
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.searchString("to", "PLACEHOLDER_SAVE_COMMAND");
         assertEquals("Groom Cat, Groom Dog, Groom Rabbit, ",
                 taskmanager.printArrayContentsToString(manager.DISPLAY_SEARCH));
-        manager.searchString("groOming", "PLACEHOLDER");
+        manager.searchString("groOming", "PLACEHOLDER_SAVE_COMMAND");
         assertEquals("Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ",
                 taskmanager.printArrayContentsToString(manager.DISPLAY_SEARCH));
 
-        assertEquals(-2, manager.markAsDone(2, "PLACEHOLDER"));
-
-        System.out.println(taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING));
-        System.out.println(taskmanager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
-
         manager.add(new TaskEntity("Do 2103 V0.4", null, TaskUtils.createDate(4, 4, 2016), true,
-                "Remember to be in before 9pm"), "PLACEHOLDER");
+                "Remember to be in before 9pm"), "PLACEHOLDER_SAVE_COMMAND");
         manager.add(new TaskEntity("Do 2103 V0.3", null, TaskUtils.createDate(28, 3, 2016), true),
-                "PLACEHOLDER");
+                "PLACEHOLDER_SAVE_COMMAND");
         manager.add(new TaskEntity("Do 2104 V0.5", null, TaskUtils.createDate(11, 4, 2016), true),
-                "PLACEHOLDER");
+                "PLACEHOLDER_SAVE_COMMAND");
 
-        manager.searchString("remember", "PLACEHOLDER");
+        manager.searchString("remember", "PLACEHOLDER_SAVE_COMMAND");
         assertEquals("Do 2103 V0.4, Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ",
                 taskmanager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+    }
+
+    @Test
+    public void testTaskManagerInterface_searchCompletedTask_GroomDogFound() {
+        taskmanager.unloadFile();
+
+        manager.add(new TaskEntity("Groom Cat", "Remember to bring cat to grooming salon"),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Groom Dog", "Remember to bring dog to grooming salon"),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Groom Bird", "Remember bring bird grooming salon"),
+                "PLACEHOLDER_SAVE_COMMAND");
+        manager.add(new TaskEntity("Groom Rabbit", "Remember to bring rabbit to grooming salon"),
+                "PLACEHOLDER_SAVE_COMMAND");
 
         manager.switchView(manager.DISPLAY_FLOATING);
-        assertEquals(1, manager.markAsDone(1, "PLACEHOLDER"));
+        assertEquals(true, manager.markAsDone(1, "PLACEHOLDER_SAVE_COMMAND").isSuccess());
 
-        manager.switchView(manager.DISPLAY_SEARCH);
-
-        manager.searchString("remember", "PLACEHOLDER");
-        manager.switchView(manager.DISPLAY_SEARCH);
-        assertEquals("Do 2103 V0.4, Groom Cat, Groom Bird, Groom Rabbit, Groom Dog, ",
-                taskmanager.printArrayContentsToString(manager.DISPLAY_SEARCH));
-
-        manager.searchString("completed", "PLACEHOLDER");
+        manager.searchString("completed", "PLACEHOLDER_SAVE_COMMAND");
         manager.switchView(manager.DISPLAY_SEARCH);
         assertEquals("Groom Dog, ", taskmanager.printArrayContentsToString(manager.DISPLAY_OTHERS));
+    }
+
+    @Test
+    public void testTaskManagerInterface_searchCategory_OnlyExactMatchFound() {
+        taskmanager.unloadFile();
+
+        TaskEntity nextTaskToAdd = new TaskEntity("Groom Cat", "Remember to bring cat to grooming salon");
+        nextTaskToAdd.addHashtag("#pets");
+        manager.add(nextTaskToAdd, "PLACEHOLDER_SAVE_COMMAND");
+
+        manager.searchString("#pets", "PLACEHOLDER_SAVE_COMMAND");
+        manager.switchView(manager.DISPLAY_SEARCH);
+        assertEquals("Groom Cat, ", taskmanager.printArrayContentsToString(manager.DISPLAY_OTHERS));
+
+        manager.searchString("#pet", "PLACEHOLDER_SAVE_COMMAND");
+        manager.switchView(manager.DISPLAY_SEARCH);
+        assertEquals("", taskmanager.printArrayContentsToString(manager.DISPLAY_OTHERS));
     }
 }

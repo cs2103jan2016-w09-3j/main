@@ -22,7 +22,13 @@ public class JUnitTaskManager {
     TaskManager manager = TaskManager.getInstance();
 
     @Test
-    public void Add_AddedToFloatingInOrder() {
+    public void testTaskManager_SwitchView_SwitchedToFloating() {
+        manager.switchView(manager.DISPLAY_FLOATING);
+        assertEquals(manager.DISPLAY_FLOATING, manager.getView());
+    }
+    
+    @Test
+    public void testTaskManager_AddFloatingTask_AddedToFloatingInOrder() {
         manager.unloadFile();
         manager.add(new TaskEntity("Task floating 1"));
         manager.add(new TaskEntity("Task floating 2"));
@@ -34,7 +40,7 @@ public class JUnitTaskManager {
     }
 
     @Test
-    public void Add_AddedToMainChronologicallyByDate() {
+    public void testTaskManager_AddTimedTask_AddedToMainChronologicallyByDate() {
         manager.unloadFile();
         manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016), true));
         manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(17, 1, 2016), true));
@@ -46,7 +52,7 @@ public class JUnitTaskManager {
     }
 
     @Test
-    public void Add_AddedToMainChronologicallyByTime() {
+    public void testTaskManager_AddTimedTask_AddedToMainChronologicallyByTime() {
         manager.unloadFile();
         manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016, 22, 0), false));
         manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(17, 1, 2016, 7, 0), false));
@@ -60,7 +66,7 @@ public class JUnitTaskManager {
     }
 
     @Test
-    public void Add_AddedToMainChronologicallyByFullDayBefore() {
+    public void testTaskManager_AddTimedTask_AddedToMainChronologicallyFullDayBeforeOtherTasks() {
         manager.unloadFile();
         manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016, 6, 0), false));
         manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(16, 1, 2016, 7, 0), true));
@@ -74,7 +80,7 @@ public class JUnitTaskManager {
     }
 
     @Test
-    public void Delete_MainTask3Deleted() {
+    public void testTaskManager_DeleteTimedTask_MainTask3Deleted() {
         manager.unloadFile();
         manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016, 6, 0), false));
         manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(16, 1, 2016, 8, 0), false));
@@ -85,7 +91,7 @@ public class JUnitTaskManager {
     }
     
     @Test
-    public void Delete_FloatingTask2Deleted() {
+    public void testTaskManager_DeleteFloatingTask_FloatingTask2Deleted() {
         manager.unloadFile();
         manager.add(new TaskEntity("Task 1"));
         manager.add(new TaskEntity("Task 2"));
@@ -97,7 +103,7 @@ public class JUnitTaskManager {
     }
     
     @Test
-    public void Modify_Task3ModifiedToTask0() {
+    public void testTaskManager_ModifyTimedTask_Task3ModifiedToTask0() {
         manager.unloadFile();
         manager.add(new TaskEntity("Task 1", null, TaskUtils.createDate(16, 1, 2016, 6, 0), false));
         manager.add(new TaskEntity("Task 2", null, TaskUtils.createDate(16, 1, 2016, 8, 0), false));
@@ -108,7 +114,7 @@ public class JUnitTaskManager {
     }
     
     @Test
-    public void Modify_FloatingTaskIntoMainTask() {
+    public void testTaskManager_ModifyFloatingTask_FloatingTaskMoveToMainTask() {
         manager.unloadFile();
         manager.add(new TaskEntity("Task 1"));
         manager.add(new TaskEntity("Task 2"));
@@ -116,12 +122,12 @@ public class JUnitTaskManager {
         manager.add(new TaskEntity("Task 4"));
         manager.switchView(manager.DISPLAY_FLOATING);
         manager.modify("0", new TaskEntity("Task 0", null, TaskUtils.createDate(16, 1, 2016, 5, 0), false));
-        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_FLOATING), "Task 2, Task 3, Task 4, ");
+        assertEquals(manager.printArrayContentsToString(manager.DISPLAY_FLOATING),  "Task 2, Task 3, Task 4, ");
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_MAIN), "Task 0, ");
     }
 
     @Test
-    public void AddModifyLinkCompiled_Floating1To4MainSameAsDisplay() {
+    public void testTaskManager_AddModifyDeleteCompiled_PrintoutMatchesTestPrintout() {
         manager.unloadFile();
 
         ArrayList<TaskEntity> newList = new ArrayList<TaskEntity>();
@@ -138,6 +144,9 @@ public class JUnitTaskManager {
         manager.add(new TaskEntity("Task floating 2"));
         manager.add(new TaskEntity("Task floating 3"));
         manager.add(new TaskEntity("Task floating 4"));
+        manager.switchView(manager.DISPLAY_FLOATING);
+        manager.delete(0);
+        manager.switchView(manager.DISPLAY_MAIN);
 
         TaskEntity headTask = new TaskEntity("2016/2/5", null, TaskUtils.createDate(5, 2, 2016), true);
         manager.modify(1, headTask);
@@ -162,14 +171,91 @@ public class JUnitTaskManager {
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_OTHERS),
                 "2016/2/3, 2016/2/5, Task 1, Task 3, Task 5, 2016/3/15, Modified task, ");
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_FLOATING),
-                "Task floating 1, Task floating 2, Task floating 3, Task floating 4, ");
+                "Task floating 2, Task floating 3, Task floating 4, ");
         assertEquals(manager.printArrayContentsToString(manager.DISPLAY_MAIN),
                 "2016/2/3, 2016/2/5, Task 1, Task 3, Task 5, 2016/3/15, Modified task, ");
     }
 
+    @Test
+    public void testTaskManager_markTimedDone_TaskMovedToCompleteAndIsComplete() {
+        manager.unloadFile();
+        
+        TaskEntity nextTaskToAdd = new TaskEntity("Assignment", null, TaskUtils.createDate(16, 1, 2016, 6, 0), false);
+        manager.add(nextTaskToAdd);
+        
+        assertEquals("Assignment, ", manager.printArrayContentsToString(manager.DISPLAY_MAIN));
+        manager.switchView(manager.DISPLAY_MAIN);
+        manager.markAsDone(0);
+        assertEquals("", manager.printArrayContentsToString(manager.DISPLAY_MAIN));
+        assertEquals("Assignment, ", manager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
+        assertEquals(true, nextTaskToAdd.isCompleted());
+    }
     
     @Test
-    public void testSearchString() {
+    public void testTaskManager_markFloatingDone_TaskMovedToCompleteAndIsComplete() {
+        manager.unloadFile();
+        
+        TaskEntity nextTaskToAdd = new TaskEntity("Assignment");
+        manager.add(nextTaskToAdd);
+        
+        assertEquals("Assignment, ", manager.printArrayContentsToString(manager.DISPLAY_FLOATING));
+        manager.switchView(manager.DISPLAY_FLOATING);
+        manager.markAsDone(0);
+        assertEquals("", manager.printArrayContentsToString(manager.DISPLAY_FLOATING));
+        assertEquals("Assignment, ", manager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
+        assertEquals(true, nextTaskToAdd.isCompleted());
+    }
+    
+    @Test
+    public void testTaskManager_link3Task_BothLinkSuccessful () {
+        manager.unloadFile();
+
+        TaskEntity firstTask = new TaskEntity("Task 1");
+        manager.add(firstTask);
+        TaskEntity secondTask = new TaskEntity("Task 2");
+        manager.add(secondTask);
+        TaskEntity thirdTask = new TaskEntity("Task 3");
+        manager.add(thirdTask);
+        
+        manager.switchView(manager.DISPLAY_FLOATING);
+        assertEquals(true, manager.link(0, 1).isSuccess());
+        assertEquals(true, manager.link(0, 2).isSuccess());
+    }
+    
+    @Test
+    public void testTaskManager_link3Task_LinkProjectHeadAsTaskUnderFails () {
+        manager.unloadFile();
+
+        TaskEntity firstTask = new TaskEntity("Task 1");
+        manager.add(firstTask);
+        TaskEntity secondTask = new TaskEntity("Task 2");
+        manager.add(secondTask);
+        TaskEntity thirdTask = new TaskEntity("Task 3");
+        manager.add(thirdTask);
+        
+        manager.switchView(manager.DISPLAY_FLOATING);
+        assertEquals(true, manager.link(0, 1).isSuccess());
+        assertEquals(false, manager.link(2, 0).isSuccess());
+    }
+    
+    @Test
+    public void testTaskManager_link3Task_MakeAssociatedTaskProjectHeadFails () {
+        manager.unloadFile();
+
+        TaskEntity firstTask = new TaskEntity("Task 1");
+        manager.add(firstTask);
+        TaskEntity secondTask = new TaskEntity("Task 2");
+        manager.add(secondTask);
+        TaskEntity thirdTask = new TaskEntity("Task 3");
+        manager.add(thirdTask);
+        
+        manager.switchView(manager.DISPLAY_FLOATING);
+        assertEquals(true, manager.link(0, 1).isSuccess());
+        assertEquals(false, manager.link(1, 2).isSuccess());
+    }
+    
+    @Test
+    public void testTaskManager_searchStringSingleWord_AllDescriptionAndNameMatchesAddedToSearchView() {
         manager.unloadFile();
 
         manager.add(new TaskEntity("Groom Cat", "Remember to bring cat to grooming salon"));
@@ -183,11 +269,6 @@ public class JUnitTaskManager {
         assertEquals("Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ",
                 manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
 
-        assertEquals(false, manager.markAsDone(2).isSuccess());
-
-        System.out.println(manager.printArrayContentsToString(manager.DISPLAY_FLOATING));
-        System.out.println(manager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
-
         manager.add(new TaskEntity("Do 2103 V0.4", null, TaskUtils.createDate(4, 4, 2016), true,
                 "Remember to be in before 9pm"));
         manager.add(new TaskEntity("Do 2103 V0.3", null, TaskUtils.createDate(28, 3, 2016), true));
@@ -196,20 +277,39 @@ public class JUnitTaskManager {
         manager.searchString("remember");
         assertEquals("Do 2103 V0.4, Groom Cat, Groom Dog, Groom Bird, Groom Rabbit, ",
                 manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
+    }
+    
+    @Test
+    public void testTaskManager_searchCompletedTask_GroomDogFound() {
+        manager.unloadFile();
+
+        manager.add(new TaskEntity("Groom Cat", "Remember to bring cat to grooming salon"));
+        manager.add(new TaskEntity("Groom Dog", "Remember to bring dog to grooming salon"));
+        manager.add(new TaskEntity("Groom Bird", "Remember bring bird grooming salon"));
+        manager.add(new TaskEntity("Groom Rabbit", "Remember to bring rabbit to grooming salon"));
 
         manager.switchView(manager.DISPLAY_FLOATING);
         assertEquals(true, manager.markAsDone(1).isSuccess());
-
-        manager.switchView(manager.DISPLAY_SEARCH);
-
-        manager.searchString("remember");
-        manager.switchView(manager.DISPLAY_SEARCH);
-        assertEquals("Do 2103 V0.4, Groom Cat, Groom Bird, Groom Rabbit, Groom Dog, ",
-                manager.printArrayContentsToString(manager.DISPLAY_SEARCH));
-
+        
         manager.searchString("completed");
         manager.switchView(manager.DISPLAY_SEARCH);
         assertEquals("Groom Dog, ", manager.printArrayContentsToString(manager.DISPLAY_OTHERS));
-
     }
+    
+    @Test
+    public void testTaskManager_searchCategory_OnlyExactMatchFound() {
+        manager.unloadFile();
+        
+        TaskEntity nextTaskToAdd = new TaskEntity("Groom Cat", "Remember to bring cat to grooming salon");
+        nextTaskToAdd.addHashtag("#pets");
+        manager.add(nextTaskToAdd);
+        
+        manager.searchString("#pets");
+        manager.switchView(manager.DISPLAY_SEARCH);
+        assertEquals("Groom Cat, ", manager.printArrayContentsToString(manager.DISPLAY_OTHERS));
+        
+        manager.searchString("#pet");
+        manager.switchView(manager.DISPLAY_SEARCH);
+        assertEquals("", manager.printArrayContentsToString(manager.DISPLAY_OTHERS));
+    } 
 }
