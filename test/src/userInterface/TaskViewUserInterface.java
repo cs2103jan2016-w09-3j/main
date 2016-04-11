@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import dateParser.ReverseParser;
-import entity.DescriptionLabel;
+import userInterface.DescriptionLabel;
 import entity.TaskEntity;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;

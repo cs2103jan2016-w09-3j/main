@@ -7,7 +7,7 @@
 package userInterface;
 
 import java.util.ArrayList;
-import entity.DescriptionLabel;
+import userInterface.DescriptionLabel;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
