@@ -74,7 +74,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testAddCommand_addTimedTask_MainListHas4TasksAfterAdding() {
+    public void testProgram_addTimedTask_MainListHas4TasksAfterAdding() {
         assertTrue(runCommand("Add basketball tmr").isSuccess());
         _executor.switchView(TaskManager.DISPLAY_MAIN);
 
@@ -82,7 +82,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testAddCommand_addInvalidTimedTask_MainListHas3TasksAfterAdding() {
+    public void testProgram_addInvalidTimedTask_MainListHas3TasksAfterAdding() {
         assertFalse(runCommand("Add tmr").isSuccess());
         _executor.switchView(TaskManager.DISPLAY_MAIN);
 
@@ -90,7 +90,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testAddCommand_addFloatingTask_FloatingListHas4TasksAfterAdding() {
+    public void testProgram_addFloatingTask_FloatingListHas4TasksAfterAdding() {
         assertTrue(runCommand("Add baseball").isSuccess());
         _executor.switchView(TaskManager.DISPLAY_FLOATING);
 
@@ -98,7 +98,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testInvalidCommands_executeInvalidCommands_commandsGetsRejected() {
+    public void testProgram_executeInvalidCommands_commandsGetsRejected() {
         assertEquals(runCommand("basktball"), null);
         assertEquals(runCommand("ad d temp"), null);
         assertEquals(runCommand("123"), null);
@@ -106,7 +106,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testAddTaskToSystem_addDummyTasks_taskAddedToCorrectList() {
+    public void testProgram_addDummyTasks_taskAddedToCorrectList() {
         assertEquals(runCommand("add basktball").getView(), ResultSet.FLOATING_VIEW);
         _executor.switchView(TaskManager.DISPLAY_FLOATING);
         assertEquals(runCommand("add what tmr").getView(), ResultSet.TASK_VIEW);
@@ -114,7 +114,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testModifyCommand_ModifyFloatingToTimed_() {
+    public void testProgram_ModifyFloatingToTimed_() {
         _executor.switchView(TaskManager.DISPLAY_FLOATING);
         runCommand("Edit ID0 floating task1 tmr 3pm");
 
@@ -124,7 +124,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testDeleteCommands_executeInvalidDeleteCommands_commandsGetRejected() {
+    public void testProgram_executeInvalidDeleteCommands_commandsGetRejected() {
         assertNull(runCommand("delete asda"));
         assertNull(runCommand("delete "));
         assertNull(runCommand("delete   "));
@@ -133,7 +133,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testDoneCommand_executeInvalidCommands_AllMarkAsDoneFails() {
+    public void testProgram_executeInvalidCommands_AllMarkAsDoneFails() {
         assertFalse(runCommand("done IDD0").isSuccess());
         assertFalse(runCommand("done DDDII0").isSuccess());
         assertFalse(runCommand("done ").isSuccess());
@@ -141,7 +141,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testDoneCommand_markSomeTaskDone_All6TaskGoesIntoCompleteList() {
+    public void testProgram_markSomeTaskDone_All6TaskGoesIntoCompleteList() {
         assertTrue(runCommand("done ID0").isSuccess());
         assertTrue(runCommand("done ID0").isSuccess());
         assertTrue(runCommand("done ID0").isSuccess());
@@ -158,7 +158,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testDeleteTask_deleteTaskFromFloatingList_taskDeleted() {
+    public void testProgram_deleteTaskFromFloatingList_taskDeleted() {
         _executor.switchView(TaskManager.DISPLAY_FLOATING);
         assertTrue(runCommand("delete ID0").isSuccess());
         assertFalse(runCommand("delete ID10").isSuccess());
@@ -168,6 +168,19 @@ public class JUnitProgramTest {
         assertFalse(runCommand("delete ID0").isSuccess());
     }
 
+    @Test
+    public void testProgram_linkThreeTasks_ThreeTasksLinked() {
+        assertTrue(runCommand("link ID0-ID1").isSuccess());
+        assertTrue(runCommand("link ID0-ID2").isSuccess());
+    }
+    
+    @Test
+    public void testProgram_invliadLinks_SecondAndThirdLinksFail() {
+        assertTrue(runCommand("link ID0-ID1").isSuccess());
+        assertFalse(runCommand("link ID1-ID2").isSuccess());
+        assertFalse(runCommand("link ID2-ID0").isSuccess());
+    }
+    
     @Test
     public void testProgram_searchSomeTask_ThreeResultsFound() {
         runCommand("search task some");
