@@ -29,7 +29,6 @@ public class JUnitProgramTest {
     public static TemporaryFolder folder = new TemporaryFolder();
 
     private static UserInterfaceExecuter _executor = new UserInterfaceExecuter();
-    private static String fileName;
     private static int counter = 0;
 
     @BeforeClass
@@ -41,7 +40,7 @@ public class JUnitProgramTest {
     }
 
     public static void changeFile() throws IOException {
-        fileName = "ProjectTest_".concat(Integer.toString(counter++)).concat(".txt");
+        String fileName = "ProjectTest_".concat(Integer.toString(counter++)).concat(".txt");
         File f = folder.newFile("temp/".concat(fileName));
         _executor.loadFrom(f.getPath());
     }
@@ -97,12 +96,12 @@ public class JUnitProgramTest {
     @Test
     public void testDeleteTaskFromFloatingList_deleteTask_taskDeleted() {
         _executor.switchView(TaskManager.DISPLAY_FLOATING);
-        System.out.println(_executor.getWorkingList().size() + "size before");
         assertTrue(runCommand("delete ID0").isSuccess());
+        assertFalse(runCommand("delete ID10").isSuccess());
         assertTrue(runCommand("delete ID0").isSuccess());
         assertTrue(runCommand("delete ID0").isSuccess());
         assertFalse(runCommand("delete ID0").isSuccess());
-        System.out.println(_executor.getWorkingList().size() + "size after");
+        assertFalse(runCommand("delete ID0").isSuccess());
     }
 
     // @@ A0125514N
