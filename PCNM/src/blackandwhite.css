@@ -1,0 +1,345 @@
+//@@author A0125514N
+.cssLabels,.cssLabelsFloatingBar,.cssLabelsFloatingTaskInterface,
+.cssLabelsSearchView{
+	-fx-text-fill:rgba(255,255,255,1.0);
+	-fx-fill:rgba(255,255,255,1.0);
+}
+.cssLabelsDescription,.cssLabelsDetails,.cssLabelsCommandBar{
+	-fx-text-fill:rgba(0,0,0,1.0);
+	-fx-fill:rgba(0,0,0,1.0);
+}
+
+#cssCommandMainUserInput {
+    -fx-background-color: rgba(0,0,0,1);
+    -fx-font: 12.0px "Arial";
+}
+
+#commandText {
+	-fx-font: 12.0px "Arial";
+}
+
+/* Help Screen */
+
+#cssHelpScreenRoot{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.5);
+}
+
+#cssHelpComponentHighLighter{
+	-fx-background-color: rgba(0.0,0.0,0.0,0.1);
+	-fx-border-width: 1.0; 
+	-fx-border-color: black;
+}
+
+#cssHelpComponentLinker{
+	-fx-background-color: rgba(0.0,0.0,0.0,1.0);
+}
+
+#cssHelpComponentDescriptionBox{
+	-fx-background-color: rgba(255.0,255.0,255.0,1.0);
+	-fx-border-width: 1.0; 
+	-fx-border-color: black;
+}
+
+#cssHelpTitle{
+	-fx-text-fill: rgba(240.0,180.0,50.0,1.0);
+	-fx-border-width: 0.0 0.0 1.0 0.0; 
+	-fx-border-color: black;
+}
+
+
+#rootPane{
+	-fx-border-color: #d3d3d3;
+    -fx-border-width: 2.0px;
+}
+
+.controlFocus {
+	-fx-border-color: #FF00FF;
+	-fx-border-width: 2.0px;
+}
+
+/* css Task view  */
+#cssTaskViewMainBackground{
+	-fx-background-color: rgba(0,0,0,0.9);
+}
+
+#cssTaskViewWeekSelected{
+	-fx-background-color: rgba(28, 22, 22,1);
+}
+
+#cssTaskViewWeekUnSelected{
+	-fx-background-color: rgba(0,0,0,0.5);
+}
+
+#cssTaskViewDayBoxSelected{
+}
+
+#cssTaskViewDayBoxUnSelected{	
+}
+
+#cssTaskViewSelectedTask{
+	-fx-background-radius: 20.0; 
+	-fx-background-color:  rgba(255.0,178.5,127.5,0.3);
+	-fx-background-insets: 1.0 5.0 1.0 5.0;
+}
+
+#cssTaskViewUnSelectedTask{
+}
+
+#cssTaskViewDayLabel{
+	-fx-border-width: 0.0 0.0 1.0 0.0; 
+	-fx-border-color: black;
+}
+
+/* css description panel */
+
+#cssDescriptionLabelSelected{
+	-fx-background-color:rgba(255.0,178.5,127.5,1);
+}
+
+#cssDescriptionLabelUnSelected{
+	-fx-background-color:rgba(255,255,255,0.2);
+}
+
+#cssRootDescriptionViewMainBackground{
+	-fx-background-color: rgba(0,0,0,0.9);
+}
+
+
+
+#cssDetailComponentRoot{
+	-fx-background-color: rgba(0,0,0,0.9);
+}
+
+#cssDetailComponentRootAssociation{
+	-fx-background-color: rgba(255.0,178.5,127.5,1),rgba(0,0,0,0.9);
+	-fx-background-insets: 0,2;
+}
+
+#cssDetailComponentEmptyTitle {
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0);	
+}
+
+#cssDetailComponentProjectHeadBox{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.95);
+}
+
+#cssExpandedViewVBox{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.9);
+	-fx-background-radius: 7.0;
+	-fx-background-insets: 0.0 5.0 0.0 5.0;
+}
+
+#cssExpandedViewVBoxSelected{
+	-fx-background-color: rgba(255.0,178.5,127.5,0.8);
+	-fx-background-radius: 7.0;
+	-fx-background-insets: 0.0 5.0 0.0 5.0;
+}
+
+#cssDetailAssociationListBox
+{
+	-fx-background-color: rgba(255.0,255.0,255.0,0.0);
+	-fx-background-insets: 0.0 0.0 0.0 0.0;
+}
+
+/* Floating Bar CSS */
+#cssRootFloatingBar{
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0), rgba(0,0,0,1);
+	-fx-background-insets: 0.0,0.0 10.0 0.0 10.0;
+}
+#cssFloatingBarContentArea{
+	-fx-border-width:  0.0 0.0 0.0 1.0; 
+	-fx-border-color: black;
+}
+
+#cssFloatingBarTitleLabel{
+
+}
+
+/* Floating Task View CSS */
+
+#cssRootFloatingTaskView{
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0),rgba(0,0,0,1.0);
+	-fx-background-insets: 0.0,5.0;
+}
+
+#cssFloatingTaskViewTitle
+{
+	-fx-background-color: rgba(255.0,178.5,127.5,1.0);
+}
+#cssFloatingTaskViewSelected{
+	-fx-background-radius: 20.0; 
+	-fx-background-color:  rgba(255.0,178.5,127.5,0.3);
+	-fx-background-insets: 1.0 7.0 1.0 7.0;
+}
+
+/* Search View CSS */
+#cssRootSearchView{
+	-fx-background-color: rgba(191.0, 80.0, 191.0,1.0,1.0),rgba(0,0,0,1.0);
+	-fx-background-insets: 0.0,5.0;
+}
+#cssSearchTitle{
+	-fx-background-color: rgba(191.0, 80.0, 191.0,1.0);
+}
+
+#cssSearchSelected{
+	-fx-background-color: rgba(191.0, 80.0, 191.0,0.3);
+	-fx-background-radius: 20.0; 
+	-fx-background-insets: 1.0 7.0 1.0 7.0;
+}
+
+/* CommandsBar CSS */
+
+#cssCommandBarMainStructure{
+	-fx-background-color: rgba(0,0,0,1);
+}
+
+#cssCommandBarContentZone{
+	-fx-border-width: 1.0 0.0 1.0 0.0; 
+	-fx-border-color: black;
+}
+
+#cssCommandBarfeedback_normal
+{
+	-fx-background-color: rgba(179.0, 255.0, 153.0, 1.0);
+}
+#cssCommandBarfeedback_conflict
+{
+	-fx-background-color: rgba(249.0, 186.0, 122.0, 1.0);
+}
+#cssCommandBarfeedback_past{
+	-fx-background-color: rgba(246.0, 246.0, 39.0, 1.0);
+}
+
+#cssCommandBarfeedback_conflict_past{
+	-fx-background-color: rgba(180, 251.0, 212.0, 1.0);
+}
+
+#cssCommandBarfeedback_error
+{
+	-fx-background-color: rgba(249.0, 122.0, 122.0,1.0);
+}
+
+/* Commands CSS */
+
+#cssCommandBarAdd {
+	-fx-background-color: rgba(72.0, 238.0, 56.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+	
+}
+
+#cssCommandBarInvalid{
+	-fx-text-fill:rgba(255.0,0.0,0.0,1.0);
+}
+
+#cssCommandBarDelete {
+	-fx-background-color: rgba(56.0, 238.0, 223.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+
+#cssCommandBarEdit {
+	-fx-background-color: rgba(56.0, 163.0, 238.0, 0.5);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+
+#cssCommandBarLink {
+	-fx-background-color: rgba(163.0, 238.0, 56.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+
+#cssCommandBarDone {
+	-fx-background-color: rgba(238.0, 132.0, 56.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+
+#cssCommandTitle {
+	-fx-background-color: rgba(202.0, 247.0, 140.0, 1.0);
+	-fx-background-radius: 7.0; 
+}
+#cssCommandDate {
+	-fx-background-color: rgba(247.0, 140.0, 149.0, 1.0);
+	-fx-background-radius: 7.0; 
+}
+#cssCommandHashTag{
+	-fx-background-color: rgba(247.0, 238.0, 140.0, 1.0);
+	-fx-background-radius: 7.0; 
+}
+
+#cssCommandID {
+	-fx-background-color: rgba(247.0, 184.0, 140.0, 1.0);
+	-fx-background-radius: 7.0; 
+}
+#cssCommandDescription {
+	-fx-background-color: rgba(140.0, 202.0, 247.0, 1.0);
+	-fx-background-radius: 7.0; 
+}
+
+#cssCommandJump {
+	-fx-background-color: rgba(238.0, 56.0, 163.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+#cssCommandSearch{
+	-fx-background-color: rgba(132.0, 56.0, 238.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+
+#cssCommandExit{
+	-fx-text-fill:white;
+	-fx-background-color: rgba(238.0, 56.0, 72.0, 1.0);
+	-fx-font-weight:bold;
+	 -fx-font: 20.0px "Arial";
+}
+
+#cssCommandFloat{
+	-fx-background-color: rgba(238.0, 132.0, 56.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+#cssCommandShow{
+	-fx-background-color: rgba(223.0, 56.0, 238.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+#cssCommandHide{
+	-fx-background-color: rgba(223.0, 56.0, 238.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+#cssCommandMain{
+	-fx-background-color: rgba(238.0, 56.0, 163.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+#cssCommandSaveDir{
+	-fx-background-color: rgba(183.0, 220.0, 40.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+#cssCommandUndo{
+	-fx-background-color: rgba(240.0, 180.0, 20.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+
+#cssCommandOther{
+	-fx-text-fill:rgba(255,255,255,1.0);
+}
+
+#cssCommandTheme{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-background-color: rgba(238.0, 120, 163.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}
+#cssCommandLoadFrom{
+	-fx-text-fill:rgba(0.0,0.0,0.0,1.0);
+	-fx-background-color: rgba(183.0, 220.0, 40.0, 1.0);
+	-fx-font-weight:bold;
+	-fx-background-radius: 7.0; 
+}

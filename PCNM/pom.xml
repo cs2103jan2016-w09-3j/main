@@ -1,19 +1,70 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>PCNM</groupId>
-  <artifactId>PCNM</artifactId>
+
+  <groupId>DateParser</groupId>
+  <artifactId>test</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <build>
-    <sourceDirectory>src</sourceDirectory>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <packaging>jar</packaging>
+
+  <name>test</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>com.joestelmach</groupId>
+    	<artifactId>natty</artifactId>
+    	<version>0.11</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-api</artifactId>
+    	<version>1.5.6</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-simple</artifactId>
+    	<version>1.5.6</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.rubiconproject.oss</groupId>
+    	<artifactId>jchronic</artifactId>
+    	<version>0.2.6</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.googlecode.json-simple</groupId>
+    	<artifactId>json-simple</artifactId>
+    	<version>1.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.google.code.gson</groupId>
+    	<artifactId>gson</artifactId>
+    	<version>2.2.2</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.json</groupId>
+    	<artifactId>json</artifactId>
+    	<version>20090211</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.fasterxml.jackson.core</groupId>
+    	<artifactId>jackson-annotations</artifactId>
+    	<version>2.7.3</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.jsoup</groupId>
+    	<artifactId>jsoup</artifactId>
+    	<version>1.8.3</version>
+    </dependency>
+  </dependencies>
 </project>
