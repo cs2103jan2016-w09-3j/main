@@ -1,6 +1,9 @@
 package test.userinterface;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,9 +21,9 @@ import entity.ResultSet;
 import entity.TaskEntity;
 import logic.TaskManager;
 import logic.TaskUtils;
+import parser.CommandParser.COMMAND;
 import parser.InputParser;
 import parser.Pair;
-import parser.CommandParser.COMMAND;
 import userinterface.UserInterfaceExecuter;
 
 public class JUnitProgramTest {
