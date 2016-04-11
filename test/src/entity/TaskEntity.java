@@ -492,7 +492,8 @@ public class TaskEntity {
      * Gets time display string for UI to print. Shows time if the duration is
      * within the same day, shows date if the duration crosses to different days
      * 
-     * @return 15 character string representing the duration/dueDate of this task
+     * @return 15 character string representing the duration/dueDate of this
+     *         task
      */
     public String getTime() {
         if (_isFloating) {

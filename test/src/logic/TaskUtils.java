@@ -7,8 +7,6 @@
 package logic;
 
 import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Queue;
 
 import entity.TaskEntity;
 
@@ -125,10 +123,10 @@ public class TaskUtils {
             // Identify if the lastChar is an alphabet or number and then cast
             // it to its dec number value of 0~35
             characterValue = castCharacterValue(lastCharAsciiValue, characterValue);
-            if(characterValue == -1) {
+            if (characterValue == -1) {
                 return -1;
             }
-            
+
             // Add the appropriate value of that digit to the final value
             if (checkIfAsciiSpaceChar(lastCharAsciiValue)) {
                 decNumber += characterValue * digitWeight;

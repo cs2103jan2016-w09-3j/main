@@ -10,8 +10,6 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.Queue;
-
-import entity.AllTaskLists;
 import entity.ResultSet;
 import entity.TaskEntity;
 
@@ -117,7 +115,8 @@ public class TaskManagerInterface {
 
     /**
      * Gets the task list in focus
-     * @return 
+     * 
+     * @return
      */
     public ArrayList<TaskEntity> getWorkingList() {
         return manager.getWorkingList();
@@ -139,9 +138,9 @@ public class TaskManagerInterface {
      * Gets the current view in focus in TaskManager
      * 
      * @return int representing the current view
-     *            TaskManagerInterface.DISPLAY_MAIN,
-     *            TaskManagerInterface.DISPLAY_FLOAT,
-     *            TaskManagerInterface.DISPLAY_SEARCH
+     *         TaskManagerInterface.DISPLAY_MAIN,
+     *         TaskManagerInterface.DISPLAY_FLOAT,
+     *         TaskManagerInterface.DISPLAY_SEARCH
      */
     public int getView() {
         return manager.getView();
@@ -266,7 +265,8 @@ public class TaskManagerInterface {
      * Takes in a filepath to change the save directory for the tasklist to.
      * Results operation result in the form of a ResultSet
      * 
-     * @param newDirectory - pathfile INCLUDING file name of the new save location
+     * @param newDirectory - pathfile INCLUDING file name of the new save
+     *            location
      * @return operation results
      */
     public ResultSet changeDirectory(String newDirectory) {
@@ -279,11 +279,11 @@ public class TaskManagerInterface {
      * 
      * @param newDirectory - pathfile INCLUDING file name of the new loaded file
      * @return ResultSet:
-     *          ResultSet.getStatus - STATUS_GOOD if success
-     *                                STATUS_JSON_ERROR if file found but corrupted
-     *                                STATUS_BAD if file not found
-     *          ResultSet.isSuccess - true if success
-     *                                false if either file not found or corrupted
+     *         ResultSet.getStatus - STATUS_GOOD if success
+     *         STATUS_JSON_ERROR if file found but corrupted
+     *         STATUS_BAD if file not found
+     *         ResultSet.isSuccess - true if success
+     *         false if either file not found or corrupted
      */
     public ResultSet loadFrom(String newDirectory) {
         return manager.loadFrom(newDirectory);
@@ -291,6 +291,7 @@ public class TaskManagerInterface {
 
     /**
      * Gets where the file is currently stored to
+     * 
      * @return filepath INCLUDING filename
      */
     public String getMainFilePath() {
@@ -330,9 +331,11 @@ public class TaskManagerInterface {
      * Takes in 2 IDs and make the second task an association under the first
      * task. Also stores the raw command. Returns a ResultSet for the operation
      * 
-     * @param projectHeadId - Id of task that takes in other task as associations.
+     * @param projectHeadId - Id of task that takes in other task as
+     *            associations.
      *            String representing an int
-     * @param taskUnderId - Id of task to be associated under the first task. String
+     * @param taskUnderId - Id of task to be associated under the first task.
+     *            String
      *            representing an int
      * @param command - Raw command prefixed with a int representing the view in
      *            which this command is carried out in
@@ -421,7 +424,7 @@ public class TaskManagerInterface {
         System.out.println("Undo completed");
         manager.undoComplete();
     }
-    
+
     /**
      * Takes in a string to search for and builds search results in the search
      * view. Also stores the raw command. Returns ResultSet for results of
@@ -445,9 +448,9 @@ public class TaskManagerInterface {
     }
 
     /**
-     * Saves the user's  theme preference
+     * Saves the user's theme preference
      * 
-      * @return true and STATUS_GOOD for success, false and STATUS_BAD for
+     * @return true and STATUS_GOOD for success, false and STATUS_BAD for
      *         failure in ResultSet.isSuccess() and ResultSet.getStatus()
      *         respectively
      */

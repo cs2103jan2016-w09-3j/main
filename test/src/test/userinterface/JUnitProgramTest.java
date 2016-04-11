@@ -74,25 +74,25 @@ public class JUnitProgramTest {
         assertTrue(runCommand("Add basketball tmr").isSuccess());
         _executor.switchView(TaskManager.DISPLAY_MAIN);
 
-        assertEquals(4, _executor.getWorkingList().size()); 
+        assertEquals(4, _executor.getWorkingList().size());
     }
-    
+
     @Test
     public void testAddCommand_addInvalidTimedTask_MainListHas3TasksAfterAdding() {
         assertFalse(runCommand("Add tmr").isSuccess());
         _executor.switchView(TaskManager.DISPLAY_MAIN);
 
-        assertEquals(3, _executor.getWorkingList().size()); 
+        assertEquals(3, _executor.getWorkingList().size());
     }
-    
+
     @Test
     public void testAddCommand_addFloatingTask_FloatingListHas4TasksAfterAdding() {
         assertTrue(runCommand("Add baseball").isSuccess());
         _executor.switchView(TaskManager.DISPLAY_FLOATING);
 
-        assertEquals(4, _executor.getWorkingList().size()); 
+        assertEquals(4, _executor.getWorkingList().size());
     }
-    
+
     @Test
     public void testInvalidCommands_executeInvalidCommands_commandsGetsRejected() {
         assertEquals(runCommand("basktball"), null);
@@ -111,14 +111,14 @@ public class JUnitProgramTest {
 
     @Test
     public void testModifyCommand_ModifyFloatingToTimed_() {
-       _executor.switchView(TaskManager.DISPLAY_FLOATING);
-       runCommand("Edit ID0 floating task1 tmr 3pm");
+        _executor.switchView(TaskManager.DISPLAY_FLOATING);
+        runCommand("Edit ID0 floating task1 tmr 3pm");
 
-       assertEquals(2, _executor.getWorkingList().size());
-       _executor.switchView(TaskManager.DISPLAY_MAIN);
-       assertEquals(4, _executor.getWorkingList().size());
+        assertEquals(2, _executor.getWorkingList().size());
+        _executor.switchView(TaskManager.DISPLAY_MAIN);
+        assertEquals(4, _executor.getWorkingList().size());
     }
-    
+
     @Test
     public void testDeleteCommands_executeInvalidDeleteCommands_commandsGetRejected() {
         assertNull(runCommand("delete asda"));
@@ -149,7 +149,7 @@ public class JUnitProgramTest {
         assertEquals(_executor.getWorkingList().size(), 6);
         // no task to mark as done
         assertFalse(runCommand("done ID0").isSuccess());
-        //Completeed list remains the same size
+        // Completeed list remains the same size
         assertEquals(_executor.getWorkingList().size(), 6);
     }
 
