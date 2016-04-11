@@ -1,4 +1,4 @@
-//@@ A0125514N
+// @@ A0125514N
 package userinterface;
 
 import java.text.SimpleDateFormat;
@@ -18,7 +18,7 @@ public class DescriptionLabel {
         this._endTask = null;
         _height = 0;
     }
-    
+
     public DescriptionLabel(TaskEntity startTask, TaskEntity endTask) {
         this._startTask = startTask;
         this._endTask = endTask;
@@ -77,7 +77,7 @@ public class DescriptionLabel {
         String weekString = null;
         if (_endTask != null) {
             Calendar eCalendar = _endTask.getDueDate();
-                weekString = sdf.format(sCalendar.getTime())+" - "+sdf.format(eCalendar.getTime());
+            weekString = sdf.format(sCalendar.getTime()) + " - " + sdf.format(eCalendar.getTime());
         } else {
             weekString = sdf.format(sCalendar.getTime()) + " Week " + sCalendar.get(Calendar.WEEK_OF_MONTH);
         }
@@ -90,7 +90,7 @@ public class DescriptionLabel {
         String weekString = null;
         if (_endTask != null) {
             Calendar eCalendar = _endTask.getDueDate();
-                weekString = sdf.format(sCalendar.getTime())+" - "+sdf.format(eCalendar.getTime());
+            weekString = sdf.format(sCalendar.getTime()) + " - " + sdf.format(eCalendar.getTime());
         } else {
             weekString = sdf.format(sCalendar.getTime()) + " Week " + sCalendar.get(Calendar.WEEK_OF_MONTH);
         }
