@@ -43,14 +43,14 @@ public class IdParserTest {
 
     @Test
     public void testIDParser_xmlID() {
-        String toTest = id.xmlID("ID1234");
+        String toTest = id.xmlId("ID1234");
         String expected = "<IdXmL>ID1234</IdXmL>";
         assertEquals(toTest, expected);
     }
 
     @Test
     public void testIDParser_xmlID_invalidInput() {
-        String toTest = id.xmlID("1234");
+        String toTest = id.xmlId("1234");
         String expected = "1234";
         assertEquals(toTest, expected);
     }
