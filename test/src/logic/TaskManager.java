@@ -263,9 +263,9 @@ public class TaskManager {
 
             if (!associationIdList[0].equals("")) {
                 for (int j = 0; j < associationIdList.length; j++) {
-                    int taskIDToAdd = Integer.parseInt(associationIdList[j]);
+                    int taskIdToAdd = Integer.parseInt(associationIdList[j]);
 
-                    loadAssociationFromID(arrayToInit.get(i), taskIDToAdd);
+                    loadAssociationFromId(arrayToInit.get(i), taskIdToAdd);
                 }
             }
         }
@@ -279,18 +279,18 @@ public class TaskManager {
      * Pre-condition : Assumes no duplicate ID
      * 
      * @param taskToLoadTo - Task that the found task is linked to
-     * @param taskIDToAdd - ID of the task to be found
+     * @param taskIdToAdd - ID of the task to be found
      */
-    private void loadAssociationFromID(TaskEntity taskToLoadTo, int taskIDToAdd) {
+    private void loadAssociationFromId(TaskEntity taskToLoadTo, int taskIdToAdd) {
         for (int k = 0; k < mainTaskEntities.size(); k++) {
-            if (taskIDToAdd == mainTaskEntities.get(k).getId()) {
+            if (taskIdToAdd == mainTaskEntities.get(k).getId()) {
                 taskToLoadTo.loadAssociation(mainTaskEntities.get(k));
                 break;
             }
         }
 
         for (int k = 0; k < floatingTaskEntities.size(); k++) {
-            if (taskIDToAdd == floatingTaskEntities.get(k).getId()) {
+            if (taskIdToAdd == floatingTaskEntities.get(k).getId()) {
                 taskToLoadTo.loadAssociation(floatingTaskEntities.get(k));
                 break;
             }
