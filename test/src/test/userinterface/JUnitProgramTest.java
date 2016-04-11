@@ -110,6 +110,16 @@ public class JUnitProgramTest {
     }
 
     @Test
+    public void testModifyCommand_ModifyFloatingToTimed_() {
+       _executor.switchView(TaskManager.DISPLAY_FLOATING);
+       runCommand("Edit ID0 floating task1 tmr 3pm");
+
+       assertEquals(2, _executor.getWorkingList().size());
+       _executor.switchView(TaskManager.DISPLAY_MAIN);
+       assertEquals(4, _executor.getWorkingList().size());
+    }
+    
+    @Test
     public void testDeleteCommands_executeInvalidDeleteCommands_commandsGetRejected() {
         assertNull(runCommand("delete asda"));
         assertNull(runCommand("delete "));
