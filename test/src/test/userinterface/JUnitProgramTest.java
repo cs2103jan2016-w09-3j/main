@@ -153,7 +153,7 @@ public class JUnitProgramTest {
         assertEquals(_executor.getWorkingList().size(), 6);
         // no task to mark as done
         assertFalse(runCommand("done ID0").isSuccess());
-        // Completeed list remains the same size
+        // Completed list remains the same size
         assertEquals(_executor.getWorkingList().size(), 6);
     }
 
@@ -173,61 +173,61 @@ public class JUnitProgramTest {
         assertTrue(runCommand("link ID0-ID1").isSuccess());
         assertTrue(runCommand("link ID0-ID2").isSuccess());
     }
-    
+
     @Test
     public void testProgram_invliadLinks_SecondAndThirdLinksFail() {
         assertTrue(runCommand("link ID0-ID1").isSuccess());
         assertFalse(runCommand("link ID1-ID2").isSuccess());
         assertFalse(runCommand("link ID2-ID0").isSuccess());
     }
-    
+
     @Test
     public void testProgram_searchSomeTask_ThreeResultsFound() {
         runCommand("search task some");
         _executor.switchView(TaskManager.DISPLAY_SEARCH);
         assertEquals(3, _executor.getWorkingList().size());
-        
+
         runCommand("search sOme TASK");
         _executor.switchView(TaskManager.DISPLAY_SEARCH);
         assertEquals(3, _executor.getWorkingList().size());
-        
+
     }
-    
+
     @Test
     public void testProgram_searchSubStrings_ThreeResultsFound() {
         runCommand("search so");
         _executor.switchView(TaskManager.DISPLAY_SEARCH);
         assertEquals(3, _executor.getWorkingList().size());
-        
+
         runCommand("search me");
         _executor.switchView(TaskManager.DISPLAY_SEARCH);
         assertEquals(3, _executor.getWorkingList().size());
-        
+
     }
-    
+
     @Test
     public void testProgram_searchExtraTerms_NoResultFound() {
         runCommand("search task some thing");
         _executor.switchView(TaskManager.DISPLAY_SEARCH);
         assertEquals(0, _executor.getWorkingList().size());
-        
+
         runCommand("search all sOme TASK");
         _executor.switchView(TaskManager.DISPLAY_SEARCH);
         assertEquals(0, _executor.getWorkingList().size());
-        
+
     }
-    
+
     @Test
     public void testProgram_searchCategory_OnlyExactSearchHasResult() {
         runCommand("add New task #assignment");
         runCommand("search #assignment");
         _executor.switchView(TaskManager.DISPLAY_SEARCH);
         assertEquals(1, _executor.getWorkingList().size());
-        
+
         runCommand("search #assign");
         _executor.switchView(TaskManager.DISPLAY_SEARCH);
         assertEquals(0, _executor.getWorkingList().size());
-        
+
     }
 
     // @@ A0125514N
