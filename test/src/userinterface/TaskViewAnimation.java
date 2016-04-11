@@ -19,7 +19,7 @@ public class TaskViewAnimation extends Service<Integer> {
     private static final int DIRECTION_TO_TASK_VIEW = 1;
     private static final int DIRECTION_TO_EXPANED_VIEW = -1;
 
-    private UserInterfaceController ui;
+    private UserInterfaceController _ui;
     private boolean _isDoneTranslatingToOtherView;
     private int _direction;
 
@@ -45,7 +45,7 @@ public class TaskViewAnimation extends Service<Integer> {
     }
 
     private TaskViewAnimation(UserInterfaceController userInterfaceController, int direction) {
-        ui = userInterfaceController;
+        _ui = userInterfaceController;
         _isDoneTranslatingToOtherView = false;
         _direction = direction;
     }
@@ -63,9 +63,9 @@ public class TaskViewAnimation extends Service<Integer> {
                 Platform.runLater(new Runnable() {
                     public void run() {
                         if (_direction == DIRECTION_TO_EXPANED_VIEW) {
-                            _isDoneTranslatingToOtherView = ui.isAtExpanedView();
+                            _isDoneTranslatingToOtherView = _ui.isAtExpanedView();
                         } else if (_direction == DIRECTION_TO_TASK_VIEW) {
-                            _isDoneTranslatingToOtherView = ui.isAtTaskView();
+                            _isDoneTranslatingToOtherView = _ui.isAtTaskView();
                         }
                     }
                 });

@@ -13,11 +13,11 @@ import javafx.concurrent.Task;
 
 public class ScrollTaskAnimation extends Service<Integer> {
 
-    private int currentIndex;
-    private int indexToGo;
-    private int direction;
-    private int numberOfMilliSecondsBeforeIncreaseSpeed = 300;
-    private UserInterfaceController ui;
+    private int _currentIndex;
+    private int _indexToGo;
+    private int _direction;
+    private int _numberOfMilliSecondsBeforeIncreaseSpeed = 300;
+    private UserInterfaceController _ui;
     private static ScrollTaskAnimation _myInstance;
     private Runnable _thread;
 
@@ -43,9 +43,9 @@ public class ScrollTaskAnimation extends Service<Integer> {
 
     private ScrollTaskAnimation(int currentIndex, int indexToGo,
             UserInterfaceController userInterfaceController) {
-        this.currentIndex = currentIndex;
-        this.indexToGo = indexToGo;
-        ui = userInterfaceController;
+        this._currentIndex = currentIndex;
+        this._indexToGo = indexToGo;
+        _ui = userInterfaceController;
     }
 
     @Override
@@ -56,11 +56,11 @@ public class ScrollTaskAnimation extends Service<Integer> {
     private class MyTask extends Task<Integer> {
         @Override
         protected Integer call() throws Exception {
-            direction = 0;
-            if (currentIndex < indexToGo) {
-                direction = 1;
+            _direction = 0;
+            if (_currentIndex < _indexToGo) {
+                _direction = 1;
             } else {
-                direction = -1;
+                _direction = -1;
             }
             long startTime = System.currentTimeMillis();
             while (true) {
@@ -72,8 +72,8 @@ public class ScrollTaskAnimation extends Service<Integer> {
                     _thread = new Runnable() {
                         public void run() {
                             checkExceed();
-                            ui.updateComponents(direction);
-                            currentIndex = currentIndex + direction;
+                            _ui.updateComponents(_direction);
+                            _currentIndex = _currentIndex + _direction;
                             _thread = null;
                         }
                     };
@@ -90,24 +90,24 @@ public class ScrollTaskAnimation extends Service<Integer> {
      * set direction to be the difference.
      */
     public void checkExceed() {
-        if (direction > 0) {
-            if (currentIndex + direction > indexToGo) {
-                direction = indexToGo - currentIndex;
+        if (_direction > 0) {
+            if (_currentIndex + _direction > _indexToGo) {
+                _direction = _indexToGo - _currentIndex;
             }
-        } else if (direction < 0) {
-            if (currentIndex + direction < indexToGo) {
-                direction = -(currentIndex - indexToGo);
+        } else if (_direction < 0) {
+            if (_currentIndex + _direction < _indexToGo) {
+                _direction = -(_currentIndex - _indexToGo);
             }
         }
     }
 
     public boolean isCompleteAnimate() {
-        if (direction > 0) {
-            if (currentIndex >= indexToGo) {
+        if (_direction > 0) {
+            if (_currentIndex >= _indexToGo) {
                 return true;
             }
-        } else if (direction < 0) {
-            if (currentIndex <= indexToGo) {
+        } else if (_direction < 0) {
+            if (_currentIndex <= _indexToGo) {
                 return true;
             }
         }
@@ -123,7 +123,7 @@ public class ScrollTaskAnimation extends Service<Integer> {
      */
     private long checkTime(long startTime) {
         long currTime = System.currentTimeMillis();
-        if (currTime - startTime > numberOfMilliSecondsBeforeIncreaseSpeed) {
+        if (currTime - startTime > _numberOfMilliSecondsBeforeIncreaseSpeed) {
             increaseSpeed();
             return currTime;
         }
@@ -131,10 +131,10 @@ public class ScrollTaskAnimation extends Service<Integer> {
     }
 
     private void increaseSpeed() {
-        if (direction < 0) {
-            direction--;
-        } else if (direction > 0) {
-            direction++;
+        if (_direction < 0) {
+            _direction--;
+        } else if (_direction > 0) {
+            _direction++;
         }
     }
 }

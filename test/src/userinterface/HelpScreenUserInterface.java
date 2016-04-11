@@ -104,7 +104,7 @@ public class HelpScreenUserInterface implements ViewInterface {
      * 
      * @param primaryStage
      * @param screenBounds
-     * @param fixedSize
+     * @param isFixedSize
      * @param styleSheet
      * @param mouseEvent
      * @param filePathLoadFrom
@@ -112,34 +112,34 @@ public class HelpScreenUserInterface implements ViewInterface {
      *         instance already.
      */
     public static HelpScreenUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds,
-            boolean fixedSize, String styleSheet, EventHandler<MouseEvent> mouseEvent,
+            boolean isFixedSize, String styleSheet, EventHandler<MouseEvent> mouseEvent,
             String filePathLoadFrom) {
         if (_myInstance == null) {
             if (primaryStage == null || screenBounds == null) {
                 return null;
             }
-            _myInstance = new HelpScreenUserInterface(primaryStage, screenBounds, fixedSize, styleSheet,
+            _myInstance = new HelpScreenUserInterface(primaryStage, screenBounds, isFixedSize, styleSheet,
                     mouseEvent, filePathLoadFrom);
             return _myInstance;
         }
         return null;
     }
 
-    public HelpScreenUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
+    public HelpScreenUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean isFixedSize,
             String styleSheet, EventHandler<MouseEvent> mouseEvent, String filePathLoadFrom) {
         _styleSheet = styleSheet;
         _filePathLoadFrom = filePathLoadFrom;
-        initializeVaribles(screenBounds, fixedSize);
+        initializeVaribles(screenBounds, isFixedSize);
         initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
     }
 
     /**
      * Initialize view dimensions and position.
      */
-    public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
-        _isFixed = fixedSize;
+    public void initializeVaribles(Rectangle2D screenBounds, boolean isFixedSize) {
+        _isFixed = isFixedSize;
         _screenBounds = screenBounds;
-        if (fixedSize) {
+        if (isFixedSize) {
             _stageWidth = (int) screenBounds.getWidth();
             _stageHeight = (int) (screenBounds.getHeight() - PrimaryUserInterface.COMMAND_BAR_BOTTOM_MARGIN);
             _windowPosX = 0;

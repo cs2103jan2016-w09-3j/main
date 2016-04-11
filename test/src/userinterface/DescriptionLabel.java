@@ -11,7 +11,7 @@ public class DescriptionLabel {
     private double _height;
     private TaskEntity _startTask;
     private TaskEntity _endTask;
-    private boolean selected = false;
+    private boolean isSelected = false;
 
     public DescriptionLabel(TaskEntity startTask) {
         this._startTask = startTask;
@@ -46,11 +46,11 @@ public class DescriptionLabel {
     }
 
     public void setSelected() {
-        selected = true;
+        isSelected = true;
     }
 
     public boolean isSelected() {
-        return selected;
+        return isSelected;
     }
 
     public String getFullDayLabel() {

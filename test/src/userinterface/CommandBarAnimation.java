@@ -45,22 +45,22 @@ public class CommandBarAnimation extends Service<Void> {
 
     private class MyTask extends Task<Void> {
         private double _percentageDone;
-        private boolean isDoneAnimating;
+        private boolean _isDoneAnimating;
 
         @Override
         protected Void call() throws Exception {
             _percentageDone = 0;
-            isDoneAnimating = false;
+            _isDoneAnimating = false;
             Thread.sleep(DELAY_BEFORE_START);
             long timeStart = System.currentTimeMillis();
-            while (!isDoneAnimating) {
+            while (!_isDoneAnimating) {
                 long timePast = System.currentTimeMillis() - timeStart;
                 _percentageDone = timePast / (double) ANIMATE_SPEED_TOTAL;
                 Platform.runLater(new Runnable() {
                     public void run() {
-                        isDoneAnimating = _commandBar.updateCommandStatus(_percentageDone, individualCount);
+                        _isDoneAnimating = _commandBar.updateCommandStatus(_percentageDone, individualCount);
                         if (_percentageDone > 1) {
-                            isDoneAnimating = true;
+                            _isDoneAnimating = true;
                         }
                     }
                 });

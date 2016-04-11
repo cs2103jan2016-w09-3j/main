@@ -77,20 +77,20 @@ public class DetailComponent implements ViewInterface {
      * @return Instance of DetailComponent only if there isn't an instance
      *         already.
      */
-    public static DetailComponent getInstance(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize,
-            String styleSheet, EventHandler<MouseEvent> mouseEvent) {
+    public static DetailComponent getInstance(Stage parentStage, Rectangle2D screenBounds,
+            boolean isFixedSize, String styleSheet, EventHandler<MouseEvent> mouseEvent) {
         if (_myInstance == null) {
-            _myInstance = new DetailComponent(parentStage, screenBounds, fixedSize, styleSheet, mouseEvent);
+            _myInstance = new DetailComponent(parentStage, screenBounds, isFixedSize, styleSheet, mouseEvent);
             return _myInstance;
         }
         return null;
     }
 
-    private DetailComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize, String styleSheet,
-            EventHandler<MouseEvent> mouseEvent) {
+    private DetailComponent(Stage parentStage, Rectangle2D screenBounds, boolean isFixedSize,
+            String styleSheet, EventHandler<MouseEvent> mouseEvent) {
         _currentSelectView = TASK_VIEW;
         _styleSheet = styleSheet;
-        initializeVaribles(screenBounds, fixedSize);
+        initializeVaribles(screenBounds, isFixedSize);
         initializeScenes(mouseEvent);
         initializeStage(parentStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
     }

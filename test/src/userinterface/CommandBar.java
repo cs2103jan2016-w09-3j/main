@@ -120,7 +120,6 @@ public class CommandBar {
     private ArrayList<String> preCommands = new ArrayList<String>();
     private int _commandSelector;
 
-    private ArrayList<String> _allSessionCmds = new ArrayList<String>();
     private String fullInput = "";
     private int _feedBackCounter;
 

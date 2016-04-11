@@ -427,8 +427,8 @@ public class PrimaryUserInterface extends Application {
 
         String indexToJump = _commandBar.getId();
         if (indexToJump != null) {
-            boolean success = uiController.jumpToIndex(indexToJump);
-            if (success) {
+            boolean isSuccess = uiController.jumpToIndex(indexToJump);
+            if (isSuccess) {
                 resetCommandInput();
             } else {
                 resultSet.setIndex(TYPE_1);

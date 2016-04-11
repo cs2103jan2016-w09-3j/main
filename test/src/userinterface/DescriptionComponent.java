@@ -55,34 +55,34 @@ public class DescriptionComponent implements ViewInterface {
      * 
      * @param parentStage
      * @param screenBounds
-     * @param fixedSize
+     * @param isFixedSize
      * @param styleSheet
      * @param mouseEvent
      * @return Instance of DescriptionComponent only if there isn't an instance
      *         already.
      */
     public static DescriptionComponent getInstance(Stage parentStage, Rectangle2D screenBounds,
-            boolean fixedSize, String styleSheet, EventHandler<MouseEvent> mouseEvent) {
+            boolean isFixedSize, String styleSheet, EventHandler<MouseEvent> mouseEvent) {
         if (_myInstance == null) {
-            _myInstance = new DescriptionComponent(parentStage, screenBounds, fixedSize, styleSheet,
+            _myInstance = new DescriptionComponent(parentStage, screenBounds, isFixedSize, styleSheet,
                     mouseEvent);
             return _myInstance;
         }
         return null;
     }
 
-    private DescriptionComponent(Stage parentStage, Rectangle2D screenBounds, boolean fixedSize,
+    private DescriptionComponent(Stage parentStage, Rectangle2D screenBounds, boolean isfixedSize,
             String styleSheet, EventHandler<MouseEvent> mouseEvent) {
         _styleSheet = styleSheet;
-        initializeVaribles(screenBounds, fixedSize);
+        initializeVaribles(screenBounds, isfixedSize);
         initializeStage(parentStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
     }
 
     /**
      * Initialize view dimensions and position.
      */
-    public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
-        if (fixedSize) {
+    public void initializeVaribles(Rectangle2D screenBounds, boolean isFixedSize) {
+        if (isFixedSize) {
             _stageWidth = CONPONENT_WIDTH;
             _stageHeight = (int) (screenBounds.getHeight() - PrimaryUserInterface.COMMAND_BAR_HEIGTH
                     - PrimaryUserInterface.COMMAND_BAR_BOTTOM_MARGIN

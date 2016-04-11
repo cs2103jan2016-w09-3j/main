@@ -14,7 +14,7 @@ import javafx.stage.Window;
 
 public interface ViewInterface {
 
-    public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize);
+    public void initializeVaribles(Rectangle2D screenBounds, boolean isFixedSize);
 
     public void initializeStage(Window owner, int applicationX, int applicationY, int windowWidth,
             int windowHeight, EventHandler<MouseEvent> mouseEvent);

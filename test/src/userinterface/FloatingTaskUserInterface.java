@@ -69,29 +69,29 @@ public class FloatingTaskUserInterface implements ViewInterface {
      * 
      * @param primaryStage
      * @param screenBounds
-     * @param fixedSize
+     * @param isFixedSize
      * @param styleSheet
      * @param mouseEvent
      * @return Instance of FloatingTaskUserInterface only if there isn't an
      *         instance already.
      */
     public static FloatingTaskUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds,
-            boolean fixedSize, String styleSheet, EventHandler<MouseEvent> mouseEvent) {
+            boolean isFixedSize, String styleSheet, EventHandler<MouseEvent> mouseEvent) {
         if (_myInstance == null) {
             if (primaryStage == null || screenBounds == null) {
                 return null;
             }
-            _myInstance = new FloatingTaskUserInterface(primaryStage, screenBounds, fixedSize, styleSheet,
+            _myInstance = new FloatingTaskUserInterface(primaryStage, screenBounds, isFixedSize, styleSheet,
                     mouseEvent);
             return _myInstance;
         }
         return null;
     }
 
-    private FloatingTaskUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
+    private FloatingTaskUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean isFixedSize,
             String styleSheet, EventHandler<MouseEvent> mouseEvent) {
         _styleSheet = styleSheet;
-        initializeVaribles(screenBounds, fixedSize);
+        initializeVaribles(screenBounds, isFixedSize);
         initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
         buildComponent();
     }
@@ -99,8 +99,8 @@ public class FloatingTaskUserInterface implements ViewInterface {
     /**
      * Initialize view dimensions and position.
      */
-    public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
-        if (fixedSize) {
+    public void initializeVaribles(Rectangle2D screenBounds, boolean isFixedSize) {
+        if (isFixedSize) {
             _stageWidth = (int) screenBounds.getWidth();
             _stageHeight = (int) (screenBounds.getHeight() - PrimaryUserInterface.COMMAND_BAR_HEIGTH
                     - PrimaryUserInterface.COMMAND_BAR_TOP_MARGIN

@@ -13,9 +13,9 @@ import javafx.concurrent.Task;
 
 public class FloatingBarAnimationThread extends Service<Void> {
 
-    private UserInterfaceController ui;
-    private boolean isAdded;
-    private boolean isDoneAnimating;
+    private UserInterfaceController _ui;
+    private boolean _isAdded;
+    private boolean _isDoneAnimating;
     private static final int ANIMATE_SPEED_TOTAL = 1500;
     private static final int ANIMATION_DELAY = 10;
     private static final int TIME_INTERVAL_FOR_NEXT_FLOATING_TASK = 10000;
@@ -23,13 +23,13 @@ public class FloatingBarAnimationThread extends Service<Void> {
     private double _percentageDone;
 
     public FloatingBarAnimationThread(UserInterfaceController userInterfaceController) {
-        ui = userInterfaceController;
+        _ui = userInterfaceController;
         _percentageDone = 0;
     }
 
     public void reset() {
-        isAdded = false;
-        isDoneAnimating = false;
+        _isAdded = false;
+        _isDoneAnimating = false;
         _percentageDone = 0.0;
     }
 
@@ -46,18 +46,18 @@ public class FloatingBarAnimationThread extends Service<Void> {
                 Thread.sleep(TIME_INTERVAL_FOR_NEXT_FLOATING_TASK);
                 reset();
                 long timeStart = System.currentTimeMillis();
-                while (!isDoneAnimating) {
+                while (!_isDoneAnimating) {
                     long timePast = System.currentTimeMillis() - timeStart;
                     _percentageDone = timePast / (double) ANIMATE_SPEED_TOTAL;
                     Platform.runLater(new Runnable() {
                         public void run() {
-                            if (!isAdded) {
-                                ui.addRandomTaskToDisplay();
-                                isAdded = true;
+                            if (!_isAdded) {
+                                _ui.addRandomTaskToDisplay();
+                                _isAdded = true;
                             }
-                            isDoneAnimating = ui.updateFloatingBar(_percentageDone);
+                            _isDoneAnimating = _ui.updateFloatingBar(_percentageDone);
                             if (_percentageDone > 1) {
-                                isDoneAnimating = true;
+                                _isDoneAnimating = true;
                             }
                         }
                     });

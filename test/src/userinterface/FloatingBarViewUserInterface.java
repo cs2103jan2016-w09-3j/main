@@ -61,27 +61,27 @@ public class FloatingBarViewUserInterface implements ViewInterface {
      *         instance already.
      */
     public static FloatingBarViewUserInterface getInstance(Stage primaryStage, Rectangle2D screenBounds,
-            boolean fixedSize, String styleSheet, EventHandler<MouseEvent> mouseEvent) {
+            boolean isFixedSize, String styleSheet, EventHandler<MouseEvent> mouseEvent) {
         if (_myInstance == null) {
-            _myInstance = new FloatingBarViewUserInterface(primaryStage, screenBounds, fixedSize, styleSheet,
-                    mouseEvent);
+            _myInstance = new FloatingBarViewUserInterface(primaryStage, screenBounds, isFixedSize,
+                    styleSheet, mouseEvent);
             return _myInstance;
         }
         return null;
     }
 
-    private FloatingBarViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean fixedSize,
+    private FloatingBarViewUserInterface(Stage primaryStage, Rectangle2D screenBounds, boolean isFixedSize,
             String styleSheet, EventHandler<MouseEvent> mouseEvent) {
         _styleSheet = styleSheet;
-        initializeVaribles(screenBounds, fixedSize);
+        initializeVaribles(screenBounds, isFixedSize);
         initializeStage(primaryStage, _windowPosX, _windowPosY, _stageWidth, _stageHeight, mouseEvent);
     }
 
     /**
      * Initialize view dimensions and position.
      */
-    public void initializeVaribles(Rectangle2D screenBounds, boolean fixedSize) {
-        if (fixedSize) {
+    public void initializeVaribles(Rectangle2D screenBounds, boolean isFixedSize) {
+        if (isFixedSize) {
             _stageWidth = (int) screenBounds.getWidth();
             _stageHeight = COMPONENT_HEIGHT;
             _windowPosX = POSITION_ZERO;
