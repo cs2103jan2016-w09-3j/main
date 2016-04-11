@@ -1,6 +1,6 @@
 /**
  * @author Angie A0126357A
- * @@author Angie A0126357A
+ * @@author A0126357A
  * 
  *          StorageInterface acts as a facade class for the storage component.
  */

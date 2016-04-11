@@ -1,8 +1,5 @@
-//@@author a0125415n
+//@@author A0125415N
 package parser;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 public class InformationParser {
 	private String title;

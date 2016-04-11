@@ -1,6 +1,6 @@
 /**
  * @author User Angie A0126357A
- * @@author Angie A0126357A
+ * @@author A0126357A
  *          AllTaskLists to facilitate passing of data from Logic to Storage and
  *          back.
  */

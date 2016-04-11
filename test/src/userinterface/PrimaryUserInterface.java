@@ -176,7 +176,7 @@ public class PrimaryUserInterface extends Application {
 		}
 	}
 
-	// @@author a0125415n
+	// @@author A0125415N
 	/**
 	 * takes the data from key press and executes the related command
 	 * 
@@ -327,7 +327,7 @@ public class PrimaryUserInterface extends Application {
 		_commandBar.showFeedBackMessage(COMMAND.INVALID, null, null);
 	}
 
-	// @@author a0125415n
+	// @@author A0125415N
 	/**
 	 * add a task into the system and display the changes in the selected view.
 	 * 

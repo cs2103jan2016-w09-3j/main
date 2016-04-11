@@ -1,24 +1,16 @@
-//@@author a0125415n
+//@@author A0125415N
 package parser;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import entity.TaskEntity;
-import junit.framework.Assert;
 import parser.CommandParser.COMMAND;
 
 public class InputParser {
-	private final int EXPECT_CMD = 0;
-	private final int EXPECT_INFO = 1;
 	private String input;
 	private DateParser dateParser;
 	private CommandParser cmdParser;

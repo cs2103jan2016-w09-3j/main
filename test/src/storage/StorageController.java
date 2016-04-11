@@ -1,6 +1,6 @@
 /**
  * @author Angie A0126357A
- * @@author Angie A0126357A
+ * @@author A0126357A
  * 
  *          StorageController to create instances of StorageHandler and
  *          JsonConverter to merge functionalities.

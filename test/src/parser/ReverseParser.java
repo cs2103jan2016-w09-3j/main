@@ -1,4 +1,4 @@
-//@@author a0125415n
+//@@author A0125415N
 package parser;
 
 import java.io.BufferedReader;

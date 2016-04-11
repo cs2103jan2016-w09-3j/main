@@ -1,3 +1,7 @@
+/**
+ * @author User Angie A0126357A
+ * @@author A0126357A
+ */
 package entity;
 
 public class ResultSet {
