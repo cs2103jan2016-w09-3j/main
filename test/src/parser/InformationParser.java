@@ -106,12 +106,4 @@ public class InformationParser {
         this.description = description;
     }
 
-    public static void main(String args[]) {
-        // String input = "<cmd>add</cmd> <dates>[Wed Mar 02 22:32:30 SGT
-        // 2016]</dates> basketball with niggas:at suntec <dates>[Sun Mar 06
-        // 22:32:30 SGT 2016]</dates>";
-        String input = "<cmd>add</cmd>";
-        InformationParser tempInfoParser = new InformationParser();
-        System.out.println(tempInfoParser.xmlTitleAndDesc(input));
-    }
 }

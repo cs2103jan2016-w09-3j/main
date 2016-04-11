@@ -196,21 +196,21 @@ public class DateParser {
      * @return String date with format DD/MM/YYYY
      */
     private String addZero(String date) {
-        boolean addToDay = false;
-        boolean addToMonth = false;
+        boolean shouldAddToDay = false;
+        boolean shouldAddToMonth = false;
         if (date.matches(DATE_REGEX_1DAY_1MONTH)) {
-            addToDay = true;
-            addToMonth = true;
+            shouldAddToDay = true;
+            shouldAddToMonth = true;
         } else if (date.matches(DATE_REGEX_1DAY_2MONTH)) {
-            addToDay = true;
+            shouldAddToDay = true;
         } else if (date.matches(DATE_REGEX_2DAY_1MONTH)) {
-            addToMonth = true;
+            shouldAddToMonth = true;
         }
 
-        if (addToDay) {
+        if (shouldAddToDay) {
             date = CHAR_ZERO + date;
         }
-        if (addToMonth) {
+        if (shouldAddToMonth) {
             if (date.contains("-")) {
                 date = date.substring(START_DAY_INDEX, END_DAY_INDEX) + DASH + CHAR_ZERO
                         + date.substring(START_MONTH_INDEX);
@@ -289,27 +289,5 @@ public class DateParser {
         System.setErr(printStreamOriginal);
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        DateParser tempNLP = new DateParser();
-
-        boolean running = true;
-        while (running) {
-            String tempDate = sc.nextLine();
-            if (tempDate.equalsIgnoreCase("exit")) {
-                running = false;
-            } else {
-                tempNLP.hideErr();
-                List<Date> dates = tempNLP.parseToList(tempDate);
-                tempNLP.showErr();
-                // System.out.println("test2"+dates);
-
-                tempNLP.hideErr();
-                System.out.println(dates);
-                tempNLP.showErr();
-            }
-        }
-
-    }
+    
 }

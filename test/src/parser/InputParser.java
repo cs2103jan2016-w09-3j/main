@@ -88,7 +88,7 @@ public class InputParser {
     }
 
     private void addXMLID() {
-        input = idParser.xmlID(input);
+        input = idParser.xmlId(input);
     }
 
     public String getSearchString() {
@@ -257,22 +257,12 @@ public class InputParser {
     }
 
     public String getID() {
-        return idParser.getID(XMLParser.removeAllTags(input));
+        return idParser.getId(XMLParser.removeAllTags(input));
     }
 
     public Pair<String, String> getLinkID() {
-        return idParser.getLinkID(XMLParser.removeAllTags(input));
+        return idParser.getLinkId(XMLParser.removeAllTags(input));
     }
 
-    public static void main(String args[]) {
-        while (true) {
-            Scanner sc = new Scanner(System.in);
-            String input = sc.nextLine();
-            // System.out.println(ParserCommons.getLastWord(input));
-            InputParser parser = new InputParser(input);
-            parser.addXML();
-            parser.getTask();
-            System.out.println(parser.getInput());
-        }
-    }
+    
 }

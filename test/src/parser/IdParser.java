@@ -14,14 +14,14 @@ public class IdParser {
         id2 = null;
     }
 
-    public String getID(String input) {
-        if (hasIDKey(input)) {
+    public String getId(String input) {
+        if (hasIdKey(input)) {
             Scanner sc = new Scanner(input);
             while (sc.hasNext()) {
                 String test = sc.next();
-                if (hasIDKey(test)) {
+                if (hasIdKey(test)) {
                     if (test.matches(TWO_ID_REGEX)) {
-                        setID1And2(test);
+                        setId1And2(test);
                     } else {
                         id = test.substring(2, test.length());
                     }
@@ -31,19 +31,19 @@ public class IdParser {
         return id;
     }
 
-    private void setID1And2(String test) {
+    private void setId1And2(String test) {
         String[] temp = test.split("-");
         id = temp[0].substring(2, temp[0].length());
         id2 = temp[1].substring(2, temp[1].length());
     }
 
-    public Pair<String, String> getLinkID(String input) {
-        getID(input);
+    public Pair<String, String> getLinkId(String input) {
+        getId(input);
         return new Pair<String, String>(id, id2);
     }
 
-    public String xmlID(String input) {
-        getID(input);
+    public String xmlId(String input) {
+        getId(input);
         if (id2 != null) {
             input = input.replace(ID_CONST + id + "-" + ID_CONST + id2, "<" + XMLParser.ID_TAG + ">"
                     + ID_CONST + id + "-" + ID_CONST + id2 + "</" + XMLParser.ID_TAG + ">");
@@ -55,7 +55,7 @@ public class IdParser {
         return input;
     }
 
-    private boolean hasIDKey(String input) {
+    private boolean hasIdKey(String input) {
         if (input.contains(ID_CONST)) {
             return true;
         } else {

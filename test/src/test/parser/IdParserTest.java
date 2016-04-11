@@ -13,21 +13,21 @@ public class IdParserTest {
 
     @Test
     public void testIDParser_GetID() {
-        String toTest = id.getID("ID123");
+        String toTest = id.getId("ID123");
         String expected = "123";
         assertEquals(toTest, expected);
     }
 
     @Test
     public void testIDParser_GetID_noInput() {
-        String toTest = id.getID("asfd");
+        String toTest = id.getId("asfd");
         String expected = null;
         assertEquals(toTest, expected);
     }
 
     @Test
     public void testIDParser_GetLinkID() {
-        Pair<String, String> toTest = id.getLinkID("ID123-ID234");
+        Pair<String, String> toTest = id.getLinkId("ID123-ID234");
         Pair<String, String> expected = new Pair("123", "234");
         assertEquals(toTest.getFirst(), expected.getFirst());
         assertEquals(toTest.getSecond(), expected.getSecond());
@@ -35,7 +35,7 @@ public class IdParserTest {
 
     @Test
     public void testIDParser_GetLinkID_invalidInput() {
-        Pair<String, String> toTest = id.getLinkID("123-234");
+        Pair<String, String> toTest = id.getLinkId("123-234");
         Pair<String, String> expected = new Pair(null, null);
         assertEquals(toTest.getFirst(), expected.getFirst());
         assertEquals(toTest.getSecond(), expected.getSecond());
