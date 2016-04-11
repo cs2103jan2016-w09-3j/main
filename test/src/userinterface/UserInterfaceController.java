@@ -959,6 +959,7 @@ public class UserInterfaceController {
         }
         resultSet.setSuccess();
         if (commandsToRun.size() == 0) {
+            _logicFace.switchView(managerView);
             updateChangesToViews(-1);
             return resultSet;
         }
