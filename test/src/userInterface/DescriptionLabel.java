@@ -1,8 +1,10 @@
 //@@ A0125514N
-package entity;
+package userInterface;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import entity.TaskEntity;
 
 public class DescriptionLabel {
 
