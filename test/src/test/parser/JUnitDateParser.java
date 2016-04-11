@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import parser.DateParser;
 
-public class DateParserTest {
+public class JUnitDateParser {
     DateParser dp = new DateParser();
 
     @Test

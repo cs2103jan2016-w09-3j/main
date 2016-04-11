@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import parser.GarbageCollectorParser;
 
-public class GarbageCollectorParserTest {
+public class JUnitGarbageCollectorParser {
     GarbageCollectorParser gc = new GarbageCollectorParser();
 
     @Test

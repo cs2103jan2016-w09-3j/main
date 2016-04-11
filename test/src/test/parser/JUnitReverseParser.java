@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import parser.ReverseParser;
 
-public class ReverseParserTest {
+public class JUnitReverseParser {
     ReverseParser rp = new ReverseParser();
 
     @Test
