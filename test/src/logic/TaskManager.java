@@ -36,7 +36,7 @@ public class TaskManager {
     private static ArrayList<TaskEntity> mainTaskEntities = new ArrayList<TaskEntity>();
     private static ArrayList<TaskEntity> completedTaskEntities = new ArrayList<TaskEntity>();
 
-    private static ArrayList<String> undoList = new ArrayList<String>();
+    private static ArrayList<String> undoCommands = new ArrayList<String>();
     private int undoPointer = -1;
     private boolean isUndoing = false;
 
@@ -54,7 +54,7 @@ public class TaskManager {
      * Function for loadFrom to reset the undo stack upon loading other file
      */
     private void resetUndo() {
-        undoList = new ArrayList<String>();
+        undoCommands = new ArrayList<String>();
         undoPointer = -1;
         isUndoing = false;
     }
@@ -333,8 +333,8 @@ public class TaskManager {
      */
     private void updateUndoStack(String command) {
         if (!isUndoing) {
-            if (undoPointer == undoList.size() - 1) {
-                undoList.add(command);
+            if (undoPointer == undoCommands.size() - 1) {
+                undoCommands.add(command);
                 undoPointer++;
             } else {
                 trimAdditionalCommands(command);
@@ -353,11 +353,11 @@ public class TaskManager {
      */
     private void trimAdditionalCommands(String command) {
         if (undoPointer == -1) {
-            undoList = new ArrayList<String>();
+            undoCommands = new ArrayList<String>();
         } else {
-            undoList = new ArrayList<String>(undoList.subList(0, undoPointer + 1));
+            undoCommands = new ArrayList<String>(undoCommands.subList(0, undoPointer + 1));
         }
-        undoList.add(command);
+        undoCommands.add(command);
         undoPointer++;
     }
 
@@ -1430,8 +1430,8 @@ public class TaskManager {
      * @return ArrayList of commands for main program to re-run
      */
     public ArrayList<String> undo() {
-        System.out.println("undolist size: " + undoList.size() + " undoPointer : " + undoPointer);
-        if (undoList.size() > 0 && undoPointer >= 0) {
+        System.out.println("undolist size: " + undoCommands.size() + " undoPointer : " + undoPointer);
+        if (undoCommands.size() > 0 && undoPointer >= 0) {
             startUndo();
 
             if (undoPointer == -1) {
@@ -1442,7 +1442,7 @@ public class TaskManager {
             } else {
                 System.out.println("Running " + (undoPointer + 1) + " commands for undo");
 
-                ArrayList<String> commandsToRun = new ArrayList<String>(undoList.subList(0, undoPointer + 1));
+                ArrayList<String> commandsToRun = new ArrayList<String>(undoCommands.subList(0, undoPointer + 1));
                 return commandsToRun;
             }
         } else {
