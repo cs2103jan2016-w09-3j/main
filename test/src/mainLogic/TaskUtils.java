@@ -36,22 +36,30 @@ public class TaskUtils {
             int currentDigit = index % 36;
             index = index / 36;
 
-            if (currentDigit < 10) {
-                base36 = Integer.toString(currentDigit) + base36;
-            } else if (currentDigit < 36) {
-                // Match the values 10~35 to match A~Z in the ASCII table
-                base36 = (char) (currentDigit + 55) + base36;
-            }
+            base36 = appendChar(currentDigit, base36);
         }
 
         // Append last character
+        base36 = appendChar(index, base36);
+
+        return base36;
+    }
+
+    /**
+     * Appends the next character to the end of the number. For
+     * convertDecToBase36
+     * 
+     * @param index - value of next digit to append
+     * @param base36 - currently compiled string of base 36 number
+     * @return new String with next appended character
+     */
+    private static String appendChar(int index, String base36) {
         if (index < 10) {
             base36 = Integer.toString(index) + base36;
         } else if (index < 36) {
             // Match the values 10~35 to match A~Z in the ASCII table
             base36 = (char) (index + 55) + base36;
         }
-
         return base36;
     }
 
@@ -116,16 +124,11 @@ public class TaskUtils {
 
             // Identify if the lastChar is an alphabet or number and then cast
             // it to its dec number value of 0~35
-            if (checkIfAsciiUppercase(lastCharAsciiValue)) {
-                characterValue = lastCharAsciiValue - 55;
-            } else if (checkIfAsciiLowercase(lastCharAsciiValue)) {
-                characterValue = lastCharAsciiValue - 87;
-            } else if (checkIfAsciiNumber(lastCharAsciiValue)) {
-                characterValue = lastCharAsciiValue - 48;
-            } else if (checkIfAsciiSpaceChar(lastCharAsciiValue)) {
+            characterValue = castCharacterValue(lastCharAsciiValue, characterValue);
+            if(characterValue == -1) {
                 return -1;
             }
-
+            
             // Add the appropriate value of that digit to the final value
             if (checkIfAsciiSpaceChar(lastCharAsciiValue)) {
                 decNumber += characterValue * digitWeight;
@@ -142,6 +145,19 @@ public class TaskUtils {
         }
 
         return decNumber;
+    }
+
+    private static int castCharacterValue(int lastCharAsciiValue, int characterValue) {
+        if (checkIfAsciiUppercase(lastCharAsciiValue)) {
+            characterValue = lastCharAsciiValue - 55;
+        } else if (checkIfAsciiLowercase(lastCharAsciiValue)) {
+            characterValue = lastCharAsciiValue - 87;
+        } else if (checkIfAsciiNumber(lastCharAsciiValue)) {
+            characterValue = lastCharAsciiValue - 48;
+        } else if (checkIfAsciiSpaceChar(lastCharAsciiValue)) {
+            characterValue = -1;
+        }
+        return characterValue;
     }
 
     private static boolean checkIfAsciiSpaceChar(int lastCharAsciiValue) {

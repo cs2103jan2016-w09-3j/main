@@ -484,6 +484,12 @@ public class TaskEntity {
         return displayedTime;
     }
 
+    /**
+     * Gets time display string for UI to print. Shows time if the duration is
+     * within the same day, shows date if the duration crosses to different days
+     * 
+     * @return 15 character string representing the duration/dueDate of this task
+     */
     public String getTime() {
         if (_isFloating) {
             return null;
@@ -499,23 +505,35 @@ public class TaskEntity {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm          ");
             return sdf.format(_dueDate.getTime());
         } else {
-            String returnDate = "";
-            SimpleDateFormat sdf;
-
-            if (_startDate.get(Calendar.YEAR) != _dueDate.get(Calendar.YEAR)) {
-                sdf = new SimpleDateFormat("[dd/MM/YY]");
-
-            } else if (TaskUtils.checkSameDate(_startDate, _dueDate)) {
-                sdf = new SimpleDateFormat(" HH:mm ");
-            } else {
-                sdf = new SimpleDateFormat("[dd/MM]");
-            }
-            returnDate += sdf.format(_startDate.getTime());
-            returnDate += "-";
-            returnDate += sdf.format(_dueDate.getTime());
-
-            return returnDate;
+            return formatTimeDurations();
         }
+    }
+
+    /**
+     * Formats the string when it has a start and end time. For getTime()
+     * function
+     * 
+     * @return 15 char string containing year if the dates are different years,
+     *         only time if they are the same day, and date if they are
+     *         different days
+     */
+    private String formatTimeDurations() {
+        String returnDate = "";
+        SimpleDateFormat sdf;
+
+        if (_startDate.get(Calendar.YEAR) != _dueDate.get(Calendar.YEAR)) {
+            sdf = new SimpleDateFormat("[dd/MM/YY]");
+
+        } else if (TaskUtils.checkSameDate(_startDate, _dueDate)) {
+            sdf = new SimpleDateFormat(" HH:mm ");
+        } else {
+            sdf = new SimpleDateFormat("[dd/MM]");
+        }
+        returnDate += sdf.format(_startDate.getTime());
+        returnDate += "-";
+        returnDate += sdf.format(_dueDate.getTime());
+
+        return returnDate;
     }
 
     public String getHashtags() {
