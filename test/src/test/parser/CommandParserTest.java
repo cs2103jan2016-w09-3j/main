@@ -1,8 +1,10 @@
 //@@author A0125415N
 package test.parser;
 
-import static org.junit.Assert.*;
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 import parser.CommandParser;
 
