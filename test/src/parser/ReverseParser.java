@@ -110,14 +110,4 @@ public class ReverseParser {
             }
         return new SimpleDateFormat("d'th' MMMM yyyy").format(date);
     }
-
-    public static void main(String args[]) {
-        Calendar c = Calendar.getInstance();
-        c.set(2016, 2, 23, 0, 0, 0);
-
-        ReverseParser rp = new ReverseParser();
-        System.out.println(rp.reParse(c));
-
-    }
-
 }
