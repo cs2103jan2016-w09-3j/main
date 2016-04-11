@@ -87,10 +87,34 @@ public class JUnitProgramTest {
 
     @Test
     public void testInvalidDeleteCommands_executeInvalidDeleteCommands_commandsGetRejected() {
-        assertEquals(runCommand("delete asda"), null);
-        assertEquals(runCommand("delete"), null);
-        assertEquals(runCommand("delete 1231"), null);
-        assertEquals(runCommand("delete 00--"), null);
+        assertNull(runCommand("delete asda"));
+        assertNull(runCommand("delete "));
+        assertNull(runCommand("delete   "));
+        assertNull(runCommand("delete 123123"));
+        assertNull(runCommand("delete --00"));
+    }
+
+    @Test
+    public void testDoneCommand_executeInvalidCommands_zeroTaskMarkAsDone() {
+        assertFalse(runCommand("done IDD0").isSuccess());
+        assertFalse(runCommand("done DDDII0").isSuccess());
+        assertFalse(runCommand("done ").isSuccess());
+        assertFalse(runCommand("done i").isSuccess());
+    }
+
+    @Test
+    public void testDoneCommand_markSomeTaskDone_someTaskGoesIntoComepleteLsit() {
+        assertTrue(runCommand("done ID0").isSuccess());
+        assertTrue(runCommand("done ID0").isSuccess());
+        assertTrue(runCommand("done ID0").isSuccess());
+        _executor.switchView(TaskManager.DISPLAY_FLOATING);
+        assertTrue(runCommand("done ID0").isSuccess());
+        assertTrue(runCommand("done ID0").isSuccess());
+        assertTrue(runCommand("done ID0").isSuccess());
+        _executor.switchView(TaskManager.DISPLAY_COMPLETED);
+        assertEquals(_executor.getWorkingList().size(), 6);
+        // no task to mark as done
+        assertFalse(runCommand("done ID0").isSuccess());
     }
 
     @Test
