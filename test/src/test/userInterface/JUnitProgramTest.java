@@ -71,15 +71,23 @@ public class JUnitProgramTest {
 
     @Test
     public void testAddCommand_addTimedTask_MainListHas4TasksAfterAdding() {
-        runCommand("Add basketball tmr");
+        assertTrue(runCommand("Add basketball tmr").isSuccess());
         _executor.switchView(TaskManager.DISPLAY_MAIN);
 
         assertEquals(4, _executor.getWorkingList().size()); 
     }
     
     @Test
+    public void testAddCommand_addInvalidTimedTask_MainListHas3TasksAfterAdding() {
+        assertFalse(runCommand("Add tmr").isSuccess());
+        _executor.switchView(TaskManager.DISPLAY_MAIN);
+
+        assertEquals(3, _executor.getWorkingList().size()); 
+    }
+    
+    @Test
     public void testAddCommand_addFloatingTask_FloatingListHas4TasksAfterAdding() {
-        runCommand("Add baseball");
+        assertTrue(runCommand("Add baseball").isSuccess());
         _executor.switchView(TaskManager.DISPLAY_FLOATING);
 
         assertEquals(4, _executor.getWorkingList().size()); 
