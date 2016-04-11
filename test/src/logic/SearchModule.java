@@ -1,6 +1,6 @@
 /**
  * @author qy
- * @@author :a0125493a
+ * @@author :A0125493A
  *
  *          File used by TaskEntityManager to search for terms in its list
  */
@@ -36,11 +36,11 @@ public class SearchModule {
                 continue;
             }
 
-            boolean searchTermFound = false;
+            boolean isSearchTermFound = false;
 
-            searchTermFound = searchAllTerms(listToSearch.get(i), searchTerms);
+            isSearchTermFound = searchAllTerms(listToSearch.get(i), searchTerms);
 
-            if (searchTermFound) {
+            if (isSearchTermFound) {
                 searchResults.add(listToSearch.get(i));
             }
         }
@@ -56,17 +56,17 @@ public class SearchModule {
      * @return
      */
     private static boolean searchAllTerms(TaskEntity taskToSearch, String[] searchTerms) {
-        boolean searchTermFound = false;
+        boolean isSearchTermFound = false;
 
         for (int j = 0; j < searchTerms.length; j++) {
-            searchTermFound = false;
+            isSearchTermFound = false;
 
             if (taskToSearch.getName().toLowerCase().contains(searchTerms[j])
                     || taskToSearch.getDescription().toLowerCase().contains(searchTerms[j])) {
-                searchTermFound = true;
+                isSearchTermFound = true;
             } else if (taskToSearch.getHashtags().toLowerCase().contains(searchTerms[j])) {
                 if (checkHashMatch(searchTerms[j], taskToSearch)) {
-                    searchTermFound = true;
+                    isSearchTermFound = true;
                 } else {
                     // Hashtag not found. Conclude as not added by breaking the
                     // loop, effctively leaving searchTermFound as false
@@ -80,7 +80,7 @@ public class SearchModule {
             }
         }
 
-        return searchTermFound;
+        return isSearchTermFound;
     }
 
     /**

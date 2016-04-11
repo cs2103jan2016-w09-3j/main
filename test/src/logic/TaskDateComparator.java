@@ -1,6 +1,6 @@
 /**
  * @author qy
- * @@author a0125493a
+ * @@author A0125493A
  * 
  *          Comparator used to sort the tasks in the timed arrayList
  */

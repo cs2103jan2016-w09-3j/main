@@ -1,6 +1,6 @@
 /**
  * @author qy
- * @@author a0125493a
+ * @@author A0125493A
  * 
  *          Testing unit for TaskManager's functionalities
  */

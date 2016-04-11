@@ -1,6 +1,6 @@
 /**
  * @author qy
- * @@author a0125493a
+ * @@author A0125493A
  * 
  *          Common utilities from logic for use through the program
  */
@@ -106,7 +106,7 @@ public class TaskUtils {
         int digitWeight = 1;
 
         // Additional check if string passed in is just spaces
-        boolean hasValue = false;
+        boolean isWithValue = false;
 
         assert base36 != null : "Null string passed into convertBase36ToDec!";
         if (base36 == null) {
@@ -131,14 +131,14 @@ public class TaskUtils {
             if (checkIfAsciiSpaceChar(lastCharAsciiValue)) {
                 decNumber += characterValue * digitWeight;
                 digitWeight *= 36;
-                hasValue = true;
+                isWithValue = true;
             }
             base36 = base36.substring(0, base36.length() - 1);
         }
 
         // Return error message of -1 if there are only spaces or no characters
         // in the string
-        if (hasValue == false) {
+        if (isWithValue == false) {
             return -1;
         }
 

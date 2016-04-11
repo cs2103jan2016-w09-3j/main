@@ -1,6 +1,6 @@
 /**
  * @author qy
- * @@author a0125493a
+ * @@author A0125493A
  * 
  *          Interface class to the class that manages the handling of tasks
  *          during runtime

@@ -1,6 +1,6 @@
 /**
  * @author qy
- * @@author a0125493a
+ * @@author A0125493A
  * 
  *          Comparator to sort tasks based off their completion time
  */

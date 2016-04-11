@@ -1,6 +1,6 @@
 /**
  * @author qy
- * @@author a0125493a
+ * @@author A0125493A
  * 
  *          Class to manage the handling of tasks during runtime. Singleton
  *          class, use GetInstance() to use this class
@@ -38,7 +38,7 @@ public class TaskManager {
 
     private static ArrayList<String> undoList = new ArrayList<String>();
     private int undoPointer = -1;
-    private boolean _undoing = false;
+    private boolean isUndoing = false;
 
     private static ArrayList<TaskEntity> searchedTasks = new ArrayList<TaskEntity>();
 
@@ -56,7 +56,7 @@ public class TaskManager {
     private void resetUndo() {
         undoList = new ArrayList<String>();
         undoPointer = -1;
-        _undoing = false;
+        isUndoing = false;
     }
 
     /**
@@ -332,7 +332,7 @@ public class TaskManager {
      * @param command - Command to add for undo
      */
     private void updateUndoStack(String command) {
-        if (!_undoing) {
+        if (!isUndoing) {
             if (undoPointer == undoList.size() - 1) {
                 undoList.add(command);
                 undoPointer++;
@@ -858,8 +858,8 @@ public class TaskManager {
      *         add(TaskEntity)
      */
     private ResultSet setResultAndInsertFloating(TaskEntity newTask, ResultSet addResults) {
-        boolean addSuccess = floatingTaskEntities.add(newTask);
-        assert addSuccess == true : "Failed to add to non-null floatingTaskEntities list";
+        boolean isAddSuccessful = floatingTaskEntities.add(newTask);
+        assert isAddSuccessful == true : "Failed to add to non-null floatingTaskEntities list";
         System.out.println(floatingTaskEntities.size());
 
         addResults.setView(ResultSet.FLOATING_VIEW);
@@ -1014,8 +1014,8 @@ public class TaskManager {
         }
 
         TaskEntity itemToBeDeleted = displayedTasks.get(index);
-        boolean deletionSuccess = deleteFromCorrespondingDisplayList(itemToBeDeleted);
-        if (!deletionSuccess) {
+        boolean isDeletionSuccessful = deleteFromCorrespondingDisplayList(itemToBeDeleted);
+        if (!isDeletionSuccessful) {
             return false;
         }
 
@@ -1149,8 +1149,8 @@ public class TaskManager {
 
         commitFullSave();
 
-        boolean loadSuccess = dataLoader.loadFrom(newDirectory);
-        if (loadSuccess == true) {
+        boolean isLoadSuccessful = dataLoader.loadFrom(newDirectory);
+        if (isLoadSuccessful == true) {
             if (reloadFile()) {
                 dataLoader.clearCommandFile();
                 loadResult.setSuccess();
@@ -1236,8 +1236,8 @@ public class TaskManager {
             return linkResult;
         }
 
-        boolean linkSuccess = projectHead.addAssociation(linkedTask);
-        if (!linkSuccess) {
+        boolean islinkSuccessful = projectHead.addAssociation(linkedTask);
+        if (!islinkSuccessful) {
             linkResult.setFail();
             linkResult.setStatus(ResultSet.STATUS_BAD);
             return linkResult;
@@ -1361,20 +1361,20 @@ public class TaskManager {
      * search results
      * 
      * @param searchTerm - String to search for
-     * @param narrowSearch - Set to true if you want to trim the current search
+     * @param isNarrowSearch - Set to true if you want to trim the current search
      *            instead of searching for a new term
      * @return true and STATUS_GOOD for success, false and STATUS_BAD for
      *         failure in ResultSet.isSuccess() and ResultSet.getStatus()
      *         respectively. ResultSet.searchCount() indicates how many search
      *         results were found
      */
-    public ResultSet searchString(String searchTerm, boolean narrowSearch) {
+    public ResultSet searchString(String searchTerm, boolean isNarrowSearch) {
         // Ensure that search is properly initialized
         if (searchedTasks == null) {
             searchedTasks = new ArrayList<TaskEntity>();
         }
 
-        if (!narrowSearch) {
+        if (!isNarrowSearch) {
             searchedTasks = new ArrayList<TaskEntity>();
         }
 
@@ -1437,7 +1437,7 @@ public class TaskManager {
             if (undoPointer == -1) {
                 System.out.println("Running 0 commands for undo");
 
-                _undoing = false;
+                isUndoing = false;
                 return new ArrayList<String>();
             } else {
                 System.out.println("Running " + (undoPointer + 1) + " commands for undo");
@@ -1455,7 +1455,7 @@ public class TaskManager {
      */
     private void startUndo() {
         reloadBackUpFile();
-        _undoing = true;
+        isUndoing = true;
         dataLoader.clearCommandFile();
         undoPointer--;
     }
@@ -1464,7 +1464,7 @@ public class TaskManager {
      * Allows the undo list to be populated again
      */
     public void undoComplete() {
-        _undoing = false;
+        isUndoing = false;
     }
 
     /**
@@ -1519,9 +1519,9 @@ public class TaskManager {
      */
     public ResultSet saveTheme(String theme) {
         ResultSet saveResult = new ResultSet();
-        boolean saveSuccess = dataLoader.saveThemePreference(theme);
+        boolean isSaveSuccessful = dataLoader.saveThemePreference(theme);
 
-        if (saveSuccess) {
+        if (isSaveSuccessful) {
             saveResult.setSuccess();
             saveResult.setStatus(ResultSet.STATUS_GOOD);
         } else {
