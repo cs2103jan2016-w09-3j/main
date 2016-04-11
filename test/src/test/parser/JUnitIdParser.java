@@ -8,7 +8,7 @@ import org.junit.Test;
 import parser.IdParser;
 import parser.Pair;
 
-public class IdParserTest {
+public class JUnitIdParser {
     IdParser id = new IdParser();
 
     @Test

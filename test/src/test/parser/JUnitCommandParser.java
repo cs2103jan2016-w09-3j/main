@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import parser.CommandParser;
 
-public class CommandParserTest {
+public class JUnitCommandParser {
 	CommandParser cp = new CommandParser();
 	@Test
 	public void testCommandParser_GetAddCommand(){

@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import parser.InformationParser;
 
-public class InformationParserTest {
+public class JUnitInformationParser {
     InformationParser info = new InformationParser();
 
     @Test

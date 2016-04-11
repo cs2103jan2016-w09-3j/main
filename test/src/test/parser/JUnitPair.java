@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import parser.Pair;
 
-public class PairTest {
+public class JUnitPair {
 
     @Test
     public void testPair_GetFirst() {

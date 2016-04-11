@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import parser.ParserCommons;
 
-public class parserCommonsTest {
+public class JUnitParserCommons {
     @Test
     public void testParserCommons_getLastWord() {
         String toTest = ParserCommons.getLastWord("asdf ghjk jkl");
