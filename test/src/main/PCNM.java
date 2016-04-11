@@ -1,6 +1,6 @@
 package main;
 
-import userInterface.PrimaryUserInterface;
+import userinterface.PrimaryUserInterface;
 
 public class PCNM {
     public static void main(String[] args) {

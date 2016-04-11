@@ -17,9 +17,9 @@ import org.junit.Test;
 
 import entity.AllTaskLists;
 import entity.TaskEntity;
-import fileStorage.JsonConverter;
-import fileStorage.StorageHandler;
-import mainLogic.TaskUtils;
+import logic.TaskUtils;
+import storage.JsonConverter;
+import storage.StorageHandler;
 
 public class JUnitStorage {
     

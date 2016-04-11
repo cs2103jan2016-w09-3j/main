@@ -14,7 +14,7 @@ import java.util.Calendar;
 import org.junit.Test;
 
 import entity.TaskEntity;
-import mainLogic.TaskUtils;
+import logic.TaskUtils;
 
 public class JUnitTaskUtils {
 

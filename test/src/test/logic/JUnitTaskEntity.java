@@ -14,7 +14,7 @@ import java.util.Calendar;
 import org.junit.Test;
 
 import entity.TaskEntity;
-import mainLogic.TaskManager;
+import logic.TaskManager;
 
 public class JUnitTaskEntity {
     TaskManager manager = TaskManager.getInstance();

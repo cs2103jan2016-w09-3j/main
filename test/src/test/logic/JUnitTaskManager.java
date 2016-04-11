@@ -17,8 +17,8 @@ import java.util.Calendar;
 import org.junit.Test;
 
 import entity.TaskEntity;
-import mainLogic.TaskManager;
-import mainLogic.TaskUtils;
+import logic.TaskManager;
+import logic.TaskUtils;
 
 public class JUnitTaskManager {
     TaskManager manager = TaskManager.getInstance();

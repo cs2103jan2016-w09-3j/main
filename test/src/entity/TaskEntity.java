@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import edu.emory.mathcs.backport.java.util.Collections;
-import mainLogic.TaskDateComparator;
-import mainLogic.TaskManager;
-import mainLogic.TaskUtils;
+import logic.TaskDateComparator;
+import logic.TaskManager;
+import logic.TaskUtils;
 
 public class TaskEntity {
     public static final int NOT_ASSOCIATED = 0;
