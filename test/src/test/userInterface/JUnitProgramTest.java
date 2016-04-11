@@ -70,6 +70,22 @@ public class JUnitProgramTest {
     }
 
     @Test
+    public void testAddCommand_addTimedTask_MainListHas4TasksAfterAdding() {
+        runCommand("Add basketball tmr");
+        _executor.switchView(TaskManager.DISPLAY_MAIN);
+
+        assertEquals(4, _executor.getWorkingList().size()); 
+    }
+    
+    @Test
+    public void testAddCommand_addFloatingTask_FloatingListHas4TasksAfterAdding() {
+        runCommand("Add baseball");
+        _executor.switchView(TaskManager.DISPLAY_FLOATING);
+
+        assertEquals(4, _executor.getWorkingList().size()); 
+    }
+    
+    @Test
     public void testInvalidCommands_executeInvalidCommands_commandsGetsRejected() {
         assertEquals(runCommand("basktball"), null);
         assertEquals(runCommand("ad d temp"), null);
@@ -86,7 +102,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testInvalidDeleteCommands_executeInvalidDeleteCommands_commandsGetRejected() {
+    public void testDeleteCommands_executeInvalidDeleteCommands_commandsGetRejected() {
         assertNull(runCommand("delete asda"));
         assertNull(runCommand("delete "));
         assertNull(runCommand("delete   "));
@@ -95,7 +111,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testDoneCommand_executeInvalidCommands_zeroTaskMarkAsDone() {
+    public void testDoneCommand_executeInvalidCommands_AllMarkAsDoneFails() {
         assertFalse(runCommand("done IDD0").isSuccess());
         assertFalse(runCommand("done DDDII0").isSuccess());
         assertFalse(runCommand("done ").isSuccess());
@@ -103,7 +119,7 @@ public class JUnitProgramTest {
     }
 
     @Test
-    public void testDoneCommand_markSomeTaskDone_someTaskGoesIntoComepleteLsit() {
+    public void testDoneCommand_markSomeTaskDone_All6TaskGoesIntoCompleteList() {
         assertTrue(runCommand("done ID0").isSuccess());
         assertTrue(runCommand("done ID0").isSuccess());
         assertTrue(runCommand("done ID0").isSuccess());
@@ -115,10 +131,12 @@ public class JUnitProgramTest {
         assertEquals(_executor.getWorkingList().size(), 6);
         // no task to mark as done
         assertFalse(runCommand("done ID0").isSuccess());
+        //Completeed list remains the same size
+        assertEquals(_executor.getWorkingList().size(), 6);
     }
 
     @Test
-    public void testDeleteTaskFromFloatingList_deleteTask_taskDeleted() {
+    public void testDeleteTask_deleteTaskFromFloatingList_taskDeleted() {
         _executor.switchView(TaskManager.DISPLAY_FLOATING);
         assertTrue(runCommand("delete ID0").isSuccess());
         assertFalse(runCommand("delete ID10").isSuccess());

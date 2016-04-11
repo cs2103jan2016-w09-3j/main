@@ -7,7 +7,9 @@
 
 package test.logic;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -169,7 +171,7 @@ public class JUnitTaskManagerInterface {
 
         System.out.println(taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN));
         TaskEntity firstFloating = new TaskEntity("Task floating 1");
-        assertEquals(true, manager.add(firstFloating, "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+        assertTrue(manager.add(firstFloating, "PLACEHOLDER_SAVE_COMMAND").isSuccess());
         manager.add(new TaskEntity("Task floating 2"), "PLACEHOLDER_SAVE_COMMAND");
         manager.add(new TaskEntity("Task floating 3"), "PLACEHOLDER_SAVE_COMMAND");
         manager.add(new TaskEntity("Task floating 4"), "PLACEHOLDER_SAVE_COMMAND");
@@ -220,7 +222,7 @@ public class JUnitTaskManagerInterface {
         manager.markAsDone(0, "PLACEHOLDER_SAVE_COMMAND");
         assertEquals("", taskmanager.printArrayContentsToString(manager.DISPLAY_MAIN));
         assertEquals("Assignment, ", taskmanager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
-        assertEquals(true, nextTaskToAdd.isCompleted());
+        assertTrue(nextTaskToAdd.isCompleted());
     }
 
     @Test
@@ -235,7 +237,7 @@ public class JUnitTaskManagerInterface {
         manager.markAsDone(0, "PLACEHOLDER_SAVE_COMMAND");
         assertEquals("", taskmanager.printArrayContentsToString(manager.DISPLAY_FLOATING));
         assertEquals("Assignment, ", taskmanager.printArrayContentsToString(manager.DISPLAY_COMPLETED));
-        assertEquals(true, nextTaskToAdd.isCompleted());
+        assertTrue(nextTaskToAdd.isCompleted());
     }
 
     @Test
@@ -250,8 +252,8 @@ public class JUnitTaskManagerInterface {
         manager.add(thirdTask, "PLACEHOLDER_SAVE_COMMAND");
 
         manager.switchView(manager.DISPLAY_FLOATING);
-        assertEquals(true, manager.link("0", "1", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
-        assertEquals(true, manager.link("0", "2", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+        assertTrue(manager.link("0", "1", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+        assertTrue(manager.link("0", "2", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
     }
 
     @Test
@@ -266,8 +268,8 @@ public class JUnitTaskManagerInterface {
         manager.add(thirdTask, "PLACEHOLDER_SAVE_COMMAND");
 
         manager.switchView(manager.DISPLAY_FLOATING);
-        assertEquals(true, manager.link("0", "1", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
-        assertEquals(false, manager.link("2", "0", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+        assertTrue(manager.link("0", "1", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+        assertFalse(manager.link("2", "0", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
     }
 
     @Test
@@ -282,8 +284,8 @@ public class JUnitTaskManagerInterface {
         manager.add(thirdTask, "PLACEHOLDER_SAVE_COMMAND");
 
         manager.switchView(manager.DISPLAY_FLOATING);
-        assertEquals(true, manager.link("0", "1", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
-        assertEquals(false, manager.link("1", "2", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+        assertTrue(manager.link("0", "1", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+        assertFalse(manager.link("1", "2", "PLACEHOLDER_SAVE_COMMAND").isSuccess());
     }
 
     @Test
@@ -331,7 +333,7 @@ public class JUnitTaskManagerInterface {
                 "PLACEHOLDER_SAVE_COMMAND");
 
         manager.switchView(manager.DISPLAY_FLOATING);
-        assertEquals(true, manager.markAsDone(1, "PLACEHOLDER_SAVE_COMMAND").isSuccess());
+        assertTrue(manager.markAsDone(1, "PLACEHOLDER_SAVE_COMMAND").isSuccess());
 
         manager.searchString("completed", "PLACEHOLDER_SAVE_COMMAND");
         manager.switchView(manager.DISPLAY_SEARCH);
