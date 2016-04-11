@@ -168,6 +168,55 @@ public class JUnitProgramTest {
         assertFalse(runCommand("delete ID0").isSuccess());
     }
 
+    @Test
+    public void testProgram_searchSomeTask_ThreeResultsFound() {
+        runCommand("search task some");
+        _executor.switchView(TaskManager.DISPLAY_SEARCH);
+        assertEquals(3, _executor.getWorkingList().size());
+        
+        runCommand("search sOme TASK");
+        _executor.switchView(TaskManager.DISPLAY_SEARCH);
+        assertEquals(3, _executor.getWorkingList().size());
+        
+    }
+    
+    @Test
+    public void testProgram_searchSubStrings_ThreeResultsFound() {
+        runCommand("search so");
+        _executor.switchView(TaskManager.DISPLAY_SEARCH);
+        assertEquals(3, _executor.getWorkingList().size());
+        
+        runCommand("search me");
+        _executor.switchView(TaskManager.DISPLAY_SEARCH);
+        assertEquals(3, _executor.getWorkingList().size());
+        
+    }
+    
+    @Test
+    public void testProgram_searchExtraTerms_NoResultFound() {
+        runCommand("search task some thing");
+        _executor.switchView(TaskManager.DISPLAY_SEARCH);
+        assertEquals(0, _executor.getWorkingList().size());
+        
+        runCommand("search all sOme TASK");
+        _executor.switchView(TaskManager.DISPLAY_SEARCH);
+        assertEquals(0, _executor.getWorkingList().size());
+        
+    }
+    
+    @Test
+    public void testProgram_searchCategory_OnlyExactSearchHasResult() {
+        runCommand("add New task #assignment");
+        runCommand("search #assignment");
+        _executor.switchView(TaskManager.DISPLAY_SEARCH);
+        assertEquals(1, _executor.getWorkingList().size());
+        
+        runCommand("search #assign");
+        _executor.switchView(TaskManager.DISPLAY_SEARCH);
+        assertEquals(0, _executor.getWorkingList().size());
+        
+    }
+
     // @@ A0125514N
     public ResultSet runCommand(String rawString) {
         InputParser parser = new InputParser(rawString);
