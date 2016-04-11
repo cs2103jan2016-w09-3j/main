@@ -16,10 +16,10 @@ import org.junit.Test;
 import entity.TaskEntity;
 import mainLogic.TaskUtils;
 
-public class JUnitUtils {
+public class JUnitTaskUtils {
 
     @Test
-    public void testConvertDecToBase36() {
+    public void testTaskUtils_ConvertDecToBase36_numberMatches() {
         String r0 = TaskUtils.convertDecToBase36(0);
         String r1 = TaskUtils.convertDecToBase36(100);
         String r2 = TaskUtils.convertDecToBase36(1000);
@@ -34,7 +34,7 @@ public class JUnitUtils {
     }
 
     @Test
-    public void convertBase36ToDec() {
+    public void testTaskUtils_convertBase36ToDec_numberMatches() {
         int r1 = TaskUtils.convertBase36ToDec("AF");
         int r2 = TaskUtils.convertBase36ToDec("asd");
         int r3 = TaskUtils.convertBase36ToDec("");
@@ -47,7 +47,7 @@ public class JUnitUtils {
     }
 
     @Test
-    public void testDueDateInRange() {
+    public void testTaskUtils_DueDateInRange_dueDatesWithinDurationReturnsTrue() {
         TaskEntity due2MinutesPast3Am = new TaskEntity("Due 3:02", null,
                 TaskUtils.createDate(1, 1, 2016, 3, 2), false);
         TaskEntity due4Am = new TaskEntity("Due 4am", null, TaskUtils.createDate(1, 1, 2016, 4, 0), false);
@@ -66,7 +66,7 @@ public class JUnitUtils {
     }
 
     @Test
-    public void testCheckOverlappingDuration() {
+    public void testTaskUtils_CheckOverlappingDuration_overlappingDurationsReturnsTrue() {
         TaskEntity from0300to0500 = new TaskEntity("From 3:05 to 5:00",
                 TaskUtils.createDate(1, 1, 2016, 3, 5), TaskUtils.createDate(1, 1, 2016, 5, 0), false);
         TaskEntity from0652to1100 = new TaskEntity("From 6:52 to 11:00",
@@ -86,7 +86,7 @@ public class JUnitUtils {
     }
 
     @Test
-    public void calculateSecondDate_SetNextYear() {
+    public void testTaskUtils_calculateSecondDate_SetToNextYear() {
         Calendar startDate = TaskUtils.createDate(17, 3, 2016);
         Calendar endDate = TaskUtils.createDate(16, 3, 2016);
         TaskEntity testTask = new TaskEntity("Testing task", startDate, endDate, true);
@@ -101,7 +101,7 @@ public class JUnitUtils {
     }
 
     @Test
-    public void calculateSecondDate_SetToNextDay() {
+    public void testTaskUtils_calculateSecondDate_SetToNextDay() {
         Calendar startDate = TaskUtils.createDate(17, 3, 2016, 7, 0);
         Calendar endDate = TaskUtils.createDate(17, 3, 2016, 6, 0);
         TaskEntity testTask = new TaskEntity("Testing task", startDate, endDate, false);
@@ -121,7 +121,7 @@ public class JUnitUtils {
     }
 
     @Test
-    public void calculateSecondDate_RemainSameDay() {
+    public void testTaskUtils_calculateSecondDate_RemainSameDay() {
         Calendar startDate = TaskUtils.createDate(17, 3, 2016, 6, 0);
         Calendar endDate = TaskUtils.createDate(17, 3, 2016, 7, 0);
         TaskEntity testTask = new TaskEntity("Testing task", startDate, endDate, false);
@@ -150,7 +150,7 @@ public class JUnitUtils {
     }
 
     @Test
-    public void calculateSecondDate_RemoveStartTime() {
+    public void testTaskUtils_calculateSecondDate_RemoveStartTime() {
         Calendar startDate = TaskUtils.createDate(17, 3, 2016);
         Calendar endDate = TaskUtils.createDate(17, 3, 2016);
         TaskEntity testTask = new TaskEntity("Testing task", startDate, endDate, true);

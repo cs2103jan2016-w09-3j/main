@@ -20,7 +20,7 @@ public class JUnitTaskEntity {
     TaskManager manager = TaskManager.getInstance();
 
     @Test
-    public void testGetAssociationPosition() {
+    public void testTaskEntity_GetAssociationPosition_positionMatchInsertionOrder() {
         manager.unloadFile();
 
         TaskEntity firstTask = new TaskEntity("Master Task");
